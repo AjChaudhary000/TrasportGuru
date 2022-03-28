@@ -5,4 +5,7 @@ const user = require('../assets/icons/user.png')
 const profileimage = require('../assets/icons/profileimage.png')
 const upload = require('../assets/icons/upload.png')
 const add = require('../assets/icons/add.png')
-export default { email, right_arrow, google, user, profileimage, upload, add };
+const camera = require('../assets/icons/camera.png')
+const gallery = require('../assets/icons/gallery.png')
+const remove = require('../assets/icons/remove.png')
+export default { email, right_arrow, google, user, profileimage, upload, add, camera, gallery, remove };

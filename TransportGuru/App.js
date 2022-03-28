@@ -2,11 +2,13 @@ import { View, Text, StatusBar } from 'react-native'
 import React from 'react'
 import Router from './src/router/router'
 import LottieView from 'lottie-react-native';
+import { Provider } from 'react-redux'
+import store from './src/Redux/store';
 const App = () => {
-  const [isloading, setloading] = React.useState(true)
+  const [isloading, setloadingData] = React.useState(true)
   React.useEffect(() => {
-    setTimeout(async () => {
-      setloading(false)
+    setTimeout(() => {
+      setloadingData(false)
     }, 2000)
 
   }, [])
@@ -23,7 +25,9 @@ const App = () => {
   }
   return (
     <View style={{ flex: 1 }}>
-      <Router />
+      <Provider store={store}>
+        <Router />
+      </Provider>
 
     </View>
   )

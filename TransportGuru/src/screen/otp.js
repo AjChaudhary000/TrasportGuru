@@ -7,6 +7,7 @@ import { CountdownCircleTimer } from 'react-native-countdown-circle-timer'
 const Otp = (props) => {
     const [isTimerView, setIsTmerView] = React.useState(true);
     const [isResendButtonVisible, setIsResendButtonVisible] = React.useState(false);
+    const [otp, setOtp] = React.useState()
     return (
         <View style={styles.contentor}>
 
@@ -21,7 +22,7 @@ const Otp = (props) => {
                 </View>
             </View>
             <View style={styles.inputBox}>
-                <OTPTextInput tintColor={"#1C22B8"} />
+                <OTPTextInput tintColor={"#1C22B8"} handleTextChange={(val) => { console.log(val) }} />
             </View>
 
 
@@ -63,7 +64,7 @@ const Otp = (props) => {
             <View style={{ marginTop: 20, height: '10%' }}>
                 <TouchableOpacity style={styles.btn} onPress={() => props.navigation.navigate('UserProfile')}>
                     <Text style={styles.btnText}>
-                        Verifiy
+                        Verify
                     </Text>
                 </TouchableOpacity>
             </View>

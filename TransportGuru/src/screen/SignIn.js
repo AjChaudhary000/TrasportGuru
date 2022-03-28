@@ -2,9 +2,35 @@ import { View, Text, Image, StyleSheet, Dimensions, TextInput, TouchableOpacity,
 import LottieView from 'lottie-react-native';
 import React from 'react'
 import icons from '../contents/icons';
+import { sendemail } from '../Redux/sendEmailSlice';
+import { connect, useSelector } from 'react-redux'
 const SignIn = (props) => {
+    const [email, setEmail] = React.useState('');
+    const [isEmailValid, setIsEmailValid] = React.useState(true);
+    const data = useSelector((state) => state.login)
+    const sendEmail = async () => {
+        if (email) {
+            props.sendemail(email);
+            console.log(data)
+            setEmail('')
+        }
+    }
+    const emailHandle = (val) => {
+        const regex = /[^\s@]+@[^\s@]+\.[^\s@]+/;
+        !regex.test(val) ? setIsEmailValid(false) : setIsEmailValid(true);
+        setEmail(val);
+    }
+    if (props.loading) {
+        return (
+            <View style={{ flex: 1 }}>
+                <StatusBar hidden />
+                <View style={{ height: "100%" }}>
+                    <LottieView source={require('../assets/json/loder.json')} autoPlay loop />
+                </View>
+            </View>
+        );
+    }
     return (
-
         <View style={styles.contentor}>
             <StatusBar hidden />
 
@@ -14,7 +40,9 @@ const SignIn = (props) => {
             <View style={styles.titleComponets}>
                 <Text style={styles.title}> Welcome To Trasport guru</Text>
                 <View>
-                    <Text style={styles.text}> Provide your email id,so we can be able  to send your confirmation code.</Text>
+                    <Text style={styles.text}>
+                        Provide your email id,so we can be able  to send your confirmation code.
+                    </Text>
                 </View>
             </View>
             <View style={styles.inputBox}>
@@ -23,12 +51,18 @@ const SignIn = (props) => {
                 </View>
                 <View style={{ width: "85%", marginHorizontal: 10 }}>
 
-                    <TextInput style={styles.input} placeholder={"email id "} placeholderTextColor={'gray'} />
+                    <TextInput style={styles.input}
+                        placeholder={"email id "}
+                        placeholderTextColor={'gray'}
+                        onChangeText={(val) => emailHandle(val)}
+                        autoCapitalize={'none'} />
+                    {!isEmailValid && <Text style={{ color: 'red', marginTop: 5 }}> * Enter valid Email  </Text>}
+
                 </View>
             </View>
 
             <View style={{ marginTop: 20, height: '10%' }}>
-                <TouchableOpacity style={styles.btn} onPress={() => props.navigation.navigate('Otp')}>
+                <TouchableOpacity style={styles.btn} onPress={() => sendEmail()}>
                     <Text style={styles.btnText}>
                         Continue
                     </Text>
@@ -45,8 +79,19 @@ const SignIn = (props) => {
 
     )
 }
+const mapDispatchToProps = (dispatch) => {
+    return {
+        sendemail: (data) => dispatch(sendemail(data))
+    };
+}
+// const mapStateToProps = (state) => (
 
-export default SignIn
+//     {
+//         userdata: state.login,
+//         loading: state.login.loading
+//     }
+// )
+export default connect(null, mapDispatchToProps)(SignIn);
 const styles = StyleSheet.create({
     contentor: {
         flex: 1,
