@@ -2,16 +2,21 @@ import { View, Text, Image, StyleSheet, Dimensions, TextInput, TouchableOpacity,
 import LottieView from 'lottie-react-native';
 import React from 'react'
 import icons from '../contents/icons';
-import { sendemail } from '../Redux/sendEmailSlice';
-import { connect, useSelector } from 'react-redux'
+import { sendemail, setUserData } from '../Redux/sendEmailSlice';
+import { connect } from 'react-redux'
 const SignIn = (props) => {
     const [email, setEmail] = React.useState('');
     const [isEmailValid, setIsEmailValid] = React.useState(true);
-    const data = useSelector((state) => state.login)
+    React.useEffect(() => {
+        if (props.userdata?.status) {
+            props.navigation.replace('Otp', { email: props.userdata.email })
+            props.setUserData({})
+        }
+
+    }, [props])
     const sendEmail = async () => {
-        if (email) {
+        if (isEmailValid && email) {
             props.sendemail(email);
-            console.log(data)
             setEmail('')
         }
     }
@@ -19,8 +24,9 @@ const SignIn = (props) => {
         const regex = /[^\s@]+@[^\s@]+\.[^\s@]+/;
         !regex.test(val) ? setIsEmailValid(false) : setIsEmailValid(true);
         setEmail(val);
+
     }
-    if (props.loading) {
+    if (props?.loading) {
         return (
             <View style={{ flex: 1 }}>
                 <StatusBar hidden />
@@ -52,7 +58,7 @@ const SignIn = (props) => {
                 <View style={{ width: "85%", marginHorizontal: 10 }}>
 
                     <TextInput style={styles.input}
-                        placeholder={"email id "}
+                        placeholder={"trasportguru@gmail.com"}
                         placeholderTextColor={'gray'}
                         onChangeText={(val) => emailHandle(val)}
                         autoCapitalize={'none'} />
@@ -79,19 +85,20 @@ const SignIn = (props) => {
 
     )
 }
-const mapDispatchToProps = (dispatch) => {
+const useDispatch = (dispatch) => {
     return {
-        sendemail: (data) => dispatch(sendemail(data))
+        sendemail: (data) => dispatch(sendemail(data)),
+        setUserData: (data) => dispatch(setUserData(data))
     };
 }
-// const mapStateToProps = (state) => (
+const useSelector = (state) => (
 
-//     {
-//         userdata: state.login,
-//         loading: state.login.loading
-//     }
-// )
-export default connect(null, mapDispatchToProps)(SignIn);
+    {
+        userdata: state.login.userdata,
+        loading: state.login.loading
+    }
+)
+export default connect(useSelector, useDispatch)(SignIn);
 const styles = StyleSheet.create({
     contentor: {
         flex: 1,

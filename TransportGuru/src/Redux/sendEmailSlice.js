@@ -1,4 +1,4 @@
-import { createAsyncThunk, createSlice, isRejectedWithValue } from '@reduxjs/toolkit';
+import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import TrasportApi from '../api/TrasportApi';
 export const sendemail = createAsyncThunk('login/sendemail',
     async (email, { getState }) => {
@@ -17,7 +17,11 @@ export const sendEmailSlice = createSlice({
         error: '',
         userdata: {}
     },
-    reducers: {},
+    reducers: {
+        setUserData: (state, action) => {
+            state.userdata = action.payload
+        }
+    },
     extraReducers: {
         [sendemail.fulfilled]: (state, action) => {
             state.userdata = action.payload;
@@ -32,4 +36,5 @@ export const sendEmailSlice = createSlice({
         }
     }
 });
+export const { setUserData } = sendEmailSlice.actions;
 export default sendEmailSlice.reducer;

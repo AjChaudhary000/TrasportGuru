@@ -4,10 +4,27 @@ import LottieView from 'lottie-react-native';
 import React from 'react'
 import OTPTextInput from 'react-native-otp-textinput'
 import { CountdownCircleTimer } from 'react-native-countdown-circle-timer'
+import icons from '../contents/icons';
+import { connect } from 'react-redux';
+import { verifyOtp } from '../Redux/verifyOtpSlice';
+import { sendemail } from '../Redux/sendEmailSlice';
 const Otp = (props) => {
     const [isTimerView, setIsTmerView] = React.useState(true);
-    const [isResendButtonVisible, setIsResendButtonVisible] = React.useState(false);
     const [otp, setOtp] = React.useState()
+    console.log(props.otpdata)
+    React.useEffect(() => {
+        props?.otpdata.account === "0" && props.navigation.replace('UserProfile')
+    }, [props])
+    const sendOTP = () => {
+
+        props.verifyOtp({ email: props.route.params.email, otp: otp })
+        setOtp('')
+        //  props.navigation.navigate('UserProfile')
+    }
+    const resendOtp = () => {
+        props.sendemail(props.route.params.email);
+        setIsTmerView(true)
+    }
     return (
         <View style={styles.contentor}>
 
@@ -21,16 +38,25 @@ const Otp = (props) => {
                     <Text style={styles.text}>We have sent you an Gmail with a code to the number that you provided.</Text>
                 </View>
             </View>
+            <View style={styles.emailbox}>
+                <View style={{ width: " 70%", alignItems: 'center' }}>
+                    <Text style={{ fontSize: 20, fontWeight: 'bold' }}>{props.route.params.email}</Text>
+                </View>
+                <TouchableOpacity style={{ width: "20%", alignItems: 'center' }} onPress={() => { props.navigation.replace('SignIn') }}>
+                    <Image source={icons.edit} style={{ width: 30, height: 30, tintColor: '#1C22B8' }} />
+                </TouchableOpacity>
+            </View>
             <View style={styles.inputBox}>
-                <OTPTextInput tintColor={"#1C22B8"} handleTextChange={(val) => { console.log(val) }} />
+                <OTPTextInput tintColor={"#1C22B8"} handleTextChange={(val) => { setOtp(val) }} />
+                {(props?.error) ? <Text style={{ color: 'red', marginTop: 5 }}> * otp invalid  </Text> : null}
             </View>
 
 
             {isTimerView ? (
                 <View style={{ alignSelf: 'center', height: '10%', bottom: 50 }}>
                     <CountdownCircleTimer
-                        isPlaying
-                        duration={5}
+                        isPlaying={true}
+                        duration={60}
                         strokeWidth={0}
                         size={150}
                         colors={[
@@ -40,7 +66,7 @@ const Otp = (props) => {
                         ]}
                         onComplete={() => {
                             setIsTmerView(false)
-                            setIsResendButtonVisible(true)
+
                         }}
                     >
                         {({ remainingTime }) => (
@@ -52,7 +78,7 @@ const Otp = (props) => {
                     </CountdownCircleTimer>
                 </View>
             ) : (<View style={{ marginTop: 20, height: '10%' }}>
-                <TouchableOpacity style={styles.btnresend}>
+                <TouchableOpacity style={styles.btnresend} onPress={() => resendOtp()}>
                     <Text style={styles.btnresendText}>
                         Resend Code
                     </Text>
@@ -62,7 +88,7 @@ const Otp = (props) => {
 
 
             <View style={{ marginTop: 20, height: '10%' }}>
-                <TouchableOpacity style={styles.btn} onPress={() => props.navigation.navigate('UserProfile')}>
+                <TouchableOpacity style={styles.btn} onPress={() => sendOTP()}>
                     <Text style={styles.btnText}>
                         Verify
                     </Text>
@@ -72,8 +98,21 @@ const Otp = (props) => {
         </View>
     )
 }
+const useDispatch = (dispatch) => {
+    return {
+        verifyOtp: (data) => dispatch(verifyOtp(data)),
+        sendemail: (data) => dispatch(sendemail(data)),
+    };
+}
+const useSelector = (state) => (
 
-export default Otp
+    {
+        otpdata: state.otp.otpdata,
+        loading: state.otp.loading,
+        error: state.otp.error
+    }
+)
+export default connect(useSelector, useDispatch)(Otp);
 const styles = StyleSheet.create({
     contentor: {
         flex: 1,
@@ -155,5 +194,24 @@ const styles = StyleSheet.create({
         fontSize: 16,
         color: '#1C22B8',
         fontWeight: 'bold'
+    },
+    emailbox: {
+        alignItems: "center",
+        flexDirection: 'row',
+        backgroundColor: 'white',
+        alignSelf: 'center',
+        borderRadius: 15,
+        flexDirection: 'row',
+        alignItems: 'center',
+        alignItems: "center",
+        shadowColor: "#000",
+        shadowOffset: {
+            width: 0,
+            height: 2
+        },
+        shadowOpacity: 0.25,
+        shadowRadius: 4,
+        elevation: 5,
+        height: 50
     }
 })

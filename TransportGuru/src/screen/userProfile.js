@@ -2,9 +2,12 @@ import { View, Text, Image, StyleSheet, Dimensions, TextInput, TouchableOpacity,
 import React from 'react'
 import icons from '../contents/icons';
 import * as ImagePicker from 'react-native-image-picker'
+import { connect } from 'react-redux'
+import { userProfile } from '../Redux/userProfileSlice';
 const UserProfile = (props) => {
     const [data, setdata] = React.useState({
-        imagepath: null,
+        imagepath: {},
+        username: ''
     })
     const [modalVisible, setModalVisible] = React.useState(false);
     const camaraLaunch = () => {
@@ -26,17 +29,11 @@ const UserProfile = (props) => {
                 console.log('User tapped custom button: ', Response.customButton);
             } else {
 
-                const source = Object.values(Response.assets)
-                for (const item in source) {
-                    if (Object.hasOwnProperty.call(source, item)) {
-                        const element = source[item];
-                        setdata({
-                            ...data,
-                            imagepath: element.uri
-                        })
-
-                    }
-                }
+                //console.log(response.assets[0])
+                setdata({
+                    ...data,
+                    imagepath: response.assets[0]
+                })
             }
         });
         setModalVisible(false)
@@ -50,7 +47,7 @@ const UserProfile = (props) => {
             },
         };
         ImagePicker.launchImageLibrary(options, (response) => {
-            console.log('Response = ', response)
+            //console.log('Response = ', response)
             if (response.didCancel) {
                 console.log('User cancelled image picker');
             } else if (response.error) {
@@ -58,21 +55,19 @@ const UserProfile = (props) => {
             } else if (response.customButton) {
                 console.log('User tapped custom button: ', response.customButton);
             } else {
-
-                const source = Object.values(response.assets)
-                for (const item in source) {
-                    if (Object.hasOwnProperty.call(source, item)) {
-                        const element = source[item];
-                        setdata({
-                            ...data,
-                            imagepath: element.uri
-                        })
-
-                    }
-                }
+                console.log(response.assets[0])
+                setdata({
+                    ...data,
+                    imagepath: response.assets[0]
+                })
             }
         });
         setModalVisible(false)
+    }
+    const uploadData = () => {
+        console.log(data)
+        props.userProfile({ ...data, token: props.token })
+        //console.log(props.token)
     }
     return (
 
@@ -103,8 +98,12 @@ const UserProfile = (props) => {
                 </View>
             </Modal>
             <View style={{ paddingTop: 12, height: '30%', justifyContent: 'center' }}>
-                {data.imagepath == null ? <Image source={icons.profileimage} style={{ width: 100, height: 100 }} /> :
-                    <Image source={{ uri: data.imagepath }} style={{ width: 100, height: 100, borderRadius: 50 }} />}
+                {data.imagepath?.length === 0 ?
+                    <Image source={icons.profileimage} style={{ width: 100, height: 100 }} />
+                    :
+
+                    <Image source={{ uri: data.imagepath.uri }} style={{ width: 100, height: 100, borderRadius: 50 }} />
+                }
                 <TouchableOpacity style={{ bottom: 30, left: 60 }} onPress={() => setModalVisible(true)}>
                     <Image source={icons.add} style={{ width: 30, height: 30 }} />
                 </TouchableOpacity>
@@ -121,12 +120,14 @@ const UserProfile = (props) => {
                 </View>
                 <View style={{ width: "85%", marginHorizontal: 10 }}>
 
-                    <TextInput style={styles.input} placeholder={"eg: Arjun Chaudhary "} placeholderTextColor={'gray'} />
+                    <TextInput style={styles.input} placeholder={"eg: Arjun Chaudhary "}
+                        onChangeText={(val) => setdata({ ...data, username: val })}
+                        placeholderTextColor={'gray'} />
                 </View>
             </View>
 
             <View style={{ marginTop: 20, height: '10%' }}>
-                <TouchableOpacity style={styles.btn} onPress={() => props.navigation.navigate('Otp')}>
+                <TouchableOpacity style={styles.btn} onPress={() => uploadData()}>
                     <Text style={styles.btnText}>
                         Finish
                     </Text>
@@ -138,8 +139,18 @@ const UserProfile = (props) => {
 
     )
 }
-
-export default UserProfile
+const useSelector = (state) => {
+    return {
+        token: state.token?.token?._W,
+        userdata: state.userProfile.data
+    }
+}
+const useDispatch = (dispatch) => {
+    return {
+        userProfile: (data) => dispatch(userProfile(data))
+    }
+}
+export default connect(useSelector, useDispatch)(UserProfile)
 const styles = StyleSheet.create({
     contentor: {
         flex: 1,
