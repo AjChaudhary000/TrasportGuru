@@ -5,7 +5,9 @@ export const verifyOtp = createAsyncThunk('otp/verifyOtp',
     async (obj, getState) => {
         try {
             const response = await TrasportApi.post('/verifyuser', obj);
-            getState.dispatch(setToken(response.data.token))
+
+            await getState.dispatch(setToken(response.data.token))
+            // console.log("Response token", responseToken);
 
             return response.data;
         } catch (e) {

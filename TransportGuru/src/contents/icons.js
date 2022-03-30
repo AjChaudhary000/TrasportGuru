@@ -9,4 +9,21 @@ const camera = require('../assets/icons/camera.png')
 const gallery = require('../assets/icons/gallery.png')
 const remove = require('../assets/icons/remove.png')
 const edit = require('../assets/icons/edit.png')
-export default { email, right_arrow, google, user, profileimage, upload, add, camera, gallery, remove, edit };
+const journey = require('../assets/icons/journey.png')
+const forword = require('../assets/icons/forword.png')
+const upToDown = require('../assets/icons/upToDown.png')
+export default {
+    email,
+    right_arrow,
+    google, user,
+    profileimage,
+    upload,
+    add,
+    camera,
+    gallery,
+    remove,
+    edit,
+    journey,
+    forword,
+    upToDown
+};

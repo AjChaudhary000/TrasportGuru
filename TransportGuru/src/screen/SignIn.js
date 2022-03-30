@@ -4,6 +4,7 @@ import React from 'react'
 import icons from '../contents/icons';
 import { sendemail, setUserData } from '../Redux/sendEmailSlice';
 import { connect } from 'react-redux'
+import color from '../contents/color';
 const SignIn = (props) => {
     const [email, setEmail] = React.useState('');
     const [isEmailValid, setIsEmailValid] = React.useState(true);
@@ -58,7 +59,7 @@ const SignIn = (props) => {
                 <View style={{ width: "85%", marginHorizontal: 10 }}>
 
                     <TextInput style={styles.input}
-                        placeholder={"trasportguru@gmail.com"}
+                        placeholder={"eg. trasportguru@gmail.com"}
                         placeholderTextColor={'gray'}
                         onChangeText={(val) => emailHandle(val)}
                         autoCapitalize={'none'} />
@@ -133,14 +134,14 @@ const styles = StyleSheet.create({
     },
     input: {
         borderBottomWidth: 2,
-        borderBottomColor: '#1C22B8',
+        borderBottomColor: color.primaryColors,
         padding: 10,
         fontSize: 18
     },
     btn: {
         width: '90%',
         height: 50,
-        backgroundColor: "#1C22B8",
+        backgroundColor: color.primaryColors,
         borderRadius: 15,
         justifyContent: "center",
         alignItems: 'center',
@@ -161,7 +162,7 @@ const styles = StyleSheet.create({
     },
     googleText: {
         fontSize: 20,
-        color: '#1C22B8',
+        color: color.primaryColors,
         fontWeight: 'bold',
         marginBottom: 10
     }

@@ -145,7 +145,6 @@
 				FF7679CC05B29737F7525760 /* Pods-TransportGuru-TransportGuruTests.debug.xcconfig */,
 				D3C3ADE9F5EC74DA016D2B68 /* Pods-TransportGuru-TransportGuruTests.release.xcconfig */,
 			);
-			name = Pods;
 			path = Pods;
 			sourceTree = "<group>";
 		};

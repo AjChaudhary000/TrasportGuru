@@ -4,6 +4,7 @@ import icons from '../contents/icons';
 import * as ImagePicker from 'react-native-image-picker'
 import { connect } from 'react-redux'
 import { userProfile } from '../Redux/userProfileSlice';
+import color from '../contents/color';
 const UserProfile = (props) => {
     const [data, setdata] = React.useState({
         imagepath: {},
@@ -185,14 +186,14 @@ const styles = StyleSheet.create({
     },
     input: {
         borderBottomWidth: 2,
-        borderBottomColor: '#1C22B8',
+        borderBottomColor: color.primaryColors,
         padding: 10,
         fontSize: 18
     },
     btn: {
         width: '90%',
         height: 50,
-        backgroundColor: "#1C22B8",
+        backgroundColor: color.primaryColors,
         borderRadius: 15,
         justifyContent: "center",
         alignItems: 'center',

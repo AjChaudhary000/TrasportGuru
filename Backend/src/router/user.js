@@ -80,7 +80,8 @@ const upload = multer({
 })
 router.post('/user/me', auth, upload.single('image'), async (req, res) => {
 
-    console.log(req )
+    console.log(req.body._parts[0])
+
     if (req?.file) {
         console.log("hl")
         // if (req.user?.image) {

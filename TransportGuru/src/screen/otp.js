@@ -8,6 +8,7 @@ import icons from '../contents/icons';
 import { connect } from 'react-redux';
 import { verifyOtp } from '../Redux/verifyOtpSlice';
 import { sendemail } from '../Redux/sendEmailSlice';
+import color from '../contents/color';
 const Otp = (props) => {
     const [isTimerView, setIsTmerView] = React.useState(true);
     const [otp, setOtp] = React.useState()
@@ -15,9 +16,10 @@ const Otp = (props) => {
     React.useEffect(() => {
         props?.otpdata.account === "0" && props.navigation.replace('UserProfile')
     }, [props])
-    const sendOTP = () => {
+    const sendOTP = async () => {
 
         props.verifyOtp({ email: props.route.params.email, otp: otp })
+
         setOtp('')
         //  props.navigation.navigate('UserProfile')
     }
@@ -43,11 +45,11 @@ const Otp = (props) => {
                     <Text style={{ fontSize: 20, fontWeight: 'bold' }}>{props.route.params.email}</Text>
                 </View>
                 <TouchableOpacity style={{ width: "20%", alignItems: 'center' }} onPress={() => { props.navigation.replace('SignIn') }}>
-                    <Image source={icons.edit} style={{ width: 30, height: 30, tintColor: '#1C22B8' }} />
+                    <Image source={icons.edit} style={{ width: 30, height: 30, tintColor: color.primaryColors }} />
                 </TouchableOpacity>
             </View>
             <View style={styles.inputBox}>
-                <OTPTextInput tintColor={"#1C22B8"} handleTextChange={(val) => { setOtp(val) }} />
+                <OTPTextInput tintColor={color.primaryColors} handleTextChange={(val) => { setOtp(val) }} />
                 {(props?.error) ? <Text style={{ color: 'red', marginTop: 5 }}> * otp invalid  </Text> : null}
             </View>
 
@@ -102,6 +104,7 @@ const useDispatch = (dispatch) => {
     return {
         verifyOtp: (data) => dispatch(verifyOtp(data)),
         sendemail: (data) => dispatch(sendemail(data)),
+
     };
 }
 const useSelector = (state) => (
@@ -150,7 +153,7 @@ const styles = StyleSheet.create({
     btn: {
         width: '90%',
         height: 50,
-        backgroundColor: "#1C22B8",
+        backgroundColor: color.primaryColors,
         borderRadius: 15,
         justifyContent: "center",
         alignItems: 'center',
@@ -171,7 +174,7 @@ const styles = StyleSheet.create({
     },
     googleText: {
         fontSize: 20,
-        color: '#1C22B8',
+        color: color.primaryColors,
         fontWeight: 'bold',
         marginBottom: 10
     }, borderStyleBase: {
@@ -180,7 +183,7 @@ const styles = StyleSheet.create({
     },
     resend: {
         fontWeight: "bold",
-        color: '#1C22B8',
+        color: color.primaryColors,
         fontSize: 18,
 
     },
@@ -192,7 +195,7 @@ const styles = StyleSheet.create({
         alignSelf: 'center'
     }, btnresendText: {
         fontSize: 16,
-        color: '#1C22B8',
+        color: color.primaryColors,
         fontWeight: 'bold'
     },
     emailbox: {
