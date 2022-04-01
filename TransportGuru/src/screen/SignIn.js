@@ -45,7 +45,7 @@ const SignIn = (props) => {
                 <LottieView source={require('../assets/json/loading.json')} autoPlay loop />
             </View>
             <View style={styles.titleComponets}>
-                <Text style={styles.title}> Welcome To Trasport guru</Text>
+                <Text style={styles.title}> Welcome To Transport guru</Text>
                 <View>
                     <Text style={styles.text}>
                         Provide your email id,so we can be able  to send your confirmation code.
@@ -59,7 +59,7 @@ const SignIn = (props) => {
                 <View style={{ width: "85%", marginHorizontal: 10 }}>
 
                     <TextInput style={styles.input}
-                        placeholder={"eg. trasportguru@gmail.com"}
+                        placeholder={"eg. transportguru@gmail.com"}
                         placeholderTextColor={'gray'}
                         onChangeText={(val) => emailHandle(val)}
                         autoCapitalize={'none'} />

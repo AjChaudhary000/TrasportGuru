@@ -12,7 +12,7 @@ const Tabs = createBottomTabNavigator();
 
 const Tab = () => {
     return (
-        <Tabs.Navigator screenOptions={{ tabBarStyle: { borderTopWidth: 0 }, tabBarShowLabel: false }}>
+        <Tabs.Navigator screenOptions={{ tabBarHideOnKeyboard: true, tabBarStyle: { borderTopWidth: 0, position: 'absolute', bottom: 0 }, tabBarShowLabel: false }}>
             <Tabs.Screen name="HomeScreen" component={HomeScreen} options={{
                 headerShown: false, tabBarIcon: ({ focused }) => (
                     <Image source={icons.home} style={{ width: 30, height: 30, tintColor: focused ? color.primaryColors : 'gray' }} />

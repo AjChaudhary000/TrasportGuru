@@ -7,6 +7,7 @@ import SettingMenu from './settingMenu';
 import { connect } from 'react-redux'
 import { getUserDetails } from '../../Redux/UserDetails';
 import { getJWTToken, removeJWTToken } from '../../Redux/helper';
+import Header from '../../components/header';
 const Setting = (props) => {
   const [token, setToken] = React.useState('');
   const fetchToken = async () => {
@@ -32,42 +33,45 @@ const Setting = (props) => {
   }, [token])
 
   return (
-    <ScrollView style={styles.container}>
-      <View>
-        <View style={styles.header}>
+
+    <View style={styles.container}>
+      {/* <View style={styles.header}>
           <Text style={styles.headerName}>Settings</Text>
-        </View>
-
-        <View style={{ marginTop: 40, alignItems: 'center' }}>
-          <Image style={{ width: 100, height: 100, tintColor: "#0D1117" }}
+        </View> */}
+      <Header name={"Settings"} />
+      <ScrollView>
+        <View style={{ marginTop: 40, overflow: 'hidden', alignSelf: 'center', width: 120, height: 120, borderRadius: 60, borderWidth: 5, borderColor: color.primaryColors }}>
+          <Image style={{ width: 110, height: 110, tintColor: "#0D1117", alignSelf: "center" }}
             source={icons.profileimage} />
-          <View >
-            <Title style={{ textAlign: 'center' }}>{props.userData?.username}</Title>
-            <Caption style={{ fontWeight: 'bold', color: 'gray' }}>@{props.userData?.email}</Caption>
-          </View>
         </View>
-      </View>
+        <View style={{ marginTop: 10, alignItems: 'center' }}>
+          <Title style={{ textAlign: 'center' }}>{props.userData?.username}</Title>
+          <Caption style={{ fontWeight: 'bold', color: 'gray' }}>@{props.userData?.email}</Caption>
+        </View>
+        {/* </View> */}
 
-      <View style={styles.menu}>
 
-        {/* <View style={{ marginHorizontal: 20 }}>
+        <View style={styles.menu}>
+
+          {/* <View style={{ marginHorizontal: 20 }}>
           <Caption style={{ fontWeight: 'bold', color: 'gray', fontSize: 16 }}>Overview</Caption>
         </View> */}
 
-        <View style={{ marginTop: 30, marginBottom: 30 }}>
-          <SettingMenu icon={icons.edit} menuName={"Edit Account"} onPress={() => { props.navigation.navigate('EditAccount') }} />
-          <SettingMenu icon={icons.truck} menuName={"Trasport Guru Account"} onPress={() => { props.navigation.navigate('TrasportGuruAccount', { _id: props.userData?._id }) }} />
-          <SettingMenu icon={icons.message} menuName={"Message"} onPress={() => { console.log("hello") }} />
-          <SettingMenu icon={icons.privacy_policy} menuName={"Privacy Policy"} onPress={() => { console.log("hello") }} />
-          <SettingMenu icon={icons.accept} menuName={"Terms of service"} onPress={() => { console.log("hello") }} />
-          <SettingMenu icon={icons.support} menuName={"Support"} onPress={() => { console.log("hello") }} />
-          <SettingMenu icon={icons.logout} menuName={"Logout"} onPress={() => { logout() }} />
+          <View style={{ marginTop: 30, marginBottom: 30 }}>
+            <SettingMenu icon={icons.edit} menuName={"Edit Account"} onPress={() => { props.navigation.navigate('EditAccount') }} />
+            <SettingMenu icon={icons.truck} menuName={"Transport Guru Account"} onPress={() => { props.navigation.navigate('TrasportGuruAccount', { _id: props.userData?._id }) }} />
+            <SettingMenu icon={icons.message} menuName={"Message"} onPress={() => { console.log("hello") }} />
+            <SettingMenu icon={icons.privacy_policy} menuName={"Privacy Policy"} onPress={() => { console.log("hello") }} />
+            <SettingMenu icon={icons.accept} menuName={"Terms of service"} onPress={() => { console.log("hello") }} />
+            <SettingMenu icon={icons.support} menuName={"Support"} onPress={() => { console.log("hello") }} />
+            <SettingMenu icon={icons.logout} menuName={"Logout"} onPress={() => { logout() }} />
+
+          </View>
 
         </View>
+      </ScrollView>
 
-      </View>
-
-    </ScrollView>
+    </View >
   )
 }
 const useDispatch = (dispatch) => {
@@ -88,6 +92,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: 'white',
+    marginBottom: 30
   },
   header: {
     marginTop: Platform.OS === 'android' ? 20 : 40,

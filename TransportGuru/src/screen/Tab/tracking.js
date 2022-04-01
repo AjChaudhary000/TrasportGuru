@@ -1,9 +1,10 @@
 import { View, Text } from 'react-native'
 import React from 'react'
-
-const Tracking = () => {
+import Header from '../../components/header'
+const Tracking = (props) => {
     return (
         <View>
+            <Header name={"Tracking"} />
             <Text>tracking</Text>
         </View>
     )

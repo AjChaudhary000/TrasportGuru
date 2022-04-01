@@ -22,6 +22,8 @@ const privacy_policy = require('../assets/icons/privacy_policy.png')
 const accept = require('../assets/icons/accept.png')
 const support = require('../assets/icons/technical-support.png')
 const logout = require('../assets/icons/logout.png')
+const add_photo = require('../assets/icons/add_photo.png')
+const back = require('../assets/icons/back.png')
 export default {
     email,
     right_arrow,
@@ -45,5 +47,6 @@ export default {
     privacy_policy,
     accept,
     support,
-    logout
+    logout, add_photo,
+    back
 };

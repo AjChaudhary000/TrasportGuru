@@ -43,7 +43,7 @@ const Router = (props) => {
                 <View style={{ height: "100%" }}>
                     <LottieView source={require('../assets/json/loading.json')} autoPlay loop />
                 </View>
-                <Text style={{ textAlign: 'center', bottom: "45%", fontSize: 20, letterSpacing: 2, color: color.primaryColors, fontWeight: 'bold' }}>Trasport guru</Text>
+                <Text style={{ textAlign: 'center', bottom: "45%", fontSize: 20, letterSpacing: 2, color: color.primaryColors, fontWeight: 'bold' }}>Trasnport guru</Text>
             </View>
         );
     }

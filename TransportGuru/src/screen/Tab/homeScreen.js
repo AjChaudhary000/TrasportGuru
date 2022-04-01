@@ -113,9 +113,9 @@ const styles = StyleSheet.create({
 
     },
     fromToDesc: {
-        height: '50%',
+        height: '45%',
         backgroundColor: '#dce3f5',
-        marginHorizontal: 30,
+        marginHorizontal: 35,
         borderRadius: 20,
         justifyContent: 'center',
         flexDirection: 'row',
@@ -127,14 +127,6 @@ const styles = StyleSheet.create({
         shadowOpacity: 0.25,
         shadowRadius: 4,
         elevation: 5,
-
-    }, inputBox: {
-        height: 50,
-        marginHorizontal: 10,
-        backgroundColor: 'white',
-        paddingHorizontal: 15,
-        borderRadius: 18,
-        color: 'black', fontSize: 20,
 
     }, inputBox: {
         height: 45,
