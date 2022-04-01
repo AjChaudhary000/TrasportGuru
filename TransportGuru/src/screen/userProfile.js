@@ -10,6 +10,10 @@ const UserProfile = (props) => {
         imagepath: {},
         username: ''
     })
+    React.useEffect(() => {
+        props?.userdata.status && props.navigation.replace('Tab')
+
+    }, [props])
     const [modalVisible, setModalVisible] = React.useState(false);
     const camaraLaunch = () => {
         let options = {
@@ -29,8 +33,6 @@ const UserProfile = (props) => {
             } else if (Response.customButton) {
                 console.log('User tapped custom button: ', Response.customButton);
             } else {
-
-                //console.log(response.assets[0])
                 setdata({
                     ...data,
                     imagepath: response.assets[0]
@@ -66,9 +68,10 @@ const UserProfile = (props) => {
         setModalVisible(false)
     }
     const uploadData = () => {
-        console.log(data)
+
         props.userProfile({ ...data, token: props.token })
-        //console.log(props.token)
+        console.log({ ...data, token: props.token })
+        console.log(props.userdata)
     }
     return (
 
@@ -134,15 +137,12 @@ const UserProfile = (props) => {
                     </Text>
                 </TouchableOpacity>
             </View>
-
-
         </View >
-
     )
 }
 const useSelector = (state) => {
     return {
-        token: state.token?.token?._W,
+        token: state.token.token,
         userdata: state.userProfile.data
     }
 }
@@ -155,8 +155,8 @@ export default connect(useSelector, useDispatch)(UserProfile)
 const styles = StyleSheet.create({
     contentor: {
         flex: 1,
-
-        marginHorizontal: 20
+        backgroundColor: 'white',
+        paddingHorizontal: 20,
     },
     truckLogo: {
         height: '25%',

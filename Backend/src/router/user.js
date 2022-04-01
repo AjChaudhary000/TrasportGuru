@@ -47,7 +47,7 @@ router.post('/verifyuser', async (req, res) => {
             const token = await UserList.genrateToken();
             return res.status(201).send({ data: UserList, token: token, account: '1' })
         } else {
-            const user = new User({ email: req.body.email });
+            const user = new User({ email: req.body.email, accountType: "User" });
             const data = await user.save()
             const token = await data.genrateToken();
             return res.status(201).send({ data: data, token: token, account: '0' })
@@ -78,20 +78,17 @@ const upload = multer({
         cb(undefined, true)
     }
 })
-router.post('/user/me', auth, upload.single('image'), async (req, res) => {
+router.post('/user/me', auth, async (req, res) => {
 
-    console.log(req.body._parts[0])
 
-    if (req?.file) {
-        console.log("hl")
-        // if (req.user?.image) {
-        //     fs.unlinkSync(`./src/image/avatars/${req.user.image}`);
-        // }
-        req.user.image = req.file.filename;
-    }
     req.user.username = req.body.username;
+    req.user.image = req.body.image;
     const data = await req.user.save();
-    res.send(data)
+    res.send({ data, status: 'true' })
+
+}, (error, req, res, next) => { res.send(error.message) })
+router.get('/user/me', auth, async (req, res) => {
+    res.send({ data: await req.user })
 
 }, (error, req, res, next) => { res.send(error.message) })
 

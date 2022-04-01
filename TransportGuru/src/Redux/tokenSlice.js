@@ -1,6 +1,7 @@
+
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { getJWTToken, saveJWTToken } from './helper';
+import { getJWTToken, saveJWTToken, removeJWTToken } from './helper';
 export const setToken = createAsyncThunk(
     'token/setToken', async (tokenData, getState) => {
 
@@ -11,22 +12,41 @@ export const setToken = createAsyncThunk(
         return token
     }
 );
+const fetchToken = () => {
+
+    try {
+        setTimeout(async () => {
+            const data = await getJWTToken();
+            return await data || '';
+        }, 1000)
+    } catch (e) {
+        console.log()
+    }
+
+}
 export const tokenSlice = createSlice({
     name: "token",
     initialState: {
         loading: false,
         error: '',
-        token: ''
+        token: ""
+
     },
     reducers: {
         logoutToken: async (state, action) => {
-            state.token = await AsyncStorage.removeItem('@usertoken');
-        }
+            state.token = await removeJWTToken();
+        },
+        getToken: (state, action) => {
+            setTimeout(async () => {
+                state.token = await getJWTToken();
+            }, 1000)
+        },
+
     },
     extraReducers: {
         [setToken.fulfilled]: (state, action) => {
 
-            console.log("my action ", action)
+            //console.log("my action ", action)
             state.token = action.payload
             state.loading = false;
         },
@@ -42,5 +62,5 @@ export const tokenSlice = createSlice({
         }
     }
 });
-export const { logoutToken } = tokenSlice.actions;
+export const { logoutToken, getToken } = tokenSlice.actions;
 export default tokenSlice.reducer;

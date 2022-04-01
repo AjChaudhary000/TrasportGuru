@@ -12,6 +12,16 @@ const edit = require('../assets/icons/edit.png')
 const journey = require('../assets/icons/journey.png')
 const forword = require('../assets/icons/forword.png')
 const upToDown = require('../assets/icons/upToDown.png')
+const home = require('../assets/icons/home.png')
+const truck = require('../assets/icons/truck.png')
+const tracking = require('../assets/icons/tracking.png')
+const setting = require('../assets/icons/setting.png')
+const next = require('../assets/icons/next.png')
+const message = require('../assets/icons/message.png')
+const privacy_policy = require('../assets/icons/privacy_policy.png')
+const accept = require('../assets/icons/accept.png')
+const support = require('../assets/icons/technical-support.png')
+const logout = require('../assets/icons/logout.png')
 export default {
     email,
     right_arrow,
@@ -25,5 +35,15 @@ export default {
     edit,
     journey,
     forword,
-    upToDown
+    upToDown,
+    home,
+    tracking,
+    truck,
+    setting,
+    next,
+    message,
+    privacy_policy,
+    accept,
+    support,
+    logout
 };

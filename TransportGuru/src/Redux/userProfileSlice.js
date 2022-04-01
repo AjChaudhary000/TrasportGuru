@@ -5,22 +5,18 @@ export const userProfile = createAsyncThunk(
     'user/userProfile',
     async (obj, getState) => {
         try {
-            var data = new FormData();
             const { uri, type, fileName } = obj.imagepath;
-            //console.log(obj.imagepath);
-            data.append('username', obj.username);
-            data.append('image', obj.imagepath);
-            console.log(data._parts)
+            const data = {
+                username: obj.username,
+                image: fileName || ''
+            }
             const response = await TrasportApi.post('/user/me', data, {
                 headers: {
                     Authorization: `Bearer ${obj.token}`,
-                    //  "Content-Type": "multipart/form-data;",
-                    //  "Content-Length": data.length
                 }
-
             });
-
-            console.log("swfhebnw8fhb8e7w", responseJson)
+            console.log("swfhebnw8fhb8e7w", response)
+            return response.data
         }
         catch (e) {
             console.log(e)

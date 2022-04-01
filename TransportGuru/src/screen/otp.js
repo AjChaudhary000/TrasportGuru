@@ -15,6 +15,7 @@ const Otp = (props) => {
     console.log(props.otpdata)
     React.useEffect(() => {
         props?.otpdata.account === "0" && props.navigation.replace('UserProfile')
+        props?.otpdata.account === "1" && props.navigation.replace('Tab')
     }, [props])
     const sendOTP = async () => {
 
@@ -119,8 +120,8 @@ export default connect(useSelector, useDispatch)(Otp);
 const styles = StyleSheet.create({
     contentor: {
         flex: 1,
-
-        marginHorizontal: 20
+        backgroundColor: 'white',
+        paddingHorizontal: 20,
     },
     truckLogo: {
         height: '25%',
@@ -163,20 +164,6 @@ const styles = StyleSheet.create({
         fontSize: 20,
         color: 'white',
         fontWeight: 'bold'
-    },
-    google: {
-        alignItems: 'center',
-        width: '60%',
-        marginTop: 20,
-        paddingTop: 30,
-        alignSelf: 'center',
-        height: "15%"
-    },
-    googleText: {
-        fontSize: 20,
-        color: color.primaryColors,
-        fontWeight: 'bold',
-        marginBottom: 10
     }, borderStyleBase: {
         width: 30,
         height: 45

@@ -54,7 +54,7 @@ const SignIn = (props) => {
             </View>
             <View style={styles.inputBox}>
                 <View style={{ width: "10%", paddingTop: 12 }}>
-                    <Image source={icons.email} style={{ width: 35, height: 35 }} />
+                    <Image source={icons.email} style={{ width: 35, height: 35, tintColor: color.primaryColors }} />
                 </View>
                 <View style={{ width: "85%", marginHorizontal: 10 }}>
 
@@ -103,8 +103,9 @@ export default connect(useSelector, useDispatch)(SignIn);
 const styles = StyleSheet.create({
     contentor: {
         flex: 1,
-
-        marginHorizontal: 20
+        backgroundColor: 'white',
+       paddingHorizontal:20,
+      
     },
     truckLogo: {
         height: '25%',

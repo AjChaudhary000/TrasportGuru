@@ -11,6 +11,12 @@ const userSchema = mongodb.Schema({
     },
     image: {
         type: String
+    },
+    accountType: {
+        type: String,
+        enam: {
+            values: ["User", "Admin", "Driver"],
+        },
     }
 }, { timestamps: true });
 userSchema.methods.genrateToken = async function () {

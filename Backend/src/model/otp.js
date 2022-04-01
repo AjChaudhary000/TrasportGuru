@@ -3,7 +3,7 @@ const otpSchema = mongodb.Schema({
     email: {
         type: String,
         required: true,
-        unique: true
+       
     },
     otp: {
         type: String
