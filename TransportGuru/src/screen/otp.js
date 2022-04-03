@@ -52,7 +52,7 @@ const Otp = (props) => {
                 </TouchableOpacity>
             </View>
             <View style={styles.inputBox}>
-                <OTPTextInput tintColor={color.primaryColors} handleTextChange={(val) => { setOtp(val) }} />
+                <OTPTextInput tintColor={color.primaryColors} offTintColor={color.fontcolor}  handleTextChange={(val) => { setOtp(val) }} />
                 {(props?.error) ? <Text style={{ color: 'red', marginTop: 5 }}> * otp invalid  </Text> : null}
             </View>
 
@@ -122,7 +122,7 @@ export default connect(useSelector, useDispatch)(Otp);
 const styles = StyleSheet.create({
     contentor: {
         flex: 1,
-        backgroundColor: 'white',
+        backgroundColor: color.backgroundColor,
         paddingHorizontal: 20,
     },
     truckLogo: {
@@ -138,7 +138,7 @@ const styles = StyleSheet.create({
     title: {
         fontSize: 25,
         fontWeight: 'bold',
-        color: 'black'
+        color:color.fontcolor
     },
     text: {
         fontSize: 18,

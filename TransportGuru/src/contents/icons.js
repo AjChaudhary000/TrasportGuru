@@ -24,6 +24,8 @@ const support = require('../assets/icons/technical-support.png')
 const logout = require('../assets/icons/logout.png')
 const add_photo = require('../assets/icons/add_photo.png')
 const back = require('../assets/icons/back.png')
+const contrast = require('../assets/icons/contrast.png')
+
 export default {
     email,
     right_arrow,
@@ -48,5 +50,5 @@ export default {
     accept,
     support,
     logout, add_photo,
-    back
+    back,contrast
 };

@@ -128,7 +128,7 @@ const UserProfile = (props) => {
             </View>
             <View style={styles.inputBox}>
                 <View style={{ width: "10%", paddingTop: 12 }}>
-                    <Image source={icons.user} style={{ width: 35, height: 35 }} />
+                    <Image source={icons.user} style={{ width: 35, height: 35 ,tintColor:color.primaryColors}} />
                 </View>
                 <View style={{ width: "85%", marginHorizontal: 10 }}>
 
@@ -163,7 +163,7 @@ export default connect(useSelector, useDispatch)(UserProfile)
 const styles = StyleSheet.create({
     contentor: {
         flex: 1,
-        backgroundColor: 'white',
+        backgroundColor: color.backgroundColor,
         paddingHorizontal: 20,
     },
     truckLogo: {
@@ -179,7 +179,7 @@ const styles = StyleSheet.create({
     title: {
         fontSize: 25,
         fontWeight: 'bold',
-        color: 'black'
+        color: color.fontcolor
     },
     text: {
         fontSize: 18,
@@ -196,7 +196,8 @@ const styles = StyleSheet.create({
         borderBottomWidth: 2,
         borderBottomColor: color.primaryColors,
         padding: 10,
-        fontSize: 18
+        fontSize: 18,
+        color:color.fontcolor
     },
     btn: {
         width: '90%',

@@ -1,4 +1,4 @@
-import { View, StyleSheet, Platform, Image, ScrollView } from 'react-native'
+import { View, StyleSheet, Platform, Image, ScrollView,TouchableOpacity,Switch } from 'react-native'
 import { Paragraph, Caption, Avatar, Text, Title } from 'react-native-paper'
 import React from 'react'
 import color from '../../contents/color';
@@ -12,6 +12,8 @@ import { logoutToken } from '../../Redux/tokenSlice';
 
 const Setting = (props) => {
   const [token, setToken] = React.useState('');
+  const [isEnabled, setIsEnabled] = React.useState(false);
+  const toggleSwitch = () => setIsEnabled(previousState => !previousState);
   const fetchToken = async () => {
     try {
       const data = await getJWTToken();
@@ -50,11 +52,11 @@ const Setting = (props) => {
       <Header name={"Settings"} />
       <ScrollView>
         <View style={{ marginTop: 40, overflow: 'hidden', alignSelf: 'center', width: 120, height: 120, borderRadius: 60, borderWidth: 5, borderColor: color.primaryColors }}>
-          <Image style={{ width: 110, height: 110, tintColor: "#0D1117", alignSelf: "center" }}
+          <Image style={{ width: 110, height: 110, tintColor: color.fontcolor, alignSelf: "center" }}
             source={icons.profileimage} />
         </View>
         <View style={{ marginTop: 10, alignItems: 'center' }}>
-          <Title style={{ textAlign: 'center' }}>{props.userData?.username}</Title>
+          <Title style={{ textAlign: 'center' ,color:color.fontcolor}}>{props.userData?.username}</Title>
           <Caption style={{ fontWeight: 'bold', color: 'gray' }}>@{props.userData?.email}</Caption>
         </View>
         {/* </View> */}
@@ -70,6 +72,23 @@ const Setting = (props) => {
             <SettingMenu icon={icons.edit} menuName={"Edit Account"} onPress={() => { props.navigation.navigate('EditAccount') }} />
             <SettingMenu icon={icons.truck} menuName={"Transport Guru Account"} onPress={() => { props.navigation.navigate('TrasportGuruAccount', { _id: props.userData?._id }) }} />
             <SettingMenu icon={icons.message} menuName={"Message"} onPress={() => { console.log("hello") }} />
+            <TouchableOpacity style={styles.option} onPress={props.onPress} activeOpacity={0.60}>
+            <View style={styles.menuIcon}>
+                <Image source={icons.contrast} style={styles.menuiconStyle} />
+            </View>
+            <View style={styles.menuname}>
+                <Text style={styles.menuText}>Drak Mode</Text>
+            </View>
+            <View style={styles.menuclick}>
+            <Switch
+        trackColor={{ false: "#767577", true: color.primaryColors }}
+        thumbColor={isEnabled ? color.primaryColors : color.primaryColors}
+        ios_backgroundColor="#3e3e3e"
+        onValueChange={toggleSwitch}
+        value={isEnabled}
+      />
+            </View>
+        </TouchableOpacity>
             <SettingMenu icon={icons.privacy_policy} menuName={"Privacy Policy"} onPress={() => { console.log("hello") }} />
             <SettingMenu icon={icons.accept} menuName={"Terms of service"} onPress={() => { console.log("hello") }} />
             <SettingMenu icon={icons.support} menuName={"Support"} onPress={() => { console.log("hello") }} />
@@ -100,7 +119,7 @@ export default connect(useSelector, useDispatch)(Setting);
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: 'white',
+    backgroundColor: color.backgroundColor,
     marginBottom: 30
   },
   header: {
@@ -116,5 +135,37 @@ const styles = StyleSheet.create({
   },
   menu: {
     marginTop: 20
-  }
+  }, option: {
+    height: 50,
+    marginHorizontal: 20,
+
+    borderRadius: 10,
+    flexDirection: 'row',
+    justifyContent: 'center',
+    marginVertical: 2
+},
+menuIcon: {
+    width: '15%',
+    justifyContent: 'center',
+    alignItems: "center"
+},
+menuname: {
+    width: '70%',
+    justifyContent: 'center'
+},
+menuclick: {
+    width: '15%',
+    justifyContent: 'center',
+    alignItems: "center"
+},
+menuText: {
+    color: color.primaryColors,
+    fontWeight: 'bold',
+    fontSize: 18
+},
+menuiconStyle: {
+    width: 25,
+    height: 25,
+    tintColor: color.primaryColors
+}
 })

@@ -63,7 +63,7 @@ const HomeScreen = () => {
                         </View>
                         <View style={styles.dateOrCapicity}>
                             <View style={{ width: '30%', justifyContent: 'center' }}>
-                                <Text style={{ fontWeight: "bold", fontSize: 18, color: 'black' }}>Goods Weight</Text>
+                                <Text style={{ fontWeight: "bold", fontSize: 18, color: color.fontcolor}}>Goods Weight</Text>
                             </View>
                             <View style={{ width: '30%', justifyContent: 'center' }}>
                                 <TextInput style={{
@@ -105,7 +105,7 @@ const styles = StyleSheet.create({
     },
     searchBox: {
         height: "60%",
-        backgroundColor: 'white',
+        backgroundColor: color.backgroundColor,
         bottom: 0,
         borderTopLeftRadius: 40,
         borderTopRightRadius: 40,

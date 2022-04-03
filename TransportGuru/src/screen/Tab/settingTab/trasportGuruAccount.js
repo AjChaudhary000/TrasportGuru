@@ -122,7 +122,7 @@ export default TrasportGuruAccount
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: 'white',
+        backgroundColor: color.backgroundColor,
 
     }, inputBox: {
         marginHorizontal: 20,

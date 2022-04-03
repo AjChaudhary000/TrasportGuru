@@ -30,7 +30,7 @@ const SignIn = (props) => {
     }
     if (props?.loading) {
         return (
-            <View style={{ flex: 1 }}>
+            <View style={{ flex: 1 ,backgroundColor:color.backgroundColor}}>
                 <StatusBar hidden />
                 <View style={{ height: "100%" }}>
                     <LottieView source={require('../assets/json/loder.json')} autoPlay loop />
@@ -105,7 +105,7 @@ export default connect(useSelector, useDispatch)(SignIn);
 const styles = StyleSheet.create({
     contentor: {
         flex: 1,
-        backgroundColor: 'white',
+        backgroundColor:color.backgroundColor,
        paddingHorizontal:20,
       
     },
@@ -122,7 +122,7 @@ const styles = StyleSheet.create({
     title: {
         fontSize: 25,
         fontWeight: 'bold',
-        color: 'black'
+        color: color.fontcolor
     },
     text: {
         fontSize: 18,
@@ -139,7 +139,7 @@ const styles = StyleSheet.create({
         borderBottomWidth: 2,
         borderBottomColor: color.primaryColors,
         padding: 10,
-        fontSize: 18
+        fontSize: 18,color:color.fontcolor
     },
     btn: {
         width: '90%',
