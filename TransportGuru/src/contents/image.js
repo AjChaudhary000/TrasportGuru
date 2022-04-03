@@ -1,3 +1,3 @@
-const truck = require('../assets/images/Truck.png')
+const Tg = require('../assets/images/Tg.png')
 
-export default { truck };
+export default { Tg };

@@ -9,6 +9,7 @@ import { connect } from 'react-redux';
 import { verifyOtp } from '../Redux/verifyOtpSlice';
 import { sendemail } from '../Redux/sendEmailSlice';
 import color from '../contents/color';
+import image from '../contents/image';
 const Otp = (props) => {
     const [isTimerView, setIsTmerView] = React.useState(true);
     const [otp, setOtp] = React.useState()
@@ -33,7 +34,8 @@ const Otp = (props) => {
 
             <StatusBar hidden />
             <View style={styles.truckLogo}>
-                <LottieView source={require('../assets/json/loading.json')} autoPlay loop />
+            <Image source={image.Tg} style={{width:200,height:100,tintColor:color.primaryColors}} />
+             {/* <LottieView source={require('../assets/json/loading.json')} autoPlay loop /> */}
             </View>
             <View style={styles.titleComponets}>
                 <Text style={styles.title}> Verification</Text>
@@ -126,7 +128,7 @@ const styles = StyleSheet.create({
     truckLogo: {
         height: '25%',
         width: "40%",
-
+        justifyContent:'center'
 
     },
     titleComponets: {

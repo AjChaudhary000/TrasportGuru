@@ -11,7 +11,12 @@ const TrasportGuruAccount = (props) => {
     const [data, setData] = React.useState({
         trasportName: '',
         trasportAddress: ''
-    })
+    });
+    const TrasportAccount = () =>{
+        if(data.trasportName !="" && data.trasportAddress !=""){
+            
+        }
+    };
     const [showimage, setshowimage] = React.useState(false)
     const GalleryLaunch = () => {
         let options = {
@@ -86,22 +91,23 @@ const TrasportGuruAccount = (props) => {
                 </View>
                 <View style={{ margin: 10 }}>
                     <TextInput style={styles.input}
+                       
                         placeholder={"eg. Trasnport name"}
                         placeholderTextColor={'gray'}
-                        onChangeText={(val) => emailHandle(val)}
+                        onChangeText={(val) => setData({...data,trasportName:val})}
                         autoCapitalize={'none'} />
-                    <Text style={{ color: 'red', marginTop: 5 }}> * Enter value  </Text>
+                    {/* <Text style={{ color: 'red', marginTop: 5 }}> * Enter value  </Text> */}
                 </View>
                 <View style={{ margin: 10 }}>
                     <TextInput style={styles.input}
                         placeholder={"eg. Trasnport Address"}
                         placeholderTextColor={'gray'}
-                        onChangeText={(val) => emailHandle(val)}
+                        onChangeText={(val) => setData({...data,trasportAddress:val})}
                         autoCapitalize={'none'} />
-                    <Text style={{ color: 'red', marginTop: 5 }}> * Enter value  </Text>
+                    {/* <Text style={{ color: 'red', marginTop: 5 }}> * Enter value  </Text> */}
                 </View>
                 <View style={{ marginHorizontal: 10, marginVertical: 20 }}>
-                    <TouchableOpacity style={styles.btn} onPress={null}>
+                    <TouchableOpacity style={styles.btn} onPress={TrasportAccount()}>
                         <Text style={styles.btnText}>
                             Continue
                         </Text>

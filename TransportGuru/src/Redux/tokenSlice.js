@@ -12,6 +12,8 @@ export const setToken = createAsyncThunk(
         return token
     }
 );
+
+
 const fetchToken = () => {
 
     try {
@@ -29,12 +31,13 @@ export const tokenSlice = createSlice({
     initialState: {
         loading: false,
         error: '',
-        token: ""
+        token: null
 
     },
     reducers: {
-        logoutToken: async (state, action) => {
-            state.token = await removeJWTToken();
+        logoutToken: (state, action) => {
+            console.log("ytytytytytytytytytytytytytytytytyty=-===")
+            state.token = null;
         },
         getToken: (state, action) => {
             setTimeout(async () => {

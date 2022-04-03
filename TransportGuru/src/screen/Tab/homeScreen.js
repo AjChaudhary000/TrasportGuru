@@ -96,7 +96,7 @@ export default HomeScreen
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-
+        paddingBottom:40
     },
     mapBox: {
         height: "40%"

@@ -5,6 +5,7 @@ import icons from '../contents/icons';
 import { sendemail, setUserData } from '../Redux/sendEmailSlice';
 import { connect } from 'react-redux'
 import color from '../contents/color';
+import image from '../contents/image';
 const SignIn = (props) => {
     const [email, setEmail] = React.useState('');
     const [isEmailValid, setIsEmailValid] = React.useState(true);
@@ -42,7 +43,8 @@ const SignIn = (props) => {
             <StatusBar hidden />
 
             <View style={styles.truckLogo}>
-                <LottieView source={require('../assets/json/loading.json')} autoPlay loop />
+            <Image source={image.Tg} style={{width:200,height:100,tintColor:color.primaryColors}} />
+                {/* <LottieView source={require('../assets/json/loading.json')} autoPlay loop /> */}
             </View>
             <View style={styles.titleComponets}>
                 <Text style={styles.title}> Welcome To Transport guru</Text>
@@ -110,7 +112,7 @@ const styles = StyleSheet.create({
     truckLogo: {
         height: '25%',
         width: "40%",
-
+        justifyContent:'center'
 
     },
     titleComponets: {

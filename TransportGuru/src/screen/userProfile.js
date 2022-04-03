@@ -1,4 +1,4 @@
-import { View, Text, Image, StyleSheet, Dimensions, TextInput, TouchableOpacity, StatusBar, Modal } from 'react-native'
+import { View, Text, Image, StyleSheet, Dimensions, TextInput, TouchableOpacity, StatusBar, Modal ,PermissionsAndroid} from 'react-native'
 import React from 'react'
 import icons from '../contents/icons';
 import * as ImagePicker from 'react-native-image-picker'
@@ -16,6 +16,14 @@ const UserProfile = (props) => {
     }, [props])
     const [modalVisible, setModalVisible] = React.useState(false);
     const camaraLaunch = () => {
+        PermissionsAndroid.check('camera').then(response => {
+            if (response === true){
+                //Open scanner
+            }
+            else if (response === false){
+                Alert("Please enable camera permission in device settings.")
+            }
+        })
         let options = {
             title: 'You can choose one image',
             mediaType: 'photo',
@@ -33,10 +41,10 @@ const UserProfile = (props) => {
             } else if (Response.customButton) {
                 console.log('User tapped custom button: ', Response.customButton);
             } else {
-                setdata({
-                    ...data,
-                    imagepath: response.assets[0]
-                })
+                // setdata({
+                //     ...data,
+                //     imagepath: response.assets[0]
+                // })
             }
         });
         setModalVisible(false)

@@ -8,6 +8,8 @@ import { connect } from 'react-redux'
 import { getUserDetails } from '../../Redux/UserDetails';
 import { getJWTToken, removeJWTToken } from '../../Redux/helper';
 import Header from '../../components/header';
+import { logoutToken } from '../../Redux/tokenSlice';
+
 const Setting = (props) => {
   const [token, setToken] = React.useState('');
   const fetchToken = async () => {
@@ -19,8 +21,15 @@ const Setting = (props) => {
     }
   }
   const logout = async () => {
+    console.log("dd3d3wqd");
+
+
     try {
+
+      console.log("dd3d3wqd");
+      props.logoutToken();
       await removeJWTToken()
+      props.navigation.replace("SignIn")
 
     } catch (e) {
       console.log();
@@ -77,7 +86,7 @@ const Setting = (props) => {
 const useDispatch = (dispatch) => {
   return {
     getUserDetails: (data) => dispatch(getUserDetails(data)),
-
+    logoutToken: () => dispatch(logoutToken())
   };
 }
 const useSelector = (state) => (

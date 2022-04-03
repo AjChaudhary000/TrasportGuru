@@ -1,4 +1,4 @@
-import { View, Text, StatusBar } from 'react-native'
+import { View, Text, StatusBar,Image } from 'react-native'
 import React from 'react'
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
@@ -13,49 +13,56 @@ import Home from '../screen/Home';
 import LottieView from 'lottie-react-native';
 import color from '../contents/color';
 import EditAccount from '../screen/Tab/settingTab/editAccount';
-import { getToken } from '../Redux/tokenSlice';
+import { getToken, setToken } from '../Redux/tokenSlice';
 import TrasportGuruAccount from '../screen/Tab/settingTab/trasportGuruAccount';
+import image from '../contents/image';
 
 const Stack = createNativeStackNavigator();
 const Router = (props) => {
-    const [token, setToken] = React.useState('')
+    const [token, setTokenData] = React.useState('')
     const [isloading, setloadingData] = React.useState(true)
     const gettoken = async () => {
         try {
             const mytoken = await getJWTToken();
-            setToken(mytoken)
+
+            console.log("r43t34t34", mytoken)
+            setTokenData(mytoken)
+            props.setToken(mytoken)
         } catch (e) {
 
         }
     }
-    console.log("mytoken Router ", props.token);
+
+
+    console.log("mytoken Router 9090909090", props.token.token);
     React.useEffect(() => {
         gettoken()
         setTimeout(() => {
-            setloadingData(false)
+               setloadingData(false)
         }, 2000)
 
     }, [])
     if (isloading) {
         return (
-            <View style={{ flex: 1 }}>
+            <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' ,backgroundColor:color.primaryColors}}>
                 <StatusBar hidden />
-                <View style={{ height: "100%" }}>
-                    <LottieView source={require('../assets/json/loading.json')} autoPlay loop />
+                <View>
+                    <Image source={image.Tg} style={{width:300,height:200}} />
                 </View>
-                <Text style={{ textAlign: 'center', bottom: "45%", fontSize: 20, letterSpacing: 2, color: color.primaryColors, fontWeight: 'bold' }}>Trasnport guru</Text>
+                
+                
             </View>
         );
     }
     return (
         <NavigationContainer>
             <Stack.Navigator>
-                {!token && <Stack.Screen name='SignIn' component={SignIn} options={{ headerShown: false }} />}
+                {!props.token.token && <Stack.Screen name='SignIn' component={SignIn} options={{ headerShown: false }} />}
                 {/* userSide */}
                 <Stack.Screen name='Tab' component={Tab} options={{ headerShown: false }} />
                 <Stack.Screen name='Home' component={Home} options={{ headerShown: false }} />
-                <Stack.Screen name='UserProfile' component={UserProfile} options={{ headerShown: false }} />
                 <Stack.Screen name='Onboardring' component={Onboardring} options={{ headerShown: false }} />
+                <Stack.Screen name='UserProfile' component={UserProfile} options={{ headerShown: false }} />
                 <Stack.Screen name='Otp' component={Otp} options={{ headerShown: false }} />
                 <Stack.Screen name='EditAccount' component={EditAccount} options={{ headerShown: false }} />
                 <Stack.Screen name='TrasportGuruAccount' component={TrasportGuruAccount} options={{ headerShown: false }} />
@@ -65,8 +72,13 @@ const Router = (props) => {
 }
 const useSelector = (state) => {
     return {
-        token: state.token?.token
+        token: state.token
     }
 }
+const useDispatch = (dispatch) => {
+    return {
 
-export default connect(useSelector)(Router)
+        setToken: (data) => dispatch(setToken(data))
+    }
+}
+export default connect(useSelector, useDispatch)(Router)

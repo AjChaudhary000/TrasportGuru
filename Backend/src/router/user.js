@@ -19,12 +19,12 @@ router.post('/sendemail', async (req, res) => {
             port: 465,
             secure: true,
             auth: {
-                user: "ajchaudharyjat00@gmail.com",
-                pass: "chaudharyjat00",
+                user: "transportguru8@gmail.com",
+                pass: "chaudhary.dcs22",
             },
         });
         let info = await transporter.sendMail({
-            from: 'ajchaudharyjat00@gmail.com',
+            from: "transportguru8@gmail.com",
             to: req.body.email,
             subject: "Trasport guru send otp ... ✔",
             text: `hii ${req.body.email} OTP ${otpvalue}`,

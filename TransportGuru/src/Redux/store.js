@@ -1,4 +1,4 @@
-import { configureStore } from '@reduxjs/toolkit';
+import { configureStore, getDefaultMiddleware } from '@reduxjs/toolkit';
 import sendEmailSlice from './sendEmailSlice';
 import { combineReducers } from 'redux';
 import verifyOtpSlice from './verifyOtpSlice';
@@ -13,5 +13,9 @@ const store = configureStore({
         userProfile: userProfileSlice,
         user: UserDetails
     }),
+    middleware: (getDefaultMiddleware) => getDefaultMiddleware({
+        immutableCheck: { ignoredPaths: ['some.nested.path'] },
+        serializableCheck: { ignoredPaths: ['some.nested.path'] }
+    })
 })
 export default store;
