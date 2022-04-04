@@ -25,14 +25,11 @@ const Setting = (props) => {
   const logout = async () => {
     console.log("dd3d3wqd");
 
-
     try {
-
       console.log("dd3d3wqd");
       props.logoutToken();
       await removeJWTToken()
       props.navigation.replace("SignIn")
-
     } catch (e) {
       console.log();
     }
@@ -40,7 +37,6 @@ const Setting = (props) => {
   React.useEffect(() => {
     fetchToken()
     props.getUserDetails(token);
-
   }, [token])
 
   return (
@@ -70,7 +66,7 @@ const Setting = (props) => {
 
           <View style={{ marginTop: 30, marginBottom: 30 }}>
             <SettingMenu icon={icons.edit} menuName={"Edit Account"} onPress={() => { props.navigation.navigate('EditAccount') }} />
-            <SettingMenu icon={icons.truck} menuName={"Transport Guru Account"} onPress={() => { props.navigation.navigate('TrasportGuruAccount', { _id: props.userData?._id }) }} />
+            <SettingMenu icon={icons.truck} menuName={"Transport Guru Account"} onPress={() => { props.navigation.navigate('TrasportGuruAccount', { type: props.userData?.accountType }) }} />
             <SettingMenu icon={icons.message} menuName={"Message"} onPress={() => { console.log("hello") }} />
             <TouchableOpacity style={styles.option} onPress={props.onPress} activeOpacity={0.60}>
             <View style={styles.menuIcon}>

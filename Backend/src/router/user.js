@@ -97,9 +97,9 @@ router.post('/user/trasportaccount', auth, async (req, res) => {
         req.user.accountType = "Admin"
         req.user.trasportAccount = req.user.trasportAccount.concat(req.body);
         const data = await req.user.save()
-        res.status(201).send({ data })
+        res.status(201).send({ data, status: true })
     } catch (e) {
-        res.status(400).send({ "error": e.toString() })
+        res.status(400).send({ "error": e.toString(), status: false })
     }
 })
 router.patch('/user/trasportaccount', auth, async (req, res) => {

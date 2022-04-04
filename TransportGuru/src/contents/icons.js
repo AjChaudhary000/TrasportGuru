@@ -25,7 +25,8 @@ const logout = require('../assets/icons/logout.png')
 const add_photo = require('../assets/icons/add_photo.png')
 const back = require('../assets/icons/back.png')
 const contrast = require('../assets/icons/contrast.png')
-
+const driver = require('../assets/icons/driver.png')
+const addtotruck = require('../assets/icons/add-to-truck.png')
 export default {
     email,
     right_arrow,
@@ -50,5 +51,8 @@ export default {
     accept,
     support,
     logout, add_photo,
-    back,contrast
+    back,
+    contrast,
+    addtotruck,
+    driver
 };

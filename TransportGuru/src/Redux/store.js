@@ -5,13 +5,21 @@ import verifyOtpSlice from './verifyOtpSlice';
 import tokenSlice from './tokenSlice';
 import userProfileSlice from './userProfileSlice';
 import UserDetails from './UserDetails';
+import transportAccountSlice from './transportAccountSlice';
+import trucktypeSlice from './Admin/trucktypeSlice';
+import addTruckSlice from './Admin/addTruckSlice';
+import countAddSlice from './Admin/countAddSlice';
 const store = configureStore({
     reducer: combineReducers({
         login: sendEmailSlice,
         otp: verifyOtpSlice,
         token: tokenSlice,
         userProfile: userProfileSlice,
-        user: UserDetails
+        user: UserDetails,
+        admin: transportAccountSlice,
+        truck: trucktypeSlice,
+        addTruck: addTruckSlice,
+        count: countAddSlice
     }),
     middleware: (getDefaultMiddleware) => getDefaultMiddleware({
         immutableCheck: { ignoredPaths: ['some.nested.path'] },

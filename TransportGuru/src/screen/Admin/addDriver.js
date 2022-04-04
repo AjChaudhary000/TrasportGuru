@@ -1,39 +1,55 @@
-import { View, Text, StyleSheet, TextInput, TouchableOpacity, Image, FlatList, StatusBar } from 'react-native'
+import { View, Text, StyleSheet, TextInput, TouchableOpacity, Image, FlatList, StatusBar, Animated } from 'react-native'
 import React from 'react'
-import color from '../../../contents/color'
-import icons from '../../../contents/icons'
+import { AdminHeaderWithBackButton } from '../../components/adminHeader';
+import color from '../../contents/color'
 import * as ImagePicker from 'react-native-image-picker'
-import { HeaderWithBackButton } from '../../../components/header'
+import icons from '../../contents/icons';
 import { connect } from 'react-redux'
-import { transportAccount } from '../../../Redux/transportAccountSlice'
-import { getUserDetails } from '../../../Redux/UserDetails'
-import image from '../../../contents/image'
-const TrasportGuruAccount = (props) => {
-    
+import { getJWTToken } from '../../Redux/helper';
+const AddDriver = (props) => {
+    const [token, setToken] = React.useState('');
     const [imageData, setimage] = React.useState([])
-    const [data, setData] = React.useState({
-        trasportName: '',
-        trasportAddress: ''
-    });
-    const [isloading, setloadingData] = React.useState(true)
-    React.useEffect(() => {
-        setTimeout(() => {
-            setloadingData(false)
-            props.route.params.type === "Admin" && props.navigation.replace('AdminTab')
-            props?.admindata.status && props.navigation.replace('AdminTab')
-            props.getUserDetails(props.token)
-        }, 2000)
-
-
-    }, [props])
-
-
-    const TrasportAccount = () => {
-        if (data.trasportName != "" && data.trasportAddress != "") {
-            props.transportAccount({ ...data, token: props.token })
-        }
-    };
     const [showimage, setshowimage] = React.useState(false)
+    const [data, setData] = React.useState({
+        truckName: '',
+        truckModelName: '',
+        truckRegistartionNo: '',
+        truckCapicity: '',
+        truckTypeId: ""
+    })
+    const fetchToken = async () => {
+        try {
+            const data = await getJWTToken();
+            setToken(data)
+
+        } catch (e) {
+            console.log()
+        }
+    }
+    React.useEffect(() => {
+        fetchToken()
+        // props.getTruckType(token)
+    }, [token])
+    React.useEffect(() => {
+
+        if (props?.truckData.status) {
+            // props.getCountTruck(token)
+            // props.setTruckData({})
+            // props.navigation.goBack();
+        }
+    }, [props, token])
+
+    const AddTruck = () => {
+        if (data.truckName !== "" &&
+            data.truckModelName !== "" &&
+            data.truckRegistartionNo !== "" &&
+            data.truckCapicity !== "" &&
+            data.truckTypeId !== "") {
+            props.addTruck({ ...data, token: token })
+        }
+
+    }
+
     const GalleryLaunch = () => {
         let options = {
             title: 'You can choose one image',
@@ -59,21 +75,11 @@ const TrasportGuruAccount = (props) => {
                 console.log(imageData)
             }
         });
+    }
 
-    }
-    if (isloading) {
-        return (
-            <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: color.adminprimaryColors }}>
-                <StatusBar hidden />
-                <View>
-                    <Image source={image.Tg} style={{ width: 300, height: 200 }} />
-                </View>
-            </View>
-        );
-    }
     return (
         <View style={styles.container}>
-            <HeaderWithBackButton name={"Transport Account"} navigation={props.navigation} />
+            <AdminHeaderWithBackButton name={"Add Driver"} navigation={props.navigation} />
             <View style={styles.inputBox}>
                 <View style={{ marginHorizontal: 10 }}>
                     <TouchableOpacity onPress={GalleryLaunch}>
@@ -85,7 +91,7 @@ const TrasportGuruAccount = (props) => {
                                 borderRadius: 10,
                                 resizeMode: 'contain',
                                 marginVertical: 30,
-                                tintColor: color.primaryColors
+                                tintColor: color.adminprimaryColors
                             }}
                             source={icons.add_photo}
                         />
@@ -115,27 +121,38 @@ const TrasportGuruAccount = (props) => {
                                 )} />
                         </View> : null}
                 </View>
+
                 <View style={{ margin: 10 }}>
                     <TextInput style={styles.input}
 
-                        placeholder={"eg. Trasnport name"}
+                        placeholder={"eg. Driver name"}
                         placeholderTextColor={'gray'}
-                        onChangeText={(val) => setData({ ...data, trasportName: val })}
+                        onChangeText={(val) => setData({ ...data, truckName: val })}
                         autoCapitalize={'none'} />
-                    {/* <Text style={{ color: 'red', marginTop: 5 }}> * Enter value  </Text> */}
+
                 </View>
                 <View style={{ margin: 10 }}>
                     <TextInput style={styles.input}
-                        placeholder={"eg. Trasnport Address"}
+                        placeholder={"eg. Driver mobile No"}
                         placeholderTextColor={'gray'}
-                        onChangeText={(val) => setData({ ...data, trasportAddress: val })}
-                        autoCapitalize={'none'} />
-                    {/* <Text style={{ color: 'red', marginTop: 5 }}> * Enter value  </Text> */}
+                        onChangeText={(val) => setData({ ...data, truckCapicity: val })}
+                        autoCapitalize={'none'}
+                        keyboardType={'number-pad'} />
+
                 </View>
-                <View style={{ marginHorizontal: 10, marginVertical: 20 }}>
-                    <TouchableOpacity style={styles.btn} onPress={() => { TrasportAccount() }}>
+                <View style={{ margin: 10 }}>
+                    <TextInput style={styles.input}
+                        placeholder={"eg. Driver email"}
+                        placeholderTextColor={'gray'}
+                        onChangeText={(val) => setData({ ...data, truckModelName: val })}
+                        autoCapitalize={'none'} />
+
+                </View>
+
+                <View style={{ marginHorizontal: 10, marginVertical: 10 }}>
+                    <TouchableOpacity style={styles.btn} onPress={() => { AddTruck() }}>
                         <Text style={styles.btnText}>
-                            Continue
+                            Verify Driver
                         </Text>
                     </TouchableOpacity>
                 </View>
@@ -143,19 +160,24 @@ const TrasportGuruAccount = (props) => {
         </View>
     )
 }
-const useSelector = (state) => {
-    return {
-        token: state.token.token,
-        admindata: state.admin.data,
-    }
-}
 const useDispatch = (dispatch) => {
     return {
-        transportAccount: (data) => dispatch(transportAccount(data)),
-        getUserDetails: (data) => dispatch(getUserDetails(data)),
-    }
+        getTruckType: (data) => dispatch(getTruckType(data)),
+        addTruck: (data) => dispatch(addTruck(data)),
+        getCountTruck: (data) => dispatch(getCountTruck(data)),
+        setTruckData: (data) => dispatch(setTruckData(data))
+    };
 }
-export default connect(useSelector, useDispatch)(TrasportGuruAccount)
+const useSelector = (state) => (
+
+    {
+        token: state.token.token,
+        trucktypeData: state.truck.truckData,
+        loading: state.truck.loading,
+        truckData: state.addTruck.data
+    }
+)
+export default connect(useSelector, useDispatch)(AddDriver);
 const styles = StyleSheet.create({
     container: {
         flex: 1,
@@ -167,7 +189,7 @@ const styles = StyleSheet.create({
     },
     input: {
         borderWidth: 2,
-        borderColor: color.primaryColors,
+        borderColor: color.adminprimaryColors,
         padding: 10,
         fontSize: 18,
         borderRadius: 10
@@ -185,7 +207,7 @@ const styles = StyleSheet.create({
     btn: {
         width: '90%',
         height: 50,
-        backgroundColor: color.primaryColors,
+        backgroundColor: color.adminprimaryColors,
         borderRadius: 15,
         justifyContent: "center",
         alignItems: 'center',
@@ -194,6 +216,23 @@ const styles = StyleSheet.create({
     btnText: {
         fontSize: 20,
         color: 'white',
+        fontWeight: 'bold'
+    },
+    resend: {
+        fontWeight: "bold",
+        color: color.primaryColors,
+        fontSize: 18,
+
+    },
+    btnresend: {
+        width: '40%',
+        height: 45,
+        justifyContent: "center",
+        alignItems: 'center',
+        alignSelf: 'center'
+    }, btnresendText: {
+        fontSize: 16,
+        color: color.primaryColors,
         fontWeight: 'bold'
     },
 })

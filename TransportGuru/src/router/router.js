@@ -1,4 +1,4 @@
-import { View, Text, StatusBar,Image } from 'react-native'
+import { View, Text, StatusBar, Image } from 'react-native'
 import React from 'react'
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
@@ -16,6 +16,9 @@ import EditAccount from '../screen/Tab/settingTab/editAccount';
 import { getToken, setToken } from '../Redux/tokenSlice';
 import TrasportGuruAccount from '../screen/Tab/settingTab/trasportGuruAccount';
 import image from '../contents/image';
+import AdminTab from './adminTab';
+import AddTruck from '../screen/Admin/addTruck';
+import AddDriver from '../screen/Admin/addDriver';
 
 const Stack = createNativeStackNavigator();
 const Router = (props) => {
@@ -32,33 +35,33 @@ const Router = (props) => {
 
         }
     }
-
-
     console.log("mytoken Router 9090909090", props.token.token);
     React.useEffect(() => {
         gettoken()
         setTimeout(() => {
-               setloadingData(false)
+            setloadingData(false)
         }, 2000)
 
     }, [])
     if (isloading) {
         return (
-            <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' ,backgroundColor:color.primaryColors}}>
+            <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: color.primaryColors }}>
                 <StatusBar hidden />
                 <View>
-                    <Image source={image.Tg} style={{width:300,height:200}} />
+                    <Image source={image.Tg} style={{ width: 300, height: 200 }} />
                 </View>
-                
-                
             </View>
         );
     }
     return (
         <NavigationContainer>
             <Stack.Navigator>
+                {/* User Login /SignUp  Start */}
                 {!props.token.token && <Stack.Screen name='SignIn' component={SignIn} options={{ headerShown: false }} />}
-                {/* userSide */}
+                {/* User Login /SignUp  End  */}
+
+                {/* userSide Start */}
+
                 <Stack.Screen name='Tab' component={Tab} options={{ headerShown: false }} />
                 <Stack.Screen name='Home' component={Home} options={{ headerShown: false }} />
                 <Stack.Screen name='Onboardring' component={Onboardring} options={{ headerShown: false }} />
@@ -66,6 +69,13 @@ const Router = (props) => {
                 <Stack.Screen name='Otp' component={Otp} options={{ headerShown: false }} />
                 <Stack.Screen name='EditAccount' component={EditAccount} options={{ headerShown: false }} />
                 <Stack.Screen name='TrasportGuruAccount' component={TrasportGuruAccount} options={{ headerShown: false }} />
+                {/* userSide End */}
+
+                {/* AdminSide Start */}
+                <Stack.Screen name='AdminTab' component={AdminTab} options={{ headerShown: false }} />
+                <Stack.Screen name='AddTruck' component={AddTruck} options={{ headerShown: false }} />
+                <Stack.Screen name='AddDriver' component={AddDriver} options={{ headerShown: false }} />
+                {/* AdminSide End */}
             </Stack.Navigator>
         </NavigationContainer>
     )
