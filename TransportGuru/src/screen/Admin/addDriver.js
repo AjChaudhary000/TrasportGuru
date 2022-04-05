@@ -3,20 +3,30 @@ import React from 'react'
 import { AdminHeaderWithBackButton } from '../../components/adminHeader';
 import color from '../../contents/color'
 import * as ImagePicker from 'react-native-image-picker'
+import { CountdownCircleTimer } from 'react-native-countdown-circle-timer'
 import icons from '../../contents/icons';
 import { connect } from 'react-redux'
 import { getJWTToken } from '../../Redux/helper';
+import { sendemail, setUserData } from '../../Redux/sendEmailSlice';
+import LottieView from 'lottie-react-native';
+import { addDriver, setDriverData } from '../../Redux/Admin/addDriverSlice';
+import { getCountDriver } from '../../Redux/Admin/countAddSlice';
 const AddDriver = (props) => {
+    const [isTimerView, setIsTmerView] = React.useState(true);
     const [token, setToken] = React.useState('');
     const [imageData, setimage] = React.useState([])
-    const [showimage, setshowimage] = React.useState(false)
+    const [showimage, setshowimage] = React.useState(false);
+    const [verifyDriverData, setVerifyDriverData] = React.useState(false)
     const [data, setData] = React.useState({
-        truckName: '',
-        truckModelName: '',
-        truckRegistartionNo: '',
-        truckCapicity: '',
-        truckTypeId: ""
+        driverName: '',
+        driverEmail: '',
+        driverMobileNo: '',
+        driverOtp: ''
     })
+    const resendOtp = () => {
+        props.sendemail(data.driverEmail);
+        setIsTmerView(true)
+    }
     const fetchToken = async () => {
         try {
             const data = await getJWTToken();
@@ -31,25 +41,41 @@ const AddDriver = (props) => {
         // props.getTruckType(token)
     }, [token])
     React.useEffect(() => {
-
-        if (props?.truckData.status) {
-            // props.getCountTruck(token)
-            // props.setTruckData({})
-            // props.navigation.goBack();
+        if (props?.Driverdata.status) {
+            setVerifyDriverData(true)
+            props.setUserData({})
+        }
+        if (props?.addDriverData.status) {
+            props.getCountDriver(token)
+            props.setDriverData({})
+            props.navigation.goBack();
         }
     }, [props, token])
 
-    const AddTruck = () => {
-        if (data.truckName !== "" &&
-            data.truckModelName !== "" &&
-            data.truckRegistartionNo !== "" &&
-            data.truckCapicity !== "" &&
-            data.truckTypeId !== "") {
-            props.addTruck({ ...data, token: token })
+    const VerifyDriver = () => {
+        if (data.driverName !== "" &&
+            data.driverEmail !== "" &&
+            data.driverMobileNo !== "") {
+
+            console.log("mydata", data)
+            props.sendemail(data.driverEmail);
+            //  props.addTruck({ ...data, token: token })
         }
-
     }
-
+    const editDriver = () => {
+        setData({
+            driverEmail: "",
+            driverMobileNo: "",
+            driverName: "",
+            driverOtp: ""
+        });
+        setVerifyDriverData(false)
+    }
+    const Finish = () => {
+        console.log(token)
+        props.addDriver({ ...data, token: token })
+        console.log("output", data)
+    }
     const GalleryLaunch = () => {
         let options = {
             title: 'You can choose one image',
@@ -76,105 +102,184 @@ const AddDriver = (props) => {
             }
         });
     }
-
+    if (props?.loading) {
+        return (
+            <View style={{ flex: 1, backgroundColor: color.backgroundColor }}>
+                <StatusBar hidden />
+                <View style={{ height: "100%" }}>
+                    <LottieView source={require('../../assets/json/loder.json')} autoPlay loop />
+                </View>
+            </View>
+        );
+    }
     return (
         <View style={styles.container}>
             <AdminHeaderWithBackButton name={"Add Driver"} navigation={props.navigation} />
-            <View style={styles.inputBox}>
-                <View style={{ marginHorizontal: 10 }}>
-                    <TouchableOpacity onPress={GalleryLaunch}>
-                        <Image
-                            style={{
-                                alignSelf: 'center',
-                                width: 80,
-                                height: 80,
-                                borderRadius: 10,
-                                resizeMode: 'contain',
-                                marginVertical: 30,
-                                tintColor: color.adminprimaryColors
-                            }}
-                            source={icons.add_photo}
-                        />
-                    </TouchableOpacity>
-                    {showimage ?
-                        <View style={{ marginLeft: 25, marginRight: 20 }}>
-                            <FlatList data={imageData}
-                                horizontal
-                                showsHorizontalScrollIndicator={false}
+            {!verifyDriverData ?
+                <View style={styles.inputBox}>
+                    <View style={{ marginHorizontal: 10 }}>
+                        <TouchableOpacity onPress={GalleryLaunch}>
+                            <Image
+                                style={{
+                                    alignSelf: 'center',
+                                    width: 80,
+                                    height: 80,
+                                    borderRadius: 10,
+                                    resizeMode: 'contain',
+                                    marginVertical: 30,
+                                    tintColor: color.adminprimaryColors
+                                }}
+                                source={icons.add_photo}
+                            />
+                        </TouchableOpacity>
+                        {showimage ?
+                            <View style={{ marginLeft: 25, marginRight: 20 }}>
+                                <FlatList data={imageData}
+                                    horizontal
+                                    showsHorizontalScrollIndicator={false}
 
-                                renderItem={({ item }) => (
-                                    <TouchableOpacity
-                                        onLongPress={console.log("helo")}
-                                        style={{ marginRight: 10 }}>
-                                        <Image
-                                            style={{
-                                                width: 80,
-                                                height: 80,
-                                                resizeMode: 'contain',
-                                                borderRadius: 10,
-                                                overflow: 'hidden',
-                                            }}
-                                            source={{ uri: item.uri }}
-                                        />
+                                    renderItem={({ item }) => (
+                                        <TouchableOpacity
+                                            onLongPress={console.log("helo")}
+                                            style={{ marginRight: 10 }}>
+                                            <Image
+                                                style={{
+                                                    width: 80,
+                                                    height: 80,
+                                                    resizeMode: 'contain',
+                                                    borderRadius: 10,
+                                                    overflow: 'hidden',
+                                                }}
+                                                source={{ uri: item.uri }}
+                                            />
 
-                                    </TouchableOpacity>
-                                )} />
-                        </View> : null}
+                                        </TouchableOpacity>
+                                    )} />
+                            </View> : null}
+                    </View>
+
+                    <View style={{ margin: 10 }}>
+                        <TextInput style={styles.input}
+
+                            placeholder={"eg. Driver name"}
+                            placeholderTextColor={'gray'}
+                            onChangeText={(val) => setData({ ...data, driverName: val })}
+                            autoCapitalize={'none'} />
+
+                    </View>
+                    <View style={{ margin: 10 }}>
+                        <TextInput style={styles.input}
+                            placeholder={"eg. Driver mobile No"}
+                            placeholderTextColor={'gray'}
+                            onChangeText={(val) => setData({ ...data, driverMobileNo: val })}
+                            autoCapitalize={'none'}
+                            keyboardType={'number-pad'} />
+
+                    </View>
+                    <View style={{ margin: 10 }}>
+                        <TextInput style={styles.input}
+                            placeholder={"eg. Driver email"}
+                            placeholderTextColor={'gray'}
+                            onChangeText={(val) => setData({ ...data, driverEmail: val })}
+                            autoCapitalize={'none'} />
+
+                    </View>
+
+                    <View style={{ marginHorizontal: 10, marginVertical: 10 }}>
+                        <TouchableOpacity style={styles.btn} onPress={() => { VerifyDriver() }}>
+                            <Text style={styles.btnText}>
+                                Verify Driver
+                            </Text>
+                        </TouchableOpacity>
+                    </View>
+                </View> :
+                <View style={styles.inputBox}>
+
+                    <View style={styles.titleComponets}>
+                        <Text style={styles.title}>Driver Verification</Text>
+                        <View>
+                            <Text style={styles.text}>We have sent you an Gmail with a code to the number that you provided.</Text>
+                        </View>
+                    </View>
+                    <View style={styles.emailbox}>
+                        <View style={{ width: " 70%", alignItems: 'center' }}>
+                            <Text style={{ fontSize: 20, fontWeight: 'bold' }}>{data.driverEmail}</Text>
+                        </View>
+                        <TouchableOpacity style={{ width: "20%", alignItems: 'center' }} onPress={() => { editDriver() }}>
+                            <Image source={icons.edit} style={{ width: 30, height: 30, tintColor: color.primaryColors }} />
+                        </TouchableOpacity>
+                    </View>
+                    <View style={{ margin: 10 }}>
+                        <TextInput style={styles.input}
+                            placeholder={"eg. 0000"}
+                            placeholderTextColor={'gray'}
+                            onChangeText={(val) => setData({ ...data, driverOtp: val })}
+                            autoCapitalize={'none'}
+                            keyboardType={'number-pad'}
+                            maxLength={4} />
+                        {(props?.error) ? <Text style={{ color: 'red', marginTop: 5 }}> * otp invalid  </Text> : null}
+                    </View>
+                    {isTimerView ? (
+                        <View style={{ alignSelf: 'center', height: '10%', bottom: 50 }}>
+                            <CountdownCircleTimer
+                                isPlaying={true}
+                                duration={60}
+                                strokeWidth={0}
+                                size={150}
+                                colors={[
+                                    ['#004777', 0.8],
+                                    ['#004777', 0.5],
+                                    ['#004777', 0.4]
+                                ]}
+                                onComplete={() => {
+                                    setIsTmerView(false)
+
+                                }}
+                            >
+                                {({ remainingTime }) => (
+                                    <Animated.Text style={styles.resend}>
+                                        Resend Code :{remainingTime}
+                                    </Animated.Text>
+                                )}
+
+                            </CountdownCircleTimer>
+                        </View>
+                    ) : (<View style={{ marginTop: 20, height: '10%' }}>
+                        <TouchableOpacity style={styles.btnresend} onPress={() => resendOtp()}>
+                            <Text style={styles.btnresendText}>
+                                Resend Code
+                            </Text>
+                        </TouchableOpacity>
+                    </View>)}
+                    <View style={{ marginHorizontal: 10, marginVertical: 10 }}>
+                        <TouchableOpacity style={styles.btn} onPress={() => { Finish() }}>
+                            <Text style={styles.btnText}>
+                                Finish
+                            </Text>
+                        </TouchableOpacity>
+                    </View>
                 </View>
-
-                <View style={{ margin: 10 }}>
-                    <TextInput style={styles.input}
-
-                        placeholder={"eg. Driver name"}
-                        placeholderTextColor={'gray'}
-                        onChangeText={(val) => setData({ ...data, truckName: val })}
-                        autoCapitalize={'none'} />
-
-                </View>
-                <View style={{ margin: 10 }}>
-                    <TextInput style={styles.input}
-                        placeholder={"eg. Driver mobile No"}
-                        placeholderTextColor={'gray'}
-                        onChangeText={(val) => setData({ ...data, truckCapicity: val })}
-                        autoCapitalize={'none'}
-                        keyboardType={'number-pad'} />
-
-                </View>
-                <View style={{ margin: 10 }}>
-                    <TextInput style={styles.input}
-                        placeholder={"eg. Driver email"}
-                        placeholderTextColor={'gray'}
-                        onChangeText={(val) => setData({ ...data, truckModelName: val })}
-                        autoCapitalize={'none'} />
-
-                </View>
-
-                <View style={{ marginHorizontal: 10, marginVertical: 10 }}>
-                    <TouchableOpacity style={styles.btn} onPress={() => { AddTruck() }}>
-                        <Text style={styles.btnText}>
-                            Verify Driver
-                        </Text>
-                    </TouchableOpacity>
-                </View>
-            </View>
+            }
         </View>
     )
 }
 const useDispatch = (dispatch) => {
     return {
-        getTruckType: (data) => dispatch(getTruckType(data)),
-        addTruck: (data) => dispatch(addTruck(data)),
-        getCountTruck: (data) => dispatch(getCountTruck(data)),
-        setTruckData: (data) => dispatch(setTruckData(data))
+        sendemail: (data) => dispatch(sendemail(data)),
+        setUserData: (data) => dispatch(setUserData(data)),
+        addDriver: (data) => dispatch(addDriver(data)),
+        getCountDriver:(data)=>dispatch(getCountDriver(data)),
+        setDriverData:(data)=>dispatch(setDriverData(data)),
     };
 }
 const useSelector = (state) => (
 
     {
         token: state.token.token,
-        trucktypeData: state.truck.truckData,
-        loading: state.truck.loading,
-        truckData: state.addTruck.data
+        Driverdata: state.login.userdata,
+        loading: state.login.loading,
+        addDriverData: state.addDriver.data,
+        error: state.addDriver.error
     }
 )
 export default connect(useSelector, useDispatch)(AddDriver);
@@ -184,8 +289,7 @@ const styles = StyleSheet.create({
         backgroundColor: color.backgroundColor,
 
     }, inputBox: {
-        marginHorizontal: 20,
-
+        margin: 20
     },
     input: {
         borderWidth: 2,
@@ -224,15 +328,51 @@ const styles = StyleSheet.create({
         fontSize: 18,
 
     },
-    btnresend: {
-        width: '40%',
-        height: 45,
-        justifyContent: "center",
-        alignItems: 'center',
-        alignSelf: 'center'
-    }, btnresendText: {
-        fontSize: 16,
-        color: color.primaryColors,
-        fontWeight: 'bold'
+
+    titleComponets: {
+        marginHorizontal: 5,
+        height: '20%', marginVertical: 30
     },
+    title: {
+        fontSize: 25,
+        fontWeight: 'bold',
+        color: color.fontcolor
+    },
+    text: {
+        fontSize: 18,
+        color: 'gray',
+        margin: 10,
+        fontWeight: 'bold',
+
+    },
+    borderStyleBase: {
+        width: 30,
+        height: 45
+    },
+    resend: {
+        fontWeight: "bold",
+        color: color.primaryColors,
+        fontSize: 18,
+
+    },
+
+    emailbox: {
+        alignItems: "center",
+        flexDirection: 'row',
+        backgroundColor: 'white',
+        alignSelf: 'center',
+        borderRadius: 15,
+        flexDirection: 'row',
+        alignItems: 'center',
+        alignItems: "center",
+        shadowColor: "#000",
+        shadowOffset: {
+            width: 0,
+            height: 2
+        },
+        shadowOpacity: 0.25,
+        shadowRadius: 4,
+        elevation: 5,
+        height: 50
+    }
 })

@@ -36,7 +36,7 @@ export const tokenSlice = createSlice({
     },
     reducers: {
         logoutToken: (state, action) => {
-            console.log("ytytytytytytytytytytytytytytytytyty=-===")
+        
             state.token = null;
         },
         getToken: (state, action) => {

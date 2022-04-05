@@ -34,8 +34,8 @@ const Otp = (props) => {
 
             <StatusBar hidden />
             <View style={styles.truckLogo}>
-            <Image source={image.Tg} style={{width:200,height:100,tintColor:color.primaryColors}} />
-             {/* <LottieView source={require('../assets/json/loading.json')} autoPlay loop /> */}
+                <Image source={image.Tg} style={{ width: 200, height: 100, tintColor: color.primaryColors }} />
+                {/* <LottieView source={require('../assets/json/loading.json')} autoPlay loop /> */}
             </View>
             <View style={styles.titleComponets}>
                 <Text style={styles.title}> Verification</Text>
@@ -52,7 +52,14 @@ const Otp = (props) => {
                 </TouchableOpacity>
             </View>
             <View style={styles.inputBox}>
-                <OTPTextInput tintColor={color.primaryColors} offTintColor={color.fontcolor}  handleTextChange={(val) => { setOtp(val) }} />
+                <TextInput style={styles.input}
+                    placeholder={"eg. 0000"}
+                    placeholderTextColor={'gray'}
+                    onChangeText={(val) => setOtp(val)}
+                    autoCapitalize={'none'}
+                    keyboardType={'number-pad'}
+                    maxLength={4} />
+                {/* <OTPTextInput tintColor={color.primaryColors} offTintColor={color.fontcolor} handleTextChange={(val) => { setOtp(val) }} /> */}
                 {(props?.error) ? <Text style={{ color: 'red', marginTop: 5 }}> * otp invalid  </Text> : null}
             </View>
 
@@ -128,7 +135,7 @@ const styles = StyleSheet.create({
     truckLogo: {
         height: '25%',
         width: "40%",
-        justifyContent:'center'
+        justifyContent: 'center'
 
     },
     titleComponets: {
@@ -138,7 +145,7 @@ const styles = StyleSheet.create({
     title: {
         fontSize: 25,
         fontWeight: 'bold',
-        color:color.fontcolor
+        color: color.fontcolor
     },
     text: {
         fontSize: 18,
@@ -148,11 +155,17 @@ const styles = StyleSheet.create({
     },
     inputBox: {
         marginVertical: 20,
-
+        width: "85%",
         height: '10%',
         alignSelf: 'center'
     },
-
+    input: {
+        borderWidth: 2,
+        borderColor: color.primaryColors,
+        padding: 10,
+        fontSize: 18,
+        borderRadius: 10
+    },
     btn: {
         width: '90%',
         height: 50,

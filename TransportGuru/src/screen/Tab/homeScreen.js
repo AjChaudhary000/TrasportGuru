@@ -32,8 +32,6 @@ const HomeScreen = () => {
                         </MapView>
                         {/* <Image source={image.truck} style={{ width: '100%', height: '100%', }} /> */}
                     </View>
-
-
                     <View style={styles.searchBox} >
                         <View style={styles.fromToDesc}>
                             <View style={{ width: "10%", justifyContent: 'center' }}>
@@ -63,7 +61,7 @@ const HomeScreen = () => {
                         </View>
                         <View style={styles.dateOrCapicity}>
                             <View style={{ width: '30%', justifyContent: 'center' }}>
-                                <Text style={{ fontWeight: "bold", fontSize: 18, color: color.fontcolor}}>Goods Weight</Text>
+                                <Text style={{ fontWeight: "bold", fontSize: 18, color: color.fontcolor }}>Goods Weight</Text>
                             </View>
                             <View style={{ width: '30%', justifyContent: 'center' }}>
                                 <TextInput style={{
@@ -96,7 +94,7 @@ export default HomeScreen
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        paddingBottom:40
+        paddingBottom: 40
     },
     mapBox: {
         height: "40%"

@@ -30,7 +30,7 @@ const SignIn = (props) => {
     }
     if (props?.loading) {
         return (
-            <View style={{ flex: 1 ,backgroundColor:color.backgroundColor}}>
+            <View style={{ flex: 1, backgroundColor: color.backgroundColor }}>
                 <StatusBar hidden />
                 <View style={{ height: "100%" }}>
                     <LottieView source={require('../assets/json/loder.json')} autoPlay loop />
@@ -43,7 +43,7 @@ const SignIn = (props) => {
             <StatusBar hidden />
 
             <View style={styles.truckLogo}>
-            <Image source={image.Tg} style={{width:200,height:100,tintColor:color.primaryColors}} />
+                <Image source={image.Tg} style={{ width: 200, height: 100, tintColor: color.primaryColors }} />
                 {/* <LottieView source={require('../assets/json/loading.json')} autoPlay loop /> */}
             </View>
             <View style={styles.titleComponets}>
@@ -105,14 +105,14 @@ export default connect(useSelector, useDispatch)(SignIn);
 const styles = StyleSheet.create({
     contentor: {
         flex: 1,
-        backgroundColor:color.backgroundColor,
-       paddingHorizontal:20,
-      
+        backgroundColor: color.backgroundColor,
+        paddingHorizontal: 20,
+
     },
     truckLogo: {
         height: '25%',
         width: "40%",
-        justifyContent:'center'
+        justifyContent: 'center'
 
     },
     titleComponets: {
@@ -136,10 +136,11 @@ const styles = StyleSheet.create({
         height: '10%'
     },
     input: {
-        borderBottomWidth: 2,
-        borderBottomColor: color.primaryColors,
+        borderWidth: 2,
+        borderColor: color.primaryColors,
         padding: 10,
-        fontSize: 18,color:color.fontcolor
+        fontSize: 18,
+        borderRadius: 10
     },
     btn: {
         width: '90%',

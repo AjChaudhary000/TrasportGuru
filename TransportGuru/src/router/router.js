@@ -19,7 +19,8 @@ import image from '../contents/image';
 import AdminTab from './adminTab';
 import AddTruck from '../screen/Admin/addTruck';
 import AddDriver from '../screen/Admin/addDriver';
-
+import TruckList from '../screen/Admin/truckList';
+import DriverList from '../screen/Admin/driverList';
 const Stack = createNativeStackNavigator();
 const Router = (props) => {
     const [token, setTokenData] = React.useState('')
@@ -75,6 +76,8 @@ const Router = (props) => {
                 <Stack.Screen name='AdminTab' component={AdminTab} options={{ headerShown: false }} />
                 <Stack.Screen name='AddTruck' component={AddTruck} options={{ headerShown: false }} />
                 <Stack.Screen name='AddDriver' component={AddDriver} options={{ headerShown: false }} />
+                <Stack.Screen name='TruckList' component={TruckList} options={{ headerShown: false }} />
+                <Stack.Screen name='DriverList' component={DriverList} options={{ headerShown: false }} />
                 {/* AdminSide End */}
             </Stack.Navigator>
         </NavigationContainer>

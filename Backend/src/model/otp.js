@@ -2,8 +2,7 @@ const mongodb = require('mongoose');
 const otpSchema = mongodb.Schema({
     email: {
         type: String,
-        required: true,
-       
+        required: true,    
     },
     otp: {
         type: String

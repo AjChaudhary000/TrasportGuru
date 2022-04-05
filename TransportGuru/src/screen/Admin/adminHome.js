@@ -1,12 +1,124 @@
-import { View, Text } from 'react-native'
+import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native'
 import React from 'react'
+import color from '../../contents/color'
+import AdminHeader from '../../components/adminHeader'
+import { connect } from 'react-redux'
+import { getCountDriver, getCountTruck } from '../../Redux/Admin/countAddSlice'
+import { getJWTToken } from '../../Redux/helper'
+import icons from '../../contents/icons'
+const AdminHome = (props) => {
+    const [token, setToken] = React.useState('');
+    const fetchToken = async () => {
+        try {
+            const data = await getJWTToken();
+            setToken(data)
 
-const AdminHome = () => {
+        } catch (e) {
+            console.log()
+        }
+    }
+    React.useEffect(() => {
+        fetchToken()
+        props.getCountTruck(token)
+        props.getCountDriver(token)
+    }, [token])
     return (
-        <View>
-            <Text>AdminHome</Text>
+        <View style={styles.container}>
+            <AdminHeader name={"Transport Deshboard"} />
+            <View style={styles.box}>
+                <TouchableOpacity style={styles.adminCard} activeOpacity={0.80} onPress={() => props.navigation.navigate('TruckList')}>
+                    <View style={styles.Text}>
+                        <Text style={styles.menuText}>{props.countTruck}</Text>
+                    </View>
+                    <View style={styles.icon}>
+                        <Image source={icons.truck} style={{ width: 40, height: 40, tintColor: color.adminprimaryColors }} />
+                        <Text style={styles.title}>Truck</Text>
+                    </View>
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.adminCard} activeOpacity={0.80} onPress={() => props.navigation.navigate('DriverList')}>
+                    <View style={styles.Text}>
+                        <Text style={styles.menuText}>{props.countDriver}</Text>
+                    </View>
+                    <View style={styles.icon}>
+                        <Image source={icons.driver} style={{ width: 40, height: 40, tintColor: color.adminprimaryColors }} />
+                        <Text style={styles.title}>Driver</Text>
+                    </View>
+                </TouchableOpacity>
+            </View>
+            <View style={styles.box}>
+                <TouchableOpacity style={styles.adminCard} activeOpacity={0.80}>
+                    <View style={styles.Text}>
+                        <Text style={styles.menuText}>0</Text>
+                    </View>
+                    <View style={styles.icon}>
+                        <Image source={icons.tracking} style={{ width: 40, height: 40, tintColor: color.adminprimaryColors }} />
+                        <Text style={styles.title} >Details</Text>
+                    </View>
+                </TouchableOpacity>
+
+            </View>
+
         </View>
     )
 }
+const useDispatch = (dispatch) => {
+    return {
+        getCountTruck: (data) => dispatch(getCountTruck(data)),
+        getCountDriver: (data) => dispatch(getCountDriver(data))
+    };
+}
+const useSelector = (state) => (
 
-export default AdminHome
+    {
+        countTruck: state.count.countTruck,
+        countDriver: state.count.countDriver,
+    }
+)
+export default connect(useSelector, useDispatch)(AdminHome);
+const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        backgroundColor: color.backgroundColor,
+    },
+    box: {
+        flexDirection: 'row',
+        marginHorizontal: 20
+    },
+    adminCard: {
+        width: 150,
+        height: 150,
+        backgroundColor: color.backgroundColor,
+        marginHorizontal: 15,
+        borderRadius: 20,
+        justifyContent: 'center',
+
+        shadowColor: color.fontcolor,
+        shadowOffset: {
+            width: 0,
+            height: 2
+        },
+        shadowOpacity: 0.25,
+        shadowRadius: 4,
+        elevation: 5,
+        marginVertical: 10,
+        flexDirection: 'column'
+    }, Text: {
+        justifyContent: "center",
+        alignItems: 'center'
+    },
+    menuText: {
+        fontSize: 50,
+        fontWeight: 'bold',
+        color: color.adminprimaryColors,
+    }, icon: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        marginHorizontal: 20
+    },
+    title: {
+        fontSize: 18,
+        fontWeight: 'bold',
+        color: color.fontcolor,
+        marginVertical: 10
+    }
+})

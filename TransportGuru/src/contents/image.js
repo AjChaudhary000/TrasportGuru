@@ -1,3 +1,4 @@
 const Tg = require('../assets/images/Tg.png')
-
-export default { Tg };
+const Truck = require('../assets/images/Truck.png')
+const user = require('../assets/images/user.jpg')
+export default { Tg, Truck ,user};

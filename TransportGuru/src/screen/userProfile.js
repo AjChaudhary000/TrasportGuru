@@ -1,4 +1,4 @@
-import { View, Text, Image, StyleSheet, Dimensions, TextInput, TouchableOpacity, StatusBar, Modal ,PermissionsAndroid} from 'react-native'
+import { View, Text, Image, StyleSheet, Dimensions, TextInput, TouchableOpacity, StatusBar, Modal, PermissionsAndroid } from 'react-native'
 import React from 'react'
 import icons from '../contents/icons';
 import * as ImagePicker from 'react-native-image-picker'
@@ -17,10 +17,10 @@ const UserProfile = (props) => {
     const [modalVisible, setModalVisible] = React.useState(false);
     const camaraLaunch = () => {
         PermissionsAndroid.check('camera').then(response => {
-            if (response === true){
+            if (response === true) {
                 //Open scanner
             }
-            else if (response === false){
+            else if (response === false) {
                 Alert("Please enable camera permission in device settings.")
             }
         })
@@ -128,7 +128,7 @@ const UserProfile = (props) => {
             </View>
             <View style={styles.inputBox}>
                 <View style={{ width: "10%", paddingTop: 12 }}>
-                    <Image source={icons.user} style={{ width: 35, height: 35 ,tintColor:color.primaryColors}} />
+                    <Image source={icons.user} style={{ width: 35, height: 35, tintColor: color.primaryColors }} />
                 </View>
                 <View style={{ width: "85%", marginHorizontal: 10 }}>
 
@@ -193,11 +193,11 @@ const styles = StyleSheet.create({
         height: '10%'
     },
     input: {
-        borderBottomWidth: 2,
-        borderBottomColor: color.primaryColors,
+        borderWidth: 2,
+        borderColor: color.primaryColors,
         padding: 10,
         fontSize: 18,
-        color:color.fontcolor
+        borderRadius: 10
     },
     btn: {
         width: '90%',

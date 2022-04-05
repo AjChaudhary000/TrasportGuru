@@ -15,7 +15,7 @@ export default function AdminHeader(props) {
     return (
         <>
             <View style={styles.header}>
-                <StatusBar backgroundColor={color.primaryColors} />
+                <StatusBar backgroundColor={color.adminprimaryColors} />
                 <Text style={styles.headerName}>{props.name}</Text>
             </View>
         </>
@@ -25,7 +25,7 @@ export const AdminHeaderWithBackButton = (props) => {
     return (
         <>
             <View style={{ flexDirection: 'row', ...styles.header }}>
-                <StatusBar backgroundColor={color.primaryColors} />
+                <StatusBar backgroundColor={color.adminprimaryColors} />
                 <TouchableOpacity style={{ paddingTop: Platform.OS === 'ios' ? 35 : 0, width: '10%', alignItems: 'center', justifyContent: 'center' }} onPress={() => props.navigation.goBack()}>
                     <Image
                         style={{

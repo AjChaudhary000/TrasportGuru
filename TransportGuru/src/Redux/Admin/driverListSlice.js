@@ -1,40 +1,42 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import TrasportApi from '../../api/TrasportApi'
-export const getTruckType = createAsyncThunk('truck/getUserDetails',
+export const getDriverList = createAsyncThunk('driverList/getDriverList',
     async (token, getState) => {
         try {
-            const response = await TrasportApi.get('/trucktype', {
+            const response = await TrasportApi.get('/driver', {
                 headers: {
                     Authorization: `Bearer ${token}`,
                 }
             });
-            return response.data.data;
+            return response.data.data
         } catch (e) {
             return getState.rejectWithValue(e.response.data);
         }
     });
-const truckTypeSlice = createSlice({
-    name: 'truck',
+
+const driverListSlice = createSlice({
+    name: 'driverList',
     initialState: {
         loading: false,
-        truckData: [],
+        driverList: [],
         error: ''
     },
     reducers: {
 
     }, extraReducers: {
-        [getTruckType.fulfilled]: (state, action) => {
-           
-            state.truckData = action.payload,
+        [getDriverList.fulfilled]: (state, action) => {
+
+            state.driverList = action.payload,
                 state.loading = false
         },
-        [getTruckType.pending]: (state, action) => {
+        [getDriverList.pending]: (state, action) => {
             state.loading = true
         },
-        [getTruckType.rejected]: (state, action) => {
+        [getDriverList.rejected]: (state, action) => {
             state.error = action.payload,
                 state.loading = true
         }
+
     }
 });
-export default truckTypeSlice.reducer;
+export default driverListSlice.reducer;

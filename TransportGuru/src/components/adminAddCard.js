@@ -3,7 +3,7 @@ import React from 'react'
 import color from '../contents/color'
 const AdminAddCard = (props) => {
     return (
-        <TouchableOpacity style={styles.card} onPress={props.onPress}>
+        <TouchableOpacity style={styles.card} onPress={props.onPress} activeOpacity={0.80}>
             <View style={styles.menuIcon}>
                 <Image source={props.icons} style={styles.menuiconStyle} />
             </View>
@@ -21,7 +21,7 @@ const AdminAddCard = (props) => {
 export default AdminAddCard
 const styles = StyleSheet.create({
     card: {
-        height: 100,
+        height: 80,
         backgroundColor: color.adminprimaryColors,
         flexDirection: 'row',
         marginHorizontal: 35,

@@ -11,25 +11,24 @@ const Driver = require('../model/Driver');
 router.post('/sendemail', async (req, res) => {
 
     try {
-        const UserData = new User(req.body);
         const otpvalue = Math.round(Math.random() * 100000).toString().slice(0, 4);
-        let testAccount = await nodemailer.createTestAccount();
-        let transporter = nodemailer.createTransport({
-            host: "smtp.gmail.com",
-            port: 465,
-            secure: true,
-            auth: {
-                user: "transportguru8@gmail.com",
-                pass: "chaudhary.dcs22",
-            },
-        });
-        let info = await transporter.sendMail({
-            from: "transportguru8@gmail.com",
-            to: req.body.email,
-            subject: "Trasport guru send otp ... ✔",
-            text: `hii ${req.body.email} OTP ${otpvalue}`,
-            //  html: "<b>Hello world?</b>",
-        })
+        // let testAccount = await nodemailer.createTestAccount();
+        // let transporter = nodemailer.createTransport({
+        //     host: "smtp.gmail.com",
+        //     port: 465,
+        //     secure: true,
+        //     auth: {
+        //         user: "transportguru8@gmail.com",
+        //         pass: "chaudhary.dcs22",
+        //     },
+        // });
+        // let info = await transporter.sendMail({
+        //     from: "transportguru8@gmail.com",
+        //     to: req.body.email,
+        //     subject: "Trasport guru send otp ... ✔",
+        //     text: `hii ${req.body.email} OTP ${otpvalue}`,
+        //     //  html: "<b>Hello world?</b>",
+        // })
         const otp = new OTP({ email: req.body.email, otp: otpvalue });
         await otp.save()
         res.status(201).send({ email: req.body.email, status: true })
@@ -57,28 +56,6 @@ router.post('/verifyuser', async (req, res) => {
         res.status(400).send(e.toString())
     }
 })
-// const disk = multer.diskStorage({
-//     destination: function (req, file, cb) {
-//         cb(null, "./src/image/avatars")
-//     },
-
-//     filename: function (req, file, cb) {
-//         const uniqueSuffix = "avt" + Date.now() + "A" + Math.round(Math.random() * 1000);
-//         cb(null, uniqueSuffix + path.extname(file.originalname));
-//     },
-// })
-// const upload = multer({
-//     storage: disk,
-//     limits: {
-//         fileSize: 1000000
-//     },
-//     fileFilter(req, file, cb) {
-//         if (!file.originalname.match(/\.(png|jpeg|jpg)$/)) {
-//             return cb(new Error('Please Upload an  Image '))
-//         }
-//         cb(undefined, true)
-//     }
-// })
 router.post('/user/me', auth, async (req, res) => {
     req.user.username = req.body.username;
     req.user.image = req.body.image;
@@ -133,6 +110,23 @@ router.post('/driver/create', auth, async (req, res) => {
         res.status(201).send({ data })
     } catch (e) {
         res.status(400).send({ "error": e.toString() })
+    }
+})
+router.post('/verifyDriver', auth, async (req, res) => {
+    try {
+        const DriverData = await OTP.findOne({ email: req.body.driverEmail, otp: req.body.driverOtp })
+
+        if (DriverData === null) return res.status(404).send({ data: 'otp invalid' })
+        const DriverInfo = {
+            driverName: req.body.driverName,
+            driverEmail: req.body.driverEmail,
+            driverMobileNo: req.body.driverMobileNo,
+        }
+        const driver = new Driver({ tarsportUserId: req.user._id, ...DriverInfo })
+        const data = await driver.save()
+        res.status(201).send({ data, status: true })
+    } catch (e) {
+        res.status(400).send({ data: e.toString(), status: false })
     }
 })
 router.get('/driver', auth, async (req, res) => {

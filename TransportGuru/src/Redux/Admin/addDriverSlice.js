@@ -1,56 +1,55 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 import TrasportApi from '../../api/TrasportApi';
 
-export const addTruck = createAsyncThunk(
-    'addTruck/addTruck',
+export const addDriver = createAsyncThunk(
+    'addDriver/addDriver',
     async (obj, getState) => {
         try {
             const data = {
-                truckName: obj.truckName,
-                truckModelName: obj.truckModelName,
-                truckRegistartionNo: obj.truckRegistartionNo,
-                truckCapicity: obj.truckCapicity,
-                truckTypeId: obj.truckTypeId
-
+                driverName: obj.driverName,
+                driverEmail: obj.driverEmail,
+                driverMobileNo: obj.driverMobileNo,
+                driverOtp: obj.driverOtp,
             }
-
-            const response = await TrasportApi.post('/truck/create', data, {
+            console.log(data)
+            const response = await TrasportApi.post('/verifyDriver', data, {
                 headers: {
                     Authorization: `Bearer ${obj.token}`,
                 }
             });
+            console.log("res ", response.data)
             return response.data
         }
         catch (e) {
             return getState.rejectWithValue(e.response.data);
         }
     })
-export const addTruckSlice = createSlice({
-    name: 'addTruck',
+export const addDriverSlice = createSlice({
+    name: 'addDriver',
     initialState: {
         loading: false,
         error: '',
         data: {}
     },
     reducers: {
-        setTruckData: (state, action) => {
-            state.userdata = action.payload
+        setDriverData: (state, action) => {
+            state.data = action.payload
         }
     },
     extraReducers: {
-        [addTruck.fulfilled]: (state, action) => {
+        [addDriver.fulfilled]: (state, action) => {
             state.data = action.payload,
                 state.loading = false
         },
-        [addTruck.payload]: (state, action) => {
+        [addDriver.payload]: (state, action) => {
             state.data = action.payload,
                 state.loading = true
         },
-        [addTruck.rejected]: (state, action) => {
+        [addDriver.rejected]: (state, action) => {
             state.error = action.payload,
                 state.loading = true
         },
     }
 })
-export const { setTruckData } = addTruckSlice.actions;
-export default addTruckSlice.reducer
+export const { setDriverData } = addDriverSlice.actions;
+export default addDriverSlice.reducer
