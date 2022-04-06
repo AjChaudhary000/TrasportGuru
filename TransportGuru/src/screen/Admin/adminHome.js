@@ -55,6 +55,15 @@ const AdminHome = (props) => {
                         <Text style={styles.title} >Details</Text>
                     </View>
                 </TouchableOpacity>
+                <TouchableOpacity style={styles.adminCard} activeOpacity={0.80}>
+                    <View style={styles.Text}>
+                        <Text style={styles.menuText}>0</Text>
+                    </View>
+                    <View style={styles.icon}>
+                        <Image source={icons.box} style={{ width: 40, height: 40, tintColor: color.adminprimaryColors }} />
+                        <Text style={styles.title} > Request</Text>
+                    </View>
+                </TouchableOpacity>
 
             </View>
 

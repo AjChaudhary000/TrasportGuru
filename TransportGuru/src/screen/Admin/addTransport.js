@@ -31,7 +31,7 @@ const AddTransport = (props) => {
       </View> */}
       <AdminAddCard icons={icons.truck} name={"Add Truck"} count={props.countTruck} onPress={() => { props.navigation.navigate('AddTruck') }} />
       <AdminAddCard icons={icons.driver} name={"Add Driver"} count={props.countDriver} onPress={() => { props.navigation.navigate('AddDriver') }} />
-      <AdminAddCard icons={icons.tracking} name={"Add Transport "} count={0} />
+      <AdminAddCard icons={icons.tracking} name={"Add Transport "} count={0} onPress={() => { props.navigation.navigate('AddTrasportDetails') }} />
     </View>
   )
 }
@@ -55,5 +55,5 @@ const styles = StyleSheet.create({
     backgroundColor: color.backgroundColor,
     //  paddingTop: 50
   }
-  
+
 })

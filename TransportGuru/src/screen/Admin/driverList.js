@@ -6,6 +6,8 @@ import image from '../../contents/image'
 import { connect } from 'react-redux'
 import { getJWTToken } from '../../Redux/helper'
 import { getDriverList } from '../../Redux/Admin/driverListSlice'
+import { deleteDriver } from '../../Redux/Admin/addDriverSlice'
+import { getCountDriver } from '../../Redux/Admin/countAddSlice'
 const DriverList = (props) => {
     const [token, setToken] = React.useState('');
     const fetchToken = async () => {
@@ -21,14 +23,25 @@ const DriverList = (props) => {
         fetchToken()
         props.getDriverList(token)
     }, [token])
-
+    React.useEffect(() => {
+        props.getCountDriver(token)
+        props.deletedata.status && props.getDriverList(token)
+    }, [token, props])
+    const DeleteDriver = (id) => {
+        console.log(id)
+        props.deleteDriver({ id: id, token: token })
+    }
+    const EditDriver = (item) => {
+        console.log(item)
+        props.navigation.navigate("AddDriver", { item: item })
+    }
     return (
         <View style={styles.container}>
             <AdminHeaderWithBackButton name={"Driver List"} navigation={props.navigation} />
             <FlatList data={props.driverList} renderItem={(item) => (
                 <View style={styles.listBox}>
                     <View style={styles.image}>
-                        <Image source={image.user} style={{ width: '100%', height: '100%',overflow:"hidden" }} />
+                        <Image source={image.user} style={{ width: '100%', height: '100%', overflow: "hidden" }} />
                     </View>
                     <View style={styles.listData}>
                         <Text style={styles.driverName}>{item.item.driverName}</Text>
@@ -37,32 +50,35 @@ const DriverList = (props) => {
                         <Text style={styles.driverMobileNo}>{item.item.driverMobileNo}</Text>
 
                         <View style={{ flexDirection: 'row', justifyContent: 'space-between', paddingTop: 10, paddingHorizontal: 20 }}>
-                            <TouchableOpacity>
+                            <TouchableOpacity onPress={() => { EditDriver(item.item) }}>
                                 <Text style={styles.edit}>Edit</Text>
                             </TouchableOpacity>
-                            <TouchableOpacity>
-                                <Text style={styles.delete}>Delete</Text>
+                            <TouchableOpacity onPress={() => { DeleteDriver(item.item._id) }}>
+                                <Text style={styles.delete} >Delete</Text>
                             </TouchableOpacity>
 
 
                         </View>
                     </View>
                 </View>
-            )} />
+            )
+            } />
 
-        </View>
+        </View >
     )
 }
 const useDispatch = (dispatch) => {
     return {
         getDriverList: (data) => dispatch(getDriverList(data)),
-
+        deleteDriver: (data) => dispatch(deleteDriver(data)),
+        getCountDriver: (data) => dispatch(getCountDriver(data)),
     };
 }
 const useSelector = (state) => (
 
     {
         driverList: state.driverList.driverList,
+        deletedata: state.addDriver.deletedata
 
     }
 )
@@ -97,7 +113,7 @@ const styles = StyleSheet.create({
         marginVertical: 10,
         marginLeft: 20,
         alignItems: 'center',
-        overflow:'hidden'
+        overflow: 'hidden'
     },
     listData: {
         width: '70%',

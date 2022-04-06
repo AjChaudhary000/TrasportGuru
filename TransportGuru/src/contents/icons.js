@@ -27,6 +27,8 @@ const back = require('../assets/icons/back.png')
 const contrast = require('../assets/icons/contrast.png')
 const driver = require('../assets/icons/driver.png')
 const addtotruck = require('../assets/icons/add-to-truck.png')
+const box = require('../assets/icons/box.png')
+const editdate = require('../assets/icons/editdate.png')
 export default {
     email,
     right_arrow,
@@ -54,5 +56,6 @@ export default {
     back,
     contrast,
     addtotruck,
-    driver
+    driver, box,
+    editdate
 };

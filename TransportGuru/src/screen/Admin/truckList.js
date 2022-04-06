@@ -6,6 +6,8 @@ import image from '../../contents/image'
 import { connect } from 'react-redux'
 import { getJWTToken } from '../../Redux/helper'
 import { getTruckList } from '../../Redux/Admin/truckListSlice'
+import { deleteTruck, setTruckData } from '../../Redux/Admin/addTruckSlice'
+import { getCountTruck } from '../../Redux/Admin/countAddSlice'
 const TruckList = (props) => {
     const [token, setToken] = React.useState('');
     const fetchToken = async () => {
@@ -21,7 +23,22 @@ const TruckList = (props) => {
         fetchToken()
         props.getTruckList(token)
     }, [token])
+    React.useEffect(() => {
 
+        if (props.deletedata.status) {
+            props.getCountTruck(token)
+            props.setTruckData({})
+            props.getTruckList(token)
+        }
+    }, [token, props])
+    const DeleteTruck = (id) => {
+
+        props.deleteTruck({ id: id, token: token })
+    }
+    const EditTruck = (item) => {
+
+        props.navigation.navigate("AddTruck", { item: item })
+    }
     return (
         <View style={styles.container}>
             <AdminHeaderWithBackButton name={"Truck List"} navigation={props.navigation} />
@@ -38,10 +55,10 @@ const TruckList = (props) => {
                             <Text style={styles.truckcapicity}>{item.item.truckCapicity} /-Tonnes</Text>
                         </View>
                         <View style={{ flexDirection: 'row', justifyContent: 'space-between', paddingTop: 10, paddingHorizontal: 20 }}>
-                            <TouchableOpacity>
+                            <TouchableOpacity onPress={() => { EditTruck(item.item) }}>
                                 <Text style={styles.edit}>Edit</Text>
                             </TouchableOpacity>
-                            <TouchableOpacity>
+                            <TouchableOpacity onPress={() => { DeleteTruck(item.item._id) }}>
                                 <Text style={styles.delete}>Delete</Text>
                             </TouchableOpacity>
 
@@ -57,14 +74,16 @@ const TruckList = (props) => {
 const useDispatch = (dispatch) => {
     return {
         getTruckList: (data) => dispatch(getTruckList(data)),
-
+        getCountTruck: (data) => dispatch(getCountTruck(data)),
+        deleteTruck: (data) => dispatch(deleteTruck(data)),
+        setTruckData: (data) => dispatch(setTruckData(data)),
     };
 }
 const useSelector = (state) => (
 
     {
         truckList: state.truckList.truckList,
-
+        deletedata: state.addTruck.data
     }
 )
 export default connect(useSelector, useDispatch)(TruckList);

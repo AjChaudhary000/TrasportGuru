@@ -39,4 +39,20 @@ router.get('/truck', auth, async (req, res) => {
         res.status(400).send({ "error": e.toString() })
     }
 })
+router.delete('/truck/delete/:_id', auth, async (req, res) => {
+    try {
+        const truck = await TruckDetails.findByIdAndDelete(req.params._id)
+        res.status(200).send({ data: truck, status: true })
+    } catch (e) {
+        res.status(400).send({ data: e.toString, status: false })
+    }
+})
+router.patch('/updatetruck/:_id', auth, async (req, res) => {
+    try {
+        const data = await TruckDetails.findByIdAndUpdate({ _id: req.params._id }, req.body, { new: true, })
+        res.status(201).send({ data, status: true })
+    } catch (e) {
+        res.status(400).send({ data: e.toString(), status: false })
+    }
+})
 module.exports = router;

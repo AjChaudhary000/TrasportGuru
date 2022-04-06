@@ -102,16 +102,6 @@ router.delete('/user/trasportaccount', auth, async (req, res) => {
         res.status(400).send({ "error": e.toString() })
     }
 })
-router.post('/driver/create', auth, async (req, res) => {
-    try {
-
-        const driver = new Driver({ tarsportUserId: req.user._id, ...req.body })
-        const data = await driver.save()
-        res.status(201).send({ data })
-    } catch (e) {
-        res.status(400).send({ "error": e.toString() })
-    }
-})
 router.post('/verifyDriver', auth, async (req, res) => {
     try {
         const DriverData = await OTP.findOne({ email: req.body.driverEmail, otp: req.body.driverOtp })
@@ -136,6 +126,32 @@ router.get('/driver', auth, async (req, res) => {
         res.status(201).send({ data })
     } catch (e) {
         res.status(400).send({ "error": e.toString() })
+    }
+})
+router.delete('/driver/delete/:_id', auth, async (req, res) => {
+    try {
+      
+        const driver = await Driver.findByIdAndDelete(req.params._id)
+        res.status(200).send({ data: driver, status: true })
+    } catch (e) {
+        res.status(400).send({ data: e.toString, status: false })
+    }
+})
+router.patch('/updateDriver/:_id', auth, async (req, res) => {
+    try {
+        const DriverData = await OTP.findOne({ email: req.body.driverEmail, otp: req.body.driverOtp })
+
+        if (DriverData === null) return res.status(404).send({ data: 'otp invalid' })
+        const DriverInfo = {
+            driverName: req.body.driverName,
+            driverEmail: req.body.driverEmail,
+            driverMobileNo: req.body.driverMobileNo,
+        }
+        
+        const data = await Driver.findByIdAndUpdate({_id:req.params._id},DriverInfo,{new:true,})
+        res.status(201).send({ data, status: true })
+    } catch (e) {
+        res.status(400).send({ data: e.toString(), status: false })
     }
 })
 module.exports = router;
