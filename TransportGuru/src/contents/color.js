@@ -3,4 +3,6 @@ export default {
     adminprimaryColors: '#548ae8',
     backgroundColor: 'white',
     fontcolor: "black"
+    // backgroundColor: '#121212',
+    // fontcolor: "white"
 }

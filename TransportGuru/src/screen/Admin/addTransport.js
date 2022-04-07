@@ -5,7 +5,7 @@ import AdminHeader from '../../components/adminHeader'
 import icons from '../../contents/icons'
 import AdminAddCard from '../../components/adminAddCard'
 import { connect } from 'react-redux'
-import { getCountDriver, getCountTruck } from '../../Redux/Admin/countAddSlice'
+import { getCountDriver, getCountRoute, getCountTruck } from '../../Redux/Admin/countAddSlice'
 import { getJWTToken } from '../../Redux/helper'
 const AddTransport = (props) => {
   const [token, setToken] = React.useState('');
@@ -22,6 +22,7 @@ const AddTransport = (props) => {
     fetchToken()
     props.getCountTruck(token)
     props.getCountDriver(token)
+    props.getCountRoute(token)
   }, [token])
   return (
     <View style={styles.container}>
@@ -29,16 +30,34 @@ const AddTransport = (props) => {
       {/* <View style={styles.header}>
         <Text style={styles.headerName}>Add Transport Services</Text>
       </View> */}
-      <AdminAddCard icons={icons.truck} name={"Add Truck"} count={props.countTruck} onPress={() => { props.navigation.navigate('AddTruck') }} />
-      <AdminAddCard icons={icons.driver} name={"Add Driver"} count={props.countDriver} onPress={() => { props.navigation.navigate('AddDriver') }} />
-      <AdminAddCard icons={icons.tracking} name={"Add Transport "} count={0} onPress={() => { props.navigation.navigate('AddTrasportDetails') }} />
+      <AdminAddCard
+        icons={icons.truck}
+        name={"Add Truck"}
+        count={props.countTruck}
+        onPress={() => { props.navigation.navigate('AddTruck') }} />
+      <AdminAddCard
+        icons={icons.driver}
+        name={"Add Driver"}
+        count={props.countDriver}
+        onPress={() => { props.navigation.navigate('AddDriver') }} />
+      <AdminAddCard
+        icons={icons.tracking}
+        name={"Add Route "}
+        count={props.countRoute}
+        onPress={() => { props.navigation.navigate('AddRoute') }} />
+      <AdminAddCard
+        icons={icons.addtotruck}
+        name={"Add Transport "}
+        count={0}
+        onPress={() => { props.navigation.navigate('AddTrasportDetails') }} />
     </View>
   )
 }
 const useDispatch = (dispatch) => {
   return {
     getCountTruck: (data) => dispatch(getCountTruck(data)),
-    getCountDriver: (data) => dispatch(getCountDriver(data))
+    getCountDriver: (data) => dispatch(getCountDriver(data)),
+    getCountRoute: (data) => dispatch(getCountRoute(data))
   };
 }
 const useSelector = (state) => (
@@ -46,6 +65,7 @@ const useSelector = (state) => (
   {
     countTruck: state.count.countTruck,
     countDriver: state.count.countDriver,
+    countRoute: state.count.countRoute,
   }
 )
 export default connect(useSelector, useDispatch)(AddTransport);

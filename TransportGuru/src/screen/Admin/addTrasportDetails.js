@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, TextInput, TouchableOpacity, Image, FlatList, StatusBar, ScrollView } from 'react-native'
+import { View, Text, StyleSheet, TextInput, TouchableOpacity, Image, FlatList, StatusBar, Dimensions, Modal } from 'react-native'
 import React from 'react'
 import { AdminHeaderWithBackButton } from '../../components/adminHeader';
 import color from '../../contents/color'
@@ -10,24 +10,17 @@ import { getDriverList } from '../../Redux/Admin/driverListSlice';
 import { getTruckList } from '../../Redux/Admin/truckListSlice';
 import DatePicker from 'react-native-date-picker'
 import image from '../../contents/image';
-import city from '../../contents/city'
-import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
+import { getRouteList } from '../../Redux/Admin/routeSlice';
+import { backgroundColor } from 'react-native/Libraries/Components/View/ReactNativeStyleAttributes';
 const AddTrasportDetails = (props) => {
-    const homePlace = {
-        description: 'Home',
-        geometry: { location: { lat: 48.8152937, lng: 2.4597668 } },
-    };
-    const workPlace = {
-        description: 'Work',
-        geometry: { location: { lat: 48.8496818, lng: 2.2940881 } },
-    };
+    const [modalVisible, setModalVisible] = React.useState(false);
+    const [placetype, setPlaceType] = React.useState()
     const [token, setToken] = React.useState('');
     const [value, setValue] = React.useState(null);
     const [date, setDate] = React.useState(new Date())
     const [open, setOpen] = React.useState(false)
     const [data, setData] = React.useState({
-        from: '',
-        destination: '',
+        routeId: '',
         capicity: '',
         Tdate: '',
         truckId: "",
@@ -46,11 +39,11 @@ const AddTrasportDetails = (props) => {
         fetchToken()
         props.getDriverList(token)
         props.getTruckList(token)
+        props.getRouteList(token)
     }, [token])
     const AddTrasport = () => {
-        if (data.from !== "" &&
-            data.destination !== "" &&
-            data.date !== "" &&
+        if (data.routeId !== "" &&
+            data.Tdate !== "" &&
             data.capicity !== "" &&
             data.driverId !== "" &&
             data.truckId !== "") {
@@ -75,125 +68,52 @@ const AddTrasportDetails = (props) => {
             </View>
         );
     };
-    const renderItemCityFrom = (item) => {
+    const renderItemRoute = (item) => {
 
         return (
-            <View style={styles.item}>
-                <Text style={styles.textItem}>{item.cityname}</Text>
+            <View style={{ borderWidth: 2 ,margin:20,borderRadius:10,borderColor:color.adminprimaryColors}}>
 
-            </View>
-        );
-    };
-    const renderItemCityDestination = (item) => {
-        return (
-            <View style={styles.item}>
-                <Text style={styles.textItem}>{item.cityname}</Text>
-
-            </View>
+                <View style={{ alignItems: "center" }}>
+                    <Text style={{ fontWeight: 'bold', color: color.fontcolor }}>
+                        {item.from}
+                    </Text>
+                </View>
+                <View style={{ alignItems: "center", paddingVertical: 10 }}>
+                    <Image source={icons.upToDown} style={{ width: 20, height: 20, tintColor: color.adminprimaryColors }} />
+                </View>
+                <View style={{ alignItems: "center" }}>
+                    <Text style={{ fontWeight: 'bold', color: color.fontcolor }}>
+                        {item.destination}
+                    </Text>
+                </View>
+            </View >
         );
     };
     return (
+
         <View style={styles.container}>
 
             <AdminHeaderWithBackButton name={"Add Transport Details"} navigation={props.navigation} />
             <View style={styles.inputBox}>
                 <View style={{ margin: 10 }}>
-                    <FlatList data={[0]} scrollEnabled={false} renderItem={() => (
-                        <GooglePlacesAutocomplete
-                            placeholder={"eg. From"}
-                            placeholderTextColor={'gray'}
-                            minLength={2} // minimum length of text to search
-                            fetchDetails={true}
-                            renderDescription={row => row.description} // custom description render
-                            onPress={(data, details = null) => {
-                                console.log(data);
-                                console.log(details);
-                            }}
-                            getDefaultValue={() => {
-                                return ''; // text input default value
-                            }}
-                            query={{
-                                // available options: https://developers.google.com/places/web-service/autocomplete
-                                key: 'AIzaSyDwIVgIMPOY0UMpmXrqO0hOBNSTM7dH2pA',
-                                language: 'en', // language of the results
-                                types: '(cities)', // default: 'geocode'
-                            }}
-                            styles={{
-
-                                textInput: {
-                                    borderWidth: 2,
-                                    borderColor: color.adminprimaryColors,
-                                    padding: 10,
-                                    fontSize: 18,
-                                    borderRadius: 10
-
-                                },
-                                description: {
-                                    color: color.adminprimaryColors,
-                                    fontSize: 18,
-
-                                }, listView: {
-                                    borderWidth: 2,
-                                    borderColor: color.adminprimaryColors,
-                                    padding: 10,
-                                    fontSize: 18,
-                                    borderRadius: 10,
-                                }
-                            }}
-
-                            debounce={200}
-                        />
-                    )}
-                    />
-
-                </View>
-                <View style={{ margin: 10 }}>
-                    <FlatList data={[0]} scrollEnabled={false} renderItem={() => (
-                        <GooglePlacesAutocomplete
-                            placeholder={"eg. Destination"}
-                            placeholderTextColor={'gray'}
-                            minLength={2} // minimum length of text to search
-                            fetchDetails={true}
-                            renderDescription={row => row.description} // custom description render
-                            onPress={(data, details = null) => {
-                                console.log(data);
-                                console.log(details);
-                            }}
-                            getDefaultValue={() => {
-                                return ''; // text input default value
-                            }}
-                            query={{
-                                // available options: https://developers.google.com/places/web-service/autocomplete
-                                key: 'AIzaSyDwIVgIMPOY0UMpmXrqO0hOBNSTM7dH2pA',
-                                language: 'en', // language of the results
-                                types: '(cities)', // default: 'geocode'
-                            }}
-                            styles={{
-
-                                textInput: {
-                                    borderWidth: 2,
-                                    borderColor: color.adminprimaryColors,
-                                    padding: 10,
-                                    fontSize: 18,
-                                    borderRadius: 10
-
-                                },
-                                description: {
-                                    color: color.adminprimaryColors,
-                                    fontSize: 18,
-
-                                }, listView: {
-                                    borderWidth: 2,
-                                    borderColor: color.adminprimaryColors,
-                                    padding: 10,
-                                    fontSize: 18,
-                                    borderRadius: 10,
-                                }
-                            }}
-
-                            debounce={200}
-                        />
-                    )}
+                    <Dropdown
+                        style={styles.dropdown}
+                        placeholderStyle={styles.placeholderStyle}
+                        selectedTextStyle={styles.selectedTextStyle}
+                        inputSearchStyle={styles.inputSearchStyle}
+                        iconStyle={styles.iconStyle}
+                        data={props.routeList}
+                        search
+                        maxHeight={300}
+                        labelField="from"
+                        valueField="_id"
+                        placeholder="Select Route  .."
+                        searchPlaceholder="Search..."
+                        value={value}
+                        onChange={item => {
+                            setData({ ...data, routeId: item._id });
+                        }}
+                        renderItem={renderItemRoute}
                     />
 
                 </View>
@@ -256,7 +176,7 @@ const AddTrasportDetails = (props) => {
                             setOpen(false)
                         }} />
                     <View style={{ width: "85%" }}>
-                        <Text style={styles.input}>{data.Tdate.slice(0, -23)}</Text>
+                        <Text style={styles.input}>{data.Tdate ? data.Tdate.slice(0, -23) : "Date"}</Text>
                     </View>
                     <TouchableOpacity style={{ width: "10%", justifyContent: 'center' }} onPress={() => setOpen(true)}>
                         <Image source={icons.editdate} style={{ width: 35, height: 35, tintColor: color.adminprimaryColors }} />
@@ -288,6 +208,7 @@ const useDispatch = (dispatch) => {
     return {
         getTruckList: (data) => dispatch(getTruckList(data)),
         getDriverList: (data) => dispatch(getDriverList(data)),
+        getRouteList: (data) => dispatch(getRouteList(data)),
     };
 }
 const useSelector = (state) => (
@@ -296,6 +217,7 @@ const useSelector = (state) => (
         token: state.token.token,
         driverList: state.driverList.driverList,
         truckList: state.truckList.truckList,
+        routeList: state.route.routeList,
 
     }
 )
@@ -355,6 +277,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
+
     },
     textItem: {
         flex: 1,
@@ -372,6 +295,25 @@ const styles = StyleSheet.create({
     }, iconStyle: {
         width: 20,
         height: 20,
+    },
+    modelBox: {
+        width: Dimensions.get('screen').width - 20,
+        minHeight: 200,
+
+        backgroundColor: color.backgroundColor,
+        alignSelf: 'center',
+        borderRadius: 15,
+        flexDirection: 'row',
+        alignItems: 'center',
+        alignItems: "center",
+        shadowColor: color.fontcolor,
+        shadowOffset: {
+            width: 0,
+            height: 2
+        },
+        shadowOpacity: 0.25,
+        shadowRadius: 4,
+        elevation: 5
     },
 })
 

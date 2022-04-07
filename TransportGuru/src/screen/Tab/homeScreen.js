@@ -1,17 +1,101 @@
-import { View, Text, Image, StyleSheet, TextInput, TouchableOpacity, KeyboardAvoidingView, TouchableWithoutFeedback, Keyboard, Platform } from 'react-native'
+import {
+    View, Text, Image,
+    StyleSheet, TextInput,
+    TouchableOpacity,
+    KeyboardAvoidingView,
+    TouchableWithoutFeedback,
+    Keyboard, Platform, Modal, Dimensions, FlatList
+} from 'react-native'
 import React from 'react'
 import color from '../../contents/color'
 import icons from '../../contents/icons'
 import image from '../../contents/image'
+import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
 import MapView, { PROVIDER_GOOGLE } from "react-native-maps"
+
 const HomeScreen = () => {
+    const [modalVisible, setModalVisible] = React.useState(false);
+    const [placetype, setPlaceType] = React.useState()
+    const [data, setData] = React.useState({
+        from: 'From',
+        destination: 'Destination',
+        capicity: '',
+    })
     return (
         <KeyboardAvoidingView
             behavior={Platform.OS === "ios" ? "padding" : "height"}
             style={styles.container}
         >
             <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-                <View >
+
+                <View>
+                    <Modal
+                        animationType="slide"
+                        transparent={true}
+                        visible={modalVisible}
+                        onRequestClose={() => {
+                            Alert.alert("Modal has been closed.");
+                            setModalVisible(!modalVisible);
+                        }}
+                    >
+                        <View style={{ flex: 1, justifyContent: 'center' }}>
+                            <View style={styles.modelBox}>
+                                <FlatList data={[0]} scrollEnabled={false} renderItem={() => (
+                                    <GooglePlacesAutocomplete
+                                        placeholder={placetype === "from" ? "eg. From" : "eg. destination"}
+                                        placeholderTextColor={'gray'}
+                                        minLength={2} // minimum length of text to search
+                                        fetchDetails={true}
+                                        renderDescription={row => row.description} // custom description render
+                                        onPress={(dt, details = null) => {
+
+                                            placetype === "from" && setData({ ...data, from: dt.description });
+                                            placetype === "destination" && setData({ ...data, destination: dt.description });
+                                            setModalVisible(false)
+                                            // console.log(details);
+                                        }}
+                                        getDefaultValue={() => {
+                                            return ''; // text input default value
+                                        }}
+                                        query={{
+                                            // available options: https://developers.google.com/places/web-service/autocomplete
+                                            key: 'AIzaSyDwIVgIMPOY0UMpmXrqO0hOBNSTM7dH2pA',
+                                            language: 'en', // language of the results
+                                            types: '(cities)', // default: 'geocode'
+                                        }}
+                                        styles={{
+
+                                            textInput: {
+                                                borderWidth: 2,
+                                                borderColor: color.primaryColors,
+                                                padding: 10,
+                                                fontSize: 18,
+                                                borderRadius: 10,
+                                                marginHorizontal: 30
+                                            },
+                                            description: {
+                                                color: color.primaryColors,
+                                                fontSize: 18,
+
+                                            }, listView: {
+                                                borderWidth: 2,
+                                                borderColor: color.primaryColors,
+                                                padding: 10,
+                                                fontSize: 18,
+                                                borderRadius: 10,
+                                            }
+                                        }}
+
+                                        debounce={200}
+                                    />
+                                )}
+                                />
+                            </View>
+                            <TouchableOpacity onPress={() => { setModalVisible(false) }} style={{ alignItems: "center", bottom: 20 }}>
+                                <Text>Close</Text>
+                            </TouchableOpacity>
+                        </View>
+                    </Modal>
                     <View style={styles.mapBox}>
                         <MapView
                             showsUserLocation={true}
@@ -42,17 +126,17 @@ const HomeScreen = () => {
                                     <View style={{ width: '5%', justifyContent: 'center' }}>
                                         <Image source={icons.forword} style={{ width: 20, height: 20, tintColor: color.primaryColors }} />
                                     </View>
-                                    <View style={{ width: '95%' }}>
-                                        <TextInput style={styles.inputBox} placeholder={"From"} placeholderTextColor={'black'} />
-                                    </View>
+                                    <TouchableOpacity style={{ width: '95%' }} activeOpacity={0.80} onPress={() => { setPlaceType("from"); setModalVisible(true) }}>
+                                        <Text style={styles.inputBox}>{data.from}</Text>
+                                    </TouchableOpacity>
                                 </View>
                                 <View style={{ margin: 10, flexDirection: 'row' }}>
                                     <View style={{ width: '5%', justifyContent: 'center' }}>
                                         <Image source={icons.forword} style={{ width: 20, height: 20, tintColor: color.primaryColors }} />
                                     </View>
-                                    <View style={{ width: '95%' }}>
-                                        <TextInput style={styles.inputBox} placeholder={"Destination"} placeholderTextColor={'black'} />
-                                    </View>
+                                    <TouchableOpacity style={{ width: '95%' }} activeOpacity={0.80} onPress={() => { setPlaceType("destination"); setModalVisible(true) }}>
+                                        <Text style={styles.inputBox}>{data.destination}</Text>
+                                    </TouchableOpacity>
                                 </View>
                             </View>
                         </View>
@@ -127,19 +211,19 @@ const styles = StyleSheet.create({
         elevation: 5,
 
     }, inputBox: {
-        height: 45,
-        marginHorizontal: 10,
-        backgroundColor: 'white',
-        paddingHorizontal: 15,
-        borderRadius: 18,
-        color: 'black', fontSize: 20,
+        borderWidth: 2,
+        borderColor: color.primaryColors,
+        padding: 10,
+        fontSize: 18,
+        borderRadius: 10,
+        marginHorizontal: 10
 
     }, reverseBtn: {
         width: 50,
         height: 50,
         borderRadius: 25,
         backgroundColor: color.primaryColors,
-        bottom: Platform.OS === 'android' ? '60%' : "58%", left: '70%',
+        bottom: Platform.OS === 'android' ? '59%' : "57%", left: '70%',
         justifyContent: 'center',
         alignItems: 'center', position: "absolute"
     },
@@ -162,6 +246,24 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         marginVertical: 10,
         marginHorizontal: 20
-    }
+    }, modelBox: {
+        width: Dimensions.get('screen').width - 20,
+        minHeight: 200,
+
+        backgroundColor: color.backgroundColor,
+        alignSelf: 'center',
+        borderRadius: 15,
+        flexDirection: 'row',
+        alignItems: 'center',
+        alignItems: "center",
+        shadowColor: color.fontcolor,
+        shadowOffset: {
+            width: 0,
+            height: 2
+        },
+        shadowOpacity: 0.25,
+        shadowRadius: 4,
+        elevation: 5
+    },
 
 })

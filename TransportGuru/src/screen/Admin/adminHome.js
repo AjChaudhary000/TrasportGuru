@@ -3,7 +3,7 @@ import React from 'react'
 import color from '../../contents/color'
 import AdminHeader from '../../components/adminHeader'
 import { connect } from 'react-redux'
-import { getCountDriver, getCountTruck } from '../../Redux/Admin/countAddSlice'
+import { getCountDriver, getCountTruck, getCountRoute } from '../../Redux/Admin/countAddSlice'
 import { getJWTToken } from '../../Redux/helper'
 import icons from '../../contents/icons'
 const AdminHome = (props) => {
@@ -21,6 +21,7 @@ const AdminHome = (props) => {
         fetchToken()
         props.getCountTruck(token)
         props.getCountDriver(token)
+        props.getCountRoute(token)
     }, [token])
     return (
         <View style={styles.container}>
@@ -46,15 +47,26 @@ const AdminHome = (props) => {
                 </TouchableOpacity>
             </View>
             <View style={styles.box}>
+                <TouchableOpacity style={styles.adminCard} activeOpacity={0.80} onPress={() => props.navigation.navigate('Routelist')}>
+                    <View style={styles.Text}>
+                        <Text style={styles.menuText}>{props.countRoute}</Text>
+                    </View>
+                    <View style={styles.icon}>
+                        <Image source={icons.tracking} style={{ width: 40, height: 40, tintColor: color.adminprimaryColors }} />
+                        <Text style={styles.title} >Routes</Text>
+                    </View>
+                </TouchableOpacity>
                 <TouchableOpacity style={styles.adminCard} activeOpacity={0.80}>
                     <View style={styles.Text}>
                         <Text style={styles.menuText}>0</Text>
                     </View>
                     <View style={styles.icon}>
-                        <Image source={icons.tracking} style={{ width: 40, height: 40, tintColor: color.adminprimaryColors }} />
+                        <Image source={icons.addtotruck} style={{ width: 40, height: 40, tintColor: color.adminprimaryColors }} />
                         <Text style={styles.title} >Details</Text>
                     </View>
                 </TouchableOpacity>
+            </View>
+            <View style={styles.box}>
                 <TouchableOpacity style={styles.adminCard} activeOpacity={0.80}>
                     <View style={styles.Text}>
                         <Text style={styles.menuText}>0</Text>
@@ -65,6 +77,7 @@ const AdminHome = (props) => {
                     </View>
                 </TouchableOpacity>
 
+
             </View>
 
         </View>
@@ -73,7 +86,8 @@ const AdminHome = (props) => {
 const useDispatch = (dispatch) => {
     return {
         getCountTruck: (data) => dispatch(getCountTruck(data)),
-        getCountDriver: (data) => dispatch(getCountDriver(data))
+        getCountDriver: (data) => dispatch(getCountDriver(data)),
+        getCountRoute: (data) => dispatch(getCountRoute(data))
     };
 }
 const useSelector = (state) => (
@@ -81,6 +95,7 @@ const useSelector = (state) => (
     {
         countTruck: state.count.countTruck,
         countDriver: state.count.countDriver,
+        countRoute: state.count.countRoute,
     }
 )
 export default connect(useSelector, useDispatch)(AdminHome);

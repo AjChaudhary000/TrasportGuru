@@ -26,12 +26,26 @@ export const getCountDriver = createAsyncThunk('count/getCountDriver',
             return getState.rejectWithValue(e.response.data);
         }
     });
+export const getCountRoute = createAsyncThunk('count/getCountRoute',
+    async (token, getState) => {
+        try {
+            const response = await TrasportApi.get('/route', {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                }
+            });
+            return response.data.data
+        } catch (e) {
+            return getState.rejectWithValue(e.response.data);
+        }
+    });
 const countAddSlice = createSlice({
     name: 'count',
     initialState: {
         loading: false,
         countTruck: 0,
         countDriver: 0,
+        countRoute: 0,
         error: ''
     },
     reducers: {
@@ -58,6 +72,18 @@ const countAddSlice = createSlice({
             state.loading = true
         },
         [getCountDriver.rejected]: (state, action) => {
+            state.error = action.payload,
+                state.loading = true
+        },
+        [getCountRoute.fulfilled]: (state, action) => {
+
+            state.countRoute = action.payload?.length,
+                state.loading = false
+        },
+        [getCountRoute.pending]: (state, action) => {
+            state.loading = true
+        },
+        [getCountRoute.rejected]: (state, action) => {
             state.error = action.payload,
                 state.loading = true
         }
