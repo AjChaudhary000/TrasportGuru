@@ -6,7 +6,7 @@ import OTPTextInput from 'react-native-otp-textinput'
 import { CountdownCircleTimer } from 'react-native-countdown-circle-timer'
 import icons from '../contents/icons';
 import { connect } from 'react-redux';
-import { verifyOtp } from '../Redux/verifyOtpSlice';
+import { setotpData, verifyOtp } from '../Redux/verifyOtpSlice';
 import { sendemail } from '../Redux/sendEmailSlice';
 import color from '../contents/color';
 import image from '../contents/image';
@@ -15,8 +15,15 @@ const Otp = (props) => {
     const [otp, setOtp] = React.useState()
     console.log(props.otpdata)
     React.useEffect(() => {
-        props?.otpdata.account === "0" && props.navigation.replace('UserProfile')
-        props?.otpdata.account === "1" && props.navigation.replace('Tab')
+        if (props?.otpdata.account === "0" && props?.otpdata.status) {
+            props.navigation.replace('UserProfile')
+            props.setotpData({})
+        }
+        if (props?.otpdata.account === "1" && props?.otpdata.status) {
+
+            props.navigation.replace('Tab')
+            props.setotpData({})
+        }
     }, [props])
     const sendOTP = async () => {
 
@@ -114,7 +121,7 @@ const useDispatch = (dispatch) => {
     return {
         verifyOtp: (data) => dispatch(verifyOtp(data)),
         sendemail: (data) => dispatch(sendemail(data)),
-
+        setotpData: (data) => dispatch(setotpData(data)),
     };
 }
 const useSelector = (state) => (

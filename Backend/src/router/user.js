@@ -45,12 +45,12 @@ router.post('/verifyuser', async (req, res) => {
         const UserList = await User.findOne({ email: req.body.email });
         if (UserList) {
             const token = await UserList.genrateToken();
-            return res.status(201).send({ data: UserList, token: token, account: '1' })
+            return res.status(201).send({ data: UserList, token: token, account: '1', status: true })
         } else {
             const user = new User({ email: req.body.email, accountType: "User" });
             const data = await user.save()
             const token = await data.genrateToken();
-            return res.status(201).send({ data: data, token: token, account: '0' })
+            return res.status(201).send({ data: data, token: token, account: '0', status: true })
         }
     } catch (e) {
         res.status(400).send(e.toString())
@@ -130,7 +130,7 @@ router.get('/driver', auth, async (req, res) => {
 })
 router.delete('/driver/delete/:_id', auth, async (req, res) => {
     try {
-      
+
         const driver = await Driver.findByIdAndDelete(req.params._id)
         res.status(200).send({ data: driver, status: true })
     } catch (e) {
@@ -147,8 +147,8 @@ router.patch('/updateDriver/:_id', auth, async (req, res) => {
             driverEmail: req.body.driverEmail,
             driverMobileNo: req.body.driverMobileNo,
         }
-        
-        const data = await Driver.findByIdAndUpdate({_id:req.params._id},DriverInfo,{new:true,})
+
+        const data = await Driver.findByIdAndUpdate({ _id: req.params._id }, DriverInfo, { new: true, })
         res.status(201).send({ data, status: true })
     } catch (e) {
         res.status(400).send({ data: e.toString(), status: false })

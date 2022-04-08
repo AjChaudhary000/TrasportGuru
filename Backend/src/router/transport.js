@@ -3,7 +3,7 @@ const router = new express.Router();
 const auth = require('../middleware/auth');
 const Transport = require('../model/trasnsportList');
 
-router.post('/Trasnsport/create', auth, async (req, res) => {
+router.post('/transport/create', auth, async (req, res) => {
     try {
         const trasnsportData = new Transport({ tarsportUserId: req.user._id, ...req.body });
         const data = await trasnsportData.save();
@@ -12,29 +12,33 @@ router.post('/Trasnsport/create', auth, async (req, res) => {
         res.status(400).send({ "error": e.toString(), status: false })
     }
 })
-// router.get('/route', auth, async (req, res) => {
-//     try {
+router.get('/transport', auth, async (req, res) => {
+    try {
 
-//         const data = await Route.find({ tarsportUserId: req.user._id }).populate("tarsportUserId");
-//         res.status(201).send({ data, status: true })
-//     } catch (e) {
-//         res.status(400).send({ "error": e.toString(), status: false })
-//     }
-// })
-// router.delete('/route/delete/:_id', auth, async (req, res) => {
-//     try {
-//         const route = await Route.findByIdAndDelete(req.params._id)
-//         res.status(200).send({ data: route, status: true })
-//     } catch (e) {
-//         res.status(400).send({ data: e.toString, status: false })
-//     }
-// })
-// router.patch('/route/update/:_id', auth, async (req, res) => {
-//     try {
-//         const data = await Route.findByIdAndUpdate({ _id: req.params._id }, req.body, { new: true, })
-//         res.status(201).send({ data, status: true })
-//     } catch (e) {
-//         res.status(400).send({ data: e.toString(), status: false })
-//     }
-// })
+        const data = await Transport.find({ tarsportUserId: req.user._id })
+            .populate("tarsportUserId")
+            .populate("routeId")
+            .populate("truckId")
+            .populate("driverId");
+        res.status(201).send({ data, status: true })
+    } catch (e) {
+        res.status(400).send({ "error": e.toString(), status: false })
+    }
+})
+router.delete('/transport/delete/:_id', auth, async (req, res) => {
+    try {
+        const data = await Transport.findByIdAndDelete(req.params._id)
+        res.status(200).send({ data: data, status: true })
+    } catch (e) {
+        res.status(400).send({ data: e.toString, status: false })
+    }
+})
+router.patch('/transport/update/:_id', auth, async (req, res) => {
+    try {
+        const data = await Transport.findByIdAndUpdate({ _id: req.params._id }, req.body, { new: true, })
+        res.status(201).send({ data, status: true })
+    } catch (e) {
+        res.status(400).send({ data: e.toString(), status: false })
+    }
+})
 module.exports = router;

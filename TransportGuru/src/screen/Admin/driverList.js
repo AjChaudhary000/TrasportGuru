@@ -32,7 +32,7 @@ const DriverList = (props) => {
         props.deleteDriver({ id: id, token: token })
     }
     const EditDriver = (item) => {
-        console.log(item)
+       
         props.navigation.navigate("AddDriver", { item: item })
     }
     return (

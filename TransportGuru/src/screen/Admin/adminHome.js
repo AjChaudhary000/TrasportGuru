@@ -3,7 +3,7 @@ import React from 'react'
 import color from '../../contents/color'
 import AdminHeader from '../../components/adminHeader'
 import { connect } from 'react-redux'
-import { getCountDriver, getCountTruck, getCountRoute } from '../../Redux/Admin/countAddSlice'
+import { getCountDriver, getCountTruck, getCountRoute, getCountTransport } from '../../Redux/Admin/countAddSlice'
 import { getJWTToken } from '../../Redux/helper'
 import icons from '../../contents/icons'
 const AdminHome = (props) => {
@@ -21,7 +21,8 @@ const AdminHome = (props) => {
         fetchToken()
         props.getCountTruck(token)
         props.getCountDriver(token)
-        props.getCountRoute(token)
+        props.getCountRoute(token),
+            props.getCountTransport(token)
     }, [token])
     return (
         <View style={styles.container}>
@@ -56,9 +57,9 @@ const AdminHome = (props) => {
                         <Text style={styles.title} >Routes</Text>
                     </View>
                 </TouchableOpacity>
-                <TouchableOpacity style={styles.adminCard} activeOpacity={0.80}>
+                <TouchableOpacity style={styles.adminCard} activeOpacity={0.80} onPress={() => props.navigation.navigate('TransportListDetails')}>
                     <View style={styles.Text}>
-                        <Text style={styles.menuText}>0</Text>
+                        <Text style={styles.menuText}>{props.countTransport}</Text>
                     </View>
                     <View style={styles.icon}>
                         <Image source={icons.addtotruck} style={{ width: 40, height: 40, tintColor: color.adminprimaryColors }} />
@@ -87,7 +88,8 @@ const useDispatch = (dispatch) => {
     return {
         getCountTruck: (data) => dispatch(getCountTruck(data)),
         getCountDriver: (data) => dispatch(getCountDriver(data)),
-        getCountRoute: (data) => dispatch(getCountRoute(data))
+        getCountRoute: (data) => dispatch(getCountRoute(data)),
+        getCountTransport: (data) => dispatch(getCountTransport(data))
     };
 }
 const useSelector = (state) => (
@@ -96,6 +98,7 @@ const useSelector = (state) => (
         countTruck: state.count.countTruck,
         countDriver: state.count.countDriver,
         countRoute: state.count.countRoute,
+        countTransport: state.count.countTransport,
     }
 )
 export default connect(useSelector, useDispatch)(AdminHome);

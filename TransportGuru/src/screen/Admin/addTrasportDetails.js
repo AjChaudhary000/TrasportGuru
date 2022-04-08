@@ -11,7 +11,9 @@ import { getTruckList } from '../../Redux/Admin/truckListSlice';
 import DatePicker from 'react-native-date-picker'
 import image from '../../contents/image';
 import { getRouteList } from '../../Redux/Admin/routeSlice';
-import { backgroundColor } from 'react-native/Libraries/Components/View/ReactNativeStyleAttributes';
+import { addTransport, setTransportData, updateTransport } from '../../Redux/Admin/transportSlice';
+import { getCountTransport } from '../../Redux/Admin/countAddSlice';
+
 const AddTrasportDetails = (props) => {
     const [modalVisible, setModalVisible] = React.useState(false);
     const [placetype, setPlaceType] = React.useState()
@@ -20,11 +22,11 @@ const AddTrasportDetails = (props) => {
     const [date, setDate] = React.useState(new Date())
     const [open, setOpen] = React.useState(false)
     const [data, setData] = React.useState({
-        routeId: '',
-        capicity: '',
-        Tdate: '',
-        truckId: "",
-        driverId: ""
+        routeId: props.route.params?.item?.routeId || '',
+        capicity: props.route.params?.item?.capicity || '',
+        Truckdate: props.route.params?.item?.Truckdate || '',
+        truckId: props.route.params?.item?.truckId || "",
+        driverId: props.route.params?.item?.driverId || ""
     })
     const fetchToken = async () => {
         try {
@@ -41,15 +43,33 @@ const AddTrasportDetails = (props) => {
         props.getTruckList(token)
         props.getRouteList(token)
     }, [token])
+    React.useEffect(() => {
+        if (props?.transportData.status) {
+            props.getCountTransport(token)
+            props.setTransportData({})
+            props.navigation.goBack();
+        }
+    }, [props, token])
     const AddTrasport = () => {
         if (data.routeId !== "" &&
-            data.Tdate !== "" &&
+            data.Truckdate !== "" &&
             data.capicity !== "" &&
             data.driverId !== "" &&
             data.truckId !== "") {
             console.log("my data ", data)
+            props.addTransport({ ...data, token })
         }
 
+    }
+    const UpdateTrasport = () => {
+        if (data.routeId !== "" &&
+            data.Truckdate !== "" &&
+            data.capicity !== "" &&
+            data.driverId !== "" &&
+            data.truckId !== "") {
+            console.log("my data ", data)
+            props.updateTransport({ ...data, id: props.route.params?.item?._id, token: token })
+        }
     }
     const renderItemDriver = (item) => {
         return (
@@ -71,7 +91,7 @@ const AddTrasportDetails = (props) => {
     const renderItemRoute = (item) => {
 
         return (
-            <View style={{ borderWidth: 2 ,margin:20,borderRadius:10,borderColor:color.adminprimaryColors}}>
+            <View style={{ borderWidth: 2, margin: 20, borderRadius: 10, borderColor: color.adminprimaryColors }}>
 
                 <View style={{ alignItems: "center" }}>
                     <Text style={{ fontWeight: 'bold', color: color.fontcolor }}>
@@ -92,115 +112,229 @@ const AddTrasportDetails = (props) => {
     return (
 
         <View style={styles.container}>
+            {!props.route.params?.item?._id ?
+                <View>
+                    <AdminHeaderWithBackButton name={"Add Transport Details"} navigation={props.navigation} />
+                    <View style={styles.inputBox}>
+                        <View style={{ margin: 10 }}>
+                            <Dropdown
+                                style={styles.dropdown}
+                                placeholderStyle={styles.placeholderStyle}
+                                selectedTextStyle={styles.selectedTextStyle}
+                                inputSearchStyle={styles.inputSearchStyle}
+                                iconStyle={styles.iconStyle}
+                                data={props.routeList}
+                                search
+                                maxHeight={300}
+                                labelField="from"
+                                valueField="_id"
+                                placeholder="Select Route  .."
+                                searchPlaceholder="Search..."
+                                value={value}
+                                onChange={item => {
+                                    setData({ ...data, routeId: item._id });
+                                }}
+                                renderItem={renderItemRoute}
+                            />
 
-            <AdminHeaderWithBackButton name={"Add Transport Details"} navigation={props.navigation} />
-            <View style={styles.inputBox}>
-                <View style={{ margin: 10 }}>
-                    <Dropdown
-                        style={styles.dropdown}
-                        placeholderStyle={styles.placeholderStyle}
-                        selectedTextStyle={styles.selectedTextStyle}
-                        inputSearchStyle={styles.inputSearchStyle}
-                        iconStyle={styles.iconStyle}
-                        data={props.routeList}
-                        search
-                        maxHeight={300}
-                        labelField="from"
-                        valueField="_id"
-                        placeholder="Select Route  .."
-                        searchPlaceholder="Search..."
-                        value={value}
-                        onChange={item => {
-                            setData({ ...data, routeId: item._id });
-                        }}
-                        renderItem={renderItemRoute}
-                    />
+                        </View>
+                        <View style={{ margin: 10 }}>
+                            <Dropdown
+                                style={styles.dropdown}
+                                placeholderStyle={styles.placeholderStyle}
+                                selectedTextStyle={styles.selectedTextStyle}
+                                inputSearchStyle={styles.inputSearchStyle}
+                                iconStyle={styles.iconStyle}
+                                data={props.truckList}
+                                search
+                                maxHeight={300}
+                                labelField="truckRegistartionNo"
+                                valueField="_id"
+                                placeholder="Select truck  .."
+                                searchPlaceholder="Search..."
+                                value={value}
+                                onChange={item => {
+                                    setData({ ...data, truckId: item._id });
+                                }}
+                                renderItem={renderItemTruck}
+                            />
 
-                </View>
-                <View style={{ margin: 10 }}>
-                    <Dropdown
-                        style={styles.dropdown}
-                        placeholderStyle={styles.placeholderStyle}
-                        selectedTextStyle={styles.selectedTextStyle}
-                        inputSearchStyle={styles.inputSearchStyle}
-                        iconStyle={styles.iconStyle}
-                        data={props.truckList}
-                        search
-                        maxHeight={300}
-                        labelField="truckRegistartionNo"
-                        valueField="_id"
-                        placeholder="Select truck  .."
-                        searchPlaceholder="Search..."
-                        value={value}
-                        onChange={item => {
-                            setData({ ...data, truckId: item._id });
-                        }}
-                        renderItem={renderItemTruck}
-                    />
+                        </View>
+                        <View style={{ margin: 10 }}>
+                            <Dropdown
+                                style={styles.dropdown}
+                                placeholderStyle={styles.placeholderStyle}
+                                selectedTextStyle={styles.selectedTextStyle}
+                                inputSearchStyle={styles.inputSearchStyle}
+                                iconStyle={styles.iconStyle}
+                                data={props.driverList}
+                                search
+                                maxHeight={300}
+                                labelField="driverName"
+                                valueField="_id"
+                                placeholder="Select Driver  .."
+                                searchPlaceholder="Search..."
+                                value={value}
+                                onChange={item => {
+                                    setData({ ...data, driverId: item._id });
+                                }}
+                                renderItem={renderItemDriver}
+                            />
 
-                </View>
-                <View style={{ margin: 10 }}>
-                    <Dropdown
-                        style={styles.dropdown}
-                        placeholderStyle={styles.placeholderStyle}
-                        selectedTextStyle={styles.selectedTextStyle}
-                        inputSearchStyle={styles.inputSearchStyle}
-                        iconStyle={styles.iconStyle}
-                        data={props.driverList}
-                        search
-                        maxHeight={300}
-                        labelField="driverName"
-                        valueField="_id"
-                        placeholder="Select Driver  .."
-                        searchPlaceholder="Search..."
-                        value={value}
-                        onChange={item => {
-                            setData({ ...data, driverId: item._id });
-                        }}
-                        renderItem={renderItemDriver}
-                    />
+                        </View>
 
-                </View>
+                        <View style={{ margin: 10, flexDirection: 'row', justifyContent: 'space-between' }}>
+                            <DatePicker modal
+                                open={open}
+                                date={date}
+                                mode={'datetime'}
+                                onConfirm={(dt) => {
+                                    setOpen(false)
+                                    setDate(dt)
+                                    setData({ ...data, Truckdate: dt.toString() })
+                                }}
+                                onCancel={() => {
+                                    setOpen(false)
+                                }} />
+                            <View style={{ width: "85%" }}>
+                                <Text style={styles.input}>{data.Truckdate ? data.Truckdate.slice(0, -23) : "Date"}</Text>
+                            </View>
+                            <TouchableOpacity style={{ width: "10%", justifyContent: 'center' }} onPress={() => setOpen(true)}>
+                                <Image source={icons.editdate} style={{ width: 35, height: 35, tintColor: color.adminprimaryColors }} />
+                            </TouchableOpacity>
 
-                <View style={{ margin: 10, flexDirection: 'row', justifyContent: 'space-between' }}>
-                    <DatePicker modal
-                        open={open}
-                        date={date}
-                        mode={'date'}
-                        onConfirm={(dt) => {
-                            setOpen(false)
-                            setDate(dt)
-                            setData({ ...data, Tdate: dt.toString() })
-                        }}
-                        onCancel={() => {
-                            setOpen(false)
-                        }} />
-                    <View style={{ width: "85%" }}>
-                        <Text style={styles.input}>{data.Tdate ? data.Tdate.slice(0, -23) : "Date"}</Text>
+                        </View>
+
+                        <View style={{ margin: 10 }}>
+                            <TextInput style={styles.input}
+                                placeholder={"eg. Truck Capicity"}
+                                placeholderTextColor={'gray'}
+                                onChangeText={(val) => setData({ ...data, capicity: val })}
+                                autoCapitalize={'none'}
+                                keyboardType={'number-pad'} />
+
+                        </View>
+                        <View style={{ marginHorizontal: 10, marginVertical: 20 }}>
+                            <TouchableOpacity style={styles.btn} onPress={() => { AddTrasport() }}>
+                                <Text style={styles.btnText}>
+                                    Add Transport Details
+                                </Text>
+                            </TouchableOpacity>
+                        </View>
                     </View>
-                    <TouchableOpacity style={{ width: "10%", justifyContent: 'center' }} onPress={() => setOpen(true)}>
-                        <Image source={icons.editdate} style={{ width: 35, height: 35, tintColor: color.adminprimaryColors }} />
-                    </TouchableOpacity>
+                </View> :
+                <View>
+                    <AdminHeaderWithBackButton name={"Update Transport Details"} navigation={props.navigation} />
+                    <View style={styles.inputBox}>
+                        <View style={{ margin: 10 }}>
+                            <Dropdown
+                                style={styles.dropdown}
+                                placeholderStyle={styles.placeholderStyle}
+                                selectedTextStyle={styles.selectedTextStyle}
+                                inputSearchStyle={styles.inputSearchStyle}
+                                iconStyle={styles.iconStyle}
+                                data={props.routeList}
+                                search
+                                maxHeight={300}
+                                labelField="from"
+                                valueField="_id"
+                                placeholder="Select Route  .."
+                                searchPlaceholder="Search..."
+                                value={props.route.params?.item?.routeId._id}
+                                onChange={item => {
+                                    setData({ ...data, routeId: item._id });
+                                }}
+                                renderItem={renderItemRoute}
+                            />
 
-                </View>
+                        </View>
+                        <View style={{ margin: 10 }}>
+                            <Dropdown
+                                style={styles.dropdown}
+                                placeholderStyle={styles.placeholderStyle}
+                                selectedTextStyle={styles.selectedTextStyle}
+                                inputSearchStyle={styles.inputSearchStyle}
+                                iconStyle={styles.iconStyle}
+                                data={props.truckList}
+                                search
+                                maxHeight={300}
+                                labelField="truckRegistartionNo"
+                                valueField="_id"
+                                placeholder="Select truck  .."
+                                searchPlaceholder="Search..."
+                                value={props.route.params?.item?.truckId._id}
+                                onChange={item => {
+                                    setData({ ...data, truckId: item._id });
+                                }}
+                                renderItem={renderItemTruck}
+                            />
 
-                <View style={{ margin: 10 }}>
-                    <TextInput style={styles.input}
-                        placeholder={"eg. Truck Capicity"}
-                        placeholderTextColor={'gray'}
-                        onChangeText={(val) => setData({ ...data, capicity: val })}
-                        autoCapitalize={'none'}
-                        keyboardType={'number-pad'} />
+                        </View>
+                        <View style={{ margin: 10 }}>
+                            <Dropdown
+                                style={styles.dropdown}
+                                placeholderStyle={styles.placeholderStyle}
+                                selectedTextStyle={styles.selectedTextStyle}
+                                inputSearchStyle={styles.inputSearchStyle}
+                                iconStyle={styles.iconStyle}
+                                data={props.driverList}
+                                search
+                                maxHeight={300}
+                                labelField="driverName"
+                                valueField="_id"
+                                placeholder="Select Driver  .."
+                                searchPlaceholder="Search..."
+                                value={props.route.params?.item?.driverId._id}
+                                onChange={item => {
+                                    setData({ ...data, driverId: item._id });
+                                }}
+                                renderItem={renderItemDriver}
+                            />
 
+                        </View>
+
+                        <View style={{ margin: 10, flexDirection: 'row', justifyContent: 'space-between' }}>
+                            <DatePicker modal
+                                open={open}
+                                date={date}
+                                mode={'datetime'}
+                                onConfirm={(dt) => {
+                                    setOpen(false)
+                                    setDate(dt)
+                                    setData({ ...data, Truckdate: dt.toString() })
+                                }}
+                                onCancel={() => {
+                                    setOpen(false)
+                                }} />
+                            <View style={{ width: "85%" }}>
+                                <Text style={styles.input}>{data.Truckdate ? data.Truckdate : "Date"}</Text>
+                            </View>
+                            <TouchableOpacity style={{ width: "10%", justifyContent: 'center' }} onPress={() => setOpen(true)}>
+                                <Image source={icons.editdate} style={{ width: 35, height: 35, tintColor: color.adminprimaryColors }} />
+                            </TouchableOpacity>
+
+                        </View>
+
+                        <View style={{ margin: 10 }}>
+                            <TextInput style={styles.input}
+                                placeholder={"eg. Truck Capicity"}
+                                placeholderTextColor={'gray'}
+                                defaultValue={props.route.params?.item?.capicity}
+                                onChangeText={(val) => setData({ ...data, capicity: val })}
+                                autoCapitalize={'none'}
+                                keyboardType={'number-pad'} />
+
+                        </View>
+                        <View style={{ marginHorizontal: 10, marginVertical: 20 }}>
+                            <TouchableOpacity style={styles.btn} onPress={() => { UpdateTrasport() }}>
+                                <Text style={styles.btnText}>
+                                    Update Transport Details
+                                </Text>
+                            </TouchableOpacity>
+                        </View>
+                    </View>
                 </View>
-                <View style={{ marginHorizontal: 10, marginVertical: 20 }}>
-                    <TouchableOpacity style={styles.btn} onPress={() => { AddTrasport() }}>
-                        <Text style={styles.btnText}>
-                            Add Transport Details
-                        </Text>
-                    </TouchableOpacity>
-                </View>
-            </View>
+            }
         </View>
     )
 }
@@ -209,6 +343,10 @@ const useDispatch = (dispatch) => {
         getTruckList: (data) => dispatch(getTruckList(data)),
         getDriverList: (data) => dispatch(getDriverList(data)),
         getRouteList: (data) => dispatch(getRouteList(data)),
+        addTransport: (data) => dispatch(addTransport(data)),
+        setTransportData: (data) => dispatch(setTransportData(data)),
+        getCountTransport: (data) => dispatch(getCountTransport(data)),
+        updateTransport: (data) => dispatch(updateTransport(data)),
     };
 }
 const useSelector = (state) => (
@@ -218,6 +356,7 @@ const useSelector = (state) => (
         driverList: state.driverList.driverList,
         truckList: state.truckList.truckList,
         routeList: state.route.routeList,
+        transportData: state.transport.data
 
     }
 )

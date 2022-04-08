@@ -13,6 +13,7 @@ import addDriverSlice from './Admin/addDriverSlice';
 import truckListSlice from './Admin/truckListSlice';
 import driverListSlice from './Admin/driverListSlice';
 import routeSlice from './Admin/routeSlice';
+import transportSlice from './Admin/transportSlice';
 const store = configureStore({
     reducer: combineReducers({
         login: sendEmailSlice,
@@ -27,7 +28,8 @@ const store = configureStore({
         addDriver: addDriverSlice,
         truckList: truckListSlice,
         driverList: driverListSlice,
-        route: routeSlice
+        route: routeSlice,
+        transport: transportSlice
     }),
     middleware: (getDefaultMiddleware) => getDefaultMiddleware({
         immutableCheck: { ignoredPaths: ['some.nested.path'] },

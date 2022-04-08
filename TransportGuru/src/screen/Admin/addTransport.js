@@ -5,7 +5,7 @@ import AdminHeader from '../../components/adminHeader'
 import icons from '../../contents/icons'
 import AdminAddCard from '../../components/adminAddCard'
 import { connect } from 'react-redux'
-import { getCountDriver, getCountRoute, getCountTruck } from '../../Redux/Admin/countAddSlice'
+import { getCountDriver, getCountRoute, getCountTransport, getCountTruck } from '../../Redux/Admin/countAddSlice'
 import { getJWTToken } from '../../Redux/helper'
 const AddTransport = (props) => {
   const [token, setToken] = React.useState('');
@@ -23,6 +23,7 @@ const AddTransport = (props) => {
     props.getCountTruck(token)
     props.getCountDriver(token)
     props.getCountRoute(token)
+    props.getCountTransport(token)
   }, [token])
   return (
     <View style={styles.container}>
@@ -48,7 +49,7 @@ const AddTransport = (props) => {
       <AdminAddCard
         icons={icons.addtotruck}
         name={"Add Transport "}
-        count={0}
+        count={props.countTransport}
         onPress={() => { props.navigation.navigate('AddTrasportDetails') }} />
     </View>
   )
@@ -57,7 +58,8 @@ const useDispatch = (dispatch) => {
   return {
     getCountTruck: (data) => dispatch(getCountTruck(data)),
     getCountDriver: (data) => dispatch(getCountDriver(data)),
-    getCountRoute: (data) => dispatch(getCountRoute(data))
+    getCountRoute: (data) => dispatch(getCountRoute(data)),
+    getCountTransport: (data) => dispatch(getCountTransport(data))
   };
 }
 const useSelector = (state) => (
@@ -66,6 +68,7 @@ const useSelector = (state) => (
     countTruck: state.count.countTruck,
     countDriver: state.count.countDriver,
     countRoute: state.count.countRoute,
+    countTransport: state.count.countTransport,
   }
 )
 export default connect(useSelector, useDispatch)(AddTransport);

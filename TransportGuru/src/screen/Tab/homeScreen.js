@@ -4,7 +4,7 @@ import {
     TouchableOpacity,
     KeyboardAvoidingView,
     TouchableWithoutFeedback,
-    Keyboard, Platform, Modal, Dimensions, FlatList
+    Keyboard, Platform, Modal, Dimensions, FlatList, ScrollView, LogBox
 } from 'react-native'
 import React from 'react'
 import color from '../../contents/color'
@@ -21,6 +21,9 @@ const HomeScreen = () => {
         destination: 'Destination',
         capicity: '',
     })
+    React.useEffect(() => {
+        LogBox.ignoreLogs(["VirtualizedLists should never be nested"])
+    }, [])
     return (
         <KeyboardAvoidingView
             behavior={Platform.OS === "ios" ? "padding" : "height"}
@@ -40,15 +43,17 @@ const HomeScreen = () => {
                     >
                         <View style={{ flex: 1, justifyContent: 'center' }}>
                             <View style={styles.modelBox}>
-                                <FlatList data={[0]} scrollEnabled={false} renderItem={() => (
+                                <ScrollView keyboardShouldPersistTaps="handled" >
+
                                     <GooglePlacesAutocomplete
                                         placeholder={placetype === "from" ? "eg. From" : "eg. destination"}
                                         placeholderTextColor={'gray'}
                                         minLength={2} // minimum length of text to search
                                         fetchDetails={true}
+
                                         renderDescription={row => row.description} // custom description render
                                         onPress={(dt, details = null) => {
-
+                                            console.log(dt)
                                             placetype === "from" && setData({ ...data, from: dt.description });
                                             placetype === "destination" && setData({ ...data, destination: dt.description });
                                             setModalVisible(false)
@@ -88,8 +93,8 @@ const HomeScreen = () => {
 
                                         debounce={200}
                                     />
-                                )}
-                                />
+
+                                </ScrollView>
                             </View>
                             <TouchableOpacity onPress={() => { setModalVisible(false) }} style={{ alignItems: "center", bottom: 20 }}>
                                 <Text>Close</Text>

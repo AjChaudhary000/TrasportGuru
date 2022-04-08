@@ -24,6 +24,8 @@ import DriverList from '../screen/Admin/driverList';
 import AddTrasportDetails from '../screen/Admin/addTrasportDetails';
 import AddRoute from '../screen/Admin/addRoute';
 import Routelist from '../screen/Admin/routelist';
+import TransportListDetails from '../screen/Admin/transportList';
+
 const Stack = createNativeStackNavigator();
 const Router = (props) => {
     const [token, setTokenData] = React.useState('')
@@ -84,6 +86,7 @@ const Router = (props) => {
                 <Stack.Screen name='TruckList' component={TruckList} options={{ headerShown: false }} />
                 <Stack.Screen name='DriverList' component={DriverList} options={{ headerShown: false }} />
                 <Stack.Screen name='Routelist' component={Routelist} options={{ headerShown: false }} />
+                <Stack.Screen name='TransportListDetails' component={TransportListDetails} options={{ headerShown: false }} />
                 {/* AdminSide End */}
             </Stack.Navigator>
         </NavigationContainer>

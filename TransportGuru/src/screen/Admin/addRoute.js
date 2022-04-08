@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, TextInput, TouchableOpacity, Image, FlatList, StatusBar, Dimensions, Modal } from 'react-native'
+import { View, Text, StyleSheet, TextInput, TouchableOpacity, Image, FlatList, StatusBar, Dimensions, Modal, ScrollView, LogBox } from 'react-native'
 import React from 'react'
 import { AdminHeaderWithBackButton } from '../../components/adminHeader';
 import color from '../../contents/color'
@@ -34,6 +34,9 @@ const AddRoute = (props) => {
         fetchToken()
     }, [token])
     React.useEffect(() => {
+        LogBox.ignoreLogs(["VirtualizedLists should never be nested"])
+    }, [])
+    React.useEffect(() => {
         if (props?.routeData.status) {
             props.getCountRoute(token)
             props.setRouteData({})
@@ -65,7 +68,7 @@ const AddRoute = (props) => {
             >
                 <View style={{ flex: 1, justifyContent: 'center' }}>
                     <View style={styles.modelBox}>
-                        <FlatList data={[0]} scrollEnabled={false} renderItem={() => (
+                        <ScrollView keyboardShouldPersistTaps="handled" >
                             <GooglePlacesAutocomplete
                                 placeholder={placetype === "from" ? "eg. From" : "eg. destination"}
                                 placeholderTextColor={'gray'}
@@ -115,8 +118,7 @@ const AddRoute = (props) => {
 
                                 debounce={200}
                             />
-                        )}
-                        />
+                        </ScrollView>
                     </View>
                     <TouchableOpacity onPress={() => { setModalVisible(false) }} style={{ alignItems: "center", bottom: 20 }}>
                         <Text>Close</Text>
@@ -166,7 +168,7 @@ const AddRoute = (props) => {
                                     <View style={{ alignItems: 'center' }}>
                                         <Text style={{ color: color.fontcolor, fontWeight: 'bold', fontSize: 18, paddingHorizontal: 5 }}>{item.stops}</Text>
                                     </View>
-                                    <TouchableOpacity style={{ alignItems: 'center' }} onPress={() => { setStopList(stopList.filter((_, index) => index !== item.index)) }}>
+                                    <TouchableOpacity style={{ alignItems: 'center' }} onPress={() => { setStopList(stopList.filter((_, ind) => ind !== index)) }}>
                                         <Image source={icons.close} style={{ width: 35, height: 35, tintColor: color.adminprimaryColors }} />
                                     </TouchableOpacity>
                                 </View>
@@ -212,6 +214,7 @@ const AddRoute = (props) => {
                             </TouchableOpacity>
 
                         </View>}
+
                         <DraggableFlatList
                             data={stopList}
                             onDragEnd={({ data }) => setData(data)}
@@ -219,14 +222,14 @@ const AddRoute = (props) => {
                             renderItem={({ item, index, drag }) => (
                                 <View style={styles.stopbox}>
                                     {moveBox &&
-                                        <TouchableOpacity style={{ alignItems: 'center' }}
+                                        <TouchableOpacity style={{ alignItems: 'center' }} style={{ flexDirection: 'column' }}
                                             onLongPress={drag}>
                                             <Image source={icons.move} style={{ width: 30, height: 30, tintColor: color.adminprimaryColors }} />
                                         </TouchableOpacity>}
                                     <View style={{ alignItems: 'center' }}>
                                         <Text style={{ color: color.fontcolor, fontWeight: 'bold', fontSize: 18, paddingHorizontal: 5 }}>{item.stops}</Text>
                                     </View>
-                                    <TouchableOpacity style={{ alignItems: 'center' }} onPress={() => { setStopList(stopList.filter((_, index) => index !== item.index)) }}>
+                                    <TouchableOpacity style={{ alignItems: 'center' }} onPress={() => { setStopList(stopList.filter((_, ind) => ind !== index)) }}>
                                         <Image source={icons.close} style={{ width: 35, height: 35, tintColor: color.adminprimaryColors }} />
                                     </TouchableOpacity>
                                 </View>
@@ -243,7 +246,7 @@ const AddRoute = (props) => {
                         </View>
                     </View>
                 </View>}
-        </View>
+        </View >
     )
 }
 const useDispatch = (dispatch) => {

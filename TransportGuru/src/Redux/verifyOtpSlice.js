@@ -23,7 +23,11 @@ export const verifyOtpSlice = createSlice({
         error: '',
         otpdata: {}
     },
-    reducers: {},
+    reducers: {
+        setotpData: (state, action) => {
+            state.otpdata = action.payload
+        }
+    },
     extraReducers: {
         [verifyOtp.fulfilled]: (state, action) => {
             state.otpdata = action.payload;
@@ -39,4 +43,5 @@ export const verifyOtpSlice = createSlice({
         }
     }
 });
+export const { setotpData } = verifyOtpSlice.actions;
 export default verifyOtpSlice.reducer;
