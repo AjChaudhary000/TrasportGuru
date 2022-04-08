@@ -68,8 +68,6 @@ const AddTruck = (props) => {
     const GalleryLaunch = () => {
         let options = {
             title: 'You can choose one image',
-            mediaType: 'photo',
-            selectionLimit: 6,
             storageOptions: {
                 skipBackup: true,
                 path: 'images',
