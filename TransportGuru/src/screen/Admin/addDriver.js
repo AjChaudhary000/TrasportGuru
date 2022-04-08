@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, TextInput, TouchableOpacity, Image, FlatList, StatusBar, Animated } from 'react-native'
+import { View, Text, StyleSheet, TextInput, TouchableOpacity, Image, FlatList, StatusBar, Animated, Platform, Alert } from 'react-native'
 import React from 'react'
 import { AdminHeaderWithBackButton } from '../../components/adminHeader';
 import color from '../../contents/color'
@@ -12,12 +12,15 @@ import LottieView from 'lottie-react-native';
 import { addDriver, setDriverData, updateDriver } from '../../Redux/Admin/addDriverSlice';
 import { getCountDriver } from '../../Redux/Admin/countAddSlice';
 import { getDriverList } from '../../Redux/Admin/driverListSlice';
+import storage from '@react-native-firebase/storage';
 const AddDriver = (props) => {
     const [isTimerView, setIsTmerView] = React.useState(true);
     const [token, setToken] = React.useState('');
-    const [imageData, setimage] = React.useState([])
+    const [imageData, setimage] = React.useState({})
     const [showimage, setshowimage] = React.useState(false);
     const [verifyDriverData, setVerifyDriverData] = React.useState(false)
+
+    const [transferred, setTransferred] = React.useState(0);
     const [data, setData] = React.useState({
         driverName: props.route.params?.item?.driverName || '',
         driverEmail: props.route.params?.item?.driverEmail || '',
@@ -55,12 +58,13 @@ const AddDriver = (props) => {
     }, [props, token])
 
     const VerifyDriver = () => {
-        if (data.driverName !== "" &&
-            data.driverEmail !== "" &&
-            data.driverMobileNo !== "") {
-            props.sendemail(data.driverEmail);
+        // if (data.driverName !== "" &&
+        //     data.driverEmail !== "" &&
+        //     data.driverMobileNo !== "") {
+        uploadImage()
+        //  props.sendemail(data.driverEmail);
 
-        }
+        // }
     }
     const editDriver = () => {
         setData({
@@ -97,13 +101,45 @@ const AddDriver = (props) => {
             } else if (response.customButton) {
                 console.log('User tapped custom button: ', response.customButton);
             } else {
-                const source = Object.values(response.assets)
-                setimage(source)
+                const source = { uri: response.assets[0].uri };
+                console.log(source);
+                setimage(source);
                 setshowimage(true)
-                console.log(imageData)
             }
         });
     }
+    const uploadImage = async () => {
+        const { uri } = imageData;
+        //const filename = uri.substring(uri.lastIndexOf('/') + 1);
+        const uploadUri = Platform.OS === 'ios' ? uri.replace('file://', '') : uri;
+
+        const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
+        const filename = uniqueSuffix + uploadUri.split('.').pop();;
+        //const storageRef = ref(firestorage, "attachments/" + filename);
+        setTransferred(0);
+        const task = storage()
+            .ref(`driver/${filename}`)
+            .putFile(uploadUri);
+        // set progress state
+        task.on('state_changed', snapshot => {
+            setTransferred(
+                Math.round(snapshot.bytesTransferred / snapshot.totalBytes) * 10000
+            );
+        });
+
+
+        task.then(async (res) => {
+            console.log(res)
+            const url = await storage().ref(`driver/${filename}`).getDownloadURL();
+            console.log("7623547365", url)
+        })
+
+        Alert.alert(
+            'Photo uploaded!',
+            'Your photo has been uploaded to Firebase Cloud Storage!'
+        );
+
+    };
     if (props?.loading) {
         return (
             <View style={{ flex: 1, backgroundColor: color.backgroundColor }}>
@@ -140,27 +176,22 @@ const AddDriver = (props) => {
                                 </TouchableOpacity>
                                 {showimage ?
                                     <View style={{ marginLeft: 25, marginRight: 20 }}>
-                                        <FlatList data={imageData}
-                                            horizontal
-                                            showsHorizontalScrollIndicator={false}
+                                        <TouchableOpacity
+                                            onLongPress={() => { setimage({}), setshowimage(false) }}
+                                            style={{ marginRight: 10 }}>
+                                            <Image
+                                                style={{
+                                                    width: 80,
+                                                    height: 80,
+                                                    resizeMode: 'contain',
+                                                    borderRadius: 10,
+                                                    overflow: 'hidden',
+                                                }}
+                                                source={{ uri: imageData.uri }}
+                                            />
 
-                                            renderItem={({ item }) => (
-                                                <TouchableOpacity
-                                                    onLongPress={console.log("helo")}
-                                                    style={{ marginRight: 10 }}>
-                                                    <Image
-                                                        style={{
-                                                            width: 80,
-                                                            height: 80,
-                                                            resizeMode: 'contain',
-                                                            borderRadius: 10,
-                                                            overflow: 'hidden',
-                                                        }}
-                                                        source={{ uri: item.uri }}
-                                                    />
+                                        </TouchableOpacity>
 
-                                                </TouchableOpacity>
-                                            )} />
                                     </View> : null}
                             </View>
 
