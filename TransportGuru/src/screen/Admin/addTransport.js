@@ -7,8 +7,10 @@ import AdminAddCard from '../../components/adminAddCard'
 import { connect } from 'react-redux'
 import { getCountDriver, getCountRoute, getCountTransport, getCountTruck } from '../../Redux/Admin/countAddSlice'
 import { getJWTToken } from '../../Redux/helper'
+
 const AddTransport = (props) => {
   const [token, setToken] = React.useState('');
+
   const fetchToken = async () => {
     try {
       const data = await getJWTToken();

@@ -45,7 +45,7 @@ const TruckList = (props) => {
             <FlatList data={props.truckList} renderItem={(item) => (
                 <View style={styles.listBox}>
                     <View style={styles.image}>
-                        <Image source={image.Truck} style={{ width: '100%', height: '100%', overflow: "hidden" }} />
+                        <Image source={{uri:item.item.truckImage}} style={{ width: '100%', height: '100%', overflow: "hidden" }} />
                     </View>
                     <View style={styles.listData}>
                         <Text style={styles.truckname}>{item.item.truckName}</Text>

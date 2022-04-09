@@ -5,9 +5,13 @@ import * as ImagePicker from 'react-native-image-picker'
 import { connect } from 'react-redux'
 import { userProfile } from '../Redux/userProfileSlice';
 import color from '../contents/color';
+import LottieView from 'lottie-react-native';
+import storage from '@react-native-firebase/storage';
 const UserProfile = (props) => {
+    const [firebaseImage, setfirebaseImage] = React.useState('');
+    const [imageLoading, setImageLoading] = React.useState(false);
+    const [transferred, setTransferred] = React.useState(0);
     const [data, setdata] = React.useState({
-        imagepath: {},
         username: ''
     })
     React.useEffect(() => {
@@ -49,6 +53,33 @@ const UserProfile = (props) => {
         });
         setModalVisible(false)
     }
+    const uploadImage = async ({ uri }) => {
+        console.log(uri)
+        const uploadUri = Platform.OS === 'ios' ? uri.replace('file://', '') : uri;
+        const uniqueSuffix = "user" + Date.now() + "-" + Math.round(Math.random() * 1e9);
+        const filename = uniqueSuffix + uploadUri.split('.').pop();;
+        setTransferred(0);
+        const task = storage()
+            .ref(`user/${filename}`)
+            .putFile(uploadUri);
+        task.on('state_changed', snapshot => {
+            setTransferred(
+                Math.round(snapshot.bytesTransferred / snapshot.totalBytes) * 10000
+            );
+        });
+        task.then(async (res) => {
+            console.log(res)
+
+            const url = await storage().ref(`user/${filename}`).getDownloadURL();
+            await setfirebaseImage(url)
+            if (res.state === 'success') {
+                setTimeout(() => {
+                    setImageLoading(false)
+                }, 4000)
+
+            }
+        })
+    };
     const GalleryLaunch = () => {
         let options = {
             title: 'You can choose one image',
@@ -58,7 +89,6 @@ const UserProfile = (props) => {
             },
         };
         ImagePicker.launchImageLibrary(options, (response) => {
-            //console.log('Response = ', response)
             if (response.didCancel) {
                 console.log('User cancelled image picker');
             } else if (response.error) {
@@ -66,20 +96,19 @@ const UserProfile = (props) => {
             } else if (response.customButton) {
                 console.log('User tapped custom button: ', response.customButton);
             } else {
-                console.log(response.assets[0])
-                setdata({
-                    ...data,
-                    imagepath: response.assets[0]
-                })
+                const source = { uri: response.assets[0].uri };
+                setImageLoading(true)
+                uploadImage(source)
+                setModalVisible(false)
             }
         });
-        setModalVisible(false)
     }
     const uploadData = () => {
-
-        props.userProfile({ ...data, token: props.token })
-        console.log({ ...data, token: props.token })
-        console.log(props.userdata)
+        if (data.username != "" && firebaseImage != "") {
+            props.userProfile({ ...data, image: firebaseImage || '', token: props.token })
+            //  console.log({ ...data, image: firebaseImage || '', token: props.token })
+            console.log(props.userdata)
+        }
     }
     return (
 
@@ -110,15 +139,38 @@ const UserProfile = (props) => {
                 </View>
             </Modal>
             <View style={{ paddingTop: 12, height: '30%', justifyContent: 'center' }}>
-                {data.imagepath?.length === 0 ?
-                    <Image source={icons.profileimage} style={{ width: 100, height: 100 }} />
-                    :
+                {!imageLoading ?
+                    <View style={{ marginHorizontal: 10 }}>
+                        {!firebaseImage ?
+                            <TouchableOpacity onPress={GalleryLaunch}>
+                                <Image
+                                    style={{
+                                        alignSelf: 'center',
+                                        width: 100,
+                                        height: 100,
+                                        borderRadius: 10,
+                                        resizeMode: 'contain',
+                                        marginVertical: 30,
+                                        tintColor: color.adminprimaryColors
+                                    }}
+                                    source={icons.add_photo}
+                                />
+                            </TouchableOpacity> :
+                            <View style={styles.image}>
+                                <Image
+                                    style={{
+                                        width: 110, height: 110, alignSelf: "center"
 
-                    <Image source={{ uri: data.imagepath.uri }} style={{ width: 100, height: 100, borderRadius: 50 }} />
-                }
-                <TouchableOpacity style={{ bottom: 30, left: 60 }} onPress={() => setModalVisible(true)}>
-                    <Image source={icons.add} style={{ width: 30, height: 30 }} />
-                </TouchableOpacity>
+                                    }}
+                                    source={{ uri: firebaseImage }}
+                                /></View>}
+
+
+                    </View>
+                    :
+                    <View style={{ height: 100, alignContent: 'center', marginHorizontal: 10 }}>
+                        <LottieView source={require('../assets/json/uploading1.json')} autoPlay loop />
+                    </View>}
             </View>
             <View style={styles.titleComponets}>
                 <Text style={styles.title}> Here we go !</Text>
@@ -243,5 +295,14 @@ const styles = StyleSheet.create({
         width: 40,
         height: 40,
         tintColor: 'black'
-    }
+    }, image: {
+        marginTop: 40,
+        overflow: 'hidden',
+        alignSelf: 'center',
+        width: 120,
+        height: 120,
+        borderRadius: 60,
+        borderWidth: 5,
+        borderColor: color.primaryColors
+    },
 })

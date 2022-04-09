@@ -10,8 +10,8 @@ export const addTruck = createAsyncThunk(
                 truckModelName: obj.truckModelName,
                 truckRegistartionNo: obj.truckRegistartionNo,
                 truckCapicity: obj.truckCapicity,
-                truckTypeId: obj.truckTypeId
-
+                truckTypeId: obj.truckTypeId,
+                truckImage: obj.truckImage
             }
 
             const response = await TrasportApi.post('/truck/create', data, {
@@ -34,7 +34,8 @@ export const updateTruck = createAsyncThunk(
                 truckModelName: obj.truckModelName,
                 truckRegistartionNo: obj.truckRegistartionNo,
                 truckCapicity: obj.truckCapicity,
-                truckTypeId: obj.truckTypeId
+                truckTypeId: obj.truckTypeId,
+                truckImage: obj.truckImage
 
             }
             const response = await TrasportApi.patch(`/updatetruck/${obj.id}`, data, {

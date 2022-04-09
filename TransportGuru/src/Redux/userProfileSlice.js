@@ -5,10 +5,9 @@ export const userProfile = createAsyncThunk(
     'user/userProfile',
     async (obj, getState) => {
         try {
-            const { uri, type, fileName } = obj.imagepath;
             const data = {
                 username: obj.username,
-                image: fileName || ''
+                image: obj.image || ''
             }
             const response = await TrasportApi.post('/user/me', data, {
                 headers: {

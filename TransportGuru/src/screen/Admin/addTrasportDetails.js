@@ -75,7 +75,7 @@ const AddTrasportDetails = (props) => {
         return (
             <View style={styles.item}>
                 <Text style={styles.textItem}>{item.driverName}</Text>
-                <Image source={image.user} style={{ width: 30, height: 30 }} />
+                <Image source={{uri:item.driverImage}} style={{ width: 30, height: 30 }} />
             </View>
         );
     };
@@ -84,7 +84,7 @@ const AddTrasportDetails = (props) => {
         return (
             <View style={styles.item}>
                 <Text style={styles.textItem}>{item.truckRegistartionNo}</Text>
-                <Image source={image.Truck} style={{ width: 30, height: 30 }} />
+                <Image source={{uri:item.truckImage}} style={{ width: 30, height: 30 }} />
             </View>
         );
     };

@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native'
+import { View, Text, StyleSheet, Image, TouchableOpacity, Dimensions } from 'react-native'
 import React from 'react'
 import color from '../../contents/color'
 import AdminHeader from '../../components/adminHeader'
@@ -109,10 +109,10 @@ const styles = StyleSheet.create({
     },
     box: {
         flexDirection: 'row',
-        marginHorizontal: 20
+        marginHorizontal: 10
     },
     adminCard: {
-        width: 150,
+        width: Dimensions.get('window').width / 2 - 40,
         height: 150,
         backgroundColor: color.backgroundColor,
         marginHorizontal: 15,

@@ -10,11 +10,14 @@ import { getTruckType } from '../../Redux/Admin/trucktypeSlice';
 import { getJWTToken } from '../../Redux/helper';
 import { addTruck, setTruckData, updateTruck } from '../../Redux/Admin/addTruckSlice';
 import { getCountTruck } from '../../Redux/Admin/countAddSlice'
+import LottieView from 'lottie-react-native';
+import storage from '@react-native-firebase/storage';
 const AddTruck = (props) => {
 
     const [token, setToken] = React.useState('');
-    const [imageData, setimage] = React.useState([])
-    const [showimage, setshowimage] = React.useState(false)
+    const [firebaseImage, setfirebaseImage] = React.useState(props.route.params?.item?.truckImage || '');
+    const [imageLoading, setImageLoading] = React.useState(false)
+    const [transferred, setTransferred] = React.useState(0);
     const [value, setValue] = React.useState(null);
     const [data, setData] = React.useState({
         truckName: props.route.params?.item?.truckName || '',
@@ -50,8 +53,9 @@ const AddTruck = (props) => {
             data.truckModelName !== "" &&
             data.truckRegistartionNo !== "" &&
             data.truckCapicity !== "" &&
-            data.truckTypeId !== "") {
-            props.addTruck({ ...data, token: token })
+            data.truckTypeId !== "" &&
+            firebaseImage !== "") {
+            props.addTruck({ ...data, truckImage: firebaseImage, token: token })
         }
 
     }
@@ -60,8 +64,9 @@ const AddTruck = (props) => {
             data.truckModelName !== "" &&
             data.truckRegistartionNo !== "" &&
             data.truckCapicity !== "" &&
-            data.truckTypeId !== "") {
-            props.updateTruck({ ...data, id: props.route.params?.item?._id, token: token })
+            data.truckTypeId !== "" &&
+            firebaseImage !== "") {
+            props.updateTruck({ ...data, truckImage: firebaseImage, id: props.route.params?.item?._id, token: token })
         }
 
     }
@@ -74,7 +79,6 @@ const AddTruck = (props) => {
             },
         };
         ImagePicker.launchImageLibrary(options, (response) => {
-            //console.log('Response = ', response)
             if (response.didCancel) {
                 console.log('User cancelled image picker');
             } else if (response.error) {
@@ -82,13 +86,40 @@ const AddTruck = (props) => {
             } else if (response.customButton) {
                 console.log('User tapped custom button: ', response.customButton);
             } else {
-                const source = Object.values(response.assets)
-                setimage(source)
-                setshowimage(true)
-                console.log(imageData)
+                const source = { uri: response.assets[0].uri };
+                setImageLoading(true)
+                uploadImage(source)
+
             }
         });
     }
+    const uploadImage = async ({ uri }) => {
+        console.log(uri)
+        const uploadUri = Platform.OS === 'ios' ? uri.replace('file://', '') : uri;
+        const uniqueSuffix = "Truck" + Date.now() + "-" + Math.round(Math.random() * 1e9);
+        const filename = uniqueSuffix + uploadUri.split('.').pop();;
+        setTransferred(0);
+        const task = storage()
+            .ref(`Truck/${filename}`)
+            .putFile(uploadUri);
+        task.on('state_changed', snapshot => {
+            setTransferred(
+                Math.round(snapshot.bytesTransferred / snapshot.totalBytes) * 10000
+            );
+        });
+        task.then(async (res) => {
+            console.log(res)
+
+            const url = await storage().ref(`Truck/${filename}`).getDownloadURL();
+            await setfirebaseImage(url)
+            if (res.state === 'success') {
+                setTimeout(() => {
+                    setImageLoading(false)
+                }, 4000)
+
+            }
+        })
+    };
     const renderItem = (item) => {
         return (
             <View style={styles.item}>
@@ -104,44 +135,36 @@ const AddTruck = (props) => {
                     <AdminHeaderWithBackButton name={"Add Truck"} navigation={props.navigation} />
                     <View style={styles.inputBox}>
                         <View style={{ marginHorizontal: 10 }}>
-                            <TouchableOpacity onPress={GalleryLaunch}>
-                                <Image
-                                    style={{
-                                        alignSelf: 'center',
-                                        width: 80,
-                                        height: 80,
-                                        borderRadius: 10,
-                                        resizeMode: 'contain',
-                                        marginVertical: 30,
-                                        tintColor: color.adminprimaryColors
-                                    }}
-                                    source={icons.add_photo}
-                                />
-                            </TouchableOpacity>
-                            {showimage ?
-                                <View style={{ marginLeft: 25, marginRight: 20 }}>
-                                    <FlatList data={imageData}
-                                        horizontal
-                                        showsHorizontalScrollIndicator={false}
+                            {!imageLoading ?
+                                <View style={{ marginHorizontal: 10 }}>
+                                    {!firebaseImage ?
+                                        <TouchableOpacity onPress={GalleryLaunch}>
+                                            <Image
+                                                style={{
+                                                    alignSelf: 'center',
+                                                    width: 100,
+                                                    height: 100,
+                                                    borderRadius: 10,
+                                                    resizeMode: 'contain',
+                                                    marginVertical: 30,
+                                                    tintColor: color.adminprimaryColors
+                                                }}
+                                                source={icons.add_photo}
+                                            />
+                                        </TouchableOpacity> :
+                                        <View style={styles.image}>
+                                            <Image
+                                                style={{
+                                                    width: 110, height: 110, alignSelf: "center"
 
-                                        renderItem={({ item }) => (
-                                            <TouchableOpacity
-                                                onLongPress={console.log("helo")}
-                                                style={{ marginRight: 10 }}>
-                                                <Image
-                                                    style={{
-                                                        width: 80,
-                                                        height: 80,
-                                                        resizeMode: 'contain',
-                                                        borderRadius: 10,
-                                                        overflow: 'hidden',
-                                                    }}
-                                                    source={{ uri: item.uri }}
-                                                />
-
-                                            </TouchableOpacity>
-                                        )} />
-                                </View> : null}
+                                                }}
+                                                source={{ uri: firebaseImage }}
+                                            /></View>}
+                                </View>
+                                :
+                                <View style={{ height: 100, alignContent: 'center', marginHorizontal: 10 }}>
+                                    <LottieView source={require('../../assets/json/uploading1.json')} autoPlay loop />
+                                </View>}
                         </View>
                         <View style={{ margin: 10 }}>
                             <Dropdown
@@ -213,44 +236,38 @@ const AddTruck = (props) => {
                     <AdminHeaderWithBackButton name={"Update Truck"} navigation={props.navigation} />
                     <View style={styles.inputBox}>
                         <View style={{ marginHorizontal: 10 }}>
-                            <TouchableOpacity onPress={GalleryLaunch}>
-                                <Image
-                                    style={{
-                                        alignSelf: 'center',
-                                        width: 80,
-                                        height: 80,
-                                        borderRadius: 10,
-                                        resizeMode: 'contain',
-                                        marginVertical: 30,
-                                        tintColor: color.adminprimaryColors
-                                    }}
-                                    source={icons.add_photo}
-                                />
-                            </TouchableOpacity>
-                            {showimage ?
-                                <View style={{ marginLeft: 25, marginRight: 20 }}>
-                                    <FlatList data={imageData}
-                                        horizontal
-                                        showsHorizontalScrollIndicator={false}
+                            {!imageLoading ?
+                                <View style={{ marginHorizontal: 10 }}>
+                                    {!firebaseImage ?
+                                        <TouchableOpacity onPress={GalleryLaunch}>
+                                            <Image
+                                                style={{
+                                                    alignSelf: 'center',
+                                                    width: 100,
+                                                    height: 100,
+                                                    borderRadius: 10,
+                                                    resizeMode: 'contain',
+                                                    marginVertical: 30,
+                                                    tintColor: color.adminprimaryColors
+                                                }}
+                                                source={icons.add_photo}
+                                            />
+                                        </TouchableOpacity> :
+                                        <TouchableOpacity onPress={GalleryLaunch} style={styles.image}>
+                                            <Image
+                                                style={{
+                                                    width: 110, height: 110, alignSelf: "center"
 
-                                        renderItem={({ item }) => (
-                                            <TouchableOpacity
-                                                onLongPress={console.log("helo")}
-                                                style={{ marginRight: 10 }}>
-                                                <Image
-                                                    style={{
-                                                        width: 80,
-                                                        height: 80,
-                                                        resizeMode: 'contain',
-                                                        borderRadius: 10,
-                                                        overflow: 'hidden',
-                                                    }}
-                                                    source={{ uri: item.uri }}
-                                                />
+                                                }}
+                                                source={{ uri: firebaseImage }}
+                                            /></TouchableOpacity>}
 
-                                            </TouchableOpacity>
-                                        )} />
-                                </View> : null}
+
+                                </View>
+                                :
+                                <View style={{ height: 100, alignContent: 'center', marginHorizontal: 10 }}>
+                                    <LottieView source={require('../../assets/json/uploading1.json')} autoPlay loop />
+                                </View>}
                         </View>
                         <View style={{ margin: 10 }}>
                             <Dropdown
@@ -415,5 +432,14 @@ const styles = StyleSheet.create({
     }, iconStyle: {
         width: 20,
         height: 20,
-    },
+    }, image: {
+        marginTop: 40,
+        overflow: 'hidden',
+        alignSelf: 'center',
+        width: 120,
+        height: 120,
+        borderRadius: 10,
+        borderWidth: 5,
+        borderColor: color.primaryColors
+    }
 })

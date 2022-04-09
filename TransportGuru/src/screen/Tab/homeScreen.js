@@ -57,7 +57,7 @@ const HomeScreen = () => {
                                             placetype === "from" && setData({ ...data, from: dt.description });
                                             placetype === "destination" && setData({ ...data, destination: dt.description });
                                             setModalVisible(false)
-                                            // console.log(details);
+                                             console.log(details);
                                         }}
                                         getDefaultValue={() => {
                                             return ''; // text input default value
@@ -200,7 +200,7 @@ const styles = StyleSheet.create({
 
     },
     fromToDesc: {
-        height: '45%',
+        height: 220,
         backgroundColor: '#dce3f5',
         marginHorizontal: 35,
         borderRadius: 20,

@@ -111,6 +111,7 @@ router.post('/verifyDriver', auth, async (req, res) => {
             driverName: req.body.driverName,
             driverEmail: req.body.driverEmail,
             driverMobileNo: req.body.driverMobileNo,
+            driverImage: req.body.driverImage
         }
         const driver = new Driver({ tarsportUserId: req.user._id, ...DriverInfo })
         const data = await driver.save()

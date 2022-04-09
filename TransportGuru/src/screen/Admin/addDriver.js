@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, TextInput, TouchableOpacity, Image, FlatList, StatusBar, Animated, Platform, Alert } from 'react-native'
+import { View, Text, StyleSheet, TextInput, TouchableOpacity, ActivityIndicator, Image, FlatList, StatusBar, Animated, Platform, Alert } from 'react-native'
 import React from 'react'
 import { AdminHeaderWithBackButton } from '../../components/adminHeader';
 import color from '../../contents/color'
@@ -16,10 +16,9 @@ import storage from '@react-native-firebase/storage';
 const AddDriver = (props) => {
     const [isTimerView, setIsTmerView] = React.useState(true);
     const [token, setToken] = React.useState('');
-    const [imageData, setimage] = React.useState({})
-    const [showimage, setshowimage] = React.useState(false);
+    const [firebaseImage, setfirebaseImage] = React.useState(props.route.params?.item?.driverImage || '');
+    const [imageLoading, setImageLoading] = React.useState(false)
     const [verifyDriverData, setVerifyDriverData] = React.useState(false)
-
     const [transferred, setTransferred] = React.useState(0);
     const [data, setData] = React.useState({
         driverName: props.route.params?.item?.driverName || '',
@@ -42,7 +41,6 @@ const AddDriver = (props) => {
     }
     React.useEffect(() => {
         fetchToken()
-        // props.getTruckType(token)
     }, [token])
     React.useEffect(() => {
         if (props?.Driverdata.status) {
@@ -58,30 +56,30 @@ const AddDriver = (props) => {
     }, [props, token])
 
     const VerifyDriver = () => {
-        // if (data.driverName !== "" &&
-        //     data.driverEmail !== "" &&
-        //     data.driverMobileNo !== "") {
-        uploadImage()
-        //  props.sendemail(data.driverEmail);
-
-        // }
+        if (data.driverName !== "" &&
+            data.driverEmail !== "" &&
+            data.driverMobileNo !== "", firebaseImage !== "") {
+            props.sendemail(data.driverEmail);
+        }
     }
     const editDriver = () => {
         setData({
             driverEmail: "",
             driverMobileNo: "",
             driverName: "",
-            driverOtp: ""
+            driverOtp: "",
+
         });
+        setImageLoading(false)
         setVerifyDriverData(false)
     }
     const Finish = () => {
         console.log(token)
-        props.addDriver({ ...data, token: token })
+        props.addDriver({ ...data, driverImage: firebaseImage, token: token })
         console.log("output", data)
     }
     const UpdateFinish = () => {
-        props.updateDriver({ ...data, id: props.route.params?.item?._id, token: token })
+        props.updateDriver({ ...data, driverImage: firebaseImage, id: props.route.params?.item?._id, token: token })
 
     }
     const GalleryLaunch = () => {
@@ -93,7 +91,6 @@ const AddDriver = (props) => {
             },
         };
         ImagePicker.launchImageLibrary(options, (response) => {
-            //console.log('Response = ', response)
             if (response.didCancel) {
                 console.log('User cancelled image picker');
             } else if (response.error) {
@@ -102,43 +99,38 @@ const AddDriver = (props) => {
                 console.log('User tapped custom button: ', response.customButton);
             } else {
                 const source = { uri: response.assets[0].uri };
-                console.log(source);
-                setimage(source);
-                setshowimage(true)
+                setImageLoading(true)
+                uploadImage(source)
+
             }
         });
     }
-    const uploadImage = async () => {
-        const { uri } = imageData;
-        //const filename = uri.substring(uri.lastIndexOf('/') + 1);
+    const uploadImage = async ({ uri }) => {
+        console.log(uri)
         const uploadUri = Platform.OS === 'ios' ? uri.replace('file://', '') : uri;
-
-        const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
+        const uniqueSuffix = "Driver" + Date.now() + "-" + Math.round(Math.random() * 1e9);
         const filename = uniqueSuffix + uploadUri.split('.').pop();;
-        //const storageRef = ref(firestorage, "attachments/" + filename);
         setTransferred(0);
         const task = storage()
             .ref(`driver/${filename}`)
             .putFile(uploadUri);
-        // set progress state
         task.on('state_changed', snapshot => {
             setTransferred(
                 Math.round(snapshot.bytesTransferred / snapshot.totalBytes) * 10000
             );
         });
-
-
         task.then(async (res) => {
             console.log(res)
+
             const url = await storage().ref(`driver/${filename}`).getDownloadURL();
-            console.log("7623547365", url)
+            await setfirebaseImage(url)
+            if (res.state === 'success') {
+                setTimeout(() => {
+                    setImageLoading(false)
+                }, 4000)
+
+            }
         })
-
-        Alert.alert(
-            'Photo uploaded!',
-            'Your photo has been uploaded to Firebase Cloud Storage!'
-        );
-
     };
     if (props?.loading) {
         return (
@@ -159,42 +151,38 @@ const AddDriver = (props) => {
 
                     {!verifyDriverData ?
                         <View style={styles.inputBox}>
-                            <View style={{ marginHorizontal: 10 }}>
-                                <TouchableOpacity onPress={GalleryLaunch}>
-                                    <Image
-                                        style={{
-                                            alignSelf: 'center',
-                                            width: 80,
-                                            height: 80,
-                                            borderRadius: 10,
-                                            resizeMode: 'contain',
-                                            marginVertical: 30,
-                                            tintColor: color.adminprimaryColors
-                                        }}
-                                        source={icons.add_photo}
-                                    />
-                                </TouchableOpacity>
-                                {showimage ?
-                                    <View style={{ marginLeft: 25, marginRight: 20 }}>
-                                        <TouchableOpacity
-                                            onLongPress={() => { setimage({}), setshowimage(false) }}
-                                            style={{ marginRight: 10 }}>
+                            {!imageLoading ?
+                                <View style={{ marginHorizontal: 10 }}>
+                                    {!firebaseImage ?
+                                        <TouchableOpacity onPress={GalleryLaunch}>
                                             <Image
                                                 style={{
-                                                    width: 80,
-                                                    height: 80,
-                                                    resizeMode: 'contain',
+                                                    alignSelf: 'center',
+                                                    width: 100,
+                                                    height: 100,
                                                     borderRadius: 10,
-                                                    overflow: 'hidden',
+                                                    resizeMode: 'contain',
+                                                    marginVertical: 30,
+                                                    tintColor: color.adminprimaryColors
                                                 }}
-                                                source={{ uri: imageData.uri }}
+                                                source={icons.add_photo}
                                             />
+                                        </TouchableOpacity> :
+                                        <View style={styles.image}>
+                                            <Image
+                                                style={{
+                                                    width: 110, height: 110, alignSelf: "center"
 
-                                        </TouchableOpacity>
+                                                }}
+                                                source={{ uri: firebaseImage }}
+                                            /></View>}
 
-                                    </View> : null}
-                            </View>
 
+                                </View>
+                                :
+                                <View style={{ height: 100, alignContent: 'center', marginHorizontal: 10 }}>
+                                    <LottieView source={require('../../assets/json/uploading1.json')} autoPlay loop />
+                                </View>}
                             <View style={{ margin: 10 }}>
                                 <TextInput style={styles.input}
 
@@ -304,44 +292,38 @@ const AddDriver = (props) => {
                     {!verifyDriverData ?
                         <View style={styles.inputBox}>
                             <View style={{ marginHorizontal: 10 }}>
-                                <TouchableOpacity onPress={GalleryLaunch}>
-                                    <Image
-                                        style={{
-                                            alignSelf: 'center',
-                                            width: 80,
-                                            height: 80,
-                                            borderRadius: 10,
-                                            resizeMode: 'contain',
-                                            marginVertical: 30,
-                                            tintColor: color.adminprimaryColors
-                                        }}
-                                        source={icons.add_photo}
-                                    />
-                                </TouchableOpacity>
-                                {showimage ?
-                                    <View style={{ marginLeft: 25, marginRight: 20 }}>
-                                        <FlatList data={imageData}
-                                            horizontal
-                                            showsHorizontalScrollIndicator={false}
+                                {!imageLoading ?
+                                    <View style={{ marginHorizontal: 10 }}>
+                                        {!firebaseImage ?
+                                            <TouchableOpacity onPress={GalleryLaunch}>
+                                                <Image
+                                                    style={{
+                                                        alignSelf: 'center',
+                                                        width: 100,
+                                                        height: 100,
+                                                        borderRadius: 10,
+                                                        resizeMode: 'contain',
+                                                        marginVertical: 30,
+                                                        tintColor: color.adminprimaryColors
+                                                    }}
+                                                    source={icons.add_photo}
+                                                />
+                                            </TouchableOpacity> :
+                                            <TouchableOpacity onPress={GalleryLaunch} style={styles.image}>
+                                                <Image
+                                                    style={{
+                                                        width: 110, height: 110, alignSelf: "center"
 
-                                            renderItem={({ item }) => (
-                                                <TouchableOpacity
-                                                    onLongPress={console.log("helo")}
-                                                    style={{ marginRight: 10 }}>
-                                                    <Image
-                                                        style={{
-                                                            width: 80,
-                                                            height: 80,
-                                                            resizeMode: 'contain',
-                                                            borderRadius: 10,
-                                                            overflow: 'hidden',
-                                                        }}
-                                                        source={{ uri: item.uri }}
-                                                    />
+                                                    }}
+                                                    source={{ uri: firebaseImage }}
+                                                /></TouchableOpacity>}
 
-                                                </TouchableOpacity>
-                                            )} />
-                                    </View> : null}
+
+                                    </View>
+                                    :
+                                    <View style={{ height: 100, alignContent: 'center', marginHorizontal: 10 }}>
+                                        <LottieView source={require('../../assets/json/uploading1.json')} autoPlay loop />
+                                    </View>}
                             </View>
 
                             <View style={{ margin: 10 }}>
@@ -567,5 +549,14 @@ const styles = StyleSheet.create({
         shadowRadius: 4,
         elevation: 5,
         height: 50
+    }, image: {
+        marginTop: 40,
+        overflow: 'hidden',
+        alignSelf: 'center',
+        width: 120,
+        height: 120,
+        borderRadius: 10,
+        borderWidth: 5,
+        borderColor: color.primaryColors
     }
 })

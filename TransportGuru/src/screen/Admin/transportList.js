@@ -110,7 +110,7 @@ const TransportListDetails = (props) => {
                     {driver.type && driver.id === item.item._id &&
                         <View style={styles.drivelist} >
                             <View style={styles.image}>
-                                <Image source={image.user} style={{ width: '100%', height: '100%', overflow: "hidden" }} />
+                                <Image source={{uri:item.item.driverId.driverImage}} style={{ width: '100%', height: '100%', overflow: "hidden" }} />
                             </View>
 
                             <View style={styles.listData}>
@@ -124,7 +124,7 @@ const TransportListDetails = (props) => {
                     {truck.type && truck.id === item.item._id &&
                         <View style={styles.drivelist}>
                             <View style={styles.image}>
-                                <Image source={image.Truck} style={{ width: '100%', height: '100%', overflow: "hidden" }} />
+                                <Image source={{uri:item.item.truckId.truckImage}} style={{ width: '100%', height: '100%', overflow: "hidden" }} />
                             </View>
                             <View style={styles.listData}>
                                 <Text style={styles.truckname}>{item.item.truckId.truckName}</Text>

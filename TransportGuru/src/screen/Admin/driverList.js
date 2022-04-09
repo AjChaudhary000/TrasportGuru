@@ -32,7 +32,7 @@ const DriverList = (props) => {
         props.deleteDriver({ id: id, token: token })
     }
     const EditDriver = (item) => {
-       
+
         props.navigation.navigate("AddDriver", { item: item })
     }
     return (
@@ -41,7 +41,7 @@ const DriverList = (props) => {
             <FlatList data={props.driverList} renderItem={(item) => (
                 <View style={styles.listBox}>
                     <View style={styles.image}>
-                        <Image source={image.user} style={{ width: '100%', height: '100%', overflow: "hidden" }} />
+                        <Image source={{ uri: item.item.driverImage }} style={{ width: '100%', height: '100%', overflow: "hidden" }} />
                     </View>
                     <View style={styles.listData}>
                         <Text style={styles.driverName}>{item.item.driverName}</Text>

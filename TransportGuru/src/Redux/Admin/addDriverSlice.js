@@ -10,8 +10,9 @@ export const addDriver = createAsyncThunk(
                 driverEmail: obj.driverEmail,
                 driverMobileNo: obj.driverMobileNo,
                 driverOtp: obj.driverOtp,
+                driverImage: obj.driverImage
             }
-            console.log(data)
+            console.log("mydata ", data)
             const response = await TrasportApi.post('/verifyDriver', data, {
                 headers: {
                     Authorization: `Bearer ${obj.token}`,
@@ -33,6 +34,7 @@ export const updateDriver = createAsyncThunk(
                 driverEmail: obj.driverEmail,
                 driverMobileNo: obj.driverMobileNo,
                 driverOtp: obj.driverOtp,
+                driverImage: obj.driverImage
             }
             console.log(obj)
             const response = await TrasportApi.patch(`/updateDriver/${obj.id}`, data, {
