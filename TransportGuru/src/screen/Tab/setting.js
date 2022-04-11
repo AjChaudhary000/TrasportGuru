@@ -1,18 +1,18 @@
-import { View, StyleSheet, Platform, Image, ScrollView, TouchableOpacity, Switch } from 'react-native'
-import { Paragraph, Caption, Avatar, Text, Title } from 'react-native-paper'
+import { View, StyleSheet, Platform, Image, ScrollView, TouchableOpacity, Switch,StatusBar } from 'react-native'
+import { Paragraph, Caption, Avatar, Text, Title, DarkTheme } from 'react-native-paper'
 import React from 'react'
 import color from '../../contents/color';
 import icons from '../../contents/icons';
 import SettingMenu from './settingMenu';
 import { connect } from 'react-redux'
 import { getUserDetails } from '../../Redux/UserDetails';
-import { getJWTToken, removeJWTToken } from '../../Redux/helper';
+import { getJWTToken, getTheme, removeJWTToken,saveTheme } from '../../Redux/helper';
 import Header from '../../components/header';
-import { logoutToken } from '../../Redux/tokenSlice';
-
+import {  getThemeMode, logoutToken } from '../../Redux/tokenSlice';
+import LottieView from 'lottie-react-native';
 const Setting = (props) => {
   const [token, setToken] = React.useState('');
-  const [isEnabled, setIsEnabled] = React.useState(false);
+  const [isEnabled, setIsEnabled] = React.useState(props.theme);
   const toggleSwitch = () => setIsEnabled(previousState => !previousState);
   const fetchToken = async () => {
     try {
@@ -22,6 +22,25 @@ const Setting = (props) => {
       console.log()
     }
   }
+  const setThemeData = async (themeMode) => {
+    try {
+      console.log(themeMode)
+      await setTheme(themeMode);
+    } catch (e) {
+      console.log()
+    }
+  }
+  const saveThemeData = async(drakmode)=>{
+    try{
+      await saveTheme(drakmode)
+    }catch(e){
+      console.log(e);
+    }
+  }
+  React.useEffect(()=>{
+    saveThemeData(isEnabled)
+    props.getThemeMode(isEnabled)
+  },[isEnabled])
   const logout = async () => {
     console.log("dd3d3wqd");
 
@@ -38,7 +57,69 @@ const Setting = (props) => {
     fetchToken()
     props.getUserDetails(token);
   }, [token])
-
+  if(props.loading){
+    return (
+        <View style={{ flex: 1, backgroundColor:props.theme ? color.drakBackgroundColor: color.backgroundColor }}>
+            <StatusBar hidden />
+            <View style={{ height: "100%" }}>
+                <LottieView source={require('../../assets/json/loder.json')} autoPlay loop />
+            </View>
+        </View>
+    );
+   }
+   const styles = StyleSheet.create({
+    container: {
+      flex: 1,
+      backgroundColor:props.theme ? color.drakBackgroundColor: color.backgroundColor,
+      marginBottom: 30
+    },
+    header: {
+      marginTop: Platform.OS === 'android' ? 20 : 40,
+      alignItems: 'flex-start',
+      marginHorizontal: 20
+    },
+    headerName: {
+      fontSize: 25,
+      fontWeight: 'bold',
+      letterSpacing: 2,
+      color: "#0D1117"
+    },
+    menu: {
+      marginTop: 20
+    }, option: {
+      height: 50,
+      marginHorizontal: 20,
+  
+      borderRadius: 10,
+      flexDirection: 'row',
+      justifyContent: 'center',
+      marginVertical: 2
+    },
+    menuIcon: {
+      width: '15%',
+      justifyContent: 'center',
+      alignItems: "center"
+    },
+    menuname: {
+      width: '70%',
+      justifyContent: 'center'
+    },
+    menuclick: {
+      width: '15%',
+      justifyContent: 'center',
+      alignItems: "center"
+    },
+    menuText: {
+      color: props.theme ? color.drakPrimaryColors: color.primaryColors,
+      fontWeight: 'bold',
+      fontSize: 18
+    },
+    menuiconStyle: {
+      width: 25,
+      height: 25,
+      tintColor: props.theme ? color.drakPrimaryColors: color.primaryColors
+    }
+  })
   return (
 
     <View style={styles.container}>
@@ -52,7 +133,7 @@ const Setting = (props) => {
             source={{ uri: props.userData?.image || "https://firebasestorage.googleapis.com/v0/b/trasnsportguru.appspot.com/o/user%2Fuser.jpg?alt=media&token=69b96dfc-7eec-4402-9f61-f6f53d0c0c7e" }} />
         </View>
         <View style={{ marginTop: 10, alignItems: 'center' }}>
-          <Title style={{ textAlign: 'center', color: color.fontcolor }}>{props.userData?.username}</Title>
+          <Title style={{ textAlign: 'center', color: props.theme?color.drakFontcolor:color.fontcolor }}>{props.userData?.username}</Title>
           <Caption style={{ fontWeight: 'bold', color: 'gray' }}>@{props.userData?.email}</Caption>
         </View>
         {/* </View> */}
@@ -101,67 +182,16 @@ const Setting = (props) => {
 const useDispatch = (dispatch) => {
   return {
     getUserDetails: (data) => dispatch(getUserDetails(data)),
-    logoutToken: () => dispatch(logoutToken())
+    logoutToken: () => dispatch(logoutToken()),
+    getThemeMode:(data)=>dispatch(getThemeMode(data))
   };
 }
 const useSelector = (state) => (
 
   {
     userData: state.user.userData,
-    loading: state.user.loading
+    loading: state.user.loading,
+    theme:state.token.theme
   }
 )
 export default connect(useSelector, useDispatch)(Setting);
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: color.backgroundColor,
-    marginBottom: 30
-  },
-  header: {
-    marginTop: Platform.OS === 'android' ? 20 : 40,
-    alignItems: 'flex-start',
-    marginHorizontal: 20
-  },
-  headerName: {
-    fontSize: 25,
-    fontWeight: 'bold',
-    letterSpacing: 2,
-    color: "#0D1117"
-  },
-  menu: {
-    marginTop: 20
-  }, option: {
-    height: 50,
-    marginHorizontal: 20,
-
-    borderRadius: 10,
-    flexDirection: 'row',
-    justifyContent: 'center',
-    marginVertical: 2
-  },
-  menuIcon: {
-    width: '15%',
-    justifyContent: 'center',
-    alignItems: "center"
-  },
-  menuname: {
-    width: '70%',
-    justifyContent: 'center'
-  },
-  menuclick: {
-    width: '15%',
-    justifyContent: 'center',
-    alignItems: "center"
-  },
-  menuText: {
-    color: color.primaryColors,
-    fontWeight: 'bold',
-    fontSize: 18
-  },
-  menuiconStyle: {
-    width: 25,
-    height: 25,
-    tintColor: color.primaryColors
-  }
-})

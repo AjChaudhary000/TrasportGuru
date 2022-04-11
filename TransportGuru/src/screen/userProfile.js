@@ -7,6 +7,8 @@ import { userProfile } from '../Redux/userProfileSlice';
 import color from '../contents/color';
 import LottieView from 'lottie-react-native';
 import storage from '@react-native-firebase/storage';
+
+
 const UserProfile = (props) => {
     const [firebaseImage, setfirebaseImage] = React.useState('');
     const [imageLoading, setImageLoading] = React.useState(false);
@@ -16,7 +18,7 @@ const UserProfile = (props) => {
     })
     React.useEffect(() => {
         props?.userdata.status && props.navigation.replace('Tab')
-
+     
     }, [props])
     const [modalVisible, setModalVisible] = React.useState(false);
     const camaraLaunch = () => {
@@ -110,6 +112,100 @@ const UserProfile = (props) => {
             console.log(props.userdata)
         }
     }
+    const styles = StyleSheet.create({
+        contentor: {
+            flex: 1,
+            backgroundColor:props.theme ? color.drakBackgroundColor :color.backgroundColor,
+            paddingHorizontal: 20,
+        },
+        truckLogo: {
+            height: '25%',
+            width: "40%",
+    
+    
+        },
+        titleComponets: {
+            marginHorizontal: 5,
+            height: '20%'
+        },
+        title: {
+            fontSize: 25,
+            fontWeight: 'bold',
+            color:props.theme ? color.drakFontcolor :color.fontcolor
+        },
+        text: {
+            fontSize: 18,
+            color: 'gray',
+            margin: 10,
+            fontWeight: 'bold',
+        },
+        inputBox: {
+            marginVertical: 20,
+            flexDirection: 'row',
+            height: '10%'
+        },
+        input: {
+            borderWidth: 2,
+            borderColor:props.theme ? color.drakPrimaryColors :color.primaryColors,
+            padding: 10,
+            fontSize: 18,
+            borderRadius: 10, color:props.theme ? color.drakFontcolor :color.fontcolor
+        },
+        btn: {
+            width: '90%',
+            height: 50,
+            backgroundColor:props.theme ? color.drakPrimaryColors :color.primaryColors,
+            borderRadius: 15,
+            justifyContent: "center",
+            alignItems: 'center',
+            alignSelf: 'center'
+        },
+        btnText: {
+            fontSize: 20,
+            color: 'white',
+            fontWeight: 'bold'
+        },
+        modelBox: {
+            width: Dimensions.get('screen').width - 20,
+            height: 100,
+            position: 'absolute',
+            bottom: 0,
+            backgroundColor: props.theme ? color.drakBackgroundColor :color.backgroundColor,
+            alignSelf: 'center',
+            borderTopLeftRadius: 20,
+            borderTopRightRadius: 20,
+            flexDirection: 'row',
+            alignItems: 'center',
+            alignItems: "center",
+            shadowColor: props.theme ? color.drakFontcolor :color.fontcolor,
+            shadowOffset: {
+                width: 0,
+                height: 2
+            },
+            shadowOpacity: 0.25,
+            shadowRadius: 4,
+            elevation: 5
+        },
+        Text: {
+            fontSize: 17,
+            color: props.theme ? color.drakFontcolor :color.fontcolor,
+            fontWeight: 'bold'
+        },
+        modelimage: {
+            width: 40,
+            height: 40,
+            tintColor: props.theme ? color.drakFontcolor :color.fontcolor,
+        }, image: {
+            marginTop: 40,
+            overflow: 'hidden',
+            alignSelf: 'center',
+            width: 120,
+            height: 120,
+            borderRadius: 60,
+            borderWidth: 5,
+            borderColor:props.theme ? color.drakPrimaryColors :color.primaryColors,
+        },
+    })
     return (
 
         <View style={styles.contentor}>
@@ -151,7 +247,7 @@ const UserProfile = (props) => {
                                         borderRadius: 10,
                                         resizeMode: 'contain',
                                         marginVertical: 30,
-                                        tintColor: color.adminprimaryColors
+                                        tintColor: props.theme ? color.drakPrimaryColors :color.primaryColors,
                                     }}
                                     source={icons.add_photo}
                                 />
@@ -203,106 +299,15 @@ const UserProfile = (props) => {
 const useSelector = (state) => {
     return {
         token: state.token.token,
-        userdata: state.userProfile.data
+        userdata: state.userProfile.data,
+         theme:state.token.theme
     }
 }
 const useDispatch = (dispatch) => {
     return {
-        userProfile: (data) => dispatch(userProfile(data))
+        userProfile: (data) => dispatch(userProfile(data)),
+      
     }
 }
+
 export default connect(useSelector, useDispatch)(UserProfile)
-const styles = StyleSheet.create({
-    contentor: {
-        flex: 1,
-        backgroundColor: color.backgroundColor,
-        paddingHorizontal: 20,
-    },
-    truckLogo: {
-        height: '25%',
-        width: "40%",
-
-
-    },
-    titleComponets: {
-        marginHorizontal: 5,
-        height: '20%'
-    },
-    title: {
-        fontSize: 25,
-        fontWeight: 'bold',
-        color: color.fontcolor
-    },
-    text: {
-        fontSize: 18,
-        color: 'gray',
-        margin: 10,
-        fontWeight: 'bold',
-    },
-    inputBox: {
-        marginVertical: 20,
-        flexDirection: 'row',
-        height: '10%'
-    },
-    input: {
-        borderWidth: 2,
-        borderColor: color.primaryColors,
-        padding: 10,
-        fontSize: 18,
-        borderRadius: 10
-    },
-    btn: {
-        width: '90%',
-        height: 50,
-        backgroundColor: color.primaryColors,
-        borderRadius: 15,
-        justifyContent: "center",
-        alignItems: 'center',
-        alignSelf: 'center'
-    },
-    btnText: {
-        fontSize: 20,
-        color: 'white',
-        fontWeight: 'bold'
-    },
-    modelBox: {
-        width: Dimensions.get('screen').width - 20,
-        height: 100,
-        position: 'absolute',
-        bottom: 0,
-        backgroundColor: 'white',
-        alignSelf: 'center',
-        borderTopLeftRadius: 20,
-        borderTopRightRadius: 20,
-        flexDirection: 'row',
-        alignItems: 'center',
-        alignItems: "center",
-        shadowColor: "#000",
-        shadowOffset: {
-            width: 0,
-            height: 2
-        },
-        shadowOpacity: 0.25,
-        shadowRadius: 4,
-        elevation: 5
-    },
-    Text: {
-        fontSize: 17,
-        color: 'black',
-        fontWeight: 'bold'
-    },
-    modelimage: {
-        width: 40,
-        height: 40,
-        tintColor: 'black'
-    }, image: {
-        marginTop: 40,
-        overflow: 'hidden',
-        alignSelf: 'center',
-        width: 120,
-        height: 120,
-        borderRadius: 60,
-        borderWidth: 5,
-        borderColor: color.primaryColors
-    },
-})

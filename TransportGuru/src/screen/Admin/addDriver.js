@@ -1,4 +1,5 @@
-import { View, Text, StyleSheet, TextInput, TouchableOpacity, ActivityIndicator, Image, FlatList, StatusBar, Animated, Platform, Alert } from 'react-native'
+import { View, Text, StyleSheet, TextInput, TouchableOpacity, TouchableWithoutFeedback,
+    Keyboard, Image, StatusBar, Animated, Platform, ScrollView } from 'react-native'
 import React from 'react'
 import { AdminHeaderWithBackButton } from '../../components/adminHeader';
 import color from '../../contents/color'
@@ -13,6 +14,7 @@ import { addDriver, setDriverData, updateDriver } from '../../Redux/Admin/addDri
 import { getCountDriver } from '../../Redux/Admin/countAddSlice';
 import { getDriverList } from '../../Redux/Admin/driverListSlice';
 import storage from '@react-native-firebase/storage';
+import Toast from 'react-native-simple-toast';
 const AddDriver = (props) => {
     const [isTimerView, setIsTmerView] = React.useState(true);
     const [token, setToken] = React.useState('');
@@ -48,17 +50,32 @@ const AddDriver = (props) => {
             props.setUserData({})
         }
         if (props?.addDriverData.status) {
+            Toast.show(" Driver add successful")
             props.getCountDriver(token)
             props.getDriverList(token)
             props.setDriverData({})
             props.navigation.goBack();
         }
+        if(props?.error){
+            Toast.show(props.error);
+        }
+        ;
     }, [props, token])
 
     const VerifyDriver = () => {
-        if (data.driverName !== "" &&
-            data.driverEmail !== "" &&
-            data.driverMobileNo !== "", firebaseImage !== "") {
+        if(data.driverName === ""){
+            Toast.show("Enter Driver name")
+        }else if(data.driverEmail === ""){
+            Toast.show("Enter Driver email")
+        }else if(data.driverMobileNo === ""){
+            Toast.show("Enter Driver mobile no")
+        }else if(firebaseImage === ""){
+            Toast.show("Select Driver Image ")
+        }else{
+            const regex = /[^\s@]+@[^\s@]+\.[^\s@]+/;
+          if(regex.test(data.driverEmail)){
+            Toast.show("Enter valid email                                                   ")
+          }
             props.sendemail(data.driverEmail);
         }
     }
@@ -134,7 +151,7 @@ const AddDriver = (props) => {
     };
     if (props?.loading) {
         return (
-            <View style={{ flex: 1, backgroundColor: color.backgroundColor }}>
+            <View style={{ flex: 1, backgroundColor: props.theme?color.drakBackgroundColor:color.backgroundColor }}>
                 <StatusBar hidden />
                 <View style={{ height: "100%" }}>
                     <LottieView source={require('../../assets/json/loder.json')} autoPlay loop />
@@ -142,11 +159,118 @@ const AddDriver = (props) => {
             </View>
         );
     }
+    const styles = StyleSheet.create({
+        container: {
+            flex: 1,
+            backgroundColor:  props.theme?color.drakBackgroundColor:color.backgroundColor,
+    
+        }, inputBox: {
+            margin: 20
+        },
+        input: {
+            borderWidth: 2,
+            borderColor:  props.theme?color.drakAdminprimaryColors:color.adminprimaryColors,
+            padding: 10,
+            fontSize: 18,
+            borderRadius: 10,
+            color:props.theme?color.drakFontcolor:color.fontcolor,
+        }, header: {
+            marginTop: 40,
+            alignItems: 'center',
+            marginHorizontal: 20
+        },
+        headerName: {
+            fontSize: 25,
+            fontWeight: 'bold',
+            letterSpacing: 2,
+            color: "#0D1117"
+        },
+        btn: {
+            width: '90%',
+            height: 50,
+            backgroundColor:props.theme?color.drakAdminprimaryColors:color.adminprimaryColors,
+            borderRadius: 15,
+            justifyContent: "center",
+            alignItems: 'center',
+            alignSelf: 'center'
+        },
+        btnText: {
+            fontSize: 20,
+            color: 'white',
+            fontWeight: 'bold'
+        },
+        resend: {
+            fontWeight: "bold",
+            color: props.theme?color.drakAdminprimaryColors:color.adminprimaryColors,
+            fontSize: 18,
+    
+        },
+    
+        titleComponets: {
+            marginHorizontal: 5,
+            height: '20%', marginVertical: 30
+        },
+        title: {
+            fontSize: 25,
+            fontWeight: 'bold',
+            color: props.theme?color.drakFontcolor:color.fontcolor,
+        },
+        text: {
+            fontSize: 18,
+            color: 'gray',
+            margin: 10,
+            fontWeight: 'bold',
+    
+        },
+        borderStyleBase: {
+            width: 30,
+            height: 45
+        },
+        resend: {
+            fontWeight: "bold",
+            color: props.theme?color.drakAdminprimaryColors:color.adminprimaryColors,
+            fontSize: 18,
+    
+        },
+    
+        emailbox: {
+            alignItems: "center",
+            flexDirection: 'row',
+            backgroundColor: props.theme?color.drakBackgroundColor:color.backgroundColor,
+            alignSelf: 'center',
+            borderRadius: 15,
+            flexDirection: 'row',
+            alignItems: 'center',
+            alignItems: "center",
+            shadowColor: props.theme?color.drakFontcolor:color.fontcolor,
+            shadowOffset: {
+                width: 0,
+                height: 2
+            },
+            shadowOpacity: 0.25,
+            shadowRadius: 4,
+            elevation: 5,
+            height: 50
+        }, image: {
+            marginTop: 40,
+            overflow: 'hidden',
+            alignSelf: 'center',
+            width: 120,
+            height: 120,
+            borderRadius: 10,
+            borderWidth: 5,
+            borderColor: props.theme?color.drakAdminprimaryColors:color.adminprimaryColors,
+        }
+    })
     return (
+        <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         <View style={styles.container}>
+            
             {!props.route.params?.item?._id ?
                 // add driver
-                <View>
+               
+
+                <ScrollView showsVerticalScrollIndicator={false}>
                     <AdminHeaderWithBackButton name={"Add Driver"} navigation={props.navigation} />
 
                     {!verifyDriverData ?
@@ -163,7 +287,7 @@ const AddDriver = (props) => {
                                                     borderRadius: 10,
                                                     resizeMode: 'contain',
                                                     marginVertical: 30,
-                                                    tintColor: color.adminprimaryColors
+                                                    tintColor: props.theme?color.drakAdminprimaryColors:color.adminprimaryColors,
                                                 }}
                                                 source={icons.add_photo}
                                             />
@@ -196,6 +320,7 @@ const AddDriver = (props) => {
                                 <TextInput style={styles.input}
                                     placeholder={"eg. Driver mobile No"}
                                     placeholderTextColor={'gray'}
+                                    maxLength={10}
                                     onChangeText={(val) => setData({ ...data, driverMobileNo: val })}
                                     autoCapitalize={'none'}
                                     keyboardType={'number-pad'} />
@@ -205,6 +330,7 @@ const AddDriver = (props) => {
                                 <TextInput style={styles.input}
                                     placeholder={"eg. Driver email"}
                                     placeholderTextColor={'gray'}
+                                    keyboardType={'email-address'}
                                     onChangeText={(val) => setData({ ...data, driverEmail: val })}
                                     autoCapitalize={'none'} />
 
@@ -231,7 +357,7 @@ const AddDriver = (props) => {
                                     <Text style={{ fontSize: 20, fontWeight: 'bold' }}>{data.driverEmail}</Text>
                                 </View>
                                 <TouchableOpacity style={{ width: "20%", alignItems: 'center' }} onPress={() => { editDriver() }}>
-                                    <Image source={icons.edit} style={{ width: 30, height: 30, tintColor: color.primaryColors }} />
+                                    <Image source={icons.edit} style={{ width: 30, height: 30, tintColor:props.theme?color.drakAdminprimaryColors:color.adminprimaryColors, }} />
                                 </TouchableOpacity>
                             </View>
                             <View style={{ margin: 10 }}>
@@ -242,7 +368,7 @@ const AddDriver = (props) => {
                                     autoCapitalize={'none'}
                                     keyboardType={'number-pad'}
                                     maxLength={4} />
-                                {(props?.error) ? <Text style={{ color: 'red', marginTop: 5 }}> * otp invalid  </Text> : null}
+                               
                             </View>
                             {isTimerView ? (
                                 <View style={{ alignSelf: 'center', height: '10%', bottom: 50 }}>
@@ -285,8 +411,8 @@ const AddDriver = (props) => {
                             </View>
                         </View>
                     }
-                </View> :
-                <View>
+                </ScrollView> :
+                <ScrollView showsVerticalScrollIndicator={false}>
                     <AdminHeaderWithBackButton name={"Update Driver"} navigation={props.navigation} />
 
                     {!verifyDriverData ?
@@ -304,7 +430,7 @@ const AddDriver = (props) => {
                                                         borderRadius: 10,
                                                         resizeMode: 'contain',
                                                         marginVertical: 30,
-                                                        tintColor: color.adminprimaryColors
+                                                        tintColor: props.theme?color.drakAdminprimaryColors:color.adminprimaryColors,
                                                     }}
                                                     source={icons.add_photo}
                                                 />
@@ -431,9 +557,10 @@ const AddDriver = (props) => {
                             </View>
                         </View>
                     }
-                </View>
+                </ScrollView>
             }
         </View>
+        </TouchableWithoutFeedback>
     )
 }
 const useDispatch = (dispatch) => {
@@ -445,6 +572,7 @@ const useDispatch = (dispatch) => {
         setDriverData: (data) => dispatch(setDriverData(data)),
         updateDriver: (data) => dispatch(updateDriver(data)),
         getDriverList: (data) => dispatch(getDriverList(data)),
+       
     };
 }
 const useSelector = (state) => (
@@ -454,109 +582,8 @@ const useSelector = (state) => (
         Driverdata: state.login.userdata,
         loading: state.login.loading,
         addDriverData: state.addDriver.data,
-        error: state.addDriver.error
+        error: state.addDriver.error,
+          theme:state.token.theme
     }
 )
 export default connect(useSelector, useDispatch)(AddDriver);
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        backgroundColor: color.backgroundColor,
-
-    }, inputBox: {
-        margin: 20
-    },
-    input: {
-        borderWidth: 2,
-        borderColor: color.adminprimaryColors,
-        padding: 10,
-        fontSize: 18,
-        borderRadius: 10
-    }, header: {
-        marginTop: 40,
-        alignItems: 'center',
-        marginHorizontal: 20
-    },
-    headerName: {
-        fontSize: 25,
-        fontWeight: 'bold',
-        letterSpacing: 2,
-        color: "#0D1117"
-    },
-    btn: {
-        width: '90%',
-        height: 50,
-        backgroundColor: color.adminprimaryColors,
-        borderRadius: 15,
-        justifyContent: "center",
-        alignItems: 'center',
-        alignSelf: 'center'
-    },
-    btnText: {
-        fontSize: 20,
-        color: 'white',
-        fontWeight: 'bold'
-    },
-    resend: {
-        fontWeight: "bold",
-        color: color.primaryColors,
-        fontSize: 18,
-
-    },
-
-    titleComponets: {
-        marginHorizontal: 5,
-        height: '20%', marginVertical: 30
-    },
-    title: {
-        fontSize: 25,
-        fontWeight: 'bold',
-        color: color.fontcolor
-    },
-    text: {
-        fontSize: 18,
-        color: 'gray',
-        margin: 10,
-        fontWeight: 'bold',
-
-    },
-    borderStyleBase: {
-        width: 30,
-        height: 45
-    },
-    resend: {
-        fontWeight: "bold",
-        color: color.primaryColors,
-        fontSize: 18,
-
-    },
-
-    emailbox: {
-        alignItems: "center",
-        flexDirection: 'row',
-        backgroundColor: 'white',
-        alignSelf: 'center',
-        borderRadius: 15,
-        flexDirection: 'row',
-        alignItems: 'center',
-        alignItems: "center",
-        shadowColor: "#000",
-        shadowOffset: {
-            width: 0,
-            height: 2
-        },
-        shadowOpacity: 0.25,
-        shadowRadius: 4,
-        elevation: 5,
-        height: 50
-    }, image: {
-        marginTop: 40,
-        overflow: 'hidden',
-        alignSelf: 'center',
-        width: 120,
-        height: 120,
-        borderRadius: 10,
-        borderWidth: 5,
-        borderColor: color.primaryColors
-    }
-})

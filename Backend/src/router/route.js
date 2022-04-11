@@ -3,11 +3,13 @@ const router = new express.Router();
 const auth = require('../middleware/auth');
 const Route = require('../model/route');
 const Transport = require('../model/trasnsportList');
+
 router.post('/route/create', auth, async (req, res) => {
     try {
+
         const routeData = new Route({ tarsportUserId: req.user._id, ...req.body });
         const data = await routeData.save();
-        res.status(201).send({ data, status: true })
+        res.status(201).send({ data: data, status: true })
     } catch (e) {
         res.status(400).send({ "error": e.toString(), status: false })
     }
@@ -40,24 +42,28 @@ router.patch('/route/update/:_id', auth, async (req, res) => {
 
 router.post('/searchRoute', async (req, res) => {
     try {
-
         const data = await Transport.find()
             .populate("routeId").populate("truckId");
         const routeList = data.
-            filter(item => ((item.truckId.truckCapicity - item.capicity) >= req.body.capicity) && item.Truckdate > new Date()).
+            filter(item => ((item.truckId.truckCapicity - item.capicity) >= req.body.capicity)).
             map(item => {
 
-                if (item.routeId.from === req.body.from && item.routeId.destination === req.body.destination) {
-                    return item
+
+
+                if (item.routeId.from.name === req.body.from && item.routeId.destination.name === req.body.destination) {
+                    if (item.Truckdate > new Date()) {
+                        return item
+                    }
+
                 } else {
-                    if (item.routeId.from === req.body.from) {
+                    if (item.routeId.from.name === req.body.from) {
                         const destination = item.routeId.routeStop.
-                            filter(destination => destination.stops === req.body.destination)
+                            filter(destination => (destination.stops === req.body.destination) && (item.Truckdate.setHours(item.Truckdate.getHours() + destination.avgTime) > new Date()))
                         if (destination.length !== 0) return item
                     }
-                    else if (item.routeId.destination === req.body.destination) {
+                    else if (item.routeId.destination.name === req.body.destination) {
                         const from = item.routeId.routeStop.
-                            filter(from => from.stops === req.body.from)
+                            filter(from => (from.stops === req.body.from) && (item.Truckdate.setHours(item.Truckdate.getHours() + from.avgTime) > new Date()))
                         if (from.length !== 0) return item
                     } else {
                         const count = item.routeId.routeStop.length

@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, Image } from 'react-native'
+import { View, Text, StyleSheet, Image ,StatusBar} from 'react-native'
 import React from 'react'
 import color from '../../contents/color'
 import AdminHeader from '../../components/adminHeader'
@@ -7,6 +7,7 @@ import AdminAddCard from '../../components/adminAddCard'
 import { connect } from 'react-redux'
 import { getCountDriver, getCountRoute, getCountTransport, getCountTruck } from '../../Redux/Admin/countAddSlice'
 import { getJWTToken } from '../../Redux/helper'
+import LottieView from 'lottie-react-native';
 
 const AddTransport = (props) => {
   const [token, setToken] = React.useState('');
@@ -26,7 +27,26 @@ const AddTransport = (props) => {
     props.getCountDriver(token)
     props.getCountRoute(token)
     props.getCountTransport(token)
+    ;
   }, [token])
+  if(props.loading){
+    return (
+        <View style={{ flex: 1, backgroundColor: props.theme ? color.drakBackgroundColor:color.backgroundColor }}>
+            <StatusBar hidden />
+            <View style={{ height: "100%" }}>
+                <LottieView source={require('../../assets/json/loder.json')} autoPlay loop />
+            </View>
+        </View>
+    );
+   }
+  const styles = StyleSheet.create({
+    container: {
+      flex: 1,
+      backgroundColor: props.theme ? color.drakBackgroundColor:color.backgroundColor,
+      //  paddingTop: 50
+    }
+  
+  })
   return (
     <View style={styles.container}>
       <AdminHeader name={"Add Transport"} />
@@ -61,7 +81,8 @@ const useDispatch = (dispatch) => {
     getCountTruck: (data) => dispatch(getCountTruck(data)),
     getCountDriver: (data) => dispatch(getCountDriver(data)),
     getCountRoute: (data) => dispatch(getCountRoute(data)),
-    getCountTransport: (data) => dispatch(getCountTransport(data))
+    getCountTransport: (data) => dispatch(getCountTransport(data)),
+   
   };
 }
 const useSelector = (state) => (
@@ -71,14 +92,8 @@ const useSelector = (state) => (
     countDriver: state.count.countDriver,
     countRoute: state.count.countRoute,
     countTransport: state.count.countTransport,
+    loading:state.count.loading,
+    theme:state.token.theme
   }
 )
 export default connect(useSelector, useDispatch)(AddTransport);
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: color.backgroundColor,
-    //  paddingTop: 50
-  }
-
-})

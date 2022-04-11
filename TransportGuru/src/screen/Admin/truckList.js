@@ -8,6 +8,7 @@ import { getJWTToken } from '../../Redux/helper'
 import { getTruckList } from '../../Redux/Admin/truckListSlice'
 import { deleteTruck, setTruckData } from '../../Redux/Admin/addTruckSlice'
 import { getCountTruck } from '../../Redux/Admin/countAddSlice'
+import Toast from 'react-native-simple-toast';
 const TruckList = (props) => {
     const [token, setToken] = React.useState('');
     const fetchToken = async () => {
@@ -32,13 +33,79 @@ const TruckList = (props) => {
         }
     }, [token, props])
     const DeleteTruck = (id) => {
-
+        Toast.show(" Truck remove successful")
         props.deleteTruck({ id: id, token: token })
     }
     const EditTruck = (item) => {
 
         props.navigation.navigate("AddTruck", { item: item })
     }
+    const styles = StyleSheet.create({
+        container: {
+            flex: 1,
+            backgroundColor: props.theme?color.drakBackgroundColor:color.backgroundColor
+        }, listBox: {
+    
+            height: 150,
+            backgroundColor: props.theme?color.drakBackgroundColor:color.backgroundColor,
+            marginHorizontal: 15,
+            borderRadius: 20,
+            justifyContent: 'center',
+            flexDirection: 'row',
+            shadowColor: props.theme?color.drakFontcolor:color.fontcolor,
+            shadowOffset: {
+                width: 0,
+                height: 2
+            },
+            shadowOpacity: 0.25,
+            shadowRadius: 4,
+            elevation: 5,
+            marginVertical: 10,
+        },
+        image: {
+            width: '30%',
+            borderWidth: 3,
+            borderColor: props.theme ? color.drakAdminprimaryColors:color.adminprimaryColors,
+            borderRadius: 15,
+            marginVertical: 10,
+            marginLeft: 20,
+            alignItems: 'center',
+            overflow: 'hidden'
+        },
+        listData: {
+            width: '70%',
+            padding: 20
+        }, truckname: {
+            fontSize: 25,
+            fontWeight: 'bold',
+            color: props.theme?color.drakFontcolor:color.fontcolor
+        }, truckmodelname: {
+            fontSize: 16,
+            fontWeight: 'bold',
+            color: props.theme ? color.drakAdminprimaryColors:color.adminprimaryColors,
+            paddingVertical: 3
+        },
+        truckreg: {
+            fontSize: 14,
+            fontWeight: 'bold',
+            color: 'gray'
+        },
+        truckcapicity: {
+            fontSize: 14,
+            fontWeight: 'bold',
+            color: props.theme?color.drakFontcolor:color.fontcolor
+        },
+        edit: {
+            fontSize: 16,
+            fontWeight: 'bold',
+            color: 'green'
+        },
+        delete: {
+            fontSize: 16,
+            fontWeight: 'bold',
+            color: 'red'
+        }
+    })
     return (
         <View style={styles.container}>
             <AdminHeaderWithBackButton name={"Truck List"} navigation={props.navigation} />
@@ -83,73 +150,8 @@ const useSelector = (state) => (
 
     {
         truckList: state.truckList.truckList,
-        deletedata: state.addTruck.data
+        deletedata: state.addTruck.data,
+        theme:state.token.theme
     }
 )
 export default connect(useSelector, useDispatch)(TruckList);
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        backgroundColor: color.backgroundColor
-    }, listBox: {
-
-        height: 150,
-        backgroundColor: color.backgroundColor,
-        marginHorizontal: 15,
-        borderRadius: 20,
-        justifyContent: 'center',
-        flexDirection: 'row',
-        shadowColor: color.fontcolor,
-        shadowOffset: {
-            width: 0,
-            height: 2
-        },
-        shadowOpacity: 0.25,
-        shadowRadius: 4,
-        elevation: 5,
-        marginVertical: 10,
-    },
-    image: {
-        width: '30%',
-        borderWidth: 3,
-        borderColor: color.adminprimaryColors,
-        borderRadius: 15,
-        marginVertical: 10,
-        marginLeft: 20,
-        alignItems: 'center',
-        overflow: 'hidden'
-    },
-    listData: {
-        width: '70%',
-        padding: 20
-    }, truckname: {
-        fontSize: 25,
-        fontWeight: 'bold',
-        color: color.fontcolor
-    }, truckmodelname: {
-        fontSize: 16,
-        fontWeight: 'bold',
-        color: color.adminprimaryColors,
-        paddingVertical: 3
-    },
-    truckreg: {
-        fontSize: 14,
-        fontWeight: 'bold',
-        color: 'gray'
-    },
-    truckcapicity: {
-        fontSize: 14,
-        fontWeight: 'bold',
-        color: 'black'
-    },
-    edit: {
-        fontSize: 16,
-        fontWeight: 'bold',
-        color: 'green'
-    },
-    delete: {
-        fontSize: 16,
-        fontWeight: 'bold',
-        color: 'red'
-    }
-})

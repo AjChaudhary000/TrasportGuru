@@ -1,4 +1,5 @@
-import { View, Text, StyleSheet, TextInput, TouchableOpacity, Image, FlatList, StatusBar } from 'react-native'
+import { View, Text, StyleSheet, TextInput, TouchableOpacity, Image, ScrollView,TouchableWithoutFeedback,
+    Keyboard } from 'react-native'
 import React from 'react'
 import { AdminHeaderWithBackButton } from '../../components/adminHeader';
 import color from '../../contents/color'
@@ -12,6 +13,9 @@ import { addTruck, setTruckData, updateTruck } from '../../Redux/Admin/addTruckS
 import { getCountTruck } from '../../Redux/Admin/countAddSlice'
 import LottieView from 'lottie-react-native';
 import storage from '@react-native-firebase/storage';
+import image from '../../contents/image';
+import Toast from 'react-native-simple-toast';
+
 const AddTruck = (props) => {
 
     const [token, setToken] = React.useState('');
@@ -26,6 +30,7 @@ const AddTruck = (props) => {
         truckCapicity: props.route.params?.item?.truckCapicity || '',
         truckTypeId: props.route.params?.item?.truckTypeId || ''
     })
+    let regno ="";
     const fetchToken = async () => {
         try {
             const data = await getJWTToken();
@@ -46,26 +51,48 @@ const AddTruck = (props) => {
             props.setTruckData({})
             props.navigation.goBack();
         }
+        ;
     }, [props, token])
 
     const AddTruck = () => {
-        if (data.truckName !== "" &&
-            data.truckModelName !== "" &&
-            data.truckRegistartionNo !== "" &&
-            data.truckCapicity !== "" &&
-            data.truckTypeId !== "" &&
-            firebaseImage !== "") {
+       
+               
+           
+         if(firebaseImage === ""){
+            Toast.show("Select The Truck Image ")
+        }
+        else if(data.truckTypeId === ""){
+            Toast.show("Enter Truck type")
+        }else if(data.truckName === ""){
+            Toast.show("Enter Truck Name")
+        }else if(data.truckModelName === ""){
+            Toast.show("Enter Truck Model ")
+        }else if(data.truckRegistartionNo === ""){
+            Toast.show("Enter Truck RegistartionNo")
+        }
+        else if(data.truckCapicity === ""){
+            Toast.show("Enter Truck capicity")
+        }else{
             props.addTruck({ ...data, truckImage: firebaseImage, token: token })
         }
 
     }
     const UpdateTruck = () => {
-        if (data.truckName !== "" &&
-            data.truckModelName !== "" &&
-            data.truckRegistartionNo !== "" &&
-            data.truckCapicity !== "" &&
-            data.truckTypeId !== "" &&
-            firebaseImage !== "") {
+        if(firebaseImage === ""){
+            Toast.show("Select The Truck Image ")
+        }
+        else if(data.truckTypeId === ""){
+            Toast.show("Enter Truck type")
+        }else if(data.truckName === ""){
+            Toast.show("Enter Truck Name")
+        }else if(data.truckModelName === ""){
+            Toast.show("Enter Truck Model ")
+        }else if(data.truckRegistartionNo === ""){
+            Toast.show("Enter Truck RegistartionNo")
+        }
+        else if(data.truckCapicity === ""){
+            Toast.show("Enter Truck capicity")
+        }else{
             props.updateTruck({ ...data, truckImage: firebaseImage, id: props.route.params?.item?._id, token: token })
         }
 
@@ -124,14 +151,110 @@ const AddTruck = (props) => {
         return (
             <View style={styles.item}>
                 <Text style={styles.textItem}>{item.TruckType}</Text>
-                <Image source={icons.truck} style={{ width: 30, height: 30, tintColor: color.primaryColors }} />
+                <Text style={styles.textItem}>0 - {item.capicity} tonnes</Text>
+                <Image source={image[item.truckTypeImage]} style={{ width: 50, height: 40}} />
             </View>
         );
     };
+    const styles = StyleSheet.create({
+        container: {
+            flex: 1,
+            backgroundColor: props.theme ? color.drakBackgroundColor:color.backgroundColor
+    
+        }, inputBox: {
+            marginHorizontal: 20,
+    
+        },
+        input: {
+            borderWidth: 2,
+            borderColor: props.theme ? color.drakAdminprimaryColors:color.adminprimaryColors,
+            color:props.theme ? color.drakFontcolor:color.fontcolor,
+            padding: 10,
+            fontSize: 18,
+            borderRadius: 10
+        }, header: {
+            marginTop: 40,
+            alignItems: 'center',
+            marginHorizontal: 20
+        },
+        headerName: {
+            fontSize: 25,
+            fontWeight: 'bold',
+            letterSpacing: 2,
+            color: "#0D1117"
+        },
+        btn: {
+            width: '90%',
+            height: 50,
+            backgroundColor: color.adminprimaryColors,
+            borderRadius: 15,
+            justifyContent: "center",
+            alignItems: 'center',
+            alignSelf: 'center'
+        },
+        btnText: {
+            fontSize: 20,
+            color: 'white',
+            fontWeight: 'bold'
+        },
+        dropdown: {
+            borderWidth: 2,
+            borderColor: props.theme ? color.drakAdminprimaryColors:color.adminprimaryColors,
+            padding: 10,
+            fontSize: 18,
+            borderRadius: 10,
+           
+        },
+        icon: {
+            marginRight: 5,
+        },
+        item: {
+            margin:10,
+            padding:10,
+            borderWidth:2,
+            borderColor:props.theme ? color.drakAdminprimaryColors:color.adminprimaryColors,
+            borderRadius:10,
+            backgroundColor:props.theme ? color.drakBackgroundColor:color.backgroundColor,
+           
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+        },
+        textItem: {
+            flex: 1,
+            fontSize: 16,
+            color:props.theme ? color.drakFontcolor:color.fontcolor,
+        },
+        placeholderStyle: {
+            fontSize: 16,
+            color:props.theme ? color.drakFontcolor:color.fontcolor,
+        },
+        selectedTextStyle: {
+            fontSize: 16,
+            color:props.theme ? color.drakFontcolor:color.fontcolor,
+        },
+        inputSearchStyle: {
+            height: 40,
+            fontSize: 16,
+        }, iconStyle: {
+            width: 20,
+            height: 20,
+        }, image: {
+            marginTop: 40,
+            overflow: 'hidden',
+            alignSelf: 'center',
+            width: 120,
+            height: 120,
+            borderRadius: 10,
+            borderWidth: 5,
+            borderColor:props.theme ? color.drakAdminprimaryColors:color.adminprimaryColors,
+        }
+    })
     return (
+        <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         <View style={styles.container}>
             {!props.route.params?.item?._id ?
-                <View>
+                <ScrollView showsVerticalScrollIndicator={false}>
                     <AdminHeaderWithBackButton name={"Add Truck"} navigation={props.navigation} />
                     <View style={styles.inputBox}>
                         <View style={{ marginHorizontal: 10 }}>
@@ -209,7 +332,10 @@ const AddTruck = (props) => {
                             <TextInput style={styles.input}
                                 placeholder={"eg. Truck RegistartionNo"}
                                 placeholderTextColor={'gray'}
-                                onChangeText={(val) => setData({ ...data, truckRegistartionNo: val })}
+                                value={data.truckRegistartionNo}
+                                maxLength={13}
+                                onChangeText={(val) =>{ 
+                                    setData({ ...data, truckRegistartionNo: val.toUpperCase() })}}
                                 autoCapitalize={'none'} />
 
                         </View>
@@ -231,8 +357,8 @@ const AddTruck = (props) => {
                             </TouchableOpacity>
                         </View>
                     </View>
-                </View> :
-                <View>
+                </ScrollView> :
+                <ScrollView showsVerticalScrollIndicator={false}>
                     <AdminHeaderWithBackButton name={"Update Truck"} navigation={props.navigation} />
                     <View style={styles.inputBox}>
                         <View style={{ marginHorizontal: 10 }}>
@@ -324,6 +450,7 @@ const AddTruck = (props) => {
                                 defaultValue={props.route.params?.item?.truckCapicity}
                                 placeholder={"eg. Truck Capicity"}
                                 placeholderTextColor={'gray'}
+                                
                                 onChangeText={(val) => setData({ ...data, truckCapicity: val })}
                                 autoCapitalize={'none'}
                                 keyboardType={'number-pad'} />
@@ -337,8 +464,9 @@ const AddTruck = (props) => {
                             </TouchableOpacity>
                         </View>
                     </View>
-                </View>}
+                </ScrollView>}
         </View>
+        </TouchableWithoutFeedback>
     )
 }
 const useDispatch = (dispatch) => {
@@ -348,6 +476,7 @@ const useDispatch = (dispatch) => {
         getCountTruck: (data) => dispatch(getCountTruck(data)),
         setTruckData: (data) => dispatch(setTruckData(data)),
         updateTruck: (data) => dispatch(updateTruck(data)),
+       
     };
 }
 const useSelector = (state) => (
@@ -356,90 +485,8 @@ const useSelector = (state) => (
         token: state.token.token,
         trucktypeData: state.truck.truckData,
         loading: state.truck.loading,
-        truckData: state.addTruck.data
+        truckData: state.addTruck.data,
+        theme:state.token.theme
     }
 )
 export default connect(useSelector, useDispatch)(AddTruck);
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        backgroundColor: color.backgroundColor,
-
-    }, inputBox: {
-        marginHorizontal: 20,
-
-    },
-    input: {
-        borderWidth: 2,
-        borderColor: color.adminprimaryColors,
-        padding: 10,
-        fontSize: 18,
-        borderRadius: 10
-    }, header: {
-        marginTop: 40,
-        alignItems: 'center',
-        marginHorizontal: 20
-    },
-    headerName: {
-        fontSize: 25,
-        fontWeight: 'bold',
-        letterSpacing: 2,
-        color: "#0D1117"
-    },
-    btn: {
-        width: '90%',
-        height: 50,
-        backgroundColor: color.adminprimaryColors,
-        borderRadius: 15,
-        justifyContent: "center",
-        alignItems: 'center',
-        alignSelf: 'center'
-    },
-    btnText: {
-        fontSize: 20,
-        color: 'white',
-        fontWeight: 'bold'
-    },
-    dropdown: {
-        borderWidth: 2,
-        borderColor: color.adminprimaryColors,
-        padding: 10,
-        fontSize: 18,
-        borderRadius: 10
-    },
-    icon: {
-        marginRight: 5,
-    },
-    item: {
-        padding: 17,
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-    },
-    textItem: {
-        flex: 1,
-        fontSize: 16,
-    },
-    placeholderStyle: {
-        fontSize: 16,
-    },
-    selectedTextStyle: {
-        fontSize: 16,
-    },
-    inputSearchStyle: {
-        height: 40,
-        fontSize: 16,
-    }, iconStyle: {
-        width: 20,
-        height: 20,
-    }, image: {
-        marginTop: 40,
-        overflow: 'hidden',
-        alignSelf: 'center',
-        width: 120,
-        height: 120,
-        borderRadius: 10,
-        borderWidth: 5,
-        borderColor: color.primaryColors
-    }
-})

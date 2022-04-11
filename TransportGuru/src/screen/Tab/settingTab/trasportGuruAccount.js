@@ -3,14 +3,16 @@ import React from 'react'
 import color from '../../../contents/color'
 import icons from '../../../contents/icons'
 import * as ImagePicker from 'react-native-image-picker'
-import { HeaderWithBackButton } from '../../../components/header'
 import { connect } from 'react-redux'
 import { transportAccount } from '../../../Redux/transportAccountSlice'
 import { getUserDetails } from '../../../Redux/UserDetails'
 import image from '../../../contents/image'
 import LottieView from 'lottie-react-native';
 import storage from '@react-native-firebase/storage';
+
 import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
+
+import { AdminHeaderWithBackButton } from '../../../components/adminHeader'
 const TrasportGuruAccount = (props) => {
     const [firebaseImage, setfirebaseImage] = React.useState('');
     const [imageLoading, setImageLoading] = React.useState(false)
@@ -88,6 +90,7 @@ const TrasportGuruAccount = (props) => {
             }
         })
     };
+    console.log("loading ",props.loading)
     if (isloading || props.loading) {
         return (
             <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: color.adminprimaryColors }}>
@@ -98,6 +101,75 @@ const TrasportGuruAccount = (props) => {
             </View>
         );
     }
+    const styles = StyleSheet.create({
+        container: {
+            flex: 1,
+            backgroundColor: props.theme ? color.drakBackgroundColor:color.backgroundColor,
+    
+        }, inputBox: {
+            marginHorizontal: 20,
+    
+        },
+        input: {
+            borderWidth: 2,
+            borderColor: props.theme ? color.drakAdminprimaryColors:color.adminprimaryColors,
+            padding: 10,
+            fontSize: 18,
+            borderRadius: 10,color: props.theme ? color.drakFontcolor:color.fontcolor,
+        }, header: {
+            marginTop: 40,
+            alignItems: 'center',
+            marginHorizontal: 20
+        },
+        headerName: {
+            fontSize: 25,
+            fontWeight: 'bold',
+            letterSpacing: 2,
+            color: "#0D1117"
+        },
+        btn: {
+            width: '90%',
+            height: 50,
+            backgroundColor: props.theme ? color.drakAdminprimaryColors:color.adminprimaryColors,
+            borderRadius: 15,
+            justifyContent: "center",
+            alignItems: 'center',
+            alignSelf: 'center'
+        },
+        btnText: {
+            fontSize: 20,
+            color: 'white',
+            fontWeight: 'bold'
+        },
+        image: {
+            marginTop: 40,
+            overflow: 'hidden',
+            alignSelf: 'center',
+            width: 120,
+            height: 120,
+            borderRadius: 10,
+            borderWidth: 5,
+            borderColor:props.theme ? color.drakAdminprimaryColors:color.adminprimaryColors,
+        }, modelBox: {
+            width: Dimensions.get('screen').width - 20,
+            minHeight: 200,
+    
+            backgroundColor:props.theme ? color.drakBackgroundColor:color.backgroundColor,
+            alignSelf: 'center',
+            borderRadius: 15,
+            flexDirection: 'row',
+            alignItems: 'center',
+            alignItems: "center",
+            shadowColor: props.theme ? color.drakFontcolor:color.fontcolor,
+            shadowOffset: {
+                width: 0,
+                height: 2
+            },
+            shadowOpacity: 0.25,
+            shadowRadius: 4,
+            elevation: 5
+        },
+    })
     return (
         <View style={styles.container}>
             <Modal
@@ -139,19 +211,19 @@ const TrasportGuruAccount = (props) => {
 
                                     textInput: {
                                         borderWidth: 2,
-                                        borderColor: color.primaryColors,
+                                        borderColor: props.theme ? color.drakAdminprimaryColors:color.adminprimaryColors,
                                         padding: 10,
                                         fontSize: 18,
                                         borderRadius: 10,
                                         marginHorizontal: 30
                                     },
                                     description: {
-                                        color: color.primaryColors,
+                                        color: props.theme ? color.drakAdminprimaryColors:color.adminprimaryColors,
                                         fontSize: 18,
 
                                     }, listView: {
                                         borderWidth: 2,
-                                        borderColor: color.primaryColors,
+                                        borderColor:props.theme ? color.drakAdminprimaryColors:color.adminprimaryColors,
                                         padding: 10,
                                         fontSize: 18,
                                         borderRadius: 10,
@@ -163,12 +235,12 @@ const TrasportGuruAccount = (props) => {
 
                         </ScrollView>
                     </View>
-                    <TouchableOpacity onPress={() => { setModalVisible(false) }} style={{ alignItems: "center", bottom: 20 }}>
-                        <Text>Close</Text>
+                    <TouchableOpacity onPress={() => { setModalVisible(false) }} style={{  bottom: 40,left:30 }}>
+                        <Text style={{fontSize:50,alignItems:'flex-end',color:props.theme ? color.drakFontcolor:color.fontcolor,}}>X</Text>
                     </TouchableOpacity>
                 </View>
             </Modal>
-            <HeaderWithBackButton name={"Transport Account"} navigation={props.navigation} />
+            <AdminHeaderWithBackButton name={"Transport Account"} navigation={props.navigation} />
             <View style={styles.inputBox}>
                 <View style={{ marginHorizontal: 10 }}>
                     {!imageLoading ?
@@ -235,82 +307,15 @@ const useSelector = (state) => {
     return {
         token: state.token.token,
         admindata: state.admin.data,
-        loading: state.admin.loading
+        loading: state.admin.loading,
+        theme:state.token.theme
     }
 }
 const useDispatch = (dispatch) => {
     return {
         transportAccount: (data) => dispatch(transportAccount(data)),
         getUserDetails: (data) => dispatch(getUserDetails(data)),
+       
     }
 }
 export default connect(useSelector, useDispatch)(TrasportGuruAccount)
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        backgroundColor: color.backgroundColor,
-
-    }, inputBox: {
-        marginHorizontal: 20,
-
-    },
-    input: {
-        borderWidth: 2,
-        borderColor: color.primaryColors,
-        padding: 10,
-        fontSize: 18,
-        borderRadius: 10
-    }, header: {
-        marginTop: 40,
-        alignItems: 'center',
-        marginHorizontal: 20
-    },
-    headerName: {
-        fontSize: 25,
-        fontWeight: 'bold',
-        letterSpacing: 2,
-        color: "#0D1117"
-    },
-    btn: {
-        width: '90%',
-        height: 50,
-        backgroundColor: color.primaryColors,
-        borderRadius: 15,
-        justifyContent: "center",
-        alignItems: 'center',
-        alignSelf: 'center'
-    },
-    btnText: {
-        fontSize: 20,
-        color: 'white',
-        fontWeight: 'bold'
-    },
-    image: {
-        marginTop: 40,
-        overflow: 'hidden',
-        alignSelf: 'center',
-        width: 120,
-        height: 120,
-        borderRadius: 10,
-        borderWidth: 5,
-        borderColor: color.primaryColors
-    }, modelBox: {
-        width: Dimensions.get('screen').width - 20,
-        minHeight: 200,
-
-        backgroundColor: color.backgroundColor,
-        alignSelf: 'center',
-        borderRadius: 15,
-        flexDirection: 'row',
-        alignItems: 'center',
-        alignItems: "center",
-        shadowColor: color.fontcolor,
-        shadowOffset: {
-            width: 0,
-            height: 2
-        },
-        shadowOpacity: 0.25,
-        shadowRadius: 4,
-        elevation: 5
-    },
-})

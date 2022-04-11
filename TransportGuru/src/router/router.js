@@ -7,13 +7,13 @@ import SignIn from '../screen/SignIn';
 import Otp from '../screen/otp';
 import UserProfile from '../screen/userProfile';
 import { connect } from 'react-redux';
-import { getJWTToken } from '../Redux/helper';
+import { getJWTToken, getTheme } from '../Redux/helper';
 import Tab from './tab';
 import Home from '../screen/Home';
 import LottieView from 'lottie-react-native';
 import color from '../contents/color';
 import EditAccount from '../screen/Tab/settingTab/editAccount';
-import { getToken, setToken } from '../Redux/tokenSlice';
+import {  getThemeMode, getToken, setToken } from '../Redux/tokenSlice';
 import TrasportGuruAccount from '../screen/Tab/settingTab/trasportGuruAccount';
 import image from '../contents/image';
 import AdminTab from './adminTab';
@@ -25,7 +25,6 @@ import AddTrasportDetails from '../screen/Admin/addTrasportDetails';
 import AddRoute from '../screen/Admin/addRoute';
 import Routelist from '../screen/Admin/routelist';
 import TransportListDetails from '../screen/Admin/transportList';
-
 const Stack = createNativeStackNavigator();
 const Router = (props) => {
     const [token, setTokenData] = React.useState('')
@@ -33,10 +32,12 @@ const Router = (props) => {
     const gettoken = async () => {
         try {
             const mytoken = await getJWTToken();
-
+            const theme = await getTheme()
             console.log("r43t34t34", mytoken)
             setTokenData(mytoken)
             props.setToken(mytoken)
+            theme === "true" ?  props.getThemeMode(true):  props.getThemeMode(false)
+           
         } catch (e) {
 
         }
@@ -47,11 +48,12 @@ const Router = (props) => {
         setTimeout(() => {
             setloadingData(false)
         }, 2000)
-
+        
     }, [])
     if (isloading) {
         return (
-            <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: color.primaryColors }}>
+            <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center',
+             backgroundColor: props.theme ? color.drakPrimaryColors: color.primaryColors, }}>
                 <StatusBar hidden />
                 <View>
                     <Image source={image.Tg} style={{ width: 300, height: 200 }} />
@@ -94,13 +96,16 @@ const Router = (props) => {
 }
 const useSelector = (state) => {
     return {
-        token: state.token
+        token: state.token,
+        theme:state.token.theme
     }
 }
 const useDispatch = (dispatch) => {
     return {
 
-        setToken: (data) => dispatch(setToken(data))
+        setToken: (data) => dispatch(setToken(data)),
+        getThemeMode: (data) => dispatch(getThemeMode(data)),
+       
     }
 }
 export default connect(useSelector, useDispatch)(Router)

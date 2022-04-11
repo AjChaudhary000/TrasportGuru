@@ -8,3 +8,14 @@ export const removeJWTToken = async () => {
 export const getJWTToken = async () => {
     return await AsyncStorage.getItem('@usertoken');
 };
+export const saveTheme = async (theme) => {
+    await AsyncStorage.setItem('@userthemeData', theme.toString());
+};
+export const getTheme = async () => {
+    try{
+        return await AsyncStorage.getItem('@userthemeData') ;
+    }catch(e){
+        console.log(e)
+    }
+    
+};

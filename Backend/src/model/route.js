@@ -1,10 +1,10 @@
 const mongodb = require('mongoose');
 const RouteSchema = mongodb.Schema({
     from: {
-        type: String
+        type: Object
     },
     destination: {
-        type: String
+        type: Object
     },
     routeStop: {
         type: Array,

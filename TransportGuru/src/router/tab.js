@@ -8,11 +8,18 @@ import TrasportList from '../screen/Tab/trasportList';
 import icons from '../contents/icons';
 import color from '../contents/color';
 import Message from '../screen/Tab/message';
+import { connect } from 'react-redux';
+
 const Tabs = createBottomTabNavigator();
 
-const Tab = () => {
+const Tab = (props) => {
+    React.useEffect(()=>{
+        
+    },[props])
     return (
-        <Tabs.Navigator screenOptions={{ tabBarHideOnKeyboard: true, tabBarStyle: { borderTopWidth: 0, position: 'absolute', bottom: 0,backgroundColor:color.backgroundColor }, tabBarShowLabel: false }}>
+        <Tabs.Navigator screenOptions={{ tabBarHideOnKeyboard: true, tabBarStyle: { borderTopWidth: 0, position: 'absolute',
+         bottom: 0,
+         backgroundColor:props.theme ? color.drakBackgroundColor: color.backgroundColor }, tabBarShowLabel: false }}>
             <Tabs.Screen name="HomeScreen" component={HomeScreen} options={{
                 headerShown: false, tabBarIcon: ({ focused }) => (
                     <Image source={icons.home} style={{ width: 30, height: 30, tintColor: focused ? color.primaryColors : 'gray' }} />
@@ -43,4 +50,15 @@ const Tab = () => {
     )
 }
 
-export default Tab
+const useDispatch = (dispatch) => {
+    return {
+       
+    };
+}
+const useSelector = (state) => (
+
+    {
+        theme:state.token.theme
+    }
+)
+export default connect(useSelector, useDispatch)(Tab);

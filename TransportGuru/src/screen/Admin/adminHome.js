@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, Image, TouchableOpacity, Dimensions } from 'react-native'
+import { View, Text, StyleSheet, Image, TouchableOpacity, Dimensions ,ScrollView,StatusBar} from 'react-native'
 import React from 'react'
 import color from '../../contents/color'
 import AdminHeader from '../../components/adminHeader'
@@ -6,6 +6,9 @@ import { connect } from 'react-redux'
 import { getCountDriver, getCountTruck, getCountRoute, getCountTransport } from '../../Redux/Admin/countAddSlice'
 import { getJWTToken } from '../../Redux/helper'
 import icons from '../../contents/icons'
+import LottieView from 'lottie-react-native';
+
+
 const AdminHome = (props) => {
     const [token, setToken] = React.useState('');
     const fetchToken = async () => {
@@ -24,9 +27,68 @@ const AdminHome = (props) => {
         props.getCountRoute(token),
             props.getCountTransport(token)
     }, [token])
+   
+       if(props.loading){
+        return (
+            <View style={{ flex: 1, backgroundColor: props.theme ? color.drakBackgroundColor:color.backgroundColor }}>
+                <StatusBar hidden />
+                <View style={{ height: "100%" }}>
+                    <LottieView source={require('../../assets/json/loder.json')} autoPlay loop />
+                </View>
+            </View>
+        );
+       }
+       const styles = StyleSheet.create({
+        container: {
+            flex: 1,
+            backgroundColor:  props.theme ? color.drakBackgroundColor:color.backgroundColor ,
+        },
+        box: {
+            flexDirection: 'row',
+            marginHorizontal: 10
+        },
+        adminCard: {
+            width: Dimensions.get('window').width / 2 - 40,
+            height: 150,
+            backgroundColor: props.theme ? color.drakBackgroundColor:color.backgroundColor ,
+            marginHorizontal: 15,
+            borderRadius: 20,
+            justifyContent: 'center',
+    
+            shadowColor: props.theme ? color.drakFontcolor:color.fontcolor ,
+            shadowOffset: {
+                width: 0,
+                height: 2
+            },
+            shadowOpacity: 0.25,
+            shadowRadius: 4,
+            elevation: 6,
+            marginVertical: 10,
+            flexDirection: 'column'
+        }, Text: {
+            justifyContent: "center",
+            alignItems: 'center'
+        },
+        menuText: {
+            fontSize: 50,
+            fontWeight: 'bold',
+            color:props.theme ? color.drakAdminprimaryColors:color.adminprimaryColors ,
+        }, icon: {
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+            marginHorizontal: 20
+        },
+        title: {
+            fontSize: 18,
+            fontWeight: 'bold',
+            color: props.theme ? color.drakFontcolor:color.fontcolor ,
+            marginVertical: 10
+        }
+    })
     return (
         <View style={styles.container}>
             <AdminHeader name={"Transport Deshboard"} />
+            <ScrollView style={{marginBottom:50}} showsVerticalScrollIndicator={false}>
             <View style={styles.box}>
                 <TouchableOpacity style={styles.adminCard} activeOpacity={0.80} onPress={() => props.navigation.navigate('TruckList')}>
                     <View style={styles.Text}>
@@ -80,7 +142,7 @@ const AdminHome = (props) => {
 
 
             </View>
-
+            </ScrollView>
         </View>
     )
 }
@@ -89,7 +151,8 @@ const useDispatch = (dispatch) => {
         getCountTruck: (data) => dispatch(getCountTruck(data)),
         getCountDriver: (data) => dispatch(getCountDriver(data)),
         getCountRoute: (data) => dispatch(getCountRoute(data)),
-        getCountTransport: (data) => dispatch(getCountTransport(data))
+        getCountTransport: (data) => dispatch(getCountTransport(data)),
+       
     };
 }
 const useSelector = (state) => (
@@ -99,53 +162,8 @@ const useSelector = (state) => (
         countDriver: state.count.countDriver,
         countRoute: state.count.countRoute,
         countTransport: state.count.countTransport,
+        loading:state.count.loading,
+        theme:state.token.theme
     }
 )
 export default connect(useSelector, useDispatch)(AdminHome);
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        backgroundColor: color.backgroundColor,
-    },
-    box: {
-        flexDirection: 'row',
-        marginHorizontal: 10
-    },
-    adminCard: {
-        width: Dimensions.get('window').width / 2 - 40,
-        height: 150,
-        backgroundColor: color.backgroundColor,
-        marginHorizontal: 15,
-        borderRadius: 20,
-        justifyContent: 'center',
-
-        shadowColor: color.fontcolor,
-        shadowOffset: {
-            width: 0,
-            height: 2
-        },
-        shadowOpacity: 0.25,
-        shadowRadius: 4,
-        elevation: 5,
-        marginVertical: 10,
-        flexDirection: 'column'
-    }, Text: {
-        justifyContent: "center",
-        alignItems: 'center'
-    },
-    menuText: {
-        fontSize: 50,
-        fontWeight: 'bold',
-        color: color.adminprimaryColors,
-    }, icon: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        marginHorizontal: 20
-    },
-    title: {
-        fontSize: 18,
-        fontWeight: 'bold',
-        color: color.fontcolor,
-        marginVertical: 10
-    }
-})
