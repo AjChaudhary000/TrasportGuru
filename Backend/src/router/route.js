@@ -1,4 +1,5 @@
 const express = require('express');
+const { default: mongoose } = require('mongoose');
 const router = new express.Router();
 const auth = require('../middleware/auth');
 const Route = require('../model/route');
@@ -40,10 +41,10 @@ router.patch('/route/update/:_id', auth, async (req, res) => {
     }
 })
 
-router.post('/searchRoute', async (req, res) => {
+router.post('/searchRoute', auth, async (req, res) => {
     try {
         const data = await Transport.find()
-            .populate("routeId").populate("truckId");
+            .populate("routeId").populate("truckId").populate("tarsportUserId");
         const routeList = data.
             filter(item => ((item.truckId.truckCapicity - item.capicity) >= req.body.capicity)).
             map(item => {
@@ -80,7 +81,7 @@ router.post('/searchRoute', async (req, res) => {
                     }
                 }
             }).filter(item => item !== undefined)
-
+        // const mydata = 
         res.status(200).send(routeList)
     } catch (e) {
         res.status(400).send({ error: e.toString() })
