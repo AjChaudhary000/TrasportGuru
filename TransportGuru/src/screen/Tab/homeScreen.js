@@ -6,10 +6,10 @@ import {
     TouchableWithoutFeedback,
     Keyboard, Platform, Modal, Dimensions, FlatList, ScrollView, LogBox
 } from 'react-native'
+import Toast from 'react-native-simple-toast';
 import React from 'react'
 import color from '../../contents/color'
 import icons from '../../contents/icons'
-import image from '../../contents/image'
 import { connect } from 'react-redux';
 import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
 import MapView, { PROVIDER_GOOGLE } from "react-native-maps"
@@ -25,101 +25,112 @@ const HomeScreen = (props) => {
     })
     React.useEffect(() => {
         LogBox.ignoreLogs(["VirtualizedLists should never be nested"])
-        
+
     }, [])
-  
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        paddingBottom: 40
-    },
-    mapBox: {
-        height: "40%"
-
-
-    },
-    searchBox: {
-        height: "60%",
-        backgroundColor:props.theme ? color.drakBackgroundColor: color.backgroundColor,
-        bottom: 0,
-        borderTopLeftRadius: 40,
-        borderTopRightRadius: 40,
-        justifyContent: 'center',
-
-    },
-    fromToDesc: {
-        height: 180,
-        backgroundColor:props.theme ? color.drakBackgroundColor: color.backgroundColor,
-        marginHorizontal: 35,
-        borderRadius: 20,
-        justifyContent: 'center',
-        flexDirection: 'row',
-        shadowColor:  props.theme ? color.drakFontcolor: color.fontcolor,
-        shadowOffset: {
-            width: 0,
-            height: 2
+    const SearchRoute = () => {
+        if (data.from === "From") {
+            Toast.show("Select loading loaction")
+        } else if (data.destination === "Destination") {
+            Toast.show("Select unloading loaction")
+        } else if (data.capicity === "") {
+            Toast.show("Enter capicity")
+        } else {
+            props.navigation.navigate("SearchTransportList", data)
+            console.log(data)
+        }
+    }
+    const styles = StyleSheet.create({
+        container: {
+            flex: 1,
+            paddingBottom: 40
         },
-        shadowOpacity: 0.25,
-        shadowRadius: 4,
-        elevation: 5,
+        mapBox: {
+            height: "40%"
 
-    }, inputBox: {
-        borderWidth: 2,
-        borderColor:props.theme ? color.drakPrimaryColors : color.primaryColors,
-        padding: 10,
-        fontSize: 18,
-        borderRadius: 10,
-        marginHorizontal: 10,color:'gray'
 
-    }, reverseBtn: {
-        width: 50,
-        height: 50,
-        borderRadius: 25,
-        backgroundColor:props.theme ? color.drakPrimaryColors : color.primaryColors,
-        bottom: Platform.OS === 'android' ? '59%' : "57%", left: '70%',
-        justifyContent: 'center',
-        alignItems: 'center', position: "absolute"
-    },
-    btn: {
-        width: '90%',
-        height: 50,
-        backgroundColor: props.theme ? color.drakPrimaryColors : color.primaryColors,
-        borderRadius: 15,
-        justifyContent: "center",
-        alignItems: 'center',
-        alignSelf: 'center'
-    },
-    btnText: {
-        fontSize: 20,
-        color: 'white',
-        fontWeight: 'bold'
-    },
-    dateOrCapicity: {
-        flexDirection: "row",
-        justifyContent: 'center',
-        marginVertical: 10,
-        marginHorizontal: 20
-    }, modelBox: {
-        width: Dimensions.get('screen').width - 20,
-        minHeight: 200,
-
-        backgroundColor: props.theme ? color.drakBackgroundColor: color.backgroundColor,
-        alignSelf: 'center',
-        borderRadius: 15,
-        flexDirection: 'row',
-        alignItems: 'center',
-        alignItems: "center",
-        shadowColor:  props.theme ? color.drakFontcolor: color.fontcolor,
-        shadowOffset: {
-            width: 0,
-            height: 4
         },
-        shadowOpacity: 0.25,
-        shadowRadius: 4,
-        elevation: 5
-    },
+        searchBox: {
+            height: "60%",
+            backgroundColor: props.theme ? color.drakBackgroundColor : color.backgroundColor,
+            bottom: 0,
+            borderTopLeftRadius: 40,
+            borderTopRightRadius: 40,
+            justifyContent: 'center',
 
-})
+        },
+        fromToDesc: {
+            height: 180,
+            backgroundColor: props.theme ? color.drakBackgroundColor : color.backgroundColor,
+            marginHorizontal: 35,
+            borderRadius: 20,
+            justifyContent: 'center',
+            flexDirection: 'row',
+            shadowColor: props.theme ? color.drakFontcolor : color.fontcolor,
+            shadowOffset: {
+                width: 0,
+                height: 2
+            },
+            shadowOpacity: 0.25,
+            shadowRadius: 4,
+            elevation: 5,
+
+        }, inputBox: {
+            borderWidth: 2,
+            borderColor: props.theme ? color.drakPrimaryColors : color.primaryColors,
+            padding: 10,
+            fontSize: 18,
+            borderRadius: 10,
+            marginHorizontal: 10, color: 'gray'
+
+        }, reverseBtn: {
+            width: 50,
+            height: 50,
+            borderRadius: 25,
+            backgroundColor: props.theme ? color.drakPrimaryColors : color.primaryColors,
+            bottom: Platform.OS === 'android' ? '59%' : "57%", left: '70%',
+            justifyContent: 'center',
+            alignItems: 'center', position: "absolute"
+        },
+        btn: {
+            width: '90%',
+            height: 50,
+            backgroundColor: props.theme ? color.drakPrimaryColors : color.primaryColors,
+            borderRadius: 15,
+            justifyContent: "center",
+            alignItems: 'center',
+            alignSelf: 'center'
+        },
+        btnText: {
+            fontSize: 20,
+            color: 'white',
+            fontWeight: 'bold'
+        },
+        dateOrCapicity: {
+            flexDirection: "row",
+            justifyContent: 'center',
+            marginVertical: 10,
+            marginHorizontal: 20
+        }, modelBox: {
+            width: Dimensions.get('screen').width - 20,
+            minHeight: 200,
+
+            backgroundColor: props.theme ? color.drakBackgroundColor : color.backgroundColor,
+            alignSelf: 'center',
+            borderRadius: 15,
+            flexDirection: 'row',
+            alignItems: 'center',
+            alignItems: "center",
+            shadowColor: props.theme ? color.drakFontcolor : color.fontcolor,
+            shadowOffset: {
+                width: 0,
+                height: 4
+            },
+            shadowOpacity: 0.25,
+            shadowRadius: 4,
+            elevation: 5
+        },
+
+    })
     return (
         <KeyboardAvoidingView
             behavior={Platform.OS === "ios" ? "padding" : "height"}
@@ -149,11 +160,11 @@ const styles = StyleSheet.create({
 
                                         renderDescription={row => row.description} // custom description render
                                         onPress={(dt, details = null) => {
-                                            console.log(dt)
+                                            //   console.log(dt)
                                             placetype === "from" && setData({ ...data, from: dt.description });
                                             placetype === "destination" && setData({ ...data, destination: dt.description });
                                             setModalVisible(false)
-                                             console.log(details);
+                                            // console.log(details);
                                         }}
                                         getDefaultValue={() => {
                                             return ''; // text input default value
@@ -168,19 +179,19 @@ const styles = StyleSheet.create({
 
                                             textInput: {
                                                 borderWidth: 2,
-                                                borderColor:props.theme ? color.drakPrimaryColors: color.primaryColors,
+                                                borderColor: props.theme ? color.drakPrimaryColors : color.primaryColors,
                                                 padding: 10,
                                                 fontSize: 18,
                                                 borderRadius: 10,
                                                 marginHorizontal: 30
                                             },
                                             description: {
-                                                color:props.theme ? color.drakPrimaryColors: color.primaryColors,
+                                                color: props.theme ? color.drakPrimaryColors : color.primaryColors,
                                                 fontSize: 18,
 
                                             }, listView: {
                                                 borderWidth: 2,
-                                                borderColor:props.theme ? color.drakPrimaryColors: color.primaryColors,
+                                                borderColor: props.theme ? color.drakPrimaryColors : color.primaryColors,
                                                 padding: 10,
                                                 fontSize: 18,
                                                 borderRadius: 10,
@@ -192,8 +203,10 @@ const styles = StyleSheet.create({
 
                                 </ScrollView>
                             </View>
-                            <TouchableOpacity onPress={() => { setModalVisible(false) }} style={{ alignItems: "center", bottom: 20 }}>
-                                <Text>Close</Text>
+
+                            <TouchableOpacity onPress={() => { setModalVisible(false) }} style={{ alignItems: 'center', bottom: 40 }}>
+                                <Image source={icons.close} style={{ width: 35, height: 35, tintColor: props.theme ? color.drakPrimaryColors : color.primaryColors, }} />
+
                             </TouchableOpacity>
                         </View>
                     </Modal>
@@ -215,17 +228,17 @@ const styles = StyleSheet.create({
                         >
 
                         </MapView>
-                        {/* <Image source={image.truck} style={{ width: '100%', height: '100%', }} /> */}
+
                     </View>
                     <View style={styles.searchBox} >
                         <View style={styles.fromToDesc}>
                             <View style={{ width: "10%", justifyContent: 'center' }}>
-                                <Image source={icons.journey} style={{ width: 50, height: 115, tintColor:props.theme ? color.drakPrimaryColors: color.primaryColors, }} />
+                                <Image source={icons.journey} style={{ width: 50, height: 115, tintColor: props.theme ? color.drakPrimaryColors : color.primaryColors, }} />
                             </View>
                             <View style={{ width: "90%", justifyContent: 'center' }}>
                                 <View style={{ margin: 10, flexDirection: 'row' }}>
                                     <View style={{ width: '5%', justifyContent: 'center' }}>
-                                        <Image source={icons.forword} style={{ width: 20, height: 20, tintColor: props.theme ? color.drakPrimaryColors: color.primaryColors,}} />
+                                        <Image source={icons.forword} style={{ width: 20, height: 20, tintColor: props.theme ? color.drakPrimaryColors : color.primaryColors, }} />
                                     </View>
                                     <TouchableOpacity style={{ width: '95%' }} activeOpacity={0.80} onPress={() => { setPlaceType("from"); setModalVisible(true) }}>
                                         <Text style={styles.inputBox}>{data.from}</Text>
@@ -233,7 +246,7 @@ const styles = StyleSheet.create({
                                 </View>
                                 <View style={{ margin: 10, flexDirection: 'row' }}>
                                     <View style={{ width: '5%', justifyContent: 'center' }}>
-                                        <Image source={icons.forword} style={{ width: 20, height: 20, tintColor: props.theme ? color.drakPrimaryColors: color.primaryColors, }} />
+                                        <Image source={icons.forword} style={{ width: 20, height: 20, tintColor: props.theme ? color.drakPrimaryColors : color.primaryColors, }} />
                                     </View>
                                     <TouchableOpacity style={{ width: '95%' }} activeOpacity={0.80} onPress={() => { setPlaceType("destination"); setModalVisible(true) }}>
                                         <Text style={styles.inputBox}>{data.destination}</Text>
@@ -246,21 +259,26 @@ const styles = StyleSheet.create({
                         </View>
                         <View style={styles.dateOrCapicity}>
                             <View style={{ width: '30%', justifyContent: 'center' }}>
-                                <Text style={{ fontWeight: "bold", fontSize: 18, color: props.theme ? color.drakFontcolor: color.fontcolor, }}>Goods Weight</Text>
+                                <Text style={{ fontWeight: "bold", fontSize: 18, color: props.theme ? color.drakFontcolor : color.fontcolor, }}>Goods Weight</Text>
                             </View>
                             <View style={{ width: '30%', justifyContent: 'center' }}>
                                 <TextInput style={{
                                     borderBottomColor: color.primaryColors,
                                     width: '70%',
                                     borderBottomWidth: 2, paddingHorizontal: 20
-                                    , height: 40, fontSize: 18
-                                }} />
+                                    , height: 40, fontSize: 18, color: props.theme ? color.drakFontcolor : color.fontcolor
+                                }}
+                                    onChangeText={(val) => setData({ ...data, capicity: val })}
+                                    placeholder={"00"}
+                                    placeholderTextColor="gray" 
+                                    keyboardType='number-pad'/>
+
                             </View>
                             <View style={{ width: '30%', justifyContent: 'center' }}>
-                                <Text style={{ fontWeight: "bold", fontSize: 18, color: props.theme ? color.drakPrimaryColors: color.primaryColors,}}>/ Tonnes</Text>
+                                <Text style={{ fontWeight: "bold", fontSize: 18, color: props.theme ? color.drakPrimaryColors : color.primaryColors, }}>/ Tonnes</Text>
                             </View>
                         </View>
-                        <TouchableOpacity style={styles.btn} >
+                        <TouchableOpacity style={styles.btn} onPress={() => { SearchRoute() }}>
                             <Text style={styles.btnText}>
                                 Search
                             </Text>
@@ -276,13 +294,13 @@ const styles = StyleSheet.create({
 }
 const useDispatch = (dispatch) => {
     return {
-     
+
     };
 }
 const useSelector = (state) => (
 
     {
-        theme:state.token.theme
+        theme: state.token.theme
     }
 )
 export default connect(useSelector, useDispatch)(HomeScreen);

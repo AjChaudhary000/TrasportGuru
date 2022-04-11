@@ -9,7 +9,7 @@ import { getUserDetails } from '../../../Redux/UserDetails'
 import image from '../../../contents/image'
 import LottieView from 'lottie-react-native';
 import storage from '@react-native-firebase/storage';
-
+import Toast from 'react-native-simple-toast';
 import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
 
 import { AdminHeaderWithBackButton } from '../../../components/adminHeader'
@@ -26,8 +26,15 @@ const TrasportGuruAccount = (props) => {
     React.useEffect(() => {
         setTimeout(() => {
             setloadingData(false)
-            props.route.params.type === "Admin" && props.navigation.replace('AdminTab')
-            props?.admindata.status && props.navigation.replace('AdminTab')
+           if( props.route.params.type === "Admin" ){
+               Toast.show("Admin Side Open")
+                props.navigation.replace('AdminTab') 
+            }
+
+            if(props?.admindata.status){
+                Toast.show("Admin Side Open")
+                 props.navigation.replace('AdminTab')
+                }
             props.getUserDetails(props.token)
         }, 2000)
 
@@ -36,7 +43,14 @@ const TrasportGuruAccount = (props) => {
 
 
     const TrasportAccount = () => {
-        if (data.trasportName != "" && data.trasportAddress != "" && firebaseImage != "") {
+        if(data.trasportName ===""){
+            Toast.show("Enter The Trasport Name")
+        }else if(data.trasportAddress === ""){
+            Toast.show("Enter Transport Address ")
+        }else if(firebaseImage === ""){
+            Toast.show("Select Transport Image")
+        }else{
+       
             props.transportAccount({ ...data, trasportImage: firebaseImage, token: props.token })
         }
     };
@@ -235,9 +249,9 @@ const TrasportGuruAccount = (props) => {
 
                         </ScrollView>
                     </View>
-                    <TouchableOpacity onPress={() => { setModalVisible(false) }} style={{  bottom: 40,left:30 }}>
-                        <Text style={{fontSize:50,alignItems:'flex-end',color:props.theme ? color.drakFontcolor:color.fontcolor,}}>X</Text>
-                    </TouchableOpacity>
+                    <TouchableOpacity onPress={() => { setModalVisible(false) }} style={{ alignItems: 'center', bottom: 40 }}>
+                        <Image source={icons.close} style={{ width: 35, height: 35, tintColor: props.theme ? color.drakAdminprimaryColors : color.adminprimaryColors, }} />
+                        </TouchableOpacity>
                 </View>
             </Modal>
             <AdminHeaderWithBackButton name={"Transport Account"} navigation={props.navigation} />

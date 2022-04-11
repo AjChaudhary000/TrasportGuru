@@ -259,7 +259,7 @@ const AddRoute = (props) => {
                             </ScrollView>
                         </View>
                         <TouchableOpacity onPress={() => { setModalVisible(false) }} style={{ alignItems: 'center', bottom: 40 }}>
-                            <Text style={{ fontSize: 30, color: props.theme ? color.drakFontcolor : color.fontcolor, }}>X</Text>
+                        <Image source={icons.close} style={{ width: 35, height: 35, tintColor: props.theme ? color.drakAdminprimaryColors : color.adminprimaryColors, }} />
                         </TouchableOpacity>
                     </View>
                 </Modal>

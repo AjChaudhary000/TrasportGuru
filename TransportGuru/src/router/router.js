@@ -25,6 +25,7 @@ import AddTrasportDetails from '../screen/Admin/addTrasportDetails';
 import AddRoute from '../screen/Admin/addRoute';
 import Routelist from '../screen/Admin/routelist';
 import TransportListDetails from '../screen/Admin/transportList';
+import SearchTransportList from '../screen/Tab/searchTransportList';
 const Stack = createNativeStackNavigator();
 const Router = (props) => {
     const [token, setTokenData] = React.useState('')
@@ -77,6 +78,7 @@ const Router = (props) => {
                 <Stack.Screen name='Otp' component={Otp} options={{ headerShown: false }} />
                 <Stack.Screen name='EditAccount' component={EditAccount} options={{ headerShown: false }} />
                 <Stack.Screen name='TrasportGuruAccount' component={TrasportGuruAccount} options={{ headerShown: false }} />
+                <Stack.Screen name='SearchTransportList' component={SearchTransportList} options={{ headerShown: false }} />
                 {/* userSide End */}
 
                 {/* AdminSide Start */}

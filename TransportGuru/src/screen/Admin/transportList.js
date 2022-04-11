@@ -37,25 +37,25 @@ const TransportListDetails = (props) => {
         }
     }, [token, props])
     const DeleteDriver = (id) => {
-      
+
         Toast.show(" Transport remove successful")
         props.deleteTransport({ id: id, token: token })
     }
     const EditDriver = (item) => {
-        
+
         props.navigation.navigate("AddTrasportDetails", { item: item })
     }
     const styles = StyleSheet.create({
         container: {
             flex: 1,
-            backgroundColor: props.theme?color.drakBackgroundColor:color.backgroundColor
+            backgroundColor: props.theme ? color.drakBackgroundColor : color.backgroundColor
         }, listBox: {
             minHeight: 150,
-            backgroundColor: props.theme?color.drakBackgroundColor:color.backgroundColor,
+            backgroundColor: props.theme ? color.drakBackgroundColor : color.backgroundColor,
             marginHorizontal: 20,
             borderRadius: 20,
-    
-            shadowColor:props.theme?color.drakFontcolor:color.fontcolor,
+
+            shadowColor: props.theme ? color.drakFontcolor : color.fontcolor,
             shadowOffset: {
                 width: 0,
                 height: 2
@@ -66,16 +66,16 @@ const TransportListDetails = (props) => {
             marginVertical: 10,
             padding: 10
         },
-    
+
         drivelist: {
-    
+
             height: 150,
-            backgroundColor: props.theme?color.drakBackgroundColor:color.backgroundColor,
+            backgroundColor: props.theme ? color.drakBackgroundColor : color.backgroundColor,
             marginHorizontal: 2,
             borderRadius: 20,
             justifyContent: 'center',
             flexDirection: 'row',
-            shadowColor:props.theme?color.drakFontcolor:color.fontcolor,
+            shadowColor: props.theme ? color.drakFontcolor : color.fontcolor,
             shadowOffset: {
                 width: 0,
                 height: 2
@@ -85,7 +85,7 @@ const TransportListDetails = (props) => {
             elevation: 5,
             marginVertical: 10,
         },
-    
+
         edit: {
             fontSize: 16,
             fontWeight: 'bold',
@@ -98,7 +98,7 @@ const TransportListDetails = (props) => {
         }, image: {
             width: '28%',
             borderWidth: 3,
-            borderColor: props.theme ? color.drakAdminprimaryColors:color.adminprimaryColors,
+            borderColor: props.theme ? color.drakAdminprimaryColors : color.adminprimaryColors,
             borderRadius: 15,
             marginVertical: 10,
             marginLeft: 20,
@@ -111,11 +111,11 @@ const TransportListDetails = (props) => {
         }, driverName: {
             fontSize: 20,
             fontWeight: 'bold',
-            color:props.theme?color.drakFontcolor:color.fontcolor
+            color: props.theme ? color.drakFontcolor : color.fontcolor
         }, driverMobileNo: {
             fontSize: 16,
             fontWeight: 'bold',
-            color: props.theme ? color.drakAdminprimaryColors:color.adminprimaryColors,
+            color: props.theme ? color.drakAdminprimaryColors : color.adminprimaryColors,
             paddingVertical: 3
         },
         driverEmail: {
@@ -126,11 +126,11 @@ const TransportListDetails = (props) => {
         truckname: {
             fontSize: 25,
             fontWeight: 'bold',
-            color:props.theme?color.drakFontcolor:color.fontcolor
+            color: props.theme ? color.drakFontcolor : color.fontcolor
         }, truckmodelname: {
             fontSize: 16,
             fontWeight: 'bold',
-            color: props.theme ? color.drakAdminprimaryColors:color.adminprimaryColors,
+            color: props.theme ? color.drakAdminprimaryColors : color.adminprimaryColors,
             paddingVertical: 3
         },
         truckreg: {
@@ -141,9 +141,9 @@ const TransportListDetails = (props) => {
         truckcapicity: {
             fontSize: 14,
             fontWeight: 'bold',
-            color: props.theme?color.drakFontcolor:color.fontcolor
+            color: props.theme ? color.drakFontcolor : color.fontcolor
         },
-    
+
     })
     return (
         <View style={styles.container}>
@@ -151,15 +151,15 @@ const TransportListDetails = (props) => {
             <FlatList data={props.transportList} renderItem={(item) => (
                 <View style={styles.listBox}>
                     <View style={{ alignItems: "center" }}>
-                        <Text style={{ fontWeight: 'bold', color:props.theme?color.drakFontcolor:color.fontcolor }}>
+                        <Text style={{ fontWeight: 'bold', color: props.theme ? color.drakFontcolor : color.fontcolor }}>
                             {item.item.routeId.from.name}
                         </Text>
                     </View>
                     <View style={{ alignItems: "center", paddingVertical: 20 }}>
-                        <Image source={icons.upToDown} style={{ width: 30, height: 30, tintColor: props.theme ? color.drakAdminprimaryColors:color.adminprimaryColors }} />
+                        <Image source={icons.upToDown} style={{ width: 30, height: 30, tintColor: props.theme ? color.drakAdminprimaryColors : color.adminprimaryColors }} />
                     </View>
                     <View style={{ alignItems: "center" }}>
-                        <Text style={{ fontWeight: 'bold', color:props.theme?color.drakFontcolor:color.fontcolor }}>
+                        <Text style={{ fontWeight: 'bold', color: props.theme ? color.drakFontcolor : color.fontcolor }}>
                             {item.item.routeId.destination.name}
                         </Text>
                     </View>
@@ -179,7 +179,7 @@ const TransportListDetails = (props) => {
                     <View style={{ marginHorizontal: 20, marginVertical: 5, flexDirection: "row", justifyContent: 'space-between' }}>
                         <View >
 
-                            <Text style={{ color: props.theme ? color.drakAdminprimaryColors:color.adminprimaryColors, fontWeight: 'bold' }}>{item.item.capicity}/{item.item.truckId.truckCapicity}</Text>
+                            <Text style={{ color: props.theme ? color.drakAdminprimaryColors : color.adminprimaryColors, fontWeight: 'bold' }}>{item.item.capicity}/{item.item.truckId.truckCapicity}</Text>
 
                         </View>
                         <View >
@@ -192,17 +192,17 @@ const TransportListDetails = (props) => {
 
                     <View style={{ marginHorizontal: 20, marginVertical: 10, flexDirection: "row", justifyContent: 'space-between' }}>
                         <TouchableOpacity onPress={() => { setDriver({ type: !driver.type, id: item.item._id }) }}>
-                            <Text style={{ color: props.theme ? color.drakAdminprimaryColors:color.adminprimaryColors, fontWeight: 'bold' }}>
+                            <Text style={{ color: props.theme ? color.drakAdminprimaryColors : color.adminprimaryColors, fontWeight: 'bold' }}>
                                 Driver
                             </Text>
                         </TouchableOpacity>
                         <TouchableOpacity onPress={() => { setTruck({ type: !truck.type, id: item.item._id }) }}>
-                            <Text style={{ color: props.theme ? color.drakAdminprimaryColors:color.adminprimaryColors, fontWeight: 'bold' }}>
+                            <Text style={{ color: props.theme ? color.drakAdminprimaryColors : color.adminprimaryColors, fontWeight: 'bold' }}>
                                 Truck
                             </Text>
                         </TouchableOpacity>
                         <TouchableOpacity onPress={() => { setRoute({ type: !route.type, id: item.item._id }) }}>
-                            <Text style={{ color: props.theme ? color.drakAdminprimaryColors:color.adminprimaryColors, fontWeight: 'bold' }}>
+                            <Text style={{ color: props.theme ? color.drakAdminprimaryColors : color.adminprimaryColors, fontWeight: 'bold' }}>
                                 Route
                             </Text>
                         </TouchableOpacity>
@@ -211,7 +211,7 @@ const TransportListDetails = (props) => {
                     {driver.type && driver.id === item.item._id &&
                         <View style={styles.drivelist} >
                             <View style={styles.image}>
-                                <Image source={{uri:item.item.driverId.driverImage}} style={{ width: '100%', height: '100%', overflow: "hidden" }} />
+                                <Image source={{ uri: item.item.driverId.driverImage }} style={{ width: '100%', height: '100%', overflow: "hidden" }} />
                             </View>
 
                             <View style={styles.listData}>
@@ -225,7 +225,7 @@ const TransportListDetails = (props) => {
                     {truck.type && truck.id === item.item._id &&
                         <View style={styles.drivelist}>
                             <View style={styles.image}>
-                                <Image source={{uri:item.item.truckId.truckImage}} style={{ width: '100%', height: '100%', overflow: "hidden" }} />
+                                <Image source={{ uri: item.item.truckId.truckImage }} style={{ width: '100%', height: '100%', overflow: "hidden" }} />
                             </View>
                             <View style={styles.listData}>
                                 <Text style={styles.truckname}>{item.item.truckId.truckName}</Text>
@@ -239,18 +239,18 @@ const TransportListDetails = (props) => {
                     {/* route data */}
                     {route.type && route.id === item.item._id &&
                         <View style={{ flexDirection: 'row' }}>
-                            <View style={{ width: "10%", justifyContent: 'center' }}>
-                                <Image source={icons.journey} style={{ width: 20, height: 200, tintColor: props.theme ? color.drakAdminprimaryColors:color.adminprimaryColors }} />
+                            <View style={{ width: "5%", justifyContent: 'center' }}>
+                                <Image source={icons.journey} style={{ width: 10, height: 40 * item.item.routeId.routeStop.length, tintColor: props.theme ? color.drakAdminprimaryColors : color.adminprimaryColors }} />
                             </View>
 
-                            <View style={{ width: "90%", justifyContent: 'center' }}>
+                            <View style={{ width: "95%", justifyContent: 'center' }}>
 
 
                                 <FlatList data={item.item.routeId.routeStop} renderItem={(item) => (
                                     <View style={{ margin: 10, flexDirection: 'row' }}>
 
                                         <View style={{ width: '5%', justifyContent: 'center' }}>
-                                            <Image source={icons.forword} style={{ width: 20, height: 20, tintColor: props.theme ? color.drakAdminprimaryColors:color.adminprimaryColors }} />
+                                            <Image source={icons.forword} style={{ width: 20, height: 20, tintColor: props.theme ? color.drakAdminprimaryColors : color.adminprimaryColors }} />
                                         </View>
                                         <View style={{ width: '95%' }}>
                                             <Text style={{ marginHorizontal: 10, fontWeight: 'bold', color: 'gray' }}>{item.item.stops}</Text>
@@ -293,7 +293,7 @@ const useSelector = (state) => (
     {
         transportList: state.transport.transportList,
         deletedata: state.transport.data,
-        theme:state.token.theme
+        theme: state.token.theme
 
     }
 )
