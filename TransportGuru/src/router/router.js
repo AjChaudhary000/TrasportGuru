@@ -26,6 +26,8 @@ import AddRoute from '../screen/Admin/addRoute';
 import Routelist from '../screen/Admin/routelist';
 import TransportListDetails from '../screen/Admin/transportList';
 import SearchTransportList from '../screen/Tab/searchTransportList';
+import AdminProfile from '../screen/Tab/adminProfile';
+
 const Stack = createNativeStackNavigator();
 const Router = (props) => {
     const [token, setTokenData] = React.useState('')
@@ -79,6 +81,7 @@ const Router = (props) => {
                 <Stack.Screen name='EditAccount' component={EditAccount} options={{ headerShown: false }} />
                 <Stack.Screen name='TrasportGuruAccount' component={TrasportGuruAccount} options={{ headerShown: false }} />
                 <Stack.Screen name='SearchTransportList' component={SearchTransportList} options={{ headerShown: false }} />
+                <Stack.Screen name='AdminProfile' component={AdminProfile} options={{ headerShown: false }} />
                 {/* userSide End */}
 
                 {/* AdminSide Start */}

@@ -13,7 +13,7 @@ import Toast from 'react-native-simple-toast';
 import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
 import { HeaderWithBackButton } from '../../../components/header'
 
-const EditAccount = (props) => {
+const AdminEditAccount = (props) => {
     const [firebaseImage, setfirebaseImage] = React.useState('');
     const [imageLoading, setImageLoading] = React.useState(false)
     const [modalVisible, setModalVisible] = React.useState(false);
@@ -342,4 +342,4 @@ const useDispatch = (dispatch) => {
 
     }
 }
-export default connect(useSelector, useDispatch)(EditAccount)
+export default connect(useSelector, useDispatch)(AdminEditAccount)

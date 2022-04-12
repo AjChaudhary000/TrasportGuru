@@ -2,7 +2,7 @@ const express = require('express');
 const router = new express.Router();
 const auth = require('../middleware/auth');
 const Transport = require('../model/trasnsportList');
-
+const User = require('../model/user');
 router.post('/transport/create', auth, async (req, res) => {
     try {
         const trasnsportData = new Transport({ tarsportUserId: req.user._id, ...req.body });
@@ -36,6 +36,14 @@ router.delete('/transport/delete/:_id', auth, async (req, res) => {
 router.patch('/transport/update/:_id', auth, async (req, res) => {
     try {
         const data = await Transport.findByIdAndUpdate({ _id: req.params._id }, req.body, { new: true, })
+        res.status(201).send({ data, status: true })
+    } catch (e) {
+        res.status(400).send({ data: e.toString(), status: false })
+    }
+})
+router.get('/transportCompanyList', auth, async (req, res) => {
+    try {
+        const data = await User.find({ accountType: "Admin" })
         res.status(201).send({ data, status: true })
     } catch (e) {
         res.status(400).send({ data: e.toString(), status: false })

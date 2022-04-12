@@ -24,7 +24,7 @@ export default function Header(props) {
 export const HeaderWithBackButton = (props) => {
     return (
         <>
-            <View style={{ flexDirection: 'row', ...styles.header }}>
+            <View style={{ flexDirection: 'row', ...styles.header1 }}>
             <StatusBar backgroundColor={color.primaryColors}/>
                 <TouchableOpacity style={{ paddingTop: Platform.OS === 'ios' ? 35 : 0, width: '10%', alignItems: 'center',justifyContent:'center' }} onPress={() => props.navigation.goBack()}>
                     <Image
@@ -39,7 +39,7 @@ export const HeaderWithBackButton = (props) => {
                     />
                 </TouchableOpacity>
                 <View style={{width:"90%"}}>
-                    <Text style={{...styles.headerName,justifyContent:'center',paddingTop: Platform.OS === 'ios' ? 40 : 18,}}>{props.name}</Text>
+                    <Text style={{...styles.headerName,justifyContent:'center',paddingTop: Platform.OS === 'ios' ? 35 : 0,}}>{props.name}</Text>
                 </View>
             </View>
         </>
@@ -48,15 +48,24 @@ export const HeaderWithBackButton = (props) => {
 const styles = StyleSheet.create({
     header: {
         marginBottom: 15,
-        height: Platform.OS === 'ios' ? 90 : 70,
+        height: Platform.OS === 'ios' ? 90 : 60,
         backgroundColor: color.primaryColors,
-       justifyContent:'center'
+       justifyContent:'center',
+      
+    },
+    header1: {
+        marginBottom: 15,
+        height: Platform.OS === 'ios' ? 90 : 60,
+        backgroundColor: color.primaryColors,
+       justifyContent:'center',
+       alignItems:'center'
     },
     headerName: {
         fontSize: 20,
         fontWeight: 'bold',
         letterSpacing: 1,
         color: 'white',
+        justifyContent:'center',
         textAlign: Platform.OS === 'ios' ? 'center' : 'left',
         paddingTop: Platform.OS === 'ios' ? 38 : 0,
         paddingLeft: Platform.OS === 'ios' ? 0 : 25,

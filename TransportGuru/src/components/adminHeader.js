@@ -24,7 +24,7 @@ export default function AdminHeader(props) {
 export const AdminHeaderWithBackButton = (props) => {
     return (
         <>
-            <View style={{ flexDirection: 'row', ...styles.header }}>
+            <View style={{ flexDirection: 'row', ...styles.header1 }}>
                 <StatusBar backgroundColor={color.adminprimaryColors} />
                 <TouchableOpacity style={{ paddingTop: Platform.OS === 'ios' ? 35 : 0, width: '10%', alignItems: 'center', justifyContent: 'center' }} onPress={() => props.navigation.goBack()}>
                     <Image
@@ -39,7 +39,7 @@ export const AdminHeaderWithBackButton = (props) => {
                     />
                 </TouchableOpacity>
                 <View style={{ width: "90%" }}>
-                    <Text style={{ ...styles.headerName, justifyContent: 'center', paddingTop: Platform.OS === 'ios' ? 45 : 20, }}>{props.name}</Text>
+                    <Text style={{ ...styles.headerName, justifyContent: 'center', paddingTop: Platform.OS === 'ios' ? 35 : 0, }}>{props.name}</Text>
                 </View>
             </View>
         </>
@@ -50,7 +50,15 @@ const styles = StyleSheet.create({
         marginBottom: 15,
         height: Platform.OS === 'ios' ? 90 : 70,
         backgroundColor: color.adminprimaryColors,
-        justifyContent: 'center'
+        justifyContent: 'center',
+        
+    },
+    header1: {
+        marginBottom: 15,
+        height: Platform.OS === 'ios' ? 90 : 70,
+        backgroundColor: color.adminprimaryColors,
+        justifyContent: 'center',
+        alignItems:'center'
     },
     headerName: {
         fontSize: 20,

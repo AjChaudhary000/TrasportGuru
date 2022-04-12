@@ -31,6 +31,8 @@ const box = require('../assets/icons/box.png')
 const editdate = require('../assets/icons/editdate.png')
 const close = require('../assets/icons/close.png')
 const move = require('../assets/icons/move.png')
+const call = require('../assets/icons/call.png')
+const share = require('../assets/icons/share.png')
 export default {
     email,
     right_arrow,
@@ -59,5 +61,5 @@ export default {
     contrast,
     addtotruck,
     driver, box,
-    editdate, close, move
+    editdate, close, move,call,share
 };

@@ -2,14 +2,15 @@ import { View, Text, Image, TouchableOpacity } from 'react-native'
 import React from 'react'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 
-import Setting from '../screen/Tab/setting';
 import Tracking from '../screen/Tab/tracking';
 import icons from '../contents/icons';
 import color from '../contents/color';
-import Message from '../screen/Tab/message';
+
 import AdminHome from '../screen/Admin/adminHome';
 import AddTransport from '../screen/Admin/addTransport';
 import { connect } from 'react-redux';
+import AdminSetting from '../screen/Admin/adminSetting';
+import AdminMessage from '../screen/Admin/adminMessage';
 
 const Tabs = createBottomTabNavigator();
 
@@ -45,12 +46,12 @@ const AdminTab = (props) => {
                     <CustomButton {...props} />)
 
             }} />
-            <Tabs.Screen name="Message" component={Message} options={{
+            <Tabs.Screen name="AdminMessage" component={AdminMessage} options={{
                 headerShown: false, tabBarIcon: ({ focused }) => (
                     <Image source={icons.message} style={{ width: 30, height: 30, tintColor: focused ? color.adminprimaryColors : 'gray' }} />
                 )
             }} />
-            <Tabs.Screen name="Setting" component={Setting} options={{
+            <Tabs.Screen name="AdminSetting" component={AdminSetting} options={{
                 headerShown: false, tabBarIcon: ({ focused }) => (
                     <Image source={icons.setting} style={{ width: 30, height: 30, tintColor: focused ? color.adminprimaryColors : 'gray' }} />
                 )

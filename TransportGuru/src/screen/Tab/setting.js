@@ -1,4 +1,4 @@
-import { View, StyleSheet, Platform, Image, ScrollView, TouchableOpacity, Switch,StatusBar } from 'react-native'
+import { View, StyleSheet, Platform, Image, ScrollView, TouchableOpacity, Switch, StatusBar } from 'react-native'
 import { Paragraph, Caption, Avatar, Text, Title, DarkTheme } from 'react-native-paper'
 import React from 'react'
 import color from '../../contents/color';
@@ -6,9 +6,9 @@ import icons from '../../contents/icons';
 import SettingMenu from './settingMenu';
 import { connect } from 'react-redux'
 import { getUserDetails } from '../../Redux/UserDetails';
-import { getJWTToken, getTheme, removeJWTToken,saveTheme } from '../../Redux/helper';
+import { getJWTToken, getTheme, removeJWTToken, saveTheme } from '../../Redux/helper';
 import Header from '../../components/header';
-import {  getThemeMode, logoutToken } from '../../Redux/tokenSlice';
+import { getThemeMode, logoutToken } from '../../Redux/tokenSlice';
 import LottieView from 'lottie-react-native';
 const Setting = (props) => {
   const [token, setToken] = React.useState('');
@@ -30,17 +30,17 @@ const Setting = (props) => {
       console.log()
     }
   }
-  const saveThemeData = async(drakmode)=>{
-    try{
+  const saveThemeData = async (drakmode) => {
+    try {
       await saveTheme(drakmode)
-    }catch(e){
+    } catch (e) {
       console.log(e);
     }
   }
-  React.useEffect(()=>{
+  React.useEffect(() => {
     saveThemeData(isEnabled)
     props.getThemeMode(isEnabled)
-  },[isEnabled])
+  }, [isEnabled])
   const logout = async () => {
     console.log("dd3d3wqd");
 
@@ -57,20 +57,20 @@ const Setting = (props) => {
     fetchToken()
     props.getUserDetails(token);
   }, [token])
-  if(props.loading){
+  if (props.loading) {
     return (
-        <View style={{ flex: 1, backgroundColor:props.theme ? color.drakBackgroundColor: color.backgroundColor }}>
-            <StatusBar hidden />
-            <View style={{ height: "100%" }}>
-                <LottieView source={require('../../assets/json/loder.json')} autoPlay loop />
-            </View>
+      <View style={{ flex: 1, backgroundColor: props.theme ? color.drakBackgroundColor : color.backgroundColor }}>
+        <StatusBar hidden />
+        <View style={{ height: "100%" }}>
+          <LottieView source={require('../../assets/json/loder.json')} autoPlay loop />
         </View>
+      </View>
     );
-   }
-   const styles = StyleSheet.create({
+  }
+  const styles = StyleSheet.create({
     container: {
       flex: 1,
-      backgroundColor:props.theme ? color.drakBackgroundColor: color.backgroundColor,
+      backgroundColor: props.theme ? color.drakBackgroundColor : color.backgroundColor,
       marginBottom: 30
     },
     header: {
@@ -89,7 +89,7 @@ const Setting = (props) => {
     }, option: {
       height: 50,
       marginHorizontal: 20,
-  
+
       borderRadius: 10,
       flexDirection: 'row',
       justifyContent: 'center',
@@ -110,14 +110,14 @@ const Setting = (props) => {
       alignItems: "center"
     },
     menuText: {
-      color: props.theme ? color.drakPrimaryColors: color.primaryColors,
+      color: props.theme ? color.drakPrimaryColors : color.primaryColors,
       fontWeight: 'bold',
       fontSize: 18
     },
     menuiconStyle: {
       width: 25,
       height: 25,
-      tintColor: props.theme ? color.drakPrimaryColors: color.primaryColors
+      tintColor: props.theme ? color.drakPrimaryColors : color.primaryColors
     }
   })
   return (
@@ -133,7 +133,7 @@ const Setting = (props) => {
             source={{ uri: props.userData?.image || "https://firebasestorage.googleapis.com/v0/b/trasnsportguru.appspot.com/o/user%2Fuser.jpg?alt=media&token=69b96dfc-7eec-4402-9f61-f6f53d0c0c7e" }} />
         </View>
         <View style={{ marginTop: 10, alignItems: 'center' }}>
-          <Title style={{ textAlign: 'center', color: props.theme?color.drakFontcolor:color.fontcolor }}>{props.userData?.username}</Title>
+          <Title style={{ textAlign: 'center', color: props.theme ? color.drakFontcolor : color.fontcolor }}>{props.userData?.username}</Title>
           <Caption style={{ fontWeight: 'bold', color: 'gray' }}>@{props.userData?.email}</Caption>
         </View>
         {/* </View> */}
@@ -146,7 +146,7 @@ const Setting = (props) => {
         </View> */}
 
           <View style={{ marginTop: 30, marginBottom: 30 }}>
-            <SettingMenu icon={icons.edit} menuName={"Edit Account"} onPress={() => { props.navigation.navigate('EditAccount') }} />
+            <SettingMenu icon={icons.edit} menuName={"Edit Account"} onPress={() => { props.navigation.navigate('EditAccount', { item: props.userData }) }} />
             <SettingMenu icon={icons.truck} menuName={"Transport Guru Account"} onPress={() => { props.navigation.navigate('TrasportGuruAccount', { type: props.userData?.accountType }) }} />
             <SettingMenu icon={icons.message} menuName={"Message"} onPress={() => { console.log("hello") }} />
             <TouchableOpacity style={styles.option} onPress={props.onPress} activeOpacity={0.60}>
@@ -183,7 +183,7 @@ const useDispatch = (dispatch) => {
   return {
     getUserDetails: (data) => dispatch(getUserDetails(data)),
     logoutToken: () => dispatch(logoutToken()),
-    getThemeMode:(data)=>dispatch(getThemeMode(data))
+    getThemeMode: (data) => dispatch(getThemeMode(data))
   };
 }
 const useSelector = (state) => (
@@ -191,7 +191,7 @@ const useSelector = (state) => (
   {
     userData: state.user.userData,
     loading: state.user.loading,
-    theme:state.token.theme
+    theme: state.token.theme
   }
 )
 export default connect(useSelector, useDispatch)(Setting);

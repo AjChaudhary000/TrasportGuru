@@ -13,7 +13,7 @@ import { addRoute, setRouteData, updateRoute } from '../../Redux/Admin/routeSlic
 import { getCountRoute } from '../../Redux/Admin/countAddSlice';
 import DraggableFlatList from 'react-native-draggable-flatlist';
 import Toast from 'react-native-simple-toast';
-
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
 const AddRoute = (props) => {
     const [modalVisible, setModalVisible] = React.useState(false);
     const [placetype, setPlaceType] = React.useState()
@@ -23,13 +23,13 @@ const AddRoute = (props) => {
             name: props.route.params?.item?.from.name || 'From',
             lat: props.route.params?.item?.destination.lat || 0.0,
             lng: props.route.params?.item?.destination.lng || 0.0,
-            avgTime:props.route.params?.item?.destination.avgTime ||  0
+            avgTime: props.route.params?.item?.destination.avgTime || 0
         },
         destination: {
             name: props.route.params?.item?.destination.name || 'destination',
-            lat: props.route.params?.item?.destination.lat ||0.0,
-            lng:props.route.params?.item?.destination.lng || 0.0,
-            avgTime: props.route.params?.item?.destination.avgTime ||0,
+            lat: props.route.params?.item?.destination.lat || 0.0,
+            lng: props.route.params?.item?.destination.lng || 0.0,
+            avgTime: props.route.params?.item?.destination.avgTime || 0,
         },
     })
     const [stopList, setStopList] = React.useState(props.route.params?.item?.routeStop || []);
@@ -259,7 +259,7 @@ const AddRoute = (props) => {
                             </ScrollView>
                         </View>
                         <TouchableOpacity onPress={() => { setModalVisible(false) }} style={{ alignItems: 'center', bottom: 40 }}>
-                        <Image source={icons.close} style={{ width: 35, height: 35, tintColor: props.theme ? color.drakAdminprimaryColors : color.adminprimaryColors, }} />
+                            <Image source={icons.close} style={{ width: 35, height: 35, tintColor: props.theme ? color.drakAdminprimaryColors : color.adminprimaryColors, }} />
                         </TouchableOpacity>
                     </View>
                 </Modal>
@@ -292,36 +292,38 @@ const AddRoute = (props) => {
                                 </TouchableOpacity>
 
                             </View>}
-                            <DraggableFlatList
-                                data={stopList}
-                                onDragEnd={({ data }) => setData(data)}
-                                keyExtractor={(item) => item.key}
-                                renderItem={({ item, index, drag }) => (
-                                    <View style={styles.stopbox}>
-                                        {moveBox &&
-                                            <TouchableOpacity style={{ alignItems: 'center' }} style={{ flexDirection: 'column' }}
-                                                onLongPress={drag}>
-                                                <Image source={icons.move} style={{ width: 30, height: 30, tintColor: props.theme ? color.drakAdminprimaryColors : color.adminprimaryColors, }} />
-                                            </TouchableOpacity>}
-                                        <View style={{ alignItems: 'center' }}>
-                                            <Text style={{ color: props.theme ? color.drakFontcolor : color.fontcolor, fontWeight: 'bold', fontSize: 18, paddingHorizontal: 5 }}>{item.stops}</Text>
+                            <GestureHandlerRootView style={{ width: '100%', height: '100%' }}>
+                                <DraggableFlatList
+                                    data={stopList}
+                                    onDragEnd={({ data }) => setData(data)}
+                                    keyExtractor={(item) => item.key}
+                                    renderItem={({ item, index, drag }) => (
+                                        <View style={styles.stopbox}>
+                                            {moveBox &&
+                                                <TouchableOpacity style={{ alignItems: 'center' }} style={{ flexDirection: 'column' }}
+                                                    onLongPress={drag}>
+                                                    <Image source={icons.move} style={{ width: 30, height: 30, tintColor: props.theme ? color.drakAdminprimaryColors : color.adminprimaryColors, }} />
+                                                </TouchableOpacity>}
+                                            <View style={{ alignItems: 'center' }}>
+                                                <Text style={{ color: props.theme ? color.drakFontcolor : color.fontcolor, fontWeight: 'bold', fontSize: 18, paddingHorizontal: 5 }}>{item.stops}</Text>
+                                            </View>
+                                            <TouchableOpacity style={{ alignItems: 'center' }} onPress={() => { setStopList(stopList.filter((_, ind) => ind !== index)) }}>
+                                                <Image source={icons.close} style={{ width: 35, height: 35, tintColor: props.theme ? color.drakAdminprimaryColors : color.adminprimaryColors, }} />
+                                            </TouchableOpacity>
                                         </View>
-                                        <TouchableOpacity style={{ alignItems: 'center' }} onPress={() => { setStopList(stopList.filter((_, ind) => ind !== index)) }}>
-                                            <Image source={icons.close} style={{ width: 35, height: 35, tintColor: props.theme ? color.drakAdminprimaryColors : color.adminprimaryColors, }} />
-                                        </TouchableOpacity>
-                                    </View>
-                                )}
-                                onDragEnd={({ data }) => setStopList(data)}
-                                keyExtractor={(item, index) => `AJ${index + 1}`}
-                            />
+                                    )}
+                                    onDragEnd={({ data }) => setStopList(data)}
+                                    keyExtractor={(item, index) => `AJ${index + 1}`}
+                                />
 
-                            <View style={{ marginHorizontal: 10, marginVertical: 20 }}>
-                                <TouchableOpacity style={styles.btn} onPress={() => { AddRoute() }}>
-                                    <Text style={styles.btnText}>
-                                        Add Route
-                                    </Text>
-                                </TouchableOpacity>
-                            </View>
+                                <View style={{ marginHorizontal: 10, marginVertical: 20 }}>
+                                    <TouchableOpacity style={styles.btn} onPress={() => { AddRoute() }}>
+                                        <Text style={styles.btnText}>
+                                            Add Route
+                                        </Text>
+                                    </TouchableOpacity>
+                                </View>
+                            </GestureHandlerRootView>
                         </View>
                     </View> :
                     <View>
@@ -352,36 +354,38 @@ const AddRoute = (props) => {
                                 </TouchableOpacity>
 
                             </View>}
-
-                            <DraggableFlatList
-                                data={stopList}
-                                onDragEnd={({ data }) => setData(data)}
-                                keyExtractor={(item) => item.key}
-                                renderItem={({ item, index, drag }) => (
-                                    <View style={styles.stopbox}>
-                                        {moveBox &&
-                                            <TouchableOpacity style={{ alignItems: 'center' }} style={{ flexDirection: 'column' }}
-                                                onLongPress={drag}>
-                                                <Image source={icons.move} style={{ width: 30, height: 30, tintColor: props.theme ? color.drakAdminprimaryColors : color.adminprimaryColors, }} />
-                                            </TouchableOpacity>}
-                                        <View style={{ alignItems: 'center' }}>
-                                            <Text style={{ color: props.theme ? color.drakFontcolor : color.fontcolor, fontWeight: 'bold', fontSize: 18, paddingHorizontal: 5 }}>{item.stops}</Text>
+                            <GestureHandlerRootView style={{ width: '100%', height: '100%' }}>
+                                <DraggableFlatList
+                                    data={stopList}
+                                    onDragEnd={({ data }) => setData(data)}
+                                    keyExtractor={(item) => item.key}
+                                    renderItem={({ item, index, drag }) => (
+                                        <View style={styles.stopbox}>
+                                            {moveBox &&
+                                                <TouchableOpacity style={{ alignItems: 'center' }} style={{ flexDirection: 'column' }}
+                                                    onLongPress={drag}>
+                                                    <Image source={icons.move} style={{ width: 30, height: 30, tintColor: props.theme ? color.drakAdminprimaryColors : color.adminprimaryColors, }} />
+                                                </TouchableOpacity>}
+                                            <View style={{ alignItems: 'center', width: '80%' }}>
+                                                <Text style={{ color: props.theme ? color.drakFontcolor : color.fontcolor, fontWeight: 'bold', fontSize: 18, paddingHorizontal: 5 }}>{item.stops}</Text>
+                                            </View>
+                                            <TouchableOpacity style={{ alignItems: 'center', width: '10%' }} onPress={() => { setStopList(stopList.filter((_, ind) => ind !== index)) }}>
+                                                <Image source={icons.close} style={{ width: 35, height: 35, tintColor: props.theme ? color.drakAdminprimaryColors : color.adminprimaryColors, }} />
+                                            </TouchableOpacity>
                                         </View>
-                                        <TouchableOpacity style={{ alignItems: 'center' }} onPress={() => { setStopList(stopList.filter((_, ind) => ind !== index)) }}>
-                                            <Image source={icons.close} style={{ width: 35, height: 35, tintColor: props.theme ? color.drakAdminprimaryColors : color.adminprimaryColors, }} />
-                                        </TouchableOpacity>
-                                    </View>
-                                )}
-                                onDragEnd={({ data }) => setStopList(data)}
-                                keyExtractor={(item, index) => `AJ${index + 1}`}
-                            />
-                            <View style={{ marginHorizontal: 10, marginVertical: 20 }}>
-                                <TouchableOpacity style={styles.btn} onPress={() => { UpdateRoute() }}>
-                                    <Text style={styles.btnText}>
-                                        Update Route
-                                    </Text>
-                                </TouchableOpacity>
-                            </View>
+                                    )}
+                                    onDragEnd={({ data }) => setStopList(data)}
+                                    keyExtractor={(item, index) => `AJ${index + 1}`}
+                                />
+
+                                <View style={{ marginHorizontal: 10, marginVertical: 20 }}>
+                                    <TouchableOpacity style={styles.btn} onPress={() => { UpdateRoute() }}>
+                                        <Text style={styles.btnText}>
+                                            Update Route
+                                        </Text>
+                                    </TouchableOpacity>
+                                </View>
+                            </GestureHandlerRootView>
                         </View>
                     </View>}
             </View >
