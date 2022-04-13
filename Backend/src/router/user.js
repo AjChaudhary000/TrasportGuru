@@ -155,6 +155,14 @@ router.patch('/updateDriver/:_id', auth, async (req, res) => {
         res.status(400).send({ data: e.toString(), status: false })
     }
 })
+router.patch('/updateUser/:_id', auth, async (req, res) => {
+    try {
+        const data = await User.findByIdAndUpdate({ _id: req.params._id }, req.body, { new: true, })
+        res.status(201).send({ data, status: true })
+    } catch (e) {
+        res.status(400).send({ data: e.toString(), status: false })
+    }
+})
 module.exports = router;
 
 

@@ -46,7 +46,7 @@ const AdminSetting = (props) => {
             width: '50%',
             flexDirection: 'row',
             alignSelf: 'center',
-            marginVertical:20
+            marginVertical: 20
         },
         menuIcon: {
             width: '20%',
@@ -85,7 +85,7 @@ const AdminSetting = (props) => {
                     <Caption style={{ fontWeight: 'bold', color: 'gray' }}>{props.adminData?.email}</Caption>
                 </View>
 
-                <TouchableOpacity style={styles.option} onPress={props.onPress} activeOpacity={0.60}>
+                <TouchableOpacity style={styles.option} onPress={()=>{props.navigation.navigate("AdminEditAccount", { item: props.adminData })}} activeOpacity={0.60}>
                     <View style={styles.menuIcon}>
                         <Image source={icons.edit} style={styles.menuiconStyle} />
                     </View>

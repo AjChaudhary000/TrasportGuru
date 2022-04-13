@@ -22,14 +22,7 @@ const Setting = (props) => {
       console.log()
     }
   }
-  const setThemeData = async (themeMode) => {
-    try {
-      console.log(themeMode)
-      await setTheme(themeMode);
-    } catch (e) {
-      console.log()
-    }
-  }
+ 
   const saveThemeData = async (drakmode) => {
     try {
       await saveTheme(drakmode)

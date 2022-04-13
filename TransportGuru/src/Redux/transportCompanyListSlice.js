@@ -9,7 +9,6 @@ export const getTransportCompanyList = createAsyncThunk('transportComapnyList/ge
                     Authorization: `Bearer ${token}`,
                 }
             });
-
             return response.data.data
         } catch (e) {
             console.log()

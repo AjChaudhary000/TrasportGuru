@@ -1,41 +1,41 @@
-import { View, Text, StyleSheet, TextInput, TouchableOpacity, Image, FlatList, StatusBar, Modal, ScrollView, Dimensions } from 'react-native'
+import {
+    View, Text, StyleSheet, TextInput, TouchableOpacity, Image,
+    PermissionsAndroid, Modal, ScrollView, Dimensions, Alert, Platform
+} from 'react-native'
 import React from 'react'
 import color from '../../../contents/color'
 import icons from '../../../contents/icons'
-import * as ImagePicker from 'react-native-image-picker'
 import { connect } from 'react-redux'
 import { transportAccount } from '../../../Redux/transportAccountSlice'
 import { getUserDetails } from '../../../Redux/UserDetails'
 import image from '../../../contents/image'
 import LottieView from 'lottie-react-native';
-import storage from '@react-native-firebase/storage';
 import Toast from 'react-native-simple-toast';
 import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
 import { HeaderWithBackButton } from '../../../components/header'
-
+import { usereditAccount, setUserData } from '../../../Redux/userProfileSlice'
+import ImageModel from '../../../components/imageModel'
 const EditAccount = (props) => {
-    const [firebaseImage, setfirebaseImage] = React.useState('');
+    const [firebaseImage, setfirebaseImage] = React.useState(props.route.params.item.image || '');
     const [imageLoading, setImageLoading] = React.useState(false)
     const [modalVisible, setModalVisible] = React.useState(false);
+    const [modalVisible1, setModalVisible1] = React.useState(false);
     const [transferred, setTransferred] = React.useState(0);
     const [data, setData] = React.useState({
-        username: props.route.params.item.username||'',
-        UserAddress: props.route.params.item?.UserAddress||'Address',
-        email: props.route.params.item.email||"",
-        mobileno:props.route.params.item?.mobileno|| ""
+        username: props.route.params.item.username || '',
+        UserAddress: props.route.params.item?.address || 'Address',
+        email: props.route.params.item.email || "",
+        mobileno: props.route.params.item?.mobileno || ""
     });
-    const [isloading, setloadingData] = React.useState(true)
+
     React.useEffect(() => {
-        setTimeout(() => {
-            setloadingData(false)
-
-        }, 2000)
-
-
+        if (props.userprofile?.status) {
+            props.getUserDetails(props.token);
+            props.setUserData({})
+            props.navigation.goBack();
+        }
     }, [props])
-
-
-    const TrasportAccount = () => {
+    const EditAccount = () => {
         if (data.username === "") {
             Toast.show("Enter  user Name")
         } else if (data.UserAddress === "") {
@@ -48,60 +48,12 @@ const EditAccount = (props) => {
         } else if (firebaseImage === "") {
             Toast.show("Select Transport Image")
         } else {
-
-            props.transportAccount({ ...data, trasportImage: firebaseImage, token: props.token })
+            console.log(data)
+            console.log("firebase", firebaseImage)
+            props.usereditAccount({ data: { ...data, image: firebaseImage }, id: props.route.params.item?._id, token: props.token })
         }
     };
-    const GalleryLaunch = () => {
-        let options = {
-            title: 'You can choose one image',
-            storageOptions: {
-                skipBackup: true,
-                path: 'images',
-            },
-        };
-        ImagePicker.launchImageLibrary(options, (response) => {
-            if (response.didCancel) {
-                console.log('User cancelled image picker');
-            } else if (response.error) {
-                console.log('ImagePicker Error: ', response.error);
-            } else if (response.customButton) {
-                console.log('User tapped custom button: ', response.customButton);
-            } else {
-                const source = { uri: response.assets[0].uri };
-                setImageLoading(true)
-                uploadImage(source)
 
-            }
-        });
-    }
-    const uploadImage = async ({ uri }) => {
-        console.log(uri)
-        const uploadUri = Platform.OS === 'ios' ? uri.replace('file://', '') : uri;
-        const uniqueSuffix = "Transport" + Date.now() + "-" + Math.round(Math.random() * 1e9);
-        const filename = uniqueSuffix + uploadUri.split('.').pop();;
-        setTransferred(0);
-        const task = storage()
-            .ref(`Transport/${filename}`)
-            .putFile(uploadUri);
-        task.on('state_changed', snapshot => {
-            setTransferred(
-                Math.round(snapshot.bytesTransferred / snapshot.totalBytes) * 10000
-            );
-        });
-        task.then(async (res) => {
-            console.log(res)
-
-            const url = await storage().ref(`Transport/${filename}`).getDownloadURL();
-            await setfirebaseImage(url)
-            if (res.state === 'success') {
-                setTimeout(() => {
-                    setImageLoading(false)
-                }, 4000)
-
-            }
-        })
-    };
 
     const styles = StyleSheet.create({
         container: {
@@ -149,7 +101,7 @@ const EditAccount = (props) => {
             alignSelf: 'center',
             width: 120,
             height: 120,
-            borderRadius: 10,
+            borderRadius: 60,
             borderWidth: 5,
             borderColor: props.theme ? color.drakPrimaryColors : color.primaryColors,
         }, modelBox: {
@@ -172,8 +124,18 @@ const EditAccount = (props) => {
             elevation: 5
         },
     })
+
     return (
+
         <View style={styles.container}>
+
+            {modalVisible1 && <ImageModel
+                filename={"user"}
+                theme={props.theme}
+                modalVisibleData={modalVisible1}
+                onGetImage={(val) => setfirebaseImage(val)}
+                onGetLoding={(val) => setImageLoading(val)}
+                onGetModalVisible={(val) => setModalVisible1(val)} />}
             <Modal
                 animationType="slide"
                 transparent={true}
@@ -248,7 +210,7 @@ const EditAccount = (props) => {
                     {!imageLoading ?
                         <View style={{ marginHorizontal: 10 }}>
                             {!firebaseImage ?
-                                <TouchableOpacity onPress={GalleryLaunch}>
+                                <TouchableOpacity onPress={() => { setModalVisible1(true) }}>
                                     <Image
                                         style={{
                                             alignSelf: 'center',
@@ -262,14 +224,14 @@ const EditAccount = (props) => {
                                         source={icons.add_photo}
                                     />
                                 </TouchableOpacity> :
-                                <View style={styles.image}>
+                                <TouchableOpacity style={styles.image} onPress={() => { setModalVisible1(true) }}>
                                     <Image
                                         style={{
                                             width: 110, height: 110, alignSelf: "center"
 
                                         }}
                                         source={{ uri: firebaseImage }}
-                                    /></View>}
+                                    /></TouchableOpacity>}
 
 
                         </View>
@@ -317,7 +279,7 @@ const EditAccount = (props) => {
                     </TouchableOpacity>
                 </View>
                 <View style={{ marginHorizontal: 10, marginVertical: 20 }}>
-                    <TouchableOpacity style={styles.btn} onPress={() => { TrasportAccount() }}>
+                    <TouchableOpacity style={styles.btn} onPress={() => { EditAccount() }}>
                         <Text style={styles.btnText}>
                             Continue
                         </Text>
@@ -330,16 +292,15 @@ const EditAccount = (props) => {
 const useSelector = (state) => {
     return {
         token: state.token.token,
-        admindata: state.admin.data,
-        loading: state.admin.loading,
+        userprofile: state.userProfile.data,
         theme: state.token.theme
     }
 }
 const useDispatch = (dispatch) => {
     return {
-        transportAccount: (data) => dispatch(transportAccount(data)),
+        usereditAccount: (data) => dispatch(usereditAccount(data)),
         getUserDetails: (data) => dispatch(getUserDetails(data)),
-
+        setUserData: (data) => dispatch(setUserData(data)),
     }
 }
 export default connect(useSelector, useDispatch)(EditAccount)

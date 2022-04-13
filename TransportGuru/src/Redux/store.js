@@ -16,7 +16,7 @@ import routeSlice from './Admin/routeSlice';
 import transportSlice from './Admin/transportSlice';
 import searchTransportListSlice from './searchTransportListSlice';
 import transportCompanyListSlice from './transportCompanyListSlice';
-
+import messageListSlice from './messageListSlice';
 const store = configureStore({
     reducer: combineReducers({
         login: sendEmailSlice,
@@ -34,7 +34,8 @@ const store = configureStore({
         route: routeSlice,
         transport: transportSlice,
         search: searchTransportListSlice,
-        transportCompanyList: transportCompanyListSlice
+        transportCompanyList: transportCompanyListSlice,
+        message: messageListSlice
     }),
     middleware: (getDefaultMiddleware) => getDefaultMiddleware({
         immutableCheck: { ignoredPaths: ['some.nested.path'] },

@@ -7,6 +7,7 @@ import { HeaderWithBackButton } from '../../components/header'
 import { Paragraph, Caption, Text, Title } from 'react-native-paper'
 import { getUserDetails } from '../../Redux/UserDetails'
 import { getJWTToken } from '../../Redux/helper'
+import Toast from 'react-native-simple-toast';
 const AdminProfile = (props) => {
     const [token, setToken] = React.useState('');
     const fetchToken = async () => {
@@ -50,7 +51,7 @@ const AdminProfile = (props) => {
     })
     return (
         <View style={styles.container}>
-                <HeaderWithBackButton name={"Admin Profile"} navigation={props.navigation} />
+            <HeaderWithBackButton name={"Admin Profile"} navigation={props.navigation} />
             <ScrollView style={{ marginBottom: 0 }} showsVerticalScrollIndicator={false}>
                 <View style={styles.backimage}>
                     <Image source={{ uri: "https://www.freepnglogos.com/uploads/truck-png/truck-png-transparent-truck-images-pluspng-20.png" }} style={{ height: "100%", width: "100%" }} />
@@ -64,11 +65,18 @@ const AdminProfile = (props) => {
                     <Caption style={{ fontWeight: 'bold', color: 'gray' }}>{props.route.params.item?.email}</Caption>
                 </View>
 
-                <View style={{ width: "99%", flexDirection: "row", justifyContent: 'space-between', paddingVertical: 10,marginHorizontal:50 }}>
+                <View style={{ width: "99%", flexDirection: "row", justifyContent: 'space-between', paddingVertical: 10, marginHorizontal: 50 }}>
                     <TouchableOpacity style={{ width: "33%" }}>
                         <Image source={icons.call} style={styles.icon} />
                     </TouchableOpacity>
-                    <TouchableOpacity style={{ width: "33%" }}>
+                    <TouchableOpacity style={{ width: "33%" }}
+                        onPress={() => {
+                            if (props.route.params.item?._id === props.userData._id) {
+                                Toast.show("not found ...")
+                            } else {
+                                props.navigation.navigate("ChatDetails", { item: props.route.params.item?._id })
+                            }
+                        }}>
                         <Image source={icons.message} style={styles.icon} />
                     </TouchableOpacity>
                     <TouchableOpacity style={{ width: "33%" }}>
@@ -98,9 +106,10 @@ const useDispatch = (dispatch) => {
 const useSelector = (state) => (
 
     {
-        adminData: state.user.userData,
+        userData: state.user.userData,
         loading: state.user.loading,
         theme: state.token.theme
+
     }
 )
 export default connect(useSelector, useDispatch)(AdminProfile);

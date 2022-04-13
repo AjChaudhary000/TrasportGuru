@@ -27,7 +27,8 @@ import Routelist from '../screen/Admin/routelist';
 import TransportListDetails from '../screen/Admin/transportList';
 import SearchTransportList from '../screen/Tab/searchTransportList';
 import AdminProfile from '../screen/Tab/adminProfile';
-
+import AdminEditAccount from '../screen/Admin/AdminEditAccount';
+import ChatDetails from '../screen/Tab/chatDetails';
 const Stack = createNativeStackNavigator();
 const Router = (props) => {
     const [token, setTokenData] = React.useState('')
@@ -94,6 +95,8 @@ const Router = (props) => {
                 <Stack.Screen name='DriverList' component={DriverList} options={{ headerShown: false }} />
                 <Stack.Screen name='Routelist' component={Routelist} options={{ headerShown: false }} />
                 <Stack.Screen name='TransportListDetails' component={TransportListDetails} options={{ headerShown: false }} />
+                <Stack.Screen name='AdminEditAccount' component={AdminEditAccount} options={{ headerShown: false }} />
+                <Stack.Screen name='ChatDetails' component={ChatDetails} options={{ headerShown: false }} />
                 {/* AdminSide End */}
             </Stack.Navigator>
         </NavigationContainer>

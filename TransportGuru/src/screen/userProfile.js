@@ -21,15 +21,38 @@ const UserProfile = (props) => {
      
     }, [props])
     const [modalVisible, setModalVisible] = React.useState(false);
-    const camaraLaunch = () => {
-        PermissionsAndroid.check('camera').then(response => {
-            if (response === true) {
-                //Open scanner
+    const camaraLaunch = async () => {
+        if (Platform.OS === 'android') {
+            const grantedcamera = await PermissionsAndroid.request(
+                PermissionsAndroid.PERMISSIONS.CAMERA,
+                {
+                    title: "App Camera Permission",
+                    message: "App needs access to your camera ",
+                    buttonNeutral: "Ask Me Later",
+                    buttonNegative: "Cancel",
+                    buttonPositive: "OK"
+                }
+            );
+            const grantedstorage = await PermissionsAndroid.request(
+                PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE,
+                {
+                    title: "App Camera Permission",
+                    message: "App needs access to your camera ",
+                    buttonNeutral: "Ask Me Later",
+                    buttonNegative: "Cancel",
+                    buttonPositive: "OK"
+                }
+            );
+            if (grantedcamera === PermissionsAndroid.RESULTS.GRANTED && grantedstorage === PermissionsAndroid.RESULTS.GRANTED) {
+                console.log("Camera & storage permission given");
+
+
+                setModalVisible1(false)
+                console.log("Camera permission given");
+            } else {
+                console.log("Camera permission denied");
             }
-            else if (response === false) {
-                Alert("Please enable camera permission in device settings.")
-            }
-        })
+        }
         let options = {
             title: 'You can choose one image',
             mediaType: 'photo',
@@ -47,13 +70,13 @@ const UserProfile = (props) => {
             } else if (Response.customButton) {
                 console.log('User tapped custom button: ', Response.customButton);
             } else {
-                // setdata({
-                //     ...data,
-                //     imagepath: response.assets[0]
-                // })
+                const source = { uri: Response.assets[0].uri };
+                setImageLoading(true)
+                uploadImage(source)
+                setModalVisible(false)
             }
         });
-        setModalVisible(false)
+
     }
     const uploadImage = async ({ uri }) => {
         console.log(uri)
@@ -194,7 +217,7 @@ const UserProfile = (props) => {
         modelimage: {
             width: 40,
             height: 40,
-            tintColor: props.theme ? color.drakFontcolor :color.fontcolor,
+            tintColor:props.theme ? color.drakPrimaryColors : color.primaryColors,
         }, image: {
             marginTop: 40,
             overflow: 'hidden',
@@ -238,7 +261,7 @@ const UserProfile = (props) => {
                 {!imageLoading ?
                     <View style={{ marginHorizontal: 10 }}>
                         {!firebaseImage ?
-                            <TouchableOpacity onPress={GalleryLaunch}>
+                            <TouchableOpacity onPress={() => { setModalVisible(true)}}>
                                 <Image
                                     style={{
                                         alignSelf: 'center',
@@ -252,14 +275,14 @@ const UserProfile = (props) => {
                                     source={icons.add_photo}
                                 />
                             </TouchableOpacity> :
-                            <View style={styles.image}>
+                            <TouchableOpacity style={styles.image} onPress={() => { setModalVisible(true)}}>
                                 <Image
                                     style={{
                                         width: 110, height: 110, alignSelf: "center"
 
                                     }}
                                     source={{ uri: firebaseImage }}
-                                /></View>}
+                                /></TouchableOpacity>}
 
 
                     </View>

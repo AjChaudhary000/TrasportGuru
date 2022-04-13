@@ -7,8 +7,8 @@ import color from '../../contents/color';
 import icons from '../../contents/icons';
 import Header from '../../components/header';
 import { getTransportCompanyList } from '../../Redux/transportCompanyListSlice';
-
-
+import { getUserDetails } from '../../Redux/UserDetails';
+import Toast from 'react-native-simple-toast';
 const TrasportList = (props) => {
     const [token, setToken] = React.useState('');
     const [route, setRoute] = React.useState({ type: false, id: '' })
@@ -24,6 +24,7 @@ const TrasportList = (props) => {
     React.useEffect(() => {
         fetchToken()
         props.getTransportCompanyList(token)
+        props.getUserDetails(token);
     }, [token])
 
     const styles = StyleSheet.create({
@@ -132,7 +133,13 @@ const TrasportList = (props) => {
                                 <TouchableOpacity style={{ width: "30%" }}>
                                     <Image source={icons.call} style={styles.icon} />
                                 </TouchableOpacity>
-                                <TouchableOpacity style={{ width: "30%" }}>
+                                <TouchableOpacity style={{ width: "30%" }} onPress={() => {
+                                    if (item.item?._id === props.userData._id) {
+                                        Toast.show("not found ...")
+                                    } else {
+                                        props.navigation.navigate("ChatDetails", { item: item.item?._id })
+                                    }
+                                }}>
                                     <Image source={icons.message} style={styles.icon} />
                                 </TouchableOpacity>
                                 <TouchableOpacity style={{ width: "30%" }}>
@@ -154,12 +161,14 @@ const TrasportList = (props) => {
 }
 const useDispatch = (dispatch) => {
     return {
-        getTransportCompanyList: (data) => dispatch(getTransportCompanyList(data))
+        getTransportCompanyList: (data) => dispatch(getTransportCompanyList(data)),
+        getUserDetails: (data) => dispatch(getUserDetails(data)),
     };
 }
 const useSelector = (state) => (
 
     {
+        userData: state.user.userData,
         theme: state.token.theme,
         data: state.transportCompanyList.data
     }

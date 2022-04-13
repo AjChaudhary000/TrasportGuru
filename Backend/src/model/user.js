@@ -12,6 +12,9 @@ const userSchema = mongodb.Schema({
     image: {
         type: String
     },
+    address: {
+        type: String
+    },
     mobileno: {
         type: String
     },
@@ -30,6 +33,9 @@ const userSchema = mongodb.Schema({
             type: String
         },
         trasportImage: {
+            type: String
+        },
+        trasportmobile: {
             type: String
         },
     }]
