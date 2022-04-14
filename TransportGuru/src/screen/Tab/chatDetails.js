@@ -1,25 +1,26 @@
-import { View, Text, TextInput, TouchableOpacity, FlatList, Image } from 'react-native'
+import { View, Text, TextInput, TouchableOpacity, FlatList, Image, StyleSheet } from 'react-native'
 import React, { useEffect } from 'react'
 import { io } from 'socket.io-client'
 import { connect } from 'react-redux'
 import TrasportApi from '../../api/TrasportApi'
-import icons from '../../contents/icons';
+
 import { getJWTToken } from '../../Redux/helper'
+import { HeaderWithBackButton } from '../../components/header'
+import color from '../../contents/color'
+import icons from '../../contents/icons';
 const ChatDetails = (props) => {
   const socket = io('http://192.168.200.123:5000');
   const [roomData, setRoomData] = React.useState([])
   const [message, setMessage] = React.useState('');
   const [convessationId, setConvessationId] = React.useState('')
 
-  const id = props.route.params.item;
-
-  
-
+  const id = props.route.params.item._id
+  const name = props.route.params.item?.trasportAccount[0]?.trasportName || props.route.params.item?.username;
   socket.on('welcome', async (data) => {
     try {
       const token = await getJWTToken()
       // const response = await TrasportApi.post('/chatroom', { convessationId: convessationId }, { headers: { Authorization: `Bearer ${token}` } })
-      setRoomData([]);
+      // setRoomData([]);
     } catch (e) {
       console.log(e)
     }
@@ -56,14 +57,25 @@ const ChatDetails = (props) => {
     }
   }
   React.useEffect(() => {
-    CreateConvessationRoom()
+    try {
+      CreateConvessationRoom()
+    } catch (e) { console.log(e) }
   }, [])
+  const styles = StyleSheet.create({
+    container: {
+      flex: 1,
+      backgroundColor: props.theme ? color.drakBackgroundColor : color.backgroundColor,
+
+      justifyContent: 'center'
+    },
+  });
   return (
-    <View style={{ flex: 1, justifyContent: 'center' }}>
+    <View style={styles.container}>
+      <HeaderWithBackButton name={name} navigation={props.navigation} />
       <FlatList style={{ marginBottom: 100 }} inverted contentContainerStyle={{ flexDirection: 'column-reverse' }}
         data={roomData} renderItem={(item) => (
           <View>
-            {(id == item.item.userId) ?
+            {(id == item.userId) ?
               <View style={{
                 marginTop: 10, minWidth: '15%', maxWidth: '70%', alignSelf: 'flex-start', alignItems: 'center',
                 height: 40, borderRadius: 10, backgroundColor: "#839bd4", justifyContent: 'center', padding: 10, borderBottomLeftRadius: 5, borderTopLeftRadius: 120

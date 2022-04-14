@@ -8,6 +8,9 @@ const TransportSchema = mongodb.Schema({
         type: Date,
 
     },
+    truckPrice: {
+        type: String
+    },
     routeId: {
         type: mongodb.Schema.Types.ObjectId,
         ref: "route"

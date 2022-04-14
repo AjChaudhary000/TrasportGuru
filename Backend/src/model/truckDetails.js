@@ -18,6 +18,7 @@ const truckDetailsSchema = mongodb.Schema({
     truckCapicity: {
         type: String
     },
+   
     truckTypeId: {
         type: mongodb.Schema.Types.ObjectId,
         ref: "truckType"

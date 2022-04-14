@@ -40,9 +40,13 @@ const ImageModel = (props) => {
         let options = {
             title: 'You can choose one image',
             mediaType: 'photo',
+                 width: 500,
+                height: 500,
+                quality: 0.2,
             storageOptions: {
                 skipBackup: true,
                 path: 'images',
+                
             },
         };
         ImagePicker.launchCamera(options, (Response) => {
@@ -66,6 +70,9 @@ const ImageModel = (props) => {
     const GalleryLaunch = () => {
         let options = {
             title: 'You can choose one image',
+            width: 500,
+            height: 500,
+            quality: 0.2,
             storageOptions: {
                 skipBackup: true,
                 path: 'images',

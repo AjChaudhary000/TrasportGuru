@@ -21,9 +21,9 @@ const AddRoute = (props) => {
     const [data, setData] = React.useState({
         from: {
             name: props.route.params?.item?.from.name || 'From',
-            lat: props.route.params?.item?.destination.lat || 0.0,
-            lng: props.route.params?.item?.destination.lng || 0.0,
-            avgTime: props.route.params?.item?.destination.avgTime || 0
+            lat: props.route.params?.item?.from.lat || 0.0,
+            lng: props.route.params?.item?.from.lng || 0.0,
+            avgTime: props.route.params?.item?.from.avgTime || 0
         },
         destination: {
             name: props.route.params?.item?.destination.name || 'destination',

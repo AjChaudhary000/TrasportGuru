@@ -526,9 +526,16 @@ const HomeScreen = (props) => {
                         }}
                     >
                         <View style={{ flex: 1, justifyContent: 'center' }}>
+                                 
                             <View style={styles.modelBox}>
+                              
                                 <ScrollView keyboardShouldPersistTaps="handled" >
-
+                                <TouchableOpacity onPress={() => { setModalVisible(false) }} style={{alignItems: 'center',left:  Dimensions.get('screen').width  / 2 -40}}>
+                                <Image source={icons.close} style={{ width: 35, height: 35, tintColor: props.theme ? color.drakPrimaryColors : color.primaryColors, }} />
+                            </TouchableOpacity>
+                                <View style={{marginHorizontal:30,marginVertical:20}}>
+                                    <Text style={{color:'gray',fontSize:20,fontWeight:'bold'}}>Search Source / Destination City</Text>
+                                </View>
                                     <GooglePlacesAutocomplete
                                         placeholder={placetype === "from" ? "eg. From" : "eg. destination"}
                                         placeholderTextColor={'gray'}
@@ -581,10 +588,7 @@ const HomeScreen = (props) => {
                                 </ScrollView>
                             </View>
 
-                            <TouchableOpacity onPress={() => { setModalVisible(false) }} style={{ alignItems: 'center', bottom: 40 }}>
-                                <Image source={icons.close} style={{ width: 35, height: 35, tintColor: props.theme ? color.drakPrimaryColors : color.primaryColors, }} />
-
-                            </TouchableOpacity>
+                           
                         </View>
                     </Modal>
                     <View style={styles.mapBox}>
@@ -610,6 +614,7 @@ const HomeScreen = (props) => {
 
                     </View>
                     <View style={styles.searchBox} >
+                     
                         <View style={styles.fromToDesc}>
                             <View style={{ width: "10%", justifyContent: 'center' }}>
                                 <Image source={icons.journey} style={{ width: 50, height: 115, tintColor: props.theme ? color.drakPrimaryColors : color.primaryColors, }} />

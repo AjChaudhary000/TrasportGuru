@@ -29,10 +29,14 @@ const EditAccount = (props) => {
     });
 
     React.useEffect(() => {
-        if (props.userprofile?.status) {
-            props.getUserDetails(props.token);
-            props.setUserData({})
-            props.navigation.goBack();
+       try{
+            if (props.userprofile?.status) {
+                props.getUserDetails(props.token);
+                props.setUserData({})
+                props.navigation.goBack();
+            
+        }}catch(e){
+            console.log("mydata ",e)
         }
     }, [props])
     const EditAccount = () => {

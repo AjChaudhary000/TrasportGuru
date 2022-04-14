@@ -1,6 +1,6 @@
 import {
     View, Text, StyleSheet, TextInput, TouchableOpacity, Image, Dimensions, ScrollView, TouchableWithoutFeedback,
-    Keyboard
+    Keyboard, Modal
 } from 'react-native'
 import React from 'react'
 import { AdminHeaderWithBackButton } from '../../components/adminHeader';
@@ -29,7 +29,8 @@ const AddTrasportDetails = (props) => {
         capicity: props.route.params?.item?.capicity || '',
         Truckdate: props.route.params?.item?.Truckdate || '',
         truckId: props.route.params?.item?.truckId || "",
-        driverId: props.route.params?.item?.driverId || ""
+        driverId: props.route.params?.item?.driverId || "",
+        truckPrice: props.route.params?.item?.truckPrice
     })
     const fetchToken = async () => {
         try {
@@ -62,8 +63,8 @@ const AddTrasportDetails = (props) => {
             Toast.show("Enter Goods capicity ")
         } else if (data.driverId === "") {
             Toast.show("Select Driver")
-        } else if (data.truckId === "") {
-            Toast.show("Select truck")
+        } else if (data.truckPrice === "") {
+            Toast.show("Enter Truck Price ")
         } else {
             props.addTransport({ ...data, token })
         }
@@ -80,6 +81,8 @@ const AddTrasportDetails = (props) => {
             Toast.show("Select Driver")
         } else if (data.truckId === "") {
             Toast.show("Select truck")
+        } else if (data.truckPrice === "") {
+            Toast.show("Enter Truck Price ")
         } else {
             props.updateTransport({ ...data, id: props.route.params?.item?._id, token: token })
         }
@@ -209,11 +212,11 @@ const AddTrasportDetails = (props) => {
         modelBox: {
             width: Dimensions.get('screen').width - 20,
             minHeight: 200,
-
+            paddingHorizontal: 20,
             backgroundColor: props.theme ? color.drakBackgroundColor : color.backgroundColor,
             alignSelf: 'center',
             borderRadius: 15,
-            flexDirection: 'row',
+            justifyContent: "center",
             alignItems: 'center',
             alignItems: "center",
             shadowColor: props.theme ? color.drakFontcolor : color.fontcolor,
@@ -228,7 +231,35 @@ const AddTrasportDetails = (props) => {
     })
     return (
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+
             <View style={styles.container}>
+                <Modal
+                    animationType="slide"
+                    transparent={true}
+                    visible={modalVisible}
+                    onRequestClose={() => {
+                        Alert.alert("Modal has been closed.");
+                        setModalVisible(!modalVisible);
+                    }}
+                >
+                    <View style={{ flex: 1, justifyContent: 'center' }}>
+                        <View style={styles.modelBox}>
+                            <Text style={{ color: 'red', fontWeight: 'bold' }}>*Note :- Truck calculation  </Text>
+
+                            <Text style={{ color: 'red', fontWeight: 'bold' }}>* Ex: 10 Km , 10 Tonne , Price 10, </Text>
+                            <Text style={{ color: 'gray', fontWeight: 'bold' }}> totalPrice = Price * Tonne * Km </Text>
+                            <Text style={{ color: 'gray', fontWeight: 'bold' }}> 1000 = 10 * 10 * 10 </Text>
+                            <Text style={{ color: 'red', fontWeight: 'bold' }}>* Ex2: 2 Km , 4 Tonne , Price 10, </Text>
+                            <Text style={{ color: 'gray', fontWeight: 'bold' }}> totalPrice = Price * Tonne * Km </Text>
+                            <Text style={{ color: 'gray' }}> 1000 = 10 * 10 * 10 </Text>
+                            <Text style={{ color: 'red', fontWeight: 'bold' }}>calculated on the basis of minimum distance and weight.</Text>
+                        </View>
+                        <TouchableOpacity onPress={() => { setModalVisible(false) }} style={{ alignItems: 'center', bottom: 190,left:  Dimensions.get('screen').width  / 2 -40 }}>
+                            <Image source={icons.close} style={{ width: 35, height: 35, tintColor: props.theme ? color.drakAdminprimaryColors : color.adminprimaryColors, }} />
+
+                        </TouchableOpacity>
+                    </View>
+                </Modal>
                 {!props.route.params?.item?._id ?
                     <ScrollView showsVerticalScrollIndicator={false}>
                         <AdminHeaderWithBackButton name={"Add Transport Details"} navigation={props.navigation} />
@@ -329,6 +360,21 @@ const AddTrasportDetails = (props) => {
                                     onChangeText={(val) => setData({ ...data, capicity: val })}
                                     autoCapitalize={'none'}
                                     keyboardType={'number-pad'} />
+
+                            </View>
+                            <View style={{ margin: 10, flexDirection: 'row', justifyContent: 'space-between' }}>
+                                <View style={{ width: "85%" }}>
+                                    <TextInput style={styles.input}
+                                        placeholder={"eg. Truck Price"}
+                                        placeholderTextColor={'gray'}
+
+                                        onChangeText={(val) => setData({ ...data, truckPrice: val })}
+                                        autoCapitalize={'none'}
+                                        keyboardType={'number-pad'} />
+                                </View>
+                                <TouchableOpacity style={{ width: "10%", justifyContent: 'center' }} onPress={() => setModalVisible(true)}>
+                                    <Image source={icons.info} style={{ width: 35, height: 35, tintColor: props.theme ? color.drakAdminprimaryColors : color.adminprimaryColors }} />
+                                </TouchableOpacity>
 
                             </View>
                             <View style={{ marginHorizontal: 10, marginVertical: 20 }}>
@@ -440,6 +486,21 @@ const AddTrasportDetails = (props) => {
                                     onChangeText={(val) => setData({ ...data, capicity: val })}
                                     autoCapitalize={'none'}
                                     keyboardType={'number-pad'} />
+
+                            </View>
+                            <View style={{ margin: 10, flexDirection: 'row', justifyContent: 'space-between' }}>
+                                <View style={{ width: "85%" }}>
+                                    <TextInput style={styles.input}
+                                        placeholder={"eg. Truck Price"}
+                                        placeholderTextColor={'gray'}
+                                        defaultValue={props.route.params?.item?.truckPrice}
+                                        onChangeText={(val) => setData({ ...data, truckPrice: val })}
+                                        autoCapitalize={'none'}
+                                        keyboardType={'number-pad'} />
+                                </View>
+                                <TouchableOpacity style={{ width: "10%", justifyContent: 'center' }} onPress={() => setModalVisible(true)}>
+                                    <Image source={icons.info} style={{ width: 35, height: 35, tintColor: props.theme ? color.drakAdminprimaryColors : color.adminprimaryColors }} />
+                                </TouchableOpacity>
 
                             </View>
                             <View style={{ marginHorizontal: 10, marginVertical: 20 }}>

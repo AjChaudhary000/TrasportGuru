@@ -74,7 +74,7 @@ const AdminProfile = (props) => {
                             if (props.route.params.item?._id === props.userData._id) {
                                 Toast.show("not found ...")
                             } else {
-                                props.navigation.navigate("ChatDetails", { item: props.route.params.item?._id })
+                                props.navigation.navigate("ChatDetails", { item: props.route.params.item })
                             }
                         }}>
                         <Image source={icons.message} style={styles.icon} />

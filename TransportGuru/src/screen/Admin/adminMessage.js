@@ -36,8 +36,8 @@ const AdminMessage = (props) => {
             width: 60,
             height: 60,
             borderRadius: 30,
-            borderWidth: 2,
-            borderColor: props.theme ? color.drakPrimaryColors : color.primaryColors,
+            borderWidth: 1,
+            borderColor: props.theme ? color.drakAdminprimaryColors : color.adminprimaryColors,
         },
         text: {
             fontSize: 16,
@@ -53,7 +53,7 @@ const AdminMessage = (props) => {
             <FlatList data={props.messageList} renderItem={(item) => (
 
                 <TouchableOpacity style={{ flexDirection: 'row', marginVertical: 10, marginHorizontal: 20 }}
-                    onPress={() => { props.navigation.navigate('ChatDetails', { item: item.item.userId?._id }) }}>
+                    onPress={() => { props.navigation.navigate('ChatDetails', { item: item.item.userId }) }}>
                     <View style={styles.image}>
                         <Image source={{ uri: item.item.userId?.image }}
                             style={{
@@ -62,8 +62,8 @@ const AdminMessage = (props) => {
                             }} />
                     </View>
                     <View style={{
-                        justifyContent: 'center', borderBottomWidth: 1,
-                        borderBottomColor: color.primaryColors, width: '80%', justifyContent: 'center'
+                        justifyContent: 'center', borderBottomWidth: 2,
+                        borderBottomColor: color.adminprimaryColors, width: '80%', justifyContent: 'center'
                     }}>
 
                         <Text style={styles.text}>
@@ -84,7 +84,7 @@ const useDispatch = (dispatch) => {
 const useSelector = (state) => (
 
     {
-        messageList: state.message.messageList,
+        messageList: state.message.usermessageList,
         userData: state.user.userData,
         theme: state.token.theme
     }

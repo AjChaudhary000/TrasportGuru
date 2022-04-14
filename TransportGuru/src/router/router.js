@@ -29,6 +29,7 @@ import SearchTransportList from '../screen/Tab/searchTransportList';
 import AdminProfile from '../screen/Tab/adminProfile';
 import AdminEditAccount from '../screen/Admin/AdminEditAccount';
 import ChatDetails from '../screen/Tab/chatDetails';
+import Booking from '../screen/Tab/booking';
 const Stack = createNativeStackNavigator();
 const Router = (props) => {
     const [token, setTokenData] = React.useState('')
@@ -83,6 +84,7 @@ const Router = (props) => {
                 <Stack.Screen name='TrasportGuruAccount' component={TrasportGuruAccount} options={{ headerShown: false }} />
                 <Stack.Screen name='SearchTransportList' component={SearchTransportList} options={{ headerShown: false }} />
                 <Stack.Screen name='AdminProfile' component={AdminProfile} options={{ headerShown: false }} />
+                <Stack.Screen name='Booking' component={Booking} options={{ headerShown: false }} />
                 {/* userSide End */}
 
                 {/* AdminSide Start */}

@@ -11,6 +11,7 @@ export const addTransport = createAsyncThunk(
                 routeId: obj.routeId,
                 truckId: obj.truckId,
                 driverId: obj.driverId,
+                truckPrice: obj.truckPrice
             }
             console.log("data", obj)
             const response = await TrasportApi.post('/transport/create', data, {
@@ -35,6 +36,7 @@ export const updateTransport = createAsyncThunk(
                 routeId: obj.routeId,
                 truckId: obj.truckId,
                 driverId: obj.driverId,
+                truckPrice: obj.truckPrice
             }
             console.log(obj)
             const response = await TrasportApi.patch(`/transport/update/${obj.id}`, data, {

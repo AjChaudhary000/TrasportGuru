@@ -16,7 +16,7 @@ export const getMessageList = createAsyncThunk('message/getMessageList',
             console.log(e)
         }
     });
-    export const getUserMessageList = createAsyncThunk('message/getUserMessageList',
+export const getUserMessageList = createAsyncThunk('message/getUserMessageList',
     async (obj, getState) => {
         try {
             console.log(obj.token)
@@ -37,6 +37,7 @@ const messagelistSlice = createSlice({
     initialState: {
         loading: false,
         messageList: [],
+        usermessageList: [],
         error: ''
     },
     reducers: {},
@@ -54,7 +55,7 @@ const messagelistSlice = createSlice({
             state.loading = true
         },
         [getUserMessageList.fulfilled]: (state, action) => {
-            state.messageList = action.payload
+            state.usermessageList = action.payload
             state.loading = false
         },
         [getUserMessageList.pending]: (state, action) => {

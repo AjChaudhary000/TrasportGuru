@@ -54,21 +54,21 @@ const Message = (props) => {
       <FlatList data={props.messageList} renderItem={(item) => (
 
         <TouchableOpacity style={{ flexDirection: 'row', marginVertical: 10, marginHorizontal: 20 }}
-          onPress={() => { props.navigation.navigate('ChatDetails', { item: item.item.senderId?._id }) }}>
+          onPress={() => { props.navigation.navigate('ChatDetails', { item: item.item.senderId }) }}>
           <View style={styles.image}>
-            <Image source={{ uri: item.item.senderId?.trasportAccount[0].trasportImage }}
+            <Image source={{ uri: item.item.senderId?.trasportAccount[0]?.trasportImage }}
               style={{
                 width: 60, height: 60, alignSelf: "center"
 
               }} />
           </View>
           <View style={{
-            justifyContent: 'center', borderBottomWidth: 1,
+            justifyContent: 'center', borderBottomWidth: 2,
             borderBottomColor: color.primaryColors, width: '80%', justifyContent: 'center'
           }}>
 
             <Text style={styles.text}>
-              {item.item.senderId?.trasportAccount[0].trasportName}</Text>
+              {item.item.senderId?.trasportAccount[0]?.trasportName}</Text>
           </View>
 
         </TouchableOpacity>

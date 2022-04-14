@@ -1,41 +1,34 @@
 {
   "project_info": {
-    "project_number": "459209492909",
-    "project_id": "trasnsportguru",
-    "storage_bucket": "trasnsportguru.appspot.com"
+    "project_number": "432578799861",
+    "project_id": "transportguru-d547f",
+    "storage_bucket": "transportguru-d547f.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:459209492909:android:395d71a056608759e07924",
+        "mobilesdk_app_id": "1:432578799861:android:a291914d3b1fecc874fdbc",
         "android_client_info": {
           "package_name": "com.transportguru"
         }
       },
       "oauth_client": [
         {
-          "client_id": "459209492909-qrafmo68rov0eh02edddjiba9ga850j2.apps.googleusercontent.com",
+          "client_id": "432578799861-27krrk087195l7nka1lcsqf8r78vr1j3.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyCzmEN9jYyAZ8AY_UP5SR_9oaPrP1lQXCg"
+          "current_key": "AIzaSyAUtvqHrscHcq06jdEW2KmQuKmvuARaTXI"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "459209492909-qrafmo68rov0eh02edddjiba9ga850j2.apps.googleusercontent.com",
+              "client_id": "432578799861-27krrk087195l7nka1lcsqf8r78vr1j3.apps.googleusercontent.com",
               "client_type": 3
-            },
-            {
-              "client_id": "459209492909-sfjcleb7dksrmnv2jm16ba6nb1n1d43v.apps.googleusercontent.com",
-              "client_type": 2,
-              "ios_info": {
-                "bundle_id": "org.reactjs.native.example.TransportGuru"
-              }
             }
           ]
         }

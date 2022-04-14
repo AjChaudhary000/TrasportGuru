@@ -137,7 +137,7 @@ const TrasportList = (props) => {
                                     if (item.item?._id === props.userData._id) {
                                         Toast.show("not found ...")
                                     } else {
-                                        props.navigation.navigate("ChatDetails", { item: item.item?._id })
+                                        props.navigation.navigate("ChatDetails", { item: item.item })
                                     }
                                 }}>
                                     <Image source={icons.message} style={styles.icon} />
