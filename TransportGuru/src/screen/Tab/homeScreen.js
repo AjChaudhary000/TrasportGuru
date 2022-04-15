@@ -19,8 +19,16 @@ const HomeScreen = (props) => {
     const [modalVisible, setModalVisible] = React.useState(false);
     const [placetype, setPlaceType] = React.useState()
     const [data, setData] = React.useState({
-        from: 'From',
-        destination: 'Destination',
+        from: {
+            name: 'From',
+            lat: 0.0,
+            lng: 0.0,
+        },
+        destination: {
+            name: 'destination',
+            lat: 0.0,
+            lng: 0.0,
+        },
         capicity: '',
     })
     React.useEffect(() => {
@@ -28,9 +36,9 @@ const HomeScreen = (props) => {
 
     }, [])
     const SearchRoute = () => {
-        if (data.from === "From") {
+        if (data.from.name === "From") {
             Toast.show("Select loading loaction")
-        } else if (data.destination === "Destination") {
+        } else if (data.destination.name === "Destination") {
             Toast.show("Select unloading loaction")
         } else if (data.capicity === "") {
             Toast.show("Enter capicity")
@@ -526,16 +534,16 @@ const HomeScreen = (props) => {
                         }}
                     >
                         <View style={{ flex: 1, justifyContent: 'center' }}>
-                                 
+
                             <View style={styles.modelBox}>
-                              
+
                                 <ScrollView keyboardShouldPersistTaps="handled" >
-                                <TouchableOpacity onPress={() => { setModalVisible(false) }} style={{alignItems: 'center',left:  Dimensions.get('screen').width  / 2 -40}}>
-                                <Image source={icons.close} style={{ width: 35, height: 35, tintColor: props.theme ? color.drakPrimaryColors : color.primaryColors, }} />
-                            </TouchableOpacity>
-                                <View style={{marginHorizontal:30,marginVertical:20}}>
-                                    <Text style={{color:'gray',fontSize:20,fontWeight:'bold'}}>Search Source / Destination City</Text>
-                                </View>
+                                    <TouchableOpacity onPress={() => { setModalVisible(false) }} style={{ alignItems: 'center', left: Dimensions.get('screen').width / 2 - 40 }}>
+                                        <Image source={icons.close} style={{ width: 35, height: 35, tintColor: props.theme ? color.drakPrimaryColors : color.primaryColors, }} />
+                                    </TouchableOpacity>
+                                    <View style={{ marginHorizontal: 30, marginVertical: 20 }}>
+                                        <Text style={{ color: 'gray', fontSize: 20, fontWeight: 'bold' }}>Search Source / Destination City</Text>
+                                    </View>
                                     <GooglePlacesAutocomplete
                                         placeholder={placetype === "from" ? "eg. From" : "eg. destination"}
                                         placeholderTextColor={'gray'}
@@ -545,8 +553,11 @@ const HomeScreen = (props) => {
                                         renderDescription={row => row.description} // custom description render
                                         onPress={(dt, details = null) => {
                                             //   console.log(dt)
-                                            placetype === "from" && setData({ ...data, from: dt.description });
-                                            placetype === "destination" && setData({ ...data, destination: dt.description });
+                                            placetype === "from" && setData({ ...data, from: { name: dt.description, lat: details.geometry.location.lat, lng: details.geometry.location.lng } });
+                                            if (placetype === "destination") {
+
+                                                setData({ ...data, destination: { name: dt.description, lat: details.geometry.location.lat, lng: details.geometry.location.lng } });
+                                            }
                                             setModalVisible(false)
                                             // console.log(details);
                                         }}
@@ -588,7 +599,7 @@ const HomeScreen = (props) => {
                                 </ScrollView>
                             </View>
 
-                           
+
                         </View>
                     </Modal>
                     <View style={styles.mapBox}>
@@ -614,7 +625,7 @@ const HomeScreen = (props) => {
 
                     </View>
                     <View style={styles.searchBox} >
-                     
+
                         <View style={styles.fromToDesc}>
                             <View style={{ width: "10%", justifyContent: 'center' }}>
                                 <Image source={icons.journey} style={{ width: 50, height: 115, tintColor: props.theme ? color.drakPrimaryColors : color.primaryColors, }} />
@@ -625,7 +636,7 @@ const HomeScreen = (props) => {
                                         <Image source={icons.forword} style={{ width: 20, height: 20, tintColor: props.theme ? color.drakPrimaryColors : color.primaryColors, }} />
                                     </View>
                                     <TouchableOpacity style={{ width: '95%' }} activeOpacity={0.80} onPress={() => { setPlaceType("from"); setModalVisible(true) }}>
-                                        <Text style={styles.inputBox}>{data.from}</Text>
+                                        <Text style={styles.inputBox}>{data.from.name}</Text>
                                     </TouchableOpacity>
                                 </View>
                                 <View style={{ margin: 10, flexDirection: 'row' }}>
@@ -633,7 +644,7 @@ const HomeScreen = (props) => {
                                         <Image source={icons.forword} style={{ width: 20, height: 20, tintColor: props.theme ? color.drakPrimaryColors : color.primaryColors, }} />
                                     </View>
                                     <TouchableOpacity style={{ width: '95%' }} activeOpacity={0.80} onPress={() => { setPlaceType("destination"); setModalVisible(true) }}>
-                                        <Text style={styles.inputBox}>{data.destination}</Text>
+                                        <Text style={styles.inputBox}>{data.destination.name}</Text>
                                     </TouchableOpacity>
                                 </View>
                             </View>

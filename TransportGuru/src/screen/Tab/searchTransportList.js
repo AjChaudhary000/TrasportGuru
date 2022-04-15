@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, FlatList, Image, TouchableOpacity, ScrollView } from 'react-native'
+import { View, Text, StyleSheet, FlatList, Image, TouchableOpacity, ScrollView, Modal, Dimensions } from 'react-native'
 import React from 'react'
 import { connect } from 'react-redux';
 import { HeaderWithBackButton } from '../../components/header'
@@ -10,7 +10,9 @@ import { getUserDetails } from '../../Redux/UserDetails';
 import Toast from 'react-native-simple-toast';
 import calcKmFind from '../../components/kmFind';
 const SearchTransportList = (props) => {
+    console.log(props.route.params.from)
     const [token, setToken] = React.useState('');
+    const [modalVisible, setModalVisible] = React.useState(false);
     const [route, setRoute] = React.useState({ type: false, id: '' })
     const fetchToken = async () => {
         try {
@@ -82,19 +84,38 @@ const SearchTransportList = (props) => {
         },
 
         pay: {
-            width: "45%",
+            width: "90%",
             height: 45,
             backgroundColor: props.theme ? color.drakPrimaryColors : color.primaryColors,
             borderRadius: 10,
             justifyContent: "center",
-            alignItems: 'center', marginHorizontal: 10
+            alignItems: 'center',
+            alignSelf: "center"
         }, icon: {
             width: 30,
             height: 30,
             tintColor: props.theme ? color.drakPrimaryColors : color.primaryColors
-        }
+        }, modelBox: {
+            width: Dimensions.get('screen').width - 20,
+            minHeight: 200,
+            paddingHorizontal: 20,
+            backgroundColor: props.theme ? color.drakBackgroundColor : color.backgroundColor,
+            alignSelf: 'center',
+            borderRadius: 15,
+            justifyContent: "center",
+            alignItems: 'center',
+            alignItems: "center",
+            shadowColor: props.theme ? color.drakFontcolor : color.fontcolor,
+            shadowOffset: {
+                width: 0,
+                height: 2
+            },
+            shadowOpacity: 0.25,
+            shadowRadius: 4,
+            elevation: 5
+        },
     })
-    console.log(props.searchList)
+
     return (
         <View style={styles.container}>
             <HeaderWithBackButton name={"Searching"} navigation={props.navigation} />
@@ -115,25 +136,51 @@ const SearchTransportList = (props) => {
                                     />
                                 </View>
                             </View>
-                            <View style={{ justifyContent: 'center', width: '80%', paddingHorizontal: 10 }}>
+                            <View style={{ justifyContent: 'center', width: '60%', paddingHorizontal: 10 }}>
                                 <Text style={{ fontSize: 20, fontWeight: 'bold', color: props.theme ? color.drakPrimaryColors : color.primaryColors }}>{item.item.tarsportUserId.trasportAccount[0].trasportName}</Text>
                             </View>
+                            <View style={{ width: "30%", flexDirection: "row", justifyContent: 'space-between', paddingVertical: 10 }}>
+                                <TouchableOpacity style={{ width: "50%" }}>
+                                    <Image source={icons.call} style={styles.icon} />
+                                </TouchableOpacity>
+                                <TouchableOpacity style={{ width: "50%" }} onPress={() => {
 
+                                    if (item.item?.tarsportUserId._id === props.userData._id) {
+                                        Toast.show("not found ...")
+                                    } else {
+                                        props.navigation.navigate("ChatDetails", { item: item.item?.tarsportUserId })
+                                    }
+                                }}>
+                                    <Image source={icons.message} style={styles.icon} />
+                                </TouchableOpacity>
+                            </View>
                         </View>
 
                         <View style={{ alignItems: "center" }}>
                             <Text style={{ fontWeight: 'bold', color: props.theme ? color.drakFontcolor : color.fontcolor }}>
-                                {item.item.routeId.from.name}
+                                {props.route.params.from.name}
                             </Text>
                             <View style={{ marginHorizontal: 20, marginVertical: 5, flexDirection: "row", justifyContent: 'space-between' }}>
                                 <View >
+
                                     <Text style={{ color: 'gray', fontWeight: 'bold', fontSize: 14, paddingRight: 2 }}>
-                                        {new Date(item.item.Truckdate).toLocaleDateString("en-US", { weekday: 'short', month: 'long', day: 'numeric' })}
+                                        {new Date(new Date(item.item.Truckdate)
+                                            .setHours(new Date(item.item.Truckdate)
+                                                .getHours() + Math.round((calcKmFind(item.item.routeId.from.lat,
+                                                    item.item.routeId.from.lng,
+                                                    props?.route.params.from.lat,
+                                                    props?.route.params.from.lng)) / 45))).toLocaleDateString("en-US", { weekday: 'short', month: 'long', day: 'numeric' })}
+
                                     </Text>
                                 </View>
                                 <View >
                                     <Text style={{ color: color.primaryColors, fontWeight: 'bold', fontSize: 14 }}>
-                                        {new Date(item.item.Truckdate).toLocaleDateString("en-US", { hour: 'numeric', minute: 'numeric', hour12: false }).toString().slice(-5)}
+                                        {new Date(new Date(item.item.Truckdate)
+                                            .setHours(new Date(item.item.Truckdate)
+                                                .getHours() + Math.round((calcKmFind(item.item.routeId.from.lat,
+                                                    item.item.routeId.from.lng,
+                                                    props?.route.params.from.lat,
+                                                    props?.route.params.from.lng)) / 45))).toLocaleDateString("en-US", { hour: 'numeric', minute: 'numeric', hour12: false }).toString().slice(-5)}
                                     </Text>
 
                                 </View>
@@ -142,43 +189,55 @@ const SearchTransportList = (props) => {
                         </View>
                         <View style={{ alignItems: "center", paddingVertical: 4, flexDirection: 'row', justifyContent: 'center' }}>
                             <View style={{ width: '33%', alignItems: "center" }}>
-                                <Text style={{fontWeight:'bold',color:props.theme?color.drakFontcolor:color.fontcolor}}>
-                                    {item.item.routeId.destination.avgTime}hr:00m:00s</Text>
+                                <Text style={{ fontWeight: 'bold', color: 'gray' }}>Duration</Text>
+                                <Text style={{ fontWeight: 'bold', color: props.theme ? color.drakFontcolor : color.fontcolor }}>
+                                    {Math.round((calcKmFind(props.route.params.from.lat,
+                                        props.route.params.from.lng,
+                                        props.route.params.destination.lat,
+                                        props.route.params.destination.lng)) / 45)} hrs </Text>
                             </View>
                             <View style={{ width: '34%', alignItems: "center" }}>
                                 <Image source={icons.upToDown} style={{ width: 30, height: 30, tintColor: props.theme ? color.drakPrimaryColors : color.primaryColors }} />
                             </View>
                             <View style={{ width: '33%', alignItems: "center" }}>
-                                <Text style={{fontWeight:'bold',color:props.theme?color.drakFontcolor:color.fontcolor}}> {calcKmFind(item.item.routeId.from.lat, 
-                                    item.item.routeId.from.lng,
-                                     item.item.routeId.destination.lat,
-                                      item.item.routeId.destination.lng)} Km</Text>
+                                <Text style={{ fontWeight: 'bold', color: 'gray' }}>Distance</Text>
+                                <Text style={{ fontWeight: 'bold', color: props.theme ? color.drakFontcolor : color.fontcolor }}>
+                                    {(calcKmFind(props.route.params.from.lat,
+                                        props.route.params.from.lng,
+                                        props.route.params.destination.lat,
+                                        props.route.params.destination.lng))} Km</Text>
                             </View>
                         </View>
                         <View style={{ alignItems: "center" }}>
                             <Text style={{ fontWeight: 'bold', color: props.theme ? color.drakFontcolor : color.fontcolor, textAlign: "center" }}>
-                                {item.item.routeId.destination.name}
+                                {props.route.params.destination.name}
                             </Text>
                             <View style={{ marginHorizontal: 20, paddingTop: 5, flexDirection: "row", justifyContent: 'center' }}>
                                 <View >
                                     <Text style={{ color: 'gray', fontWeight: 'bold', fontSize: 14, paddingRight: 2 }}>
                                         {new Date(new Date(item.item.Truckdate)
                                             .setHours(new Date(item.item.Truckdate)
-                                                .getHours() + item.item.routeId.destination.avgTime)).toLocaleDateString("en-US", { weekday: 'short', month: 'long', day: 'numeric' })}
+                                                .getHours() + Math.round((calcKmFind(props.route.params.from.lat,
+                                                    props.route.params.from.lng,
+                                                    props.route.params.destination.lat,
+                                                    props.route.params.destination.lng)) / 45))).toLocaleDateString("en-US", { weekday: 'short', month: 'long', day: 'numeric' })}
                                     </Text>
                                 </View>
                                 <View >
                                     <Text style={{ color: color.primaryColors, fontWeight: 'bold', fontSize: 14 }}>
                                         {new Date(new Date(item.item.Truckdate)
                                             .setHours(new Date(item.item.Truckdate)
-                                                .getHours() + item.item.routeId.destination.avgTime)).toLocaleDateString("en-US", { hour: 'numeric', minute: 'numeric', hour12: false }).toString().slice(-5)}
+                                                .getHours() + Math.round((calcKmFind(props.route.params.from.lat,
+                                                    props.route.params.from.lng,
+                                                    props.route.params.destination.lat,
+                                                    props.route.params.destination.lng)) / 45))).toLocaleDateString("en-US", { hour: 'numeric', minute: 'numeric', hour12: false }).toString().slice(-5)}
                                     </Text>
                                 </View>
                             </View>
                         </View>
 
                         <View style={{ marginHorizontal: 10, marginTop: 5, flexDirection: "row", justifyContent: 'space-between' }}>
-                            <TouchableOpacity onPress={() => { setRoute({ type: !route.type, id: item.item.routeId._id }) }}>
+                            <TouchableOpacity onPress={() => { setRoute({ type: !route.type, id: item.item.routeId._id }), setModalVisible(true) }}>
                                 <Text style={{ color: color.primaryColors, fontWeight: 'bold' }}>
                                     Routes</Text>
                             </TouchableOpacity>
@@ -189,69 +248,164 @@ const SearchTransportList = (props) => {
                         </View>
                         {/* route data */}
                         {route.type && route.id === item.item.routeId._id &&
-                            <View style={{ flexDirection: 'row', marginVertical: 10 }}>
-                                <View style={{ width: "5%", justifyContent: 'center' }}>
-                                    <Image source={icons.journey} style={{ width: 10, height: 70 * item.item.routeId.routeStop.length, tintColor: props.theme ? color.drakPrimaryColors : color.primaryColors }} />
-                                </View>
-                                <View style={{ width: "95%", justifyContent: 'center', paddingBottom: 10 }}>
-                                    <FlatList data={item.item.routeId.routeStop} renderItem={(data) => (
-                                        <View>
-                                            <View style={{ margin: 10, flexDirection: 'row' }}>
+                            <Modal
+                                animationType="slide"
+                                transparent={true}
+                                visible={modalVisible}
+                                onRequestClose={() => {
+                                    Alert.alert("Modal has been closed.");
+                                    setModalVisible(!modalVisible);
+                                }} >
+                                <View style={{ flex: 1, justifyContent: 'center' }}>
 
-                                                <View style={{ width: '5%', justifyContent: 'center' }}>
-                                                    <Image source={icons.forword} style={{ width: 20, height: 20, tintColor: props.theme ? color.drakPrimaryColors : color.primaryColors }} />
-                                                </View>
-                                                <View style={{ width: '95%' }}>
-                                                    <Text style={{ marginHorizontal: 10, fontWeight: 'bold', color: 'gray', fontSize: 16 }}>{data.item.stops}</Text>
-                                                </View>
-
+                                    <View style={styles.modelBox}>
+                                        <TouchableOpacity onPress={() => { setRoute({ type: !route.type, id: item.item.routeId._id }), setModalVisible(false) }} style={{ alignItems: 'center', left: Dimensions.get('screen').width / 2 - 40 }}>
+                                            <Image source={icons.close} style={{ width: 35, height: 35, tintColor: props.theme ? color.drakPrimaryColors : color.primaryColors, }} />
+                                        </TouchableOpacity>
+                                        <View style={{ flexDirection: 'row', marginVertical: 5, }}>
+                                            <View style={{ width: "3%", alignItems: 'flex-end' }}>
+                                                <Image source={icons.journey} style={{ width: 5, height: 50 * (item.item.routeId.routeStop.length + 2), tintColor: props.theme ? color.drakPrimaryColors : color.primaryColors }} />
                                             </View>
-                                            <View style={{ marginHorizontal: 20, marginVertical: 1, flexDirection: "row", justifyContent: 'space-between' }}>
-                                                <View >
-                                                    <Text style={{ color: props.theme ? color.drakFontcolor : color.fontcolor, fontWeight: 'bold' }}>
-                                                        {new Date(new Date(item.item.Truckdate)
-                                                            .setHours(new Date(item.item.Truckdate)
-                                                                .getHours() + data.item.avgTime)).toLocaleDateString("en-US", { weekday: 'short', month: 'long', day: 'numeric' })}
-                                                    </Text>
+                                            <View style={{ width: "97%", justifyContent: 'center', paddingBottom: 10 }}>
+                                                <View>
+                                                    <View style={{ margin: 5, flexDirection: 'row' }}>
+
+                                                        <View style={{ width: '5%', justifyContent: 'center' }}>
+                                                            <Image source={icons.forword} style={{ width: 20, height: 20, tintColor: props.theme ? color.drakPrimaryColors : color.primaryColors }} />
+                                                        </View>
+                                                        <View style={{ width: '95%' }}>
+                                                            <Text style={{ marginHorizontal: 10, fontWeight: 'bold', color: 'gray', fontSize: 16 }}>
+                                                                {item.item.routeId.from.name}</Text>
+                                                        </View>
+
+                                                    </View>
+                                                    <View style={{ marginHorizontal: 20, flexDirection: "row", justifyContent: 'space-between' }}>
+                                                        <View style={{ width: "33%", alignItems: 'center' }}>
+                                                            <Text style={{ color: props.theme ? color.drakFontcolor : color.fontcolor, }}>
+                                                                {new Date(item.item.Truckdate).toLocaleDateString("en-US", { weekday: 'short', month: 'long', day: 'numeric' })}
+                                                            </Text>
+                                                        </View>
+
+                                                        <View style={{ width: "33%", alignItems: 'center' }} >
+                                                            <Text style={{ color: props.theme ? color.drakFontcolor : color.fontcolor }}>
+                                                                {new Date(item.item.Truckdate).toLocaleDateString("en-US", { hour: 'numeric', minute: 'numeric', hour12: false }).toString().slice(-5)}
+                                                            </Text>
+                                                        </View>
+                                                        <View style={{ width: "34%", alignItems: 'center' }}>
+                                                            <Text style={{ color: props.theme ? color.drakFontcolor : color.fontcolor, fontWeight: 'bold' }}>
+                                                                -
+                                                            </Text>
+                                                        </View>
+                                                    </View>
                                                 </View>
-                                                <View >
-                                                    <Text style={{ color: props.theme ? color.drakFontcolor : color.fontcolor, fontWeight: 'bold' }}>
-                                                        {new Date(new Date(item.item.Truckdate)
-                                                            .setHours(new Date(item.item.Truckdate)
-                                                                .getHours() + data.item.avgTime)).toLocaleDateString("en-US", { hour: 'numeric', minute: 'numeric', hour12: false }).toString().slice(-6)}
-                                                    </Text>
+                                                <FlatList data={item.item.routeId.routeStop} renderItem={(data) => (
+
+                                                    <View >
+                                                        <View style={{ margin: 5, flexDirection: 'row' }}>
+
+                                                            <View style={{ width: '5%', justifyContent: 'center' }}>
+                                                                <Image source={icons.forword} style={{ width: 20, height: 20, tintColor: props.theme ? color.drakPrimaryColors : color.primaryColors }} />
+                                                            </View>
+                                                            <View style={{ width: '95%' }}>
+                                                                <Text style={{ marginHorizontal: 10, fontWeight: 'bold', color: 'gray', fontSize: 16 }}>{data.item.stops}</Text>
+                                                            </View>
+
+                                                        </View>
+                                                        <View style={{ marginHorizontal: 20, flexDirection: "row", justifyContent: 'space-between' }}>
+                                                            <View style={{ width: "33%", alignItems: 'center' }} >
+                                                                <Text style={{ color: props.theme ? color.drakFontcolor : color.fontcolor }}>
+                                                                    {new Date(new Date(item.item.Truckdate)
+                                                                        .setHours(new Date(item.item.Truckdate)
+                                                                            .getHours() + data.item.avgTime)).toLocaleDateString("en-US", { weekday: 'short', month: 'long', day: 'numeric' })}
+                                                                </Text>
+                                                            </View>
+
+                                                            <View style={{ width: "33%", alignItems: 'center' }}>
+                                                                <Text style={{ color: props.theme ? color.drakFontcolor : color.fontcolor, }}>
+                                                                    {new Date(new Date(item.item.Truckdate)
+                                                                        .setHours(new Date(item.item.Truckdate)
+                                                                            .getHours() + data.item.avgTime)).toLocaleDateString("en-US", { hour: 'numeric', minute: 'numeric', hour12: false }).toString().slice(-6)}
+                                                                </Text>
+                                                            </View>
+                                                            <View style={{ width: "34%", alignItems: 'center' }}>
+                                                                <Text style={{ color: props.theme ? color.drakFontcolor : color.fontcolor, fontWeight: 'bold' }}>
+                                                                    {((calcKmFind(props.route.params.from.lat,
+                                                                        props.route.params.from.lng,
+                                                                        data.item.lat,
+                                                                        data.item.lng)) * (props.route.params.capicity) * (item.item.truckPrice)).toLocaleString('en-IN', {
+                                                                            maximumFractionDigits: 2,
+                                                                            style: 'currency',
+                                                                            currency: 'INR'
+                                                                        })}
+                                                                </Text>
+                                                            </View>
+                                                        </View>
+                                                    </View>
+                                                )}
+                                                />
+                                                <View>
+                                                    <View style={{ margin: 5, flexDirection: 'row' }}>
+
+                                                        <View style={{ width: '5%', justifyContent: 'center' }}>
+                                                            <Image source={icons.forword} style={{ width: 20, height: 20, tintColor: props.theme ? color.drakPrimaryColors : color.primaryColors }} />
+                                                        </View>
+                                                        <View style={{ width: '95%' }}>
+                                                            <Text style={{ marginHorizontal: 10, fontWeight: 'bold', color: 'gray', fontSize: 16 }}>
+                                                                {item.item.routeId.destination.name}</Text>
+                                                        </View>
+
+                                                    </View>
+                                                    <View style={{ marginHorizontal: 20, flexDirection: "row", justifyContent: 'space-between' }}>
+                                                        <View style={{ width: "34%", alignItems: 'center' }}>
+                                                            <Text style={{ color: props.theme ? color.drakFontcolor : color.fontcolor, }}>
+                                                                {new Date(new Date(item.item.Truckdate)
+                                                                    .setHours(new Date(item.item.Truckdate)
+                                                                        .getHours() + item.item.routeId.destination.avgTime)).toLocaleDateString("en-US", { weekday: 'short', month: 'long', day: 'numeric' })}
+                                                            </Text>
+                                                        </View>
+
+                                                        <View style={{ width: "33%", alignItems: 'center' }}>
+                                                            <Text style={{ color: props.theme ? color.drakFontcolor : color.fontcolor, }}>
+                                                                {new Date(new Date(item.item.Truckdate)
+                                                                    .setHours(new Date(item.item.Truckdate)
+                                                                        .getHours() + item.item.routeId.destination.avgTime)).toLocaleDateString("en-US", { hour: 'numeric', minute: 'numeric', hour12: false }).toString().slice(-5)}
+                                                            </Text>
+                                                        </View>
+                                                        <View style={{ width: "34%", alignItems: 'center' }}>
+                                                            <Text style={{ color: props.theme ? color.drakFontcolor : color.fontcolor, fontWeight: 'bold' }}>
+                                                                {((calcKmFind(props.route.params.from.lat,
+                                                                    props.route.params.from.lng,
+                                                                    item.item.routeId.destination.lat,
+                                                                    item.item.routeId.destination.lng)) * (props.route.params.capicity) * (item.item.truckPrice)).toLocaleString('en-IN', {
+                                                                        maximumFractionDigits: 2,
+                                                                        style: 'currency',
+                                                                        currency: 'INR'
+                                                                    })}
+                                                            </Text>
+                                                        </View>
+                                                    </View>
                                                 </View>
                                             </View>
                                         </View>
-                                    )}
-                                    />
+                                    </View>
                                 </View>
-                            </View>}
+                            </Modal>}
                         {/* route data */}
 
-                        <View style={{ flexDirection: "row", justifyContent: 'space-between', padding: 5 }}>
-                            <View style={{ width: "50%", flexDirection: "row", justifyContent: 'space-between', paddingVertical: 10 }}>
-                                <TouchableOpacity style={{ width: "30%" }}>
-                                    <Image source={icons.call} style={styles.icon} />
-                                </TouchableOpacity>
-                                <TouchableOpacity style={{ width: "30%" }} onPress={() => {
 
-                                    if (item.item?.tarsportUserId._id === props.userData._id) {
-                                        Toast.show("not found ...")
-                                    } else {
-                                        props.navigation.navigate("ChatDetails", { item: item.item?.tarsportUserId })
-                                    }
-                                }}>
-                                    <Image source={icons.message} style={styles.icon} />
-                                </TouchableOpacity>
-                                <TouchableOpacity style={{ width: "30%" }}>
-                                    <Image source={icons.share} style={styles.icon} />
-                                </TouchableOpacity>
-                            </View>
-                            <TouchableOpacity style={styles.pay} onPress={() => { props.navigation.navigate("Booking", { item: item.item }) }}>
-                                <Text style={{ color: 'white', fontWeight: "bold" }}>Book Now</Text>
-                            </TouchableOpacity>
-                        </View>
+
+                        <TouchableOpacity style={styles.pay}
+                            onPress={() => {
+                                props.navigation.navigate("Booking", {
+                                    tarsportId: item.item._id,
+                                    from: props.route.params.from,
+                                    destination: props.route.params.destination,
+                                    capicity: props.route.params.capicity
+                                })
+                            }}>
+                            <Text style={{ color: 'white', fontWeight: "bold" }}>Book Now</Text>
+                        </TouchableOpacity>
+
                     </View>
                 )
                 } />

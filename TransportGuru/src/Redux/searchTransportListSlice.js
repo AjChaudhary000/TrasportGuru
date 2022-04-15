@@ -4,17 +4,17 @@ export const getSearchTransportList = createAsyncThunk('search/getSearchTranspor
     async (obj, getState) => {
         try {
             const data = {
-                from: obj.from,
-                destination: obj.destination,
+                from: obj.from.name,
+                destination: obj.destination.name,
                 capicity: obj.capicity
             }
-           
+
             const response = await TrasportApi.post('/searchRoute', data, {
                 headers: {
                     Authorization: `Bearer ${obj.token}`,
                 }
             });
-           
+
             return response.data
         } catch (e) {
             console.log()
