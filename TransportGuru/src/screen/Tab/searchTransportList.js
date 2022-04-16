@@ -10,7 +10,7 @@ import { getUserDetails } from '../../Redux/UserDetails';
 import Toast from 'react-native-simple-toast';
 import calcKmFind from '../../components/kmFind';
 const SearchTransportList = (props) => {
-    console.log(props.route.params.from)
+    console.log(props.route.params)
     const [token, setToken] = React.useState('');
     const [modalVisible, setModalVisible] = React.useState(false);
     const [route, setRoute] = React.useState({ type: false, id: '' })
@@ -28,7 +28,7 @@ const SearchTransportList = (props) => {
         props.getSearchTransportList({ ...props.route.params, token: token })
         props.getUserDetails(token)
     }, [token])
-
+    console.log(props.searchList)
     const styles = StyleSheet.create({
         container: {
             flex: 1,

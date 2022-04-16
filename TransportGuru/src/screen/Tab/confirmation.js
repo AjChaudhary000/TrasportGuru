@@ -1,0 +1,101 @@
+import { View, Text, StatusBar, StyleSheet, TouchableOpacity } from 'react-native'
+import React from 'react'
+import LottieView from 'lottie-react-native';
+import color from '../../contents/color';
+import { connect } from 'react-redux';
+const Confirmation = (props) => {
+  const [isloading, setloadingData] = React.useState(true)
+  React.useEffect(() => {
+
+    setTimeout(() => {
+      setloadingData(false)
+    }, 3000)
+
+  }, [])
+  if (isloading) {
+    return (
+      <View style={{ flex: 1, backgroundColor: props.theme ? color.drakBackgroundColor : color.backgroundColor }}>
+        <StatusBar hidden />
+        <View style={{ height: "100%" }}>
+          <LottieView source={require('../../assets/json/pay.json')} autoPlay loop />
+        </View>
+      </View>
+    );
+  }
+  const styles = StyleSheet.create({
+    container: {
+      flex: 1,
+      backgroundColor: props.theme ? color.drakBackgroundColor : color.backgroundColor,
+      justifyContent: 'center'
+    }, listBox: {
+      minHeight: "40%",
+      backgroundColor: props.theme ? color.drakBackgroundColor : color.backgroundColor,
+      marginHorizontal: 20,
+      borderRadius: 20,
+      justifyContent: 'center',
+      shadowColor: props.theme ? color.drakFontcolor : color.fontcolor,
+      shadowOffset: {
+        width: 0,
+        height: 2
+      },
+      shadowOpacity: 0.25,
+      shadowRadius: 4,
+      elevation: 5,
+      marginVertical: 10,
+      padding: 10
+    },
+    titleText: {
+      textAlign: 'center',
+      fontSize: 30, fontWeight: 'bold',
+      color: props.theme ? color.drakFontcolor : color.fontcolor
+    },
+    btn: {
+      width: "90%",
+      height: 55,
+      backgroundColor: props.theme ? color.drakPrimaryColors : color.primaryColors,
+      borderRadius: 10,
+      justifyContent: "center",
+      alignItems: 'center', marginHorizontal: 10, marginVertical: 20
+    }, payment: {
+      textAlign: 'center',
+      fontSize: 30, fontWeight: 'bold',
+      color: props.theme ? color.drakFontcolor : color.fontcolor, margin: 20
+    }
+  });
+  return (
+    <View style={styles.container}>
+      <View style={{ height: '50%', backgroundColor: props.theme ? color.drakBackgroundColor : color.backgroundColor }}>
+        <View style={{ height: "100%" }}>
+          <LottieView source={require('../../assets/json/pay.json')} autoPlay loop />
+        </View>
+      </View>
+      <View style={styles.listBox}>
+        <Text style={styles.titleText}>Thank You </Text>
+        <Text style={styles.payment}>
+          {(props.route.params.payment)?.toLocaleString('en-IN', {
+            maximumFractionDigits: 2,
+            style: 'currency',
+            currency: 'INR'
+          })}
+        </Text>
+        <TouchableOpacity style={styles.btn}
+          onPress={() => {
+            props.navigation.popToTop();
+          }}>
+          <Text style={{ color: 'white', fontWeight: "bold" }}>Continue</Text>
+        </TouchableOpacity>
+      </View>
+    </View>
+  )
+}
+
+
+const useSelector = (state) => (
+
+  {
+
+    theme: state.token.theme,
+
+  }
+)
+export default connect(useSelector)(Confirmation);

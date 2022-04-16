@@ -15,10 +15,12 @@ const paymentSchema = mongodb.Schema({
         type: String,
 
     },
-    payPayment: {
-        type: String,
-
-    },
+    paymentHistory: [
+        {
+            payment: {
+                type: String,
+            }
+        }, { timestamps: true }],
     paymentStatus: {
         type: String
     },

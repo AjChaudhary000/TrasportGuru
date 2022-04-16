@@ -30,16 +30,9 @@ export const updateTransport = createAsyncThunk(
     'transport/updateTransport',
     async (obj, getState) => {
         try {
-            const data = {
-                capicity: obj.capicity,
-                Truckdate: obj.Truckdate,
-                routeId: obj.routeId,
-                truckId: obj.truckId,
-                driverId: obj.driverId,
-                truckPrice: obj.truckPrice
-            }
+
             console.log(obj)
-            const response = await TrasportApi.patch(`/transport/update/${obj.id}`, data, {
+            const response = await TrasportApi.patch(`/transport/update/${obj.id}`, obj.data, {
                 headers: {
                     Authorization: `Bearer ${obj.token}`,
                 }

@@ -84,7 +84,7 @@ const AddTrasportDetails = (props) => {
         } else if (data.truckPrice === "") {
             Toast.show("Enter Truck Price ")
         } else {
-            props.updateTransport({ ...data, id: props.route.params?.item?._id, token: token })
+            props.updateTransport({ data, id: props.route.params?.item?._id, token: token })
         }
     }
     const renderItemDriver = (item) => {

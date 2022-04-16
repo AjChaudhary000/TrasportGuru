@@ -2,6 +2,7 @@ import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import TrasportApi from '../api/TrasportApi'
 export const getSearchTransportList = createAsyncThunk('search/getSearchTransportList',
     async (obj, getState) => {
+        console.log("obj", obj);
         try {
             const data = {
                 from: obj.from.name,
@@ -14,7 +15,7 @@ export const getSearchTransportList = createAsyncThunk('search/getSearchTranspor
                     Authorization: `Bearer ${obj.token}`,
                 }
             });
-
+            console.log(response.data)
             return response.data
         } catch (e) {
             console.log()

@@ -2,7 +2,6 @@ import { View, Text, StyleSheet, FlatList, Image, TouchableOpacity, ScrollView, 
 import React from 'react'
 import { connect } from 'react-redux';
 import { HeaderWithBackButton } from '../../components/header'
-import { getSearchTransportList } from '../../Redux/searchTransportListSlice';
 import { getJWTToken } from '../../Redux/helper';
 import color from '../../contents/color';
 import icons from '../../contents/icons';
@@ -11,7 +10,9 @@ import Toast from 'react-native-simple-toast';
 import calcKmFind from '../../components/kmFind';
 import { transportListById } from '../../Redux/fetchByIDSlice';
 import RadioButtonRN from 'radio-buttons-react-native';
-import { backgroundColor } from 'react-native/Libraries/Components/View/ReactNativeStyleAttributes';
+import { payment, setPaymentData } from '../../Redux/paymentSlice';
+import { updateTransport } from '../../Redux/Admin/transportSlice';
+import { tracking, setTrackingData } from '../../Redux/trackingSlice';
 const Booking = (props) => {
   //console.log("props1", props.route.params)
   const [token, setToken] = React.useState('');
@@ -97,7 +98,7 @@ const Booking = (props) => {
       tintColor: props.theme ? color.drakPrimaryColors : color.primaryColors
     },
     modelBox1: {
-      width: Dimensions.get('screen').width - 20,
+      width: Dimensions.get('screen').width,
       height: 120,
       position: 'absolute',
       bottom: 0,
@@ -118,7 +119,7 @@ const Booking = (props) => {
       elevation: 5
     },
   })
-  const paymentHendle = (price) => {
+  const paymentHendle = (price, truckCapicty) => {
     const totalPayment = ((calcKmFind(props.route.params.from.lat,
       props.route.params.from.lng,
       props.route.params.destination.lat,
@@ -126,11 +127,30 @@ const Booking = (props) => {
     const data = {
       ...props.route.params,
       totalPayment: totalPayment,
-      payPayment: amount,
+      paymentHistory: [{ payment: amount }],
     }
-    console.log("my data", data)
+    const totalCapicity = (Number(props.route.params.capicity) + Number(truckCapicty))
+    console.log(totalCapicity)
+    props.updateTransport({ data: { capicity: totalCapicity }, id: props.route.params.tarsportId, token: token })
+    props.payment({ data, token })
   }
-
+  React.useEffect(() => {
+    if (props.paymentData.status) {
+      props.tracking({
+        data: {
+          tarsportId: props.route.params.tarsportId,
+          paymentid: props.paymentData.data._id
+        }, token
+      })
+      props.setPaymentData([])
+    }
+    if (props.trackingData.status) {
+      setModalVisible1(false);
+      props.setTrackingData([])
+      props.navigation.replace('Confirmation', { payment: amount });
+    }
+  }, [props])
+  console.log(props.paymentData)
   return (
     <View style={styles.container}>
       <HeaderWithBackButton name={"Booking Details"} navigation={props.navigation} />
@@ -435,7 +455,7 @@ const Booking = (props) => {
                 </View>
                 <TouchableOpacity style={styles.pay}
                   onPress={() => {
-                    paymentHendle(item.item.truckPrice)
+                    paymentHendle(item.item.truckPrice, item.item.capicity)
                   }}>
                   <Text style={{ color: 'white', fontWeight: "bold" }}>Pay</Text>
                 </TouchableOpacity>
@@ -455,11 +475,18 @@ const useDispatch = (dispatch) => {
   return {
     transportListById: (data) => dispatch(transportListById(data)),
     getUserDetails: (data) => dispatch(getUserDetails(data)),
+    payment: (data) => dispatch(payment(data)),
+    tracking: (data) => dispatch(tracking(data)),
+    updateTransport: (data) => dispatch(updateTransport(data)),
+    setPaymentData: (data) => dispatch(setPaymentData(data)),
+    setTrackingData: (data) => dispatch(setTrackingData(data))
   };
 }
 const useSelector = (state) => (
 
   {
+    paymentData: state.payment.paymentdata,
+    trackingData: state.tracking.trackingdata,
     userData: state.user.userData,
     theme: state.token.theme,
     transportList: state.fetchById.transportList

@@ -22,7 +22,7 @@ export const transportAccount = createAsyncThunk(
         }
     })
 export const transportAccountSlice = createSlice({
-    name: 'user',
+    name: 'admin',
     initialState: {
         loading: false,
         error: '',
