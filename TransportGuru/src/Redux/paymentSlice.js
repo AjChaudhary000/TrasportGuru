@@ -16,6 +16,20 @@ export const payment = createAsyncThunk('payment/payment',
             console.log()
         }
     });
+export const updatePayment = createAsyncThunk('payment/updatePayment',
+    async (obj, getState) => {
+        try {
+            const response = await TrasportApi.patch(`/payment/${obj.id}`, obj.data, {
+                headers: {
+                    Authorization: `Bearer ${obj.token}`,
+                }
+            });
+            console.log(response.data)
+            return response.data
+        } catch (e) {
+            console.log()
+        }
+    });
 const paymentSlice = createSlice({
     name: 'payment',
     initialState: {
@@ -36,6 +50,17 @@ const paymentSlice = createSlice({
             state.loading = true
         },
         [payment.rejected]: (state, action) => {
+            state.error = action.payload,
+                state.loading = true
+        },
+        [updatePayment.fulfilled]: (state, action) => {
+            state.paymentdata = action.payload,
+                state.loading = false
+        },
+        [updatePayment.pending]: (state, action) => {
+            state.loading = true
+        },
+        [updatePayment.rejected]: (state, action) => {
             state.error = action.payload,
                 state.loading = true
         }

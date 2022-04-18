@@ -1,24 +1,28 @@
-import { View, Text, StyleSheet, Image, TouchableOpacity, FlatList } from 'react-native'
+import { View, Text, StyleSheet, Image, TouchableOpacity, FlatList ,ActivityIndicator} from 'react-native'
 import React from 'react'
 import { AdminHeaderWithBackButton } from '../../components/adminHeader'
 import color from '../../contents/color'
 import image from '../../contents/image'
 import { connect } from 'react-redux'
 import { getJWTToken } from '../../Redux/helper'
-import { deleteRoute, getRouteList, setRouteData } from '../../Redux/Admin/routeSlice'
 import { getCountTransport } from '../../Redux/Admin/countAddSlice'
 import icons from '../../contents/icons'
-import { deleteTransport, getTransportList, setTransportData } from '../../Redux/Admin/transportSlice'
+import { deleteTransport, getTransportList, setTransportData ,setTransportList} from '../../Redux/Admin/transportSlice'
 import Toast from 'react-native-simple-toast';
+import AnimatedLoader from "react-native-animated-loader";
 const TransportListDetails = (props) => {
     const [token, setToken] = React.useState('');
     const [driver, setDriver] = React.useState({ type: false, id: '' });
     const [truck, setTruck] = React.useState({ type: false, id: '' });
     const [route, setRoute] = React.useState({ type: false, id: '' })
+    const [data,setData] = React.useState([])
+    const limitValue = 3
+    const [isSkip,setIsSkip] = React.useState(0);
     const fetchToken = async () => {
         try {
             const data = await getJWTToken();
             setToken(data)
+            props.getTransportList({token:data,skip:isSkip,limit:limitValue})
 
         } catch (e) {
             console.log()
@@ -26,16 +30,24 @@ const TransportListDetails = (props) => {
     }
     React.useEffect(() => {
         fetchToken()
-        props.getTransportList(token)
-    }, [token])
+      
+    }, [])
     React.useEffect(() => {
 
-        if (props.deletedata.status) {
-            props.getTransportList(token)
+        if (props.deletedata?.status) {
+           
             props.getCountTransport(token)
-            props.setTransportData(token)
+            props.setTransportData({})
         }
+       if(props.transportList?.status){
+        //console.log(props.transportList)
+           setData([...data,...props.transportList.data]);
+           props.setTransportList({})
+           props.transportList = {}
+          
+       }
     }, [token, props])
+   
     const DeleteDriver = (id) => {
 
         Toast.show(" Transport remove successful")
@@ -45,6 +57,7 @@ const TransportListDetails = (props) => {
 
         props.navigation.navigate("AddTrasportDetails", { item: item })
     }
+   
     const styles = StyleSheet.create({
         container: {
             flex: 1,
@@ -70,19 +83,10 @@ const TransportListDetails = (props) => {
         drivelist: {
 
             height: 150,
-            backgroundColor: props.theme ? color.drakBackgroundColor : color.backgroundColor,
-            marginHorizontal: 2,
-            borderRadius: 20,
+           
             justifyContent: 'center',
             flexDirection: 'row',
-            shadowColor: props.theme ? color.drakFontcolor : color.fontcolor,
-            shadowOffset: {
-                width: 0,
-                height: 2
-            },
-            shadowOpacity: 0.25,
-            shadowRadius: 4,
-            elevation: 5,
+            
             marginVertical: 10,
         },
 
@@ -145,11 +149,40 @@ const TransportListDetails = (props) => {
         },
 
     })
+    const handleListFooterComponent = ()=>{
+        return(
+        (props.loading)?(
+            <AnimatedLoader
+            visible={props.loading}
+            overlayColor="rgba(255,255,255,0.75)"
+            source={require("../../assets/json/loder.json")}
+            animationStyle={{
+              width: 100,
+              height: 100
+            }}
+            speed={1}
+          >
+            <Text>Loading...</Text>
+          </AnimatedLoader>):null
+        )
+    }
     return (
         <View style={styles.container}>
+            {/* <AnimatedLoader
+        visible={props.loading}
+        overlayColor="rgba(255,255,255,0.75)"
+        source={require("../../assets/json/loder.json")}
+        animationStyle={{
+          width: 100,
+          height: 100
+        }}
+        speed={1}
+      >
+        <Text>Loading...</Text>
+      </AnimatedLoader> */}
             <AdminHeaderWithBackButton name={"Transport List"} navigation={props.navigation} />
-            <FlatList data={props.transportList} renderItem={(item) => (
-                <View style={styles.listBox}>
+            <FlatList data={data} renderItem={(item) => (
+                <View style={styles.listBox} key={"A"+item.index}>
                     <View style={{ alignItems: "center" }}>
                         <Text style={{ fontWeight: 'bold', color: props.theme ? color.drakFontcolor : color.fontcolor }}>
                             {item.item.routeId.from.name}
@@ -275,7 +308,19 @@ const TransportListDetails = (props) => {
                     </View>
                 </View>
             )
-            } />
+            }
+            onEndReached={()=>{
+                let count =isSkip+limitValue
+                console.log("isSkip",count)
+                setIsSkip(count);
+               
+                props.getTransportList({token,skip:count,limit:limitValue})
+            }}
+            onEndReachedThreshold={0.2}
+            ListFooterComponent={handleListFooterComponent}
+           
+
+             />
 
         </View >
     )
@@ -285,7 +330,8 @@ const useDispatch = (dispatch) => {
         getTransportList: (data) => dispatch(getTransportList(data)),
         deleteTransport: (data) => dispatch(deleteTransport(data)),
         getCountTransport: (data) => dispatch(getCountTransport(data)),
-        setTransportData: (data) => dispatch(setTransportData(data))
+        setTransportData: (data) => dispatch(setTransportData(data)),
+        setTransportList: (data) => dispatch(setTransportList(data))
     };
 }
 const useSelector = (state) => (
@@ -293,7 +339,9 @@ const useSelector = (state) => (
     {
         transportList: state.transport.transportList,
         deletedata: state.transport.data,
-        theme: state.token.theme
+        theme: state.token.theme,
+        loading: state.transport.loading,
+        
 
     }
 )

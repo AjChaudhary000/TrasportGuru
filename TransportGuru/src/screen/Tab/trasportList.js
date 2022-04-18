@@ -1,7 +1,7 @@
-import { View, Text, StyleSheet, FlatList, Image, TouchableOpacity, ScrollViewBase, ScrollView } from 'react-native'
+import { View, Text, StyleSheet, FlatList, Image, TouchableOpacity, RefreshControl, ScrollView } from 'react-native'
 import React from 'react'
 import { connect } from 'react-redux';
-import { getSearchTransportList } from '../../Redux/searchTransportListSlice';
+
 import { getJWTToken } from '../../Redux/helper';
 import color from '../../contents/color';
 import icons from '../../contents/icons';
@@ -9,9 +9,22 @@ import Header from '../../components/header';
 import { getTransportCompanyList } from '../../Redux/transportCompanyListSlice';
 import { getUserDetails } from '../../Redux/UserDetails';
 import Toast from 'react-native-simple-toast';
+import AnimatedLoader from "react-native-animated-loader";
+const wait = (timeout) => {
+    return new Promise(resolve => setTimeout(resolve, timeout));
+}
+
 const TrasportList = (props) => {
     const [token, setToken] = React.useState('');
-    const [route, setRoute] = React.useState({ type: false, id: '' })
+    const [refreshing, setRefreshing] = React.useState(false);
+
+    const onRefresh = React.useCallback(() => {
+        setRefreshing(true);
+
+        props.getTransportCompanyList(token)
+        //  props.getUserDetails(token);
+        wait(2000).then(() => setRefreshing(false));
+    }, [token]);
     const fetchToken = async () => {
         try {
             const data = await getJWTToken();
@@ -24,7 +37,7 @@ const TrasportList = (props) => {
     React.useEffect(() => {
         fetchToken()
         props.getTransportCompanyList(token)
-        props.getUserDetails(token);
+        //  props.getUserDetails(token);
     }, [token])
 
     const styles = StyleSheet.create({
@@ -98,8 +111,25 @@ const TrasportList = (props) => {
 
     return (
         <View style={styles.container}>
+            <AnimatedLoader
+                visible={props.loading}
+                overlayColor="rgba(255,255,255,0.75)"
+                source={require("../../assets/json/loder.json")}
+                animationStyle={{
+                    width: 100,
+                    height: 100
+                }}
+                speed={1}
+            >
+                <Text>Loading ...</Text>
+            </AnimatedLoader>
             <Header name={"Transport List"} />
-            <ScrollView style={{ marginBottom: 60 }} showsVerticalScrollIndicator={false}>
+            <ScrollView style={{ marginBottom: 60 }} refreshControl={
+                <RefreshControl
+                    refreshing={refreshing}
+                    onRefresh={onRefresh}
+                />
+            } showsVerticalScrollIndicator={false}>
                 <FlatList data={props.data} renderItem={(item) => (
                     <View style={styles.listBox}>
                         <View style={{
@@ -162,12 +192,13 @@ const TrasportList = (props) => {
 const useDispatch = (dispatch) => {
     return {
         getTransportCompanyList: (data) => dispatch(getTransportCompanyList(data)),
-        getUserDetails: (data) => dispatch(getUserDetails(data)),
+        // getUserDetails: (data) => dispatch(getUserDetails(data)),
     };
 }
 const useSelector = (state) => (
 
     {
+        loading: state.transportCompanyList.loading,
         userData: state.user.userData,
         theme: state.token.theme,
         data: state.transportCompanyList.data

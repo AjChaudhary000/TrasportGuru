@@ -1,8 +1,6 @@
 
 import { View, Text, Image, StyleSheet, Dimensions, TextInput, TouchableOpacity, StatusBar, Animated } from 'react-native'
-import LottieView from 'lottie-react-native';
 import React from 'react'
-import OTPTextInput from 'react-native-otp-textinput'
 import { CountdownCircleTimer } from 'react-native-countdown-circle-timer'
 import icons from '../contents/icons';
 import { connect } from 'react-redux';
@@ -11,6 +9,7 @@ import { sendemail } from '../Redux/sendEmailSlice';
 import color from '../contents/color';
 import image from '../contents/image';
 import Toast from 'react-native-simple-toast';
+import AnimatedLoader from "react-native-animated-loader";
 const Otp = (props) => {
     const [isTimerView, setIsTmerView] = React.useState(true);
     const [otp, setOtp] = React.useState()
@@ -138,7 +137,18 @@ const Otp = (props) => {
     })
     return (
         <View style={styles.contentor}>
-
+ <AnimatedLoader
+        visible={props.loading}
+        overlayColor="rgba(255,255,255,0.75)"
+        source={require("../assets/json/loder.json")}
+        animationStyle={{
+          width: 100,
+          height: 100
+        }}
+        speed={1}
+      >
+        <Text>Loading...</Text>
+      </AnimatedLoader>
             <StatusBar hidden />
             <View style={styles.truckLogo}>
                 <Image source={image.Tg} style={{ width: 200, height: 100, tintColor: props.theme ? color.drakPrimaryColors : color.primaryColors,}} />

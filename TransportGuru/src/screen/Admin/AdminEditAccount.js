@@ -12,7 +12,7 @@ import icons from '../../contents/icons'
 import { AdminHeaderWithBackButton } from '../../components/adminHeader'
 import { usereditAccount, setUserData } from '../../Redux/userProfileSlice';
 import { getTransportCompanyList } from '../../Redux/transportCompanyListSlice';
-
+import AnimatedLoader from "react-native-animated-loader";
 const AdminEditAccount = (props) => {
     const [firebaseImage, setfirebaseImage] = React.useState(props.route.params.item.trasportAccount[0].trasportImage || '');
     const [imageLoading, setImageLoading] = React.useState(false)
@@ -121,6 +121,18 @@ const AdminEditAccount = (props) => {
     })
     return (
         <View style={styles.container}>
+            <AnimatedLoader
+        visible={props.loading}
+        overlayColor="rgba(255,255,255,0.75)"
+        source={require("../../assets/json/loder.json")}
+        animationStyle={{
+          width: 100,
+          height: 100
+        }}
+        speed={1}
+      >
+        <Text>Loading...</Text>
+      </AnimatedLoader>
             {modalVisible1 && <ImageModel
                 filename={"user"}
                 theme={props.theme}
@@ -275,6 +287,7 @@ const useSelector = (state) => {
     return {
         token: state.token.token,
         userprofile: state.userProfile.data,
+        loading: state.userProfile.loading,
         theme: state.token.theme
     }
 }

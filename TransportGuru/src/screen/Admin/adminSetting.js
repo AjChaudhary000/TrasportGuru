@@ -7,6 +7,7 @@ import AdminHeader from '../../components/adminHeader'
 import { Paragraph, Caption, Text, Title } from 'react-native-paper'
 import { getUserDetails } from '../../Redux/UserDetails'
 import { getJWTToken } from '../../Redux/helper'
+import AnimatedLoader from "react-native-animated-loader";
 const AdminSetting = (props) => {
     const [token, setToken] = React.useState('');
     const fetchToken = async () => {
@@ -71,6 +72,18 @@ const AdminSetting = (props) => {
     })
     return (
         <View style={styles.container}>
+            <AnimatedLoader
+        visible={props.loading}
+        overlayColor="rgba(255,255,255,0.75)"
+        source={require("../../assets/json/loder.json")}
+        animationStyle={{
+          width: 100,
+          height: 100
+        }}
+        speed={1}
+      >
+        <Text>Loading...</Text>
+      </AnimatedLoader>
             <AdminHeader name={"Setting"} />
             <ScrollView style={{ marginBottom: 80 }} showsVerticalScrollIndicator={false}>
                 <View style={styles.backimage}>

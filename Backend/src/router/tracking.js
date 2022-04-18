@@ -14,15 +14,30 @@ router.post('/tracking', auth, async (req, res) => {
 router.get('/tracking', auth, async (req, res) => {
     try {
 
-        const data = await Tracking.find({ userId: req.user._id })
+        const data = await Tracking.find({ userId: req.user._id }).sort({ createdAt: -1 })
             .populate("tarsportId")
+            .populate("paymentid")
+
+        res.status(201).send({ data, status: true })
+    } catch (e) {
+        res.status(400).send({ "error": e.toString(), status: false })
+    }
+})
+router.get('/tracking/:id', auth, async (req, res) => {
+    try {
+
+        const data = await Tracking.find({ userId: req.user._id, _id: req.params.id })
             .populate({
                 path: 'tarsportId',
                 populate: [{
                     path: "routeId",
-                   
+
+                }, {
+                    path: "truckId",
+                }, {
+                    path: "driverId",
                 },{
-                    path: "truckId",   
+                    path: "tarsportUserId",
                 }]
             })
             .populate("paymentid")

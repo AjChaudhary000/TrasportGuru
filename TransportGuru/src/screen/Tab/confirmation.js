@@ -80,7 +80,8 @@ const Confirmation = (props) => {
         </Text>
         <TouchableOpacity style={styles.btn}
           onPress={() => {
-            props.navigation.popToTop();
+            props.route.params?.type == "0" ?
+              props.navigation.popToTop() : props.navigation.goBack()
           }}>
           <Text style={{ color: 'white', fontWeight: "bold" }}>Continue</Text>
         </TouchableOpacity>

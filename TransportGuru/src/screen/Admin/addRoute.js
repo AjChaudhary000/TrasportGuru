@@ -14,6 +14,7 @@ import { getCountRoute } from '../../Redux/Admin/countAddSlice';
 import DraggableFlatList from 'react-native-draggable-flatlist';
 import Toast from 'react-native-simple-toast';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import AnimatedLoader from "react-native-animated-loader";
 const AddRoute = (props) => {
     const [modalVisible, setModalVisible] = React.useState(false);
     const [placetype, setPlaceType] = React.useState()

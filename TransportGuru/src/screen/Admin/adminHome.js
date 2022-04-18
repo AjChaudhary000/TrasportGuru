@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, Image, TouchableOpacity, Dimensions ,ScrollView,StatusBar} from 'react-native'
+import { View, Text, StyleSheet, Image, TouchableOpacity, Dimensions ,ScrollView,RefreshControl} from 'react-native'
 import React from 'react'
 import color from '../../contents/color'
 import AdminHeader from '../../components/adminHeader'
@@ -7,10 +7,23 @@ import { getCountDriver, getCountTruck, getCountRoute, getCountTransport } from 
 import { getJWTToken } from '../../Redux/helper'
 import icons from '../../contents/icons'
 import LottieView from 'lottie-react-native';
-
-
+import AnimatedLoader from "react-native-animated-loader";
+const wait = (timeout) => {
+    return new Promise(resolve => setTimeout(resolve, timeout));
+  }
 const AdminHome = (props) => {
     const [token, setToken] = React.useState('');
+    const [refreshing, setRefreshing] = React.useState(false);
+
+    const onRefresh = React.useCallback(() => {
+      setRefreshing(true);
+      fetchToken()
+        props.getCountTruck(token)
+        props.getCountDriver(token)
+        props.getCountRoute(token),
+            props.getCountTransport(token)
+      wait(2000).then(() => setRefreshing(false));
+    }, [token]);
     const fetchToken = async () => {
         try {
             const data = await getJWTToken();
@@ -28,16 +41,7 @@ const AdminHome = (props) => {
             props.getCountTransport(token)
     }, [token])
    
-       if(props.loading){
-        return (
-            <View style={{ flex: 1, backgroundColor: props.theme ? color.drakBackgroundColor:color.backgroundColor }}>
-                <StatusBar hidden />
-                <View style={{ height: "100%" }}>
-                    <LottieView source={require('../../assets/json/loder.json')} autoPlay loop />
-                </View>
-            </View>
-        );
-       }
+      
        const styles = StyleSheet.create({
         container: {
             flex: 1,
@@ -87,8 +91,25 @@ const AdminHome = (props) => {
     })
     return (
         <View style={styles.container}>
+            <AnimatedLoader
+        visible={props.loading}
+        overlayColor="rgba(255,255,255,0.75)"
+        source={require("../../assets/json/loder.json")}
+        animationStyle={{
+          width: 100,
+          height: 100
+        }}
+        speed={1}
+      >
+        <Text>Loading...</Text>
+      </AnimatedLoader>
             <AdminHeader name={"Transport Deshboard"} />
-            <ScrollView style={{marginBottom:50}} showsVerticalScrollIndicator={false}>
+            <ScrollView style={{marginBottom:50}} showsVerticalScrollIndicator={false} refreshControl={
+          <RefreshControl
+            refreshing={refreshing}
+            onRefresh={onRefresh}
+          />
+        }>
             <View style={styles.box}>
                 <TouchableOpacity style={styles.adminCard} activeOpacity={0.80} onPress={() => props.navigation.navigate('TruckList')}>
                     <View style={styles.Text}>
@@ -136,7 +157,7 @@ const AdminHome = (props) => {
                     </View>
                     <View style={styles.icon}>
                         <Image source={icons.box} style={{ width: 40, height: 40, tintColor: color.adminprimaryColors }} />
-                        <Text style={styles.title} > Request</Text>
+                        <Text style={styles.title} > Booking</Text>
                     </View>
                 </TouchableOpacity>
 

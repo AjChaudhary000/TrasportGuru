@@ -8,7 +8,7 @@ import { connect } from 'react-redux'
 import { getCountDriver, getCountRoute, getCountTransport, getCountTruck } from '../../Redux/Admin/countAddSlice'
 import { getJWTToken } from '../../Redux/helper'
 import LottieView from 'lottie-react-native';
-
+import AnimatedLoader from "react-native-animated-loader";
 const AddTransport = (props) => {
   const [token, setToken] = React.useState('');
 
@@ -29,16 +29,7 @@ const AddTransport = (props) => {
     props.getCountTransport(token)
     ;
   }, [token])
-  if(props.loading){
-    return (
-        <View style={{ flex: 1, backgroundColor: props.theme ? color.drakBackgroundColor:color.backgroundColor }}>
-            <StatusBar hidden />
-            <View style={{ height: "100%" }}>
-                <LottieView source={require('../../assets/json/loder.json')} autoPlay loop />
-            </View>
-        </View>
-    );
-   }
+  
   const styles = StyleSheet.create({
     container: {
       flex: 1,
@@ -49,6 +40,18 @@ const AddTransport = (props) => {
   })
   return (
     <View style={styles.container}>
+      <AnimatedLoader
+        visible={props.loading}
+        overlayColor="rgba(255,255,255,0.75)"
+        source={require("../../assets/json/loder.json")}
+        animationStyle={{
+          width: 100,
+          height: 100
+        }}
+        speed={1}
+      >
+        <Text>Loading...</Text>
+      </AnimatedLoader>
       <AdminHeader name={"Add Transport"} />
       {/* <View style={styles.header}>
         <Text style={styles.headerName}>Add Transport Services</Text>

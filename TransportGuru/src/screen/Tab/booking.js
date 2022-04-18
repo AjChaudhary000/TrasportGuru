@@ -13,6 +13,7 @@ import RadioButtonRN from 'radio-buttons-react-native';
 import { payment, setPaymentData } from '../../Redux/paymentSlice';
 import { updateTransport } from '../../Redux/Admin/transportSlice';
 import { tracking, setTrackingData } from '../../Redux/trackingSlice';
+import AnimatedLoader from "react-native-animated-loader";
 const Booking = (props) => {
   //console.log("props1", props.route.params)
   const [token, setToken] = React.useState('');
@@ -30,7 +31,7 @@ const Booking = (props) => {
   React.useEffect(() => {
     fetchToken()
     props.transportListById({ id: props.route.params.tarsportId, token: token })
-    props.getUserDetails(token)
+    // props.getUserDetails(token)
   }, [token])
   //console.log(props.transportList)
   const styles = StyleSheet.create({
@@ -124,10 +125,17 @@ const Booking = (props) => {
       props.route.params.from.lng,
       props.route.params.destination.lat,
       props.route.params.destination.lng)) * (props.route.params.capicity) * (price))
+    let paymentStatus = "";
+    if (totalPayment === amount) {
+      paymentStatus = "Completing"
+    } else {
+      paymentStatus = "Pending"
+    }
     const data = {
       ...props.route.params,
       totalPayment: totalPayment,
       paymentHistory: [{ payment: amount }],
+      paymentStatus
     }
     const totalCapicity = (Number(props.route.params.capicity) + Number(truckCapicty))
     console.log(totalCapicity)
@@ -135,7 +143,7 @@ const Booking = (props) => {
     props.payment({ data, token })
   }
   React.useEffect(() => {
-    if (props.paymentData.status) {
+    if (props.paymentData?.status) {
       props.tracking({
         data: {
           tarsportId: props.route.params.tarsportId,
@@ -144,15 +152,27 @@ const Booking = (props) => {
       })
       props.setPaymentData([])
     }
-    if (props.trackingData.status) {
+    if (props.trackingData?.status) {
       setModalVisible1(false);
       props.setTrackingData([])
-      props.navigation.replace('Confirmation', { payment: amount });
+      props.navigation.navigate('Confirmation', { payment: amount, type: "0" });
     }
   }, [props])
   console.log(props.paymentData)
   return (
     <View style={styles.container}>
+      <AnimatedLoader
+        visible={props.loading}
+        overlayColor="rgba(255,255,255,0.75)"
+        source={require("../../assets/json/loder.json")}
+        animationStyle={{
+          width: 100,
+          height: 100
+        }}
+        speed={1}
+      >
+        <Text>Loading ...</Text>
+      </AnimatedLoader>
       <HeaderWithBackButton name={"Booking Details"} navigation={props.navigation} />
       <ScrollView style={{ marginBottom: 0 }} showsVerticalScrollIndicator={false}>
         <FlatList data={props.transportList} renderItem={(item) => (
@@ -489,7 +509,8 @@ const useSelector = (state) => (
     trackingData: state.tracking.trackingdata,
     userData: state.user.userData,
     theme: state.token.theme,
-    transportList: state.fetchById.transportList
+    transportList: state.fetchById.transportList,
+    loading: state.fetchById.loading
   }
 )
 export default connect(useSelector, useDispatch)(Booking);

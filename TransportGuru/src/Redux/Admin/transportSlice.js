@@ -37,7 +37,7 @@ export const updateTransport = createAsyncThunk(
                     Authorization: `Bearer ${obj.token}`,
                 }
             });
-            console.log("res ", response.data)
+           
             return response.data
         }
         catch (e) {
@@ -45,14 +45,16 @@ export const updateTransport = createAsyncThunk(
         }
     })
 export const getTransportList = createAsyncThunk('transport/getTransportList',
-    async (token, getState) => {
+    async (obj, getState) => {
+        console.log(obj)
         try {
-            const response = await TrasportApi.get('/transport', {
+            const response = await TrasportApi.get(`/transport?skip=${obj.skip}&limit=${obj.limit}`, {
                 headers: {
-                    Authorization: `Bearer ${token}`,
+                    Authorization: `Bearer ${obj.token}`,
                 }
             });
-            return response.data.data
+          
+            return response.data
         } catch (e) {
             return getState.rejectWithValue(e.response.data);
         }
@@ -67,6 +69,7 @@ export const deleteTransport = createAsyncThunk(
                     Authorization: `Bearer ${obj.token}`,
                 }
             });
+           
             return response.data
         }
         catch (e) {
@@ -79,11 +82,16 @@ export const transportSlice = createSlice({
         loading: false,
         error: '',
         data: {},
-        transportList: []
+        transportList: {}
     },
     reducers: {
         setTransportData: (state, action) => {
             state.data = action.payload
+            
+        },
+        setTransportList: (state, action) => {
+           
+            state.transportList= action.payload
         }
     },
     extraReducers: {
@@ -134,5 +142,5 @@ export const transportSlice = createSlice({
 
     }
 })
-export const { setTransportData } = transportSlice.actions;
+export const { setTransportData,setTransportList } = transportSlice.actions;
 export default transportSlice.reducer

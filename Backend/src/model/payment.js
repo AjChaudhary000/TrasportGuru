@@ -19,8 +19,12 @@ const paymentSchema = mongodb.Schema({
         {
             payment: {
                 type: String,
+            },
+            paymentDate: {
+                type: Date,
+                default: Date.now,
             }
-        }, { timestamps: true }],
+        }],
     paymentStatus: {
         type: String
     },

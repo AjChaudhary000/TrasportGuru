@@ -9,6 +9,7 @@ import { getDriverList } from '../../Redux/Admin/driverListSlice'
 import { deleteDriver } from '../../Redux/Admin/addDriverSlice'
 import { getCountDriver } from '../../Redux/Admin/countAddSlice'
 import Toast from 'react-native-simple-toast';
+import AnimatedLoader from "react-native-animated-loader";
 const DriverList = (props) => {
     const [token, setToken] = React.useState('');
     const fetchToken = async () => {
@@ -100,6 +101,18 @@ const DriverList = (props) => {
     })
     return (
         <View style={styles.container}>
+            <AnimatedLoader
+        visible={props.loading}
+        overlayColor="rgba(255,255,255,0.75)"
+        source={require("../../assets/json/loder.json")}
+        animationStyle={{
+          width: 100,
+          height: 100
+        }}
+        speed={1}
+      >
+        <Text>Loading...</Text>
+      </AnimatedLoader>
             <AdminHeaderWithBackButton name={"Driver List"} navigation={props.navigation} />
             <FlatList data={props.driverList} renderItem={(item) => (
                 <View style={styles.listBox}>
@@ -140,6 +153,7 @@ const useDispatch = (dispatch) => {
 const useSelector = (state) => (
 
     {
+        loading: state.driverList.loading,
         driverList: state.driverList.driverList,
         deletedata: state.addDriver.deletedata,
         theme:state.token.theme

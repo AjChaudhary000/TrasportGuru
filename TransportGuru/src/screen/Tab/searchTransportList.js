@@ -9,8 +9,9 @@ import icons from '../../contents/icons';
 import { getUserDetails } from '../../Redux/UserDetails';
 import Toast from 'react-native-simple-toast';
 import calcKmFind from '../../components/kmFind';
+import AnimatedLoader from "react-native-animated-loader";
 const SearchTransportList = (props) => {
-    console.log(props.route.params)
+   
     const [token, setToken] = React.useState('');
     const [modalVisible, setModalVisible] = React.useState(false);
     const [route, setRoute] = React.useState({ type: false, id: '' })
@@ -25,10 +26,11 @@ const SearchTransportList = (props) => {
     }
     React.useEffect(() => {
         fetchToken()
+        
         props.getSearchTransportList({ ...props.route.params, token: token })
-        props.getUserDetails(token)
+      //  props.getUserDetails(token)
     }, [token])
-    console.log(props.searchList)
+   
     const styles = StyleSheet.create({
         container: {
             flex: 1,
@@ -118,6 +120,18 @@ const SearchTransportList = (props) => {
 
     return (
         <View style={styles.container}>
+             <AnimatedLoader
+        visible={props.loading}
+        overlayColor="rgba(255,255,255,0.75)"
+        source={require("../../assets/json/loder.json")}
+        animationStyle={{
+          width: 100,
+          height: 100
+        }}
+        speed={1}
+      >
+        <Text>Loading ...</Text>
+      </AnimatedLoader>
             <HeaderWithBackButton name={"Searching"} navigation={props.navigation} />
             <ScrollView style={{ marginBottom: 0 }} showsVerticalScrollIndicator={false}>
                 <FlatList data={props.searchList} renderItem={(item) => (
@@ -416,7 +430,7 @@ const SearchTransportList = (props) => {
 const useDispatch = (dispatch) => {
     return {
         getSearchTransportList: (data) => dispatch(getSearchTransportList(data)),
-        getUserDetails: (data) => dispatch(getUserDetails(data)),
+      //  getUserDetails: (data) => dispatch(getUserDetails(data)),
     };
 }
 const useSelector = (state) => (
@@ -424,7 +438,8 @@ const useSelector = (state) => (
     {
         userData: state.user.userData,
         theme: state.token.theme,
-        searchList: state.search.serachData
+        searchList: state.search.serachData,
+        loading: state.search.loading
     }
 )
 export default connect(useSelector, useDispatch)(SearchTransportList);

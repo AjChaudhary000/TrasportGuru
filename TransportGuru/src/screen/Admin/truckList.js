@@ -8,6 +8,7 @@ import { getJWTToken } from '../../Redux/helper'
 import { getTruckList } from '../../Redux/Admin/truckListSlice'
 import { deleteTruck, setTruckData } from '../../Redux/Admin/addTruckSlice'
 import { getCountTruck } from '../../Redux/Admin/countAddSlice'
+import AnimatedLoader from "react-native-animated-loader";
 import Toast from 'react-native-simple-toast';
 const TruckList = (props) => {
     const [token, setToken] = React.useState('');
@@ -108,6 +109,18 @@ const TruckList = (props) => {
     })
     return (
         <View style={styles.container}>
+            <AnimatedLoader
+        visible={props.loading}
+       // overlayColor="rgba(255,255,255,0.75)"
+        source={require("../../assets/json/loder.json")}
+        animationStyle={{
+          width: 100,
+          height: 100
+        }}
+        speed={1}
+      >
+        <Text>Loading...</Text>
+      </AnimatedLoader>
             <AdminHeaderWithBackButton name={"Truck List"} navigation={props.navigation} />
             <FlatList data={props.truckList} renderItem={(item) => (
                 <View style={styles.listBox}>
@@ -150,6 +163,7 @@ const useSelector = (state) => (
 
     {
         truckList: state.truckList.truckList,
+        loading: state.truckList.loading,
         deletedata: state.addTruck.data,
         theme:state.token.theme
     }

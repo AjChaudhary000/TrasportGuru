@@ -1,135 +1,31 @@
 import { View, Text, Image, StyleSheet, Dimensions, TextInput, TouchableOpacity, StatusBar, Modal, PermissionsAndroid } from 'react-native'
 import React from 'react'
 import icons from '../contents/icons';
-import * as ImagePicker from 'react-native-image-picker'
 import { connect } from 'react-redux'
 import { userProfile } from '../Redux/userProfileSlice';
 import color from '../contents/color';
 import LottieView from 'lottie-react-native';
-import storage from '@react-native-firebase/storage';
-
-
+import AnimatedLoader from "react-native-animated-loader";
+import ImageModel from '../components/imageModel';
+import Toast from 'react-native-simple-toast';
 const UserProfile = (props) => {
     const [firebaseImage, setfirebaseImage] = React.useState('');
     const [imageLoading, setImageLoading] = React.useState(false);
-    const [transferred, setTransferred] = React.useState(0);
     const [data, setdata] = React.useState({
         username: ''
     })
     React.useEffect(() => {
         props?.userdata.status && props.navigation.replace('Tab')
-     
+
     }, [props])
-    const [modalVisible, setModalVisible] = React.useState(false);
-    const camaraLaunch = async () => {
-        if (Platform.OS === 'android') {
-            const grantedcamera = await PermissionsAndroid.request(
-                PermissionsAndroid.PERMISSIONS.CAMERA,
-                {
-                    title: "App Camera Permission",
-                    message: "App needs access to your camera ",
-                    buttonNeutral: "Ask Me Later",
-                    buttonNegative: "Cancel",
-                    buttonPositive: "OK"
-                }
-            );
-            const grantedstorage = await PermissionsAndroid.request(
-                PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE,
-                {
-                    title: "App Camera Permission",
-                    message: "App needs access to your camera ",
-                    buttonNeutral: "Ask Me Later",
-                    buttonNegative: "Cancel",
-                    buttonPositive: "OK"
-                }
-            );
-            if (grantedcamera === PermissionsAndroid.RESULTS.GRANTED && grantedstorage === PermissionsAndroid.RESULTS.GRANTED) {
-                console.log("Camera & storage permission given");
-
-
-                setModalVisible1(false)
-                console.log("Camera permission given");
-            } else {
-                console.log("Camera permission denied");
-            }
-        }
-        let options = {
-            title: 'You can choose one image',
-            mediaType: 'photo',
-            storageOptions: {
-                skipBackup: true,
-                path: 'images',
-            },
-        };
-        ImagePicker.launchCamera(options, (Response) => {
-            console.log('Response = ', Response)
-            if (Response.didCancel) {
-                console.log('User cancelled image picker');
-            } else if (Response.error) {
-                console.log('ImagePicker Error: ', Response.error);
-            } else if (Response.customButton) {
-                console.log('User tapped custom button: ', Response.customButton);
-            } else {
-                const source = { uri: Response.assets[0].uri };
-                setImageLoading(true)
-                uploadImage(source)
-                setModalVisible(false)
-            }
-        });
-
-    }
-    const uploadImage = async ({ uri }) => {
-        console.log(uri)
-        const uploadUri = Platform.OS === 'ios' ? uri.replace('file://', '') : uri;
-        const uniqueSuffix = "user" + Date.now() + "-" + Math.round(Math.random() * 1e9);
-        const filename = uniqueSuffix + uploadUri.split('.').pop();;
-        setTransferred(0);
-        const task = storage()
-            .ref(`user/${filename}`)
-            .putFile(uploadUri);
-        task.on('state_changed', snapshot => {
-            setTransferred(
-                Math.round(snapshot.bytesTransferred / snapshot.totalBytes) * 10000
-            );
-        });
-        task.then(async (res) => {
-            console.log(res)
-
-            const url = await storage().ref(`user/${filename}`).getDownloadURL();
-            await setfirebaseImage(url)
-            if (res.state === 'success') {
-                setTimeout(() => {
-                    setImageLoading(false)
-                }, 4000)
-
-            }
-        })
-    };
-    const GalleryLaunch = () => {
-        let options = {
-            title: 'You can choose one image',
-            storageOptions: {
-                skipBackup: true,
-                path: 'images',
-            },
-        };
-        ImagePicker.launchImageLibrary(options, (response) => {
-            if (response.didCancel) {
-                console.log('User cancelled image picker');
-            } else if (response.error) {
-                console.log('ImagePicker Error: ', response.error);
-            } else if (response.customButton) {
-                console.log('User tapped custom button: ', response.customButton);
-            } else {
-                const source = { uri: response.assets[0].uri };
-                setImageLoading(true)
-                uploadImage(source)
-                setModalVisible(false)
-            }
-        });
-    }
+    const [modalVisible1, setModalVisible1] = React.useState(false);
     const uploadData = () => {
-        if (data.username != "" && firebaseImage != "") {
+
+        if (data.username == "") {
+            Toast.show("Enter username")
+        } else if (firebaseImage = "") {
+            Toast.show("Select Image")
+        } else {
             props.userProfile({ ...data, image: firebaseImage || '', token: props.token })
             //  console.log({ ...data, image: firebaseImage || '', token: props.token })
             console.log(props.userdata)
@@ -138,14 +34,14 @@ const UserProfile = (props) => {
     const styles = StyleSheet.create({
         contentor: {
             flex: 1,
-            backgroundColor:props.theme ? color.drakBackgroundColor :color.backgroundColor,
+            backgroundColor: props.theme ? color.drakBackgroundColor : color.backgroundColor,
             paddingHorizontal: 20,
         },
         truckLogo: {
             height: '25%',
             width: "40%",
-    
-    
+
+
         },
         titleComponets: {
             marginHorizontal: 5,
@@ -154,7 +50,7 @@ const UserProfile = (props) => {
         title: {
             fontSize: 25,
             fontWeight: 'bold',
-            color:props.theme ? color.drakFontcolor :color.fontcolor
+            color: props.theme ? color.drakFontcolor : color.fontcolor
         },
         text: {
             fontSize: 18,
@@ -169,15 +65,15 @@ const UserProfile = (props) => {
         },
         input: {
             borderWidth: 2,
-            borderColor:props.theme ? color.drakPrimaryColors :color.primaryColors,
+            borderColor: props.theme ? color.drakPrimaryColors : color.primaryColors,
             padding: 10,
             fontSize: 18,
-            borderRadius: 10, color:props.theme ? color.drakFontcolor :color.fontcolor
+            borderRadius: 10, color: props.theme ? color.drakFontcolor : color.fontcolor
         },
         btn: {
             width: '90%',
             height: 50,
-            backgroundColor:props.theme ? color.drakPrimaryColors :color.primaryColors,
+            backgroundColor: props.theme ? color.drakPrimaryColors : color.primaryColors,
             borderRadius: 15,
             justifyContent: "center",
             alignItems: 'center',
@@ -193,14 +89,14 @@ const UserProfile = (props) => {
             height: 100,
             position: 'absolute',
             bottom: 0,
-            backgroundColor: props.theme ? color.drakBackgroundColor :color.backgroundColor,
+            backgroundColor: props.theme ? color.drakBackgroundColor : color.backgroundColor,
             alignSelf: 'center',
             borderTopLeftRadius: 20,
             borderTopRightRadius: 20,
             flexDirection: 'row',
             alignItems: 'center',
             alignItems: "center",
-            shadowColor: props.theme ? color.drakFontcolor :color.fontcolor,
+            shadowColor: props.theme ? color.drakFontcolor : color.fontcolor,
             shadowOffset: {
                 width: 0,
                 height: 2
@@ -211,13 +107,13 @@ const UserProfile = (props) => {
         },
         Text: {
             fontSize: 17,
-            color: props.theme ? color.drakFontcolor :color.fontcolor,
+            color: props.theme ? color.drakFontcolor : color.fontcolor,
             fontWeight: 'bold'
         },
         modelimage: {
             width: 40,
             height: 40,
-            tintColor:props.theme ? color.drakPrimaryColors : color.primaryColors,
+            tintColor: props.theme ? color.drakPrimaryColors : color.primaryColors,
         }, image: {
             marginTop: 40,
             overflow: 'hidden',
@@ -226,42 +122,38 @@ const UserProfile = (props) => {
             height: 120,
             borderRadius: 60,
             borderWidth: 5,
-            borderColor:props.theme ? color.drakPrimaryColors :color.primaryColors,
+            borderColor: props.theme ? color.drakPrimaryColors : color.primaryColors,
         },
     })
     return (
 
         <View style={styles.contentor}>
-            <StatusBar hidden />
-            <Modal
-                animationType="slide"
-                transparent={true}
-                visible={modalVisible}
-                onRequestClose={() => {
-                    Alert.alert("Modal has been closed.");
-                    setModalVisible(!modalVisible);
+            <AnimatedLoader
+                visible={props.loading}
+                overlayColor="rgba(255,255,255,0.75)"
+                source={require("../assets/json/loder.json")}
+                animationStyle={{
+                    width: 100,
+                    height: 100
                 }}
+                speed={1}
             >
-                <View style={styles.modelBox}>
-                    <TouchableOpacity style={{ flex: 1, alignItems: 'center' }} onPress={camaraLaunch}>
-                        <Image source={icons.camera} style={styles.modelimage} />
-                        <Text style={styles.Text}>Camera</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity style={{ flex: 1, alignItems: 'center' }} onPress={GalleryLaunch}>
-                        <Image source={icons.gallery} style={styles.modelimage} />
-                        <Text style={styles.Text}>Gallery</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity style={{ flex: 1, alignItems: 'center' }} onPress={() => setModalVisible(false)}>
-                        <Image source={icons.remove} style={styles.modelimage} />
-                        <Text style={styles.Text}>Remove</Text>
-                    </TouchableOpacity>
-                </View>
-            </Modal>
+                <Text>Loading...</Text>
+            </AnimatedLoader>
+            {modalVisible1 && <ImageModel
+                filename={"user"}
+                theme={props.theme}
+                modalVisibleData={modalVisible1}
+                onGetImage={(val) => setfirebaseImage(val)}
+                onGetLoding={(val) => setImageLoading(val)}
+                onGetModalVisible={(val) => setModalVisible1(val)} />}
+            <StatusBar hidden />
+
             <View style={{ paddingTop: 12, height: '30%', justifyContent: 'center' }}>
                 {!imageLoading ?
                     <View style={{ marginHorizontal: 10 }}>
                         {!firebaseImage ?
-                            <TouchableOpacity onPress={() => { setModalVisible(true)}}>
+                            <TouchableOpacity onPress={() => { setModalVisible1(true) }}>
                                 <Image
                                     style={{
                                         alignSelf: 'center',
@@ -270,12 +162,12 @@ const UserProfile = (props) => {
                                         borderRadius: 10,
                                         resizeMode: 'contain',
                                         marginVertical: 30,
-                                        tintColor: props.theme ? color.drakPrimaryColors :color.primaryColors,
+                                        tintColor: props.theme ? color.drakPrimaryColors : color.primaryColors,
                                     }}
                                     source={icons.add_photo}
                                 />
                             </TouchableOpacity> :
-                            <TouchableOpacity style={styles.image} onPress={() => { setModalVisible(true)}}>
+                            <TouchableOpacity style={styles.image} onPress={() => { setModalVisible1(true) }}>
                                 <Image
                                     style={{
                                         width: 110, height: 110, alignSelf: "center"
@@ -294,7 +186,7 @@ const UserProfile = (props) => {
             <View style={styles.titleComponets}>
                 <Text style={styles.title}> Here we go !</Text>
                 <View>
-                    <Text style={styles.text}> Please provide your name and optional profile photo.</Text>
+                    <Text style={styles.text}> Please provide your name and  profile photo.</Text>
                 </View>
             </View>
             <View style={styles.inputBox}>
@@ -323,13 +215,14 @@ const useSelector = (state) => {
     return {
         token: state.token.token,
         userdata: state.userProfile.data,
-         theme:state.token.theme
+        theme: state.token.theme,
+        loading: state.userProfile.loading,
     }
 }
 const useDispatch = (dispatch) => {
     return {
         userProfile: (data) => dispatch(userProfile(data)),
-      
+
     }
 }
 

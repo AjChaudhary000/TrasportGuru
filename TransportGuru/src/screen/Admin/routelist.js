@@ -9,6 +9,7 @@ import { deleteRoute, getRouteList, setRouteData } from '../../Redux/Admin/route
 import { getCountRoute } from '../../Redux/Admin/countAddSlice'
 import icons from '../../contents/icons'
 import Toast from 'react-native-simple-toast';
+import AnimatedLoader from "react-native-animated-loader";
 const Routelist = (props) => {
     const [token, setToken] = React.useState('');
     const fetchToken = async () => {
@@ -77,6 +78,18 @@ const Routelist = (props) => {
     })
     return (
         <View style={styles.container}>
+            <AnimatedLoader
+        visible={props.loading}
+        overlayColor="rgba(255,255,255,0.75)"
+        source={require("../../assets/json/loder.json")}
+        animationStyle={{
+          width: 100,
+          height: 100
+        }}
+        speed={1}
+      >
+        <Text>Loading...</Text>
+      </AnimatedLoader>
             <AdminHeaderWithBackButton name={"Route List"} navigation={props.navigation} />
             <FlatList data={props.routelist} renderItem={(item) => (
                 <View style={styles.listBox}>
@@ -144,6 +157,7 @@ const useDispatch = (dispatch) => {
 const useSelector = (state) => (
 
     {
+        loading: state.route.loading,
         routelist: state.route.routeList,
         deletedata: state.route.data,
         theme: state.token.theme

@@ -38,7 +38,7 @@ export const verifyOtpSlice = createSlice({
             state.error = action.payload;
         },
         [verifyOtp.rejected]: (state, action) => {
-            state.loading = true;
+            state.loading = false;
             state.error = action.payload.data;
         }
     }

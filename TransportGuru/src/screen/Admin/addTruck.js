@@ -1,5 +1,7 @@
-import { View, Text, StyleSheet, TextInput, TouchableOpacity, Image, ScrollView,TouchableWithoutFeedback,
-    Keyboard } from 'react-native'
+import {
+    View, Text, StyleSheet, TextInput, TouchableOpacity, Image, ScrollView, TouchableWithoutFeedback,
+    Keyboard
+} from 'react-native'
 import React from 'react'
 import { AdminHeaderWithBackButton } from '../../components/adminHeader';
 import color from '../../contents/color'
@@ -15,13 +17,14 @@ import LottieView from 'lottie-react-native';
 import storage from '@react-native-firebase/storage';
 import image from '../../contents/image';
 import Toast from 'react-native-simple-toast';
-
+import AnimatedLoader from "react-native-animated-loader";
+import ImageModel from '../../components/imageModel';
 const AddTruck = (props) => {
 
     const [token, setToken] = React.useState('');
     const [firebaseImage, setfirebaseImage] = React.useState(props.route.params?.item?.truckImage || '');
     const [imageLoading, setImageLoading] = React.useState(false)
-    const [transferred, setTransferred] = React.useState(0);
+    const [modalVisible1, setModalVisible1] = React.useState(false);
     const [value, setValue] = React.useState(null);
     const [data, setData] = React.useState({
         truckName: props.route.params?.item?.truckName || '',
@@ -30,7 +33,7 @@ const AddTruck = (props) => {
         truckCapicity: props.route.params?.item?.truckCapicity || '',
         truckTypeId: props.route.params?.item?.truckTypeId || ''
     })
-    let regno ="";
+    let regno = "";
     const fetchToken = async () => {
         try {
             const data = await getJWTToken();
@@ -55,120 +58,70 @@ const AddTruck = (props) => {
     }, [props, token])
 
     const AddTruck = () => {
-       
-               
-           
-         if(firebaseImage === ""){
+
+
+
+        if (firebaseImage === "") {
             Toast.show("Select The Truck Image ")
         }
-        else if(data.truckTypeId === ""){
+        else if (data.truckTypeId === "") {
             Toast.show("Enter Truck type")
-        }else if(data.truckName === ""){
+        } else if (data.truckName === "") {
             Toast.show("Enter Truck Name")
-        }else if(data.truckModelName === ""){
+        } else if (data.truckModelName === "") {
             Toast.show("Enter Truck Model ")
-        }else if(data.truckRegistartionNo === ""){
+        } else if (data.truckRegistartionNo === "") {
             Toast.show("Enter Truck RegistartionNo")
         }
-        else if(data.truckCapicity === ""){
+        else if (data.truckCapicity === "") {
             Toast.show("Enter Truck capicity")
-        }else{
+        } else {
             props.addTruck({ ...data, truckImage: firebaseImage, token: token })
         }
 
     }
     const UpdateTruck = () => {
-        if(firebaseImage === ""){
+        if (firebaseImage === "") {
             Toast.show("Select The Truck Image ")
         }
-        else if(data.truckTypeId === ""){
+        else if (data.truckTypeId === "") {
             Toast.show("Enter Truck type")
-        }else if(data.truckName === ""){
+        } else if (data.truckName === "") {
             Toast.show("Enter Truck Name")
-        }else if(data.truckModelName === ""){
+        } else if (data.truckModelName === "") {
             Toast.show("Enter Truck Model ")
-        }else if(data.truckRegistartionNo === ""){
+        } else if (data.truckRegistartionNo === "") {
             Toast.show("Enter Truck RegistartionNo")
         }
-        else if(data.truckCapicity === ""){
+        else if (data.truckCapicity === "") {
             Toast.show("Enter Truck capicity")
-        }else{
+        } else {
             props.updateTruck({ ...data, truckImage: firebaseImage, id: props.route.params?.item?._id, token: token })
         }
 
     }
-    const GalleryLaunch = () => {
-        let options = {
-            title: 'You can choose one image',
-            storageOptions: {
-                skipBackup: true,
-                path: 'images',
-            },
-        };
-        ImagePicker.launchImageLibrary(options, (response) => {
-            if (response.didCancel) {
-                console.log('User cancelled image picker');
-            } else if (response.error) {
-                console.log('ImagePicker Error: ', response.error);
-            } else if (response.customButton) {
-                console.log('User tapped custom button: ', response.customButton);
-            } else {
-                const source = { uri: response.assets[0].uri };
-                setImageLoading(true)
-                uploadImage(source)
-
-            }
-        });
-    }
-    const uploadImage = async ({ uri }) => {
-        console.log(uri)
-        const uploadUri = Platform.OS === 'ios' ? uri.replace('file://', '') : uri;
-        const uniqueSuffix = "Truck" + Date.now() + "-" + Math.round(Math.random() * 1e9);
-        const filename = uniqueSuffix + uploadUri.split('.').pop();;
-        setTransferred(0);
-        const task = storage()
-            .ref(`Truck/${filename}`)
-            .putFile(uploadUri);
-        task.on('state_changed', snapshot => {
-            setTransferred(
-                Math.round(snapshot.bytesTransferred / snapshot.totalBytes) * 10000
-            );
-        });
-        task.then(async (res) => {
-            console.log(res)
-
-            const url = await storage().ref(`Truck/${filename}`).getDownloadURL();
-            await setfirebaseImage(url)
-            if (res.state === 'success') {
-                setTimeout(() => {
-                    setImageLoading(false)
-                }, 4000)
-
-            }
-        })
-    };
     const renderItem = (item) => {
         return (
             <View style={styles.item}>
                 <Text style={styles.textItem}>{item.TruckType}</Text>
                 <Text style={styles.textItem}>0 - {item.capicity} tonnes</Text>
-                <Image source={image[item.truckTypeImage]} style={{ width: 50, height: 40}} />
+                <Image source={image[item.truckTypeImage]} style={{ width: 50, height: 40 }} />
             </View>
         );
     };
     const styles = StyleSheet.create({
         container: {
             flex: 1,
-            backgroundColor: props.theme ? color.drakBackgroundColor:color.backgroundColor
-    
+            backgroundColor: props.theme ? color.drakBackgroundColor : color.backgroundColor
+
         }, inputBox: {
             marginHorizontal: 20,
-    
+
         },
         input: {
             borderWidth: 2,
-            borderColor: props.theme ? color.drakAdminprimaryColors:color.adminprimaryColors,
-            color:props.theme ? color.drakFontcolor:color.fontcolor,
+            borderColor: props.theme ? color.drakAdminprimaryColors : color.adminprimaryColors,
+            color: props.theme ? color.drakFontcolor : color.fontcolor,
             padding: 10,
             fontSize: 18,
             borderRadius: 10
@@ -199,23 +152,23 @@ const AddTruck = (props) => {
         },
         dropdown: {
             borderWidth: 2,
-            borderColor: props.theme ? color.drakAdminprimaryColors:color.adminprimaryColors,
+            borderColor: props.theme ? color.drakAdminprimaryColors : color.adminprimaryColors,
             padding: 10,
             fontSize: 18,
             borderRadius: 10,
-           
+
         },
         icon: {
             marginRight: 5,
         },
         item: {
-            margin:10,
-            padding:10,
-            borderWidth:2,
-            borderColor:props.theme ? color.drakAdminprimaryColors:color.adminprimaryColors,
-            borderRadius:10,
-            backgroundColor:props.theme ? color.drakBackgroundColor:color.backgroundColor,
-           
+            margin: 10,
+            padding: 10,
+            borderWidth: 2,
+            borderColor: props.theme ? color.drakAdminprimaryColors : color.adminprimaryColors,
+            borderRadius: 10,
+            backgroundColor: props.theme ? color.drakBackgroundColor : color.backgroundColor,
+
             flexDirection: 'row',
             justifyContent: 'space-between',
             alignItems: 'center',
@@ -223,15 +176,15 @@ const AddTruck = (props) => {
         textItem: {
             flex: 1,
             fontSize: 16,
-            color:props.theme ? color.drakFontcolor:color.fontcolor,
+            color: props.theme ? color.drakFontcolor : color.fontcolor,
         },
         placeholderStyle: {
             fontSize: 16,
-            color:props.theme ? color.drakFontcolor:color.fontcolor,
+            color: props.theme ? color.drakFontcolor : color.fontcolor,
         },
         selectedTextStyle: {
             fontSize: 16,
-            color:props.theme ? color.drakFontcolor:color.fontcolor,
+            color: props.theme ? color.drakFontcolor : color.fontcolor,
         },
         inputSearchStyle: {
             height: 40,
@@ -247,225 +200,245 @@ const AddTruck = (props) => {
             height: 120,
             borderRadius: 10,
             borderWidth: 5,
-            borderColor:props.theme ? color.drakAdminprimaryColors:color.adminprimaryColors,
+            borderColor: props.theme ? color.drakAdminprimaryColors : color.adminprimaryColors,
         }
     })
     return (
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-        <View style={styles.container}>
-            {!props.route.params?.item?._id ?
-                <ScrollView showsVerticalScrollIndicator={false}>
-                    <AdminHeaderWithBackButton name={"Add Truck"} navigation={props.navigation} />
-                    <View style={styles.inputBox}>
-                        <View style={{ marginHorizontal: 10 }}>
-                            {!imageLoading ?
-                                <View style={{ marginHorizontal: 10 }}>
-                                    {!firebaseImage ?
-                                        <TouchableOpacity onPress={GalleryLaunch}>
-                                            <Image
-                                                style={{
-                                                    alignSelf: 'center',
-                                                    width: 100,
-                                                    height: 100,
-                                                    borderRadius: 10,
-                                                    resizeMode: 'contain',
-                                                    marginVertical: 30,
-                                                    tintColor: color.adminprimaryColors
-                                                }}
-                                                source={icons.add_photo}
-                                            />
-                                        </TouchableOpacity> :
-                                        <View style={styles.image}>
-                                            <Image
-                                                style={{
-                                                    width: 110, height: 110, alignSelf: "center"
+            <View style={styles.container}>
+                <AnimatedLoader
+                    visible={props.loading}
+                    overlayColor="rgba(255,255,255,0.75)"
+                    source={require("../../assets/json/loder.json")}
+                    animationStyle={{
+                        width: 100,
+                        height: 100
+                    }}
+                    speed={1}
+                >
+                    <Text>Loading...</Text>
+                </AnimatedLoader>
+                {modalVisible1 && <ImageModel
+                    filename={"Driver"}
+                    theme={props.theme}
+                    modalVisibleData={modalVisible1}
+                    onGetImage={(val) => setfirebaseImage(val)}
+                    onGetLoding={(val) => setImageLoading(val)}
+                    onGetModalVisible={(val) => setModalVisible1(val)} />}
+                {!props.route.params?.item?._id ?
+                    <ScrollView showsVerticalScrollIndicator={false}>
+                        <AdminHeaderWithBackButton name={"Add Truck"} navigation={props.navigation} />
+                        <View style={styles.inputBox}>
+                            <View style={{ marginHorizontal: 10 }}>
+                                {!imageLoading ?
+                                    <View style={{ marginHorizontal: 10 }}>
+                                        {!firebaseImage ?
+                                            <TouchableOpacity onPress={() => { setModalVisible1(true) }}>
+                                                <Image
+                                                    style={{
+                                                        alignSelf: 'center',
+                                                        width: 100,
+                                                        height: 100,
+                                                        borderRadius: 10,
+                                                        resizeMode: 'contain',
+                                                        marginVertical: 30,
+                                                        tintColor: color.adminprimaryColors
+                                                    }}
+                                                    source={icons.add_photo}
+                                                />
+                                            </TouchableOpacity> :
+                                            <TouchableOpacity style={styles.image} onPress={() => { setModalVisible1(true) }}>
+                                                <Image
+                                                    style={{
+                                                        width: 110, height: 110, alignSelf: "center"
 
-                                                }}
-                                                source={{ uri: firebaseImage }}
-                                            /></View>}
-                                </View>
-                                :
-                                <View style={{ height: 100, alignContent: 'center', marginHorizontal: 10 }}>
-                                    <LottieView source={require('../../assets/json/uploading1.json')} autoPlay loop />
-                                </View>}
+                                                    }}
+                                                    source={{ uri: firebaseImage }}
+                                                /></TouchableOpacity>}
+                                    </View>
+                                    :
+                                    <View style={{ height: 100, alignContent: 'center', marginHorizontal: 10 }}>
+                                        <LottieView source={require('../../assets/json/uploading1.json')} autoPlay loop />
+                                    </View>}
+                            </View>
+                            <View style={{ margin: 10 }}>
+                                <Dropdown
+                                    style={styles.dropdown}
+                                    placeholderStyle={styles.placeholderStyle}
+                                    selectedTextStyle={styles.selectedTextStyle}
+                                    inputSearchStyle={styles.inputSearchStyle}
+                                    iconStyle={styles.iconStyle}
+                                    data={props.trucktypeData}
+                                    search
+                                    maxHeight={300}
+                                    labelField="TruckType"
+                                    valueField="_id"
+                                    placeholder="Select truck type .."
+                                    searchPlaceholder="Search..."
+                                    value={value}
+                                    onChange={item => {
+                                        setData({ ...data, truckTypeId: item._id });
+                                    }}
+                                    renderItem={renderItem}
+                                />
+
+                            </View>
+                            <View style={{ margin: 10 }}>
+                                <TextInput style={styles.input}
+
+                                    placeholder={"eg. Truck name"}
+                                    placeholderTextColor={'gray'}
+                                    onChangeText={(val) => setData({ ...data, truckName: val })}
+                                    autoCapitalize={'none'} />
+
+                            </View>
+                            <View style={{ margin: 10 }}>
+                                <TextInput style={styles.input}
+                                    placeholder={"eg. Truck model name"}
+                                    placeholderTextColor={'gray'}
+                                    onChangeText={(val) => setData({ ...data, truckModelName: val })}
+                                    autoCapitalize={'none'} />
+
+                            </View>
+                            <View style={{ margin: 10 }}>
+                                <TextInput style={styles.input}
+                                    placeholder={"eg. Truck RegistartionNo"}
+                                    placeholderTextColor={'gray'}
+                                    value={data.truckRegistartionNo}
+                                    maxLength={13}
+                                    onChangeText={(val) => {
+                                        setData({ ...data, truckRegistartionNo: val.toUpperCase() })
+                                    }}
+                                    autoCapitalize={'none'} />
+
+                            </View>
+
+                            <View style={{ margin: 10 }}>
+                                <TextInput style={styles.input}
+                                    placeholder={"eg. Truck Capicity"}
+                                    placeholderTextColor={'gray'}
+                                    onChangeText={(val) => setData({ ...data, truckCapicity: val })}
+                                    autoCapitalize={'none'}
+                                    keyboardType={'number-pad'} />
+
+                            </View>
+                            <View style={{ marginHorizontal: 10, marginVertical: 20 }}>
+                                <TouchableOpacity style={styles.btn} onPress={() => { AddTruck() }}>
+                                    <Text style={styles.btnText}>
+                                        Add Truck
+                                    </Text>
+                                </TouchableOpacity>
+                            </View>
                         </View>
-                        <View style={{ margin: 10 }}>
-                            <Dropdown
-                                style={styles.dropdown}
-                                placeholderStyle={styles.placeholderStyle}
-                                selectedTextStyle={styles.selectedTextStyle}
-                                inputSearchStyle={styles.inputSearchStyle}
-                                iconStyle={styles.iconStyle}
-                                data={props.trucktypeData}
-                                search
-                                maxHeight={300}
-                                labelField="TruckType"
-                                valueField="_id"
-                                placeholder="Select truck type .."
-                                searchPlaceholder="Search..."
-                                value={value}
-                                onChange={item => {
-                                    setData({ ...data, truckTypeId: item._id });
-                                }}
-                                renderItem={renderItem}
-                            />
+                    </ScrollView> :
+                    <ScrollView showsVerticalScrollIndicator={false}>
+                        <AdminHeaderWithBackButton name={"Update Truck"} navigation={props.navigation} />
+                        <View style={styles.inputBox}>
+                            <View style={{ marginHorizontal: 10 }}>
+                                {!imageLoading ?
+                                    <View style={{ marginHorizontal: 10 }}>
+                                        {!firebaseImage ?
+                                            <TouchableOpacity onPress={() => { setModalVisible1(true) }}>
+                                                <Image
+                                                    style={{
+                                                        alignSelf: 'center',
+                                                        width: 100,
+                                                        height: 100,
+                                                        borderRadius: 10,
+                                                        resizeMode: 'contain',
+                                                        marginVertical: 30,
+                                                        tintColor: color.adminprimaryColors
+                                                    }}
+                                                    source={icons.add_photo}
+                                                />
+                                            </TouchableOpacity> :
+                                            <TouchableOpacity onPress={() => { setModalVisible1(true) }} style={styles.image}>
+                                                <Image
+                                                    style={{
+                                                        width: 110, height: 110, alignSelf: "center"
 
+                                                    }}
+                                                    source={{ uri: firebaseImage }}
+                                                /></TouchableOpacity>}
+
+
+                                    </View>
+                                    :
+                                    <View style={{ height: 100, alignContent: 'center', marginHorizontal: 10 }}>
+                                        <LottieView source={require('../../assets/json/uploading1.json')} autoPlay loop />
+                                    </View>}
+                            </View>
+                            <View style={{ margin: 10 }}>
+                                <Dropdown
+                                    style={styles.dropdown}
+                                    placeholderStyle={styles.placeholderStyle}
+                                    selectedTextStyle={styles.selectedTextStyle}
+                                    inputSearchStyle={styles.inputSearchStyle}
+                                    iconStyle={styles.iconStyle}
+                                    data={props.trucktypeData}
+                                    search
+                                    maxHeight={300}
+                                    labelField="TruckType"
+                                    valueField="_id"
+                                    placeholder="Select truck type .."
+                                    searchPlaceholder="Search..."
+                                    value={props.route.params?.item?.truckTypeId._id}
+                                    onChange={item => {
+                                        setData({ ...data, truckTypeId: item._id });
+                                    }}
+                                    renderItem={renderItem}
+                                />
+
+                            </View>
+                            <View style={{ margin: 10 }}>
+                                <TextInput style={styles.input}
+                                    defaultValue={props.route.params?.item?.truckName}
+                                    placeholder={"eg. Truck name"}
+                                    placeholderTextColor={'gray'}
+                                    onChangeText={(val) => setData({ ...data, truckName: val })}
+                                    autoCapitalize={'none'} />
+
+                            </View>
+                            <View style={{ margin: 10 }}>
+                                <TextInput style={styles.input}
+                                    defaultValue={props.route.params?.item?.truckModelName}
+                                    placeholder={"eg. Truck model name"}
+                                    placeholderTextColor={'gray'}
+                                    onChangeText={(val) => setData({ ...data, truckModelName: val })}
+                                    autoCapitalize={'none'} />
+
+                            </View>
+                            <View style={{ margin: 10 }}>
+                                <TextInput style={styles.input}
+                                    defaultValue={props.route.params?.item?.truckRegistartionNo}
+                                    placeholder={"eg. Truck RegistartionNo"}
+                                    placeholderTextColor={'gray'}
+                                    onChangeText={(val) => setData({ ...data, truckRegistartionNo: val })}
+                                    autoCapitalize={'none'} />
+
+                            </View>
+
+                            <View style={{ margin: 10 }}>
+                                <TextInput style={styles.input}
+                                    defaultValue={props.route.params?.item?.truckCapicity}
+                                    placeholder={"eg. Truck Capicity"}
+                                    placeholderTextColor={'gray'}
+
+                                    onChangeText={(val) => setData({ ...data, truckCapicity: val })}
+                                    autoCapitalize={'none'}
+                                    keyboardType={'number-pad'} />
+
+                            </View>
+                            <View style={{ marginHorizontal: 10, marginVertical: 20 }}>
+                                <TouchableOpacity style={styles.btn} onPress={() => { UpdateTruck() }}>
+                                    <Text style={styles.btnText}>
+                                        Update Truck
+                                    </Text>
+                                </TouchableOpacity>
+                            </View>
                         </View>
-                        <View style={{ margin: 10 }}>
-                            <TextInput style={styles.input}
-
-                                placeholder={"eg. Truck name"}
-                                placeholderTextColor={'gray'}
-                                onChangeText={(val) => setData({ ...data, truckName: val })}
-                                autoCapitalize={'none'} />
-
-                        </View>
-                        <View style={{ margin: 10 }}>
-                            <TextInput style={styles.input}
-                                placeholder={"eg. Truck model name"}
-                                placeholderTextColor={'gray'}
-                                onChangeText={(val) => setData({ ...data, truckModelName: val })}
-                                autoCapitalize={'none'} />
-
-                        </View>
-                        <View style={{ margin: 10 }}>
-                            <TextInput style={styles.input}
-                                placeholder={"eg. Truck RegistartionNo"}
-                                placeholderTextColor={'gray'}
-                                value={data.truckRegistartionNo}
-                                maxLength={13}
-                                onChangeText={(val) =>{ 
-                                    setData({ ...data, truckRegistartionNo: val.toUpperCase() })}}
-                                autoCapitalize={'none'} />
-
-                        </View>
-
-                        <View style={{ margin: 10 }}>
-                            <TextInput style={styles.input}
-                                placeholder={"eg. Truck Capicity"}
-                                placeholderTextColor={'gray'}
-                                onChangeText={(val) => setData({ ...data, truckCapicity: val })}
-                                autoCapitalize={'none'}
-                                keyboardType={'number-pad'} />
-
-                        </View>
-                        <View style={{ marginHorizontal: 10, marginVertical: 20 }}>
-                            <TouchableOpacity style={styles.btn} onPress={() => { AddTruck() }}>
-                                <Text style={styles.btnText}>
-                                    Add Truck
-                                </Text>
-                            </TouchableOpacity>
-                        </View>
-                    </View>
-                </ScrollView> :
-                <ScrollView showsVerticalScrollIndicator={false}>
-                    <AdminHeaderWithBackButton name={"Update Truck"} navigation={props.navigation} />
-                    <View style={styles.inputBox}>
-                        <View style={{ marginHorizontal: 10 }}>
-                            {!imageLoading ?
-                                <View style={{ marginHorizontal: 10 }}>
-                                    {!firebaseImage ?
-                                        <TouchableOpacity onPress={GalleryLaunch}>
-                                            <Image
-                                                style={{
-                                                    alignSelf: 'center',
-                                                    width: 100,
-                                                    height: 100,
-                                                    borderRadius: 10,
-                                                    resizeMode: 'contain',
-                                                    marginVertical: 30,
-                                                    tintColor: color.adminprimaryColors
-                                                }}
-                                                source={icons.add_photo}
-                                            />
-                                        </TouchableOpacity> :
-                                        <TouchableOpacity onPress={GalleryLaunch} style={styles.image}>
-                                            <Image
-                                                style={{
-                                                    width: 110, height: 110, alignSelf: "center"
-
-                                                }}
-                                                source={{ uri: firebaseImage }}
-                                            /></TouchableOpacity>}
-
-
-                                </View>
-                                :
-                                <View style={{ height: 100, alignContent: 'center', marginHorizontal: 10 }}>
-                                    <LottieView source={require('../../assets/json/uploading1.json')} autoPlay loop />
-                                </View>}
-                        </View>
-                        <View style={{ margin: 10 }}>
-                            <Dropdown
-                                style={styles.dropdown}
-                                placeholderStyle={styles.placeholderStyle}
-                                selectedTextStyle={styles.selectedTextStyle}
-                                inputSearchStyle={styles.inputSearchStyle}
-                                iconStyle={styles.iconStyle}
-                                data={props.trucktypeData}
-                                search
-                                maxHeight={300}
-                                labelField="TruckType"
-                                valueField="_id"
-                                placeholder="Select truck type .."
-                                searchPlaceholder="Search..."
-                                value={props.route.params?.item?.truckTypeId._id}
-                                onChange={item => {
-                                    setData({ ...data, truckTypeId: item._id });
-                                }}
-                                renderItem={renderItem}
-                            />
-
-                        </View>
-                        <View style={{ margin: 10 }}>
-                            <TextInput style={styles.input}
-                                defaultValue={props.route.params?.item?.truckName}
-                                placeholder={"eg. Truck name"}
-                                placeholderTextColor={'gray'}
-                                onChangeText={(val) => setData({ ...data, truckName: val })}
-                                autoCapitalize={'none'} />
-
-                        </View>
-                        <View style={{ margin: 10 }}>
-                            <TextInput style={styles.input}
-                                defaultValue={props.route.params?.item?.truckModelName}
-                                placeholder={"eg. Truck model name"}
-                                placeholderTextColor={'gray'}
-                                onChangeText={(val) => setData({ ...data, truckModelName: val })}
-                                autoCapitalize={'none'} />
-
-                        </View>
-                        <View style={{ margin: 10 }}>
-                            <TextInput style={styles.input}
-                                defaultValue={props.route.params?.item?.truckRegistartionNo}
-                                placeholder={"eg. Truck RegistartionNo"}
-                                placeholderTextColor={'gray'}
-                                onChangeText={(val) => setData({ ...data, truckRegistartionNo: val })}
-                                autoCapitalize={'none'} />
-
-                        </View>
-
-                        <View style={{ margin: 10 }}>
-                            <TextInput style={styles.input}
-                                defaultValue={props.route.params?.item?.truckCapicity}
-                                placeholder={"eg. Truck Capicity"}
-                                placeholderTextColor={'gray'}
-                                
-                                onChangeText={(val) => setData({ ...data, truckCapicity: val })}
-                                autoCapitalize={'none'}
-                                keyboardType={'number-pad'} />
-
-                        </View>
-                        <View style={{ marginHorizontal: 10, marginVertical: 20 }}>
-                            <TouchableOpacity style={styles.btn} onPress={() => { UpdateTruck() }}>
-                                <Text style={styles.btnText}>
-                                    Update Truck
-                                </Text>
-                            </TouchableOpacity>
-                        </View>
-                    </View>
-                </ScrollView>}
-        </View>
+                    </ScrollView>}
+            </View>
         </TouchableWithoutFeedback>
     )
 }
@@ -476,7 +449,7 @@ const useDispatch = (dispatch) => {
         getCountTruck: (data) => dispatch(getCountTruck(data)),
         setTruckData: (data) => dispatch(setTruckData(data)),
         updateTruck: (data) => dispatch(updateTruck(data)),
-       
+
     };
 }
 const useSelector = (state) => (
@@ -486,7 +459,7 @@ const useSelector = (state) => (
         trucktypeData: state.truck.truckData,
         loading: state.truck.loading,
         truckData: state.addTruck.data,
-        theme:state.token.theme
+        theme: state.token.theme
     }
 )
 export default connect(useSelector, useDispatch)(AddTruck);

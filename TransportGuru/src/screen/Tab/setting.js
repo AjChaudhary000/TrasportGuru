@@ -9,7 +9,7 @@ import { getUserDetails } from '../../Redux/UserDetails';
 import { getJWTToken, getTheme, removeJWTToken, saveTheme } from '../../Redux/helper';
 import Header from '../../components/header';
 import { getThemeMode, logoutToken } from '../../Redux/tokenSlice';
-import LottieView from 'lottie-react-native';
+import AnimatedLoader from "react-native-animated-loader";
 const Setting = (props) => {
   const [token, setToken] = React.useState('');
   const [isEnabled, setIsEnabled] = React.useState(props.theme);
@@ -50,16 +50,7 @@ const Setting = (props) => {
     fetchToken()
     props.getUserDetails(token);
   }, [token])
-  if (props.loading) {
-    return (
-      <View style={{ flex: 1, backgroundColor: props.theme ? color.drakBackgroundColor : color.backgroundColor }}>
-        <StatusBar hidden />
-        <View style={{ height: "100%" }}>
-          <LottieView source={require('../../assets/json/loder.json')} autoPlay loop />
-        </View>
-      </View>
-    );
-  }
+ 
   const styles = StyleSheet.create({
     container: {
       flex: 1,
@@ -119,6 +110,18 @@ const Setting = (props) => {
       {/* <View style={styles.header}>
           <Text style={styles.headerName}>Settings</Text>
         </View> */}
+        <AnimatedLoader
+        visible={props.loading}
+        overlayColor="rgba(255,255,255,0.75)"
+        source={require("../../assets/json/loder.json")}
+        animationStyle={{
+          width: 100,
+          height: 100
+        }}
+        speed={1}
+      >
+        <Text>Loading 2...</Text>
+      </AnimatedLoader>
       <Header name={"Settings"} />
       <ScrollView>
         <View style={{ marginTop: 40, overflow: 'hidden', alignSelf: 'center', width: 120, height: 120, borderRadius: 60, borderWidth: 5, borderColor: color.primaryColors }}>

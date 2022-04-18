@@ -2,7 +2,7 @@ import { View, Text, Image, TouchableOpacity } from 'react-native'
 import React from 'react'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 
-import Tracking from '../screen/Tab/tracking';
+
 import icons from '../contents/icons';
 import color from '../contents/color';
 
@@ -11,6 +11,7 @@ import AddTransport from '../screen/Admin/addTransport';
 import { connect } from 'react-redux';
 import AdminSetting from '../screen/Admin/adminSetting';
 import AdminMessage from '../screen/Admin/adminMessage';
+import AdminTracking from '../screen/Admin/adminTracking';
 
 const Tabs = createBottomTabNavigator();
 
@@ -32,7 +33,7 @@ const AdminTab = (props) => {
                 )
             }} />
 
-            <Tabs.Screen name="Tracking" component={Tracking} options={{
+            <Tabs.Screen name="AdminTracking" component={AdminTracking} options={{
                 headerShown: false, tabBarIcon: ({ focused }) => (
                     <Image source={icons.tracking} style={{ width: 30, height: 30, tintColor: focused ? color.adminprimaryColors : 'gray' }} />
                 )

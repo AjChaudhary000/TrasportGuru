@@ -8,24 +8,25 @@ export const tracking = createAsyncThunk('tracking/tracking',
                     Authorization: `Bearer ${obj.token}`,
                 }
             });
-
+            
             return response.data
         } catch (e) {
             console.log()
         }
     });
 export const getTracking = createAsyncThunk('tracking/tracking',
-    async (obj, getState) => {
+    async (token, getState) => {
         try {
+           
             const response = await TrasportApi.get(`/tracking`, {
                 headers: {
-                    Authorization: `Bearer ${obj.token}`,
+                    Authorization: `Bearer ${token}`,
                 }
             });
-
-            return response.data
+          
+            return response.data.data
         } catch (e) {
-            console.log()
+            console.log(e)
         }
     });
 const trackingSlice = createSlice({

@@ -14,8 +14,9 @@ router.post('/transport/create', auth, async (req, res) => {
 })
 router.get('/transport', auth, async (req, res) => {
     try {
-
-        const data = await Transport.find({ tarsportUserId: req.user._id })
+        console.log("skip",req.query.skip);
+        console.log("limit",req.query.limit);
+        const data = await Transport.find({ tarsportUserId: req.user._id }).skip(req.query.skip || 0).limit(req.query.limit ||0)
             .populate("tarsportUserId")
             .populate("routeId")
             .populate("truckId")

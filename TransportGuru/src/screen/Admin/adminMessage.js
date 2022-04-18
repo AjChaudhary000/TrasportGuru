@@ -1,7 +1,7 @@
 import { View, Text, FlatList, Image, TouchableOpacity, StyleSheet } from 'react-native';
 import React from 'react';
 import AdminHeader from '../../components/adminHeader'
-
+import AnimatedLoader from "react-native-animated-loader";
 import { connect } from 'react-redux'
 import { getJWTToken } from '../../Redux/helper';
 import color from '../../contents/color';
@@ -49,6 +49,18 @@ const AdminMessage = (props) => {
     })
     return (
         <View style={styles.container}>
+            <AnimatedLoader
+        visible={props.loading}
+        overlayColor="rgba(255,255,255,0.75)"
+        source={require("../../assets/json/loder.json")}
+        animationStyle={{
+          width: 100,
+          height: 100
+        }}
+        speed={1}
+      >
+        <Text>Loading...</Text>
+      </AnimatedLoader>
             <AdminHeader name={"Messages"} />
             <FlatList data={props.messageList} renderItem={(item) => (
 
@@ -84,6 +96,7 @@ const useDispatch = (dispatch) => {
 const useSelector = (state) => (
 
     {
+        loading: state.message.loading,
         messageList: state.message.usermessageList,
         userData: state.user.userData,
         theme: state.token.theme

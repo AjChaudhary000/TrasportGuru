@@ -7,6 +7,7 @@ import { connect } from 'react-redux'
 import color from '../contents/color';
 import image from '../contents/image';
 import Toast from 'react-native-simple-toast';
+import AnimatedLoader from "react-native-animated-loader";
 const SignIn = (props) => {
     const [email, setEmail] = React.useState('');
     const [isEmailValid, setIsEmailValid] = React.useState(true);
@@ -37,18 +38,6 @@ const SignIn = (props) => {
         setEmail(val);
 
     }
-    if (props?.loading) {
-        return (
-            <View style={{ flex: 1, backgroundColor: color.backgroundColor }}>
-                <StatusBar hidden />
-                <View style={{ height: "100%" }}>
-                    <LottieView source={require('../assets/json/loder.json')} autoPlay loop />
-                </View>
-            </View>
-        );
-    }
-    
-   
     const styles = StyleSheet.create({
         contentor: {
             flex: 1,
@@ -121,7 +110,18 @@ const SignIn = (props) => {
     return (
         <View style={styles.contentor}>
             <StatusBar hidden />
-
+            <AnimatedLoader
+        visible={props.loading}
+        overlayColor="rgba(255,255,255,0.75)"
+        source={require("../assets/json/loder.json")}
+        animationStyle={{
+          width: 100,
+          height: 100
+        }}
+        speed={1}
+      >
+        <Text>Loading...</Text>
+      </AnimatedLoader>
             <View style={styles.truckLogo}>
                 <Image source={image.Tg} style={{ width: 200, height: 100, tintColor:  props.theme ? color.drakPrimaryColors : color.primaryColors, }} />
                 {/* <LottieView source={require('../assets/json/loading.json')} autoPlay loop /> */}

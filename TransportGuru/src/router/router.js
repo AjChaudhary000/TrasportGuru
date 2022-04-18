@@ -31,9 +31,13 @@ import AdminEditAccount from '../screen/Admin/AdminEditAccount';
 import ChatDetails from '../screen/Tab/chatDetails';
 import Booking from '../screen/Tab/booking';
 import Confirmation from '../screen/Tab/confirmation';
+import NetInfo from "@react-native-community/netinfo";
+import { getUserDetails } from '../Redux/UserDetails';
+import TrackingDetails from '../screen/Tab/trackingDetails';
 const Stack = createNativeStackNavigator();
 const Router = (props) => {
     const [token, setTokenData] = React.useState('')
+    const [netCheck, setNetCheck] = React.useState(false);
     const [isloading, setloadingData] = React.useState(true)
     const gettoken = async () => {
         try {
@@ -42,6 +46,7 @@ const Router = (props) => {
             console.log("r43t34t34", mytoken)
             setTokenData(mytoken)
             props.setToken(mytoken)
+            props.getUserDetails(mytoken)
             theme === "true" ? props.getThemeMode(true) : props.getThemeMode(false)
 
         } catch (e) {
@@ -56,6 +61,13 @@ const Router = (props) => {
         }, 2000)
 
     }, [])
+    React.useEffect(() => {
+        NetInfo.fetch().then(state => {
+            //console.log("Connection type", state.type);
+            console.log("Is connected?", state.isConnected);
+            setNetCheck(state.isConnected)
+        });
+    }, [netCheck])
     if (isloading) {
         return (
             <View style={{
@@ -66,6 +78,20 @@ const Router = (props) => {
                 <View>
                     <Image source={image.Tg} style={{ width: 300, height: 200 }} />
                 </View>
+            </View>
+        );
+    }
+    if (!netCheck) {
+        return (
+            <View style={{
+                flex: 1,
+                backgroundColor: props.theme ? color.drakPrimaryColors : color.primaryColors,
+            }}>
+                <StatusBar hidden />
+                <View style={{ height: "100%" }}>
+                    <LottieView source={require('../assets/json/internet.json')} autoPlay loop />
+                </View>
+                {/* <Text style={{ textAlign: 'center', bottom: "45%", fontSize: 20, letterSpacing: 2, color: '#1C22B8', fontWeight: 'bold' }}> No internet Connection</Text> */}
             </View>
         );
     }
@@ -89,6 +115,7 @@ const Router = (props) => {
                 <Stack.Screen name='AdminProfile' component={AdminProfile} options={{ headerShown: false }} />
                 <Stack.Screen name='Booking' component={Booking} options={{ headerShown: false }} />
                 <Stack.Screen name='Confirmation' component={Confirmation} options={{ headerShown: false }} />
+                <Stack.Screen name='TrackingDetails' component={TrackingDetails} options={{ headerShown: false }} />
                 {/* userSide End */}
 
                 {/* AdminSide Start */}
@@ -119,6 +146,7 @@ const useDispatch = (dispatch) => {
 
         setToken: (data) => dispatch(setToken(data)),
         getThemeMode: (data) => dispatch(getThemeMode(data)),
+        getUserDetails: (data) => dispatch(getUserDetails(data)),
 
     }
 }

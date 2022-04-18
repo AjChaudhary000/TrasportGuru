@@ -11,13 +11,13 @@ import LottieView from 'lottie-react-native';
 import storage from '@react-native-firebase/storage';
 import Toast from 'react-native-simple-toast';
 import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
-
+import ImageModel from '../../../components/imageModel'
 import { AdminHeaderWithBackButton } from '../../../components/adminHeader'
 const TrasportGuruAccount = (props) => {
     const [firebaseImage, setfirebaseImage] = React.useState('');
     const [imageLoading, setImageLoading] = React.useState(false)
     const [modalVisible, setModalVisible] = React.useState(false);
-    const [transferred, setTransferred] = React.useState(0);
+    const [modalVisible1, setModalVisible1] = React.useState(false);
     const [data, setData] = React.useState({
         trasportName: '',
         trasportAddress: 'Address'
@@ -26,15 +26,15 @@ const TrasportGuruAccount = (props) => {
     React.useEffect(() => {
         setTimeout(() => {
             setloadingData(false)
-           if( props.route.params.type === "Admin" ){
-               Toast.show("Admin Side Open")
-                props.navigation.replace('AdminTab') 
+            if (props.route.params.type === "Admin") {
+                Toast.show("Admin Side Open")
+                props.navigation.replace('AdminTab')
             }
 
-            if(props?.admindata.status){
+            if (props?.admindata.status) {
                 Toast.show("Admin Side Open")
-                 props.navigation.replace('AdminTab')
-                }
+                props.navigation.replace('AdminTab')
+            }
             props.getUserDetails(props.token)
         }, 2000)
 
@@ -43,68 +43,19 @@ const TrasportGuruAccount = (props) => {
 
 
     const TrasportAccount = () => {
-        if(data.trasportName ===""){
+        if (data.trasportName === "") {
             Toast.show("Enter The Trasport Name")
-        }else if(data.trasportAddress === ""){
+        } else if (data.trasportAddress === "") {
             Toast.show("Enter Transport Address ")
-        }else if(firebaseImage === ""){
+        } else if (firebaseImage === "") {
             Toast.show("Select Transport Image")
-        }else{
-       
+        } else {
+
             props.transportAccount({ ...data, trasportImage: firebaseImage, token: props.token })
         }
     };
-    const GalleryLaunch = () => {
-        let options = {
-            title: 'You can choose one image',
-            storageOptions: {
-                skipBackup: true,
-                path: 'images',
-            },
-        };
-        ImagePicker.launchImageLibrary(options, (response) => {
-            if (response.didCancel) {
-                console.log('User cancelled image picker');
-            } else if (response.error) {
-                console.log('ImagePicker Error: ', response.error);
-            } else if (response.customButton) {
-                console.log('User tapped custom button: ', response.customButton);
-            } else {
-                const source = { uri: response.assets[0].uri };
-                setImageLoading(true)
-                uploadImage(source)
 
-            }
-        });
-    }
-    const uploadImage = async ({ uri }) => {
-        console.log(uri)
-        const uploadUri = Platform.OS === 'ios' ? uri.replace('file://', '') : uri;
-        const uniqueSuffix = "Transport" + Date.now() + "-" + Math.round(Math.random() * 1e9);
-        const filename = uniqueSuffix + uploadUri.split('.').pop();;
-        setTransferred(0);
-        const task = storage()
-            .ref(`Transport/${filename}`)
-            .putFile(uploadUri);
-        task.on('state_changed', snapshot => {
-            setTransferred(
-                Math.round(snapshot.bytesTransferred / snapshot.totalBytes) * 10000
-            );
-        });
-        task.then(async (res) => {
-            console.log(res)
-
-            const url = await storage().ref(`Transport/${filename}`).getDownloadURL();
-            await setfirebaseImage(url)
-            if (res.state === 'success') {
-                setTimeout(() => {
-                    setImageLoading(false)
-                }, 4000)
-
-            }
-        })
-    };
-    console.log("loading ",props.loading)
+    console.log("loading ", props.loading)
     if (isloading || props.loading) {
         return (
             <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: color.adminprimaryColors }}>
@@ -118,18 +69,18 @@ const TrasportGuruAccount = (props) => {
     const styles = StyleSheet.create({
         container: {
             flex: 1,
-            backgroundColor: props.theme ? color.drakBackgroundColor:color.backgroundColor,
-    
+            backgroundColor: props.theme ? color.drakBackgroundColor : color.backgroundColor,
+
         }, inputBox: {
             marginHorizontal: 20,
-    
+
         },
         input: {
             borderWidth: 2,
-            borderColor: props.theme ? color.drakAdminprimaryColors:color.adminprimaryColors,
+            borderColor: props.theme ? color.drakAdminprimaryColors : color.adminprimaryColors,
             padding: 10,
             fontSize: 18,
-            borderRadius: 10,color: props.theme ? color.drakFontcolor:color.fontcolor,
+            borderRadius: 10, color: props.theme ? color.drakFontcolor : color.fontcolor,
         }, header: {
             marginTop: 40,
             alignItems: 'center',
@@ -144,7 +95,7 @@ const TrasportGuruAccount = (props) => {
         btn: {
             width: '90%',
             height: 50,
-            backgroundColor: props.theme ? color.drakAdminprimaryColors:color.adminprimaryColors,
+            backgroundColor: props.theme ? color.drakAdminprimaryColors : color.adminprimaryColors,
             borderRadius: 15,
             justifyContent: "center",
             alignItems: 'center',
@@ -163,18 +114,18 @@ const TrasportGuruAccount = (props) => {
             height: 120,
             borderRadius: 10,
             borderWidth: 5,
-            borderColor:props.theme ? color.drakAdminprimaryColors:color.adminprimaryColors,
+            borderColor: props.theme ? color.drakAdminprimaryColors : color.adminprimaryColors,
         }, modelBox: {
             width: Dimensions.get('screen').width - 20,
             minHeight: 200,
-    
-            backgroundColor:props.theme ? color.drakBackgroundColor:color.backgroundColor,
+
+            backgroundColor: props.theme ? color.drakBackgroundColor : color.backgroundColor,
             alignSelf: 'center',
             borderRadius: 15,
             flexDirection: 'row',
             alignItems: 'center',
             alignItems: "center",
-            shadowColor: props.theme ? color.drakFontcolor:color.fontcolor,
+            shadowColor: props.theme ? color.drakFontcolor : color.fontcolor,
             shadowOffset: {
                 width: 0,
                 height: 2
@@ -186,6 +137,13 @@ const TrasportGuruAccount = (props) => {
     })
     return (
         <View style={styles.container}>
+            {modalVisible1 && <ImageModel
+                filename={"Transport"}
+                theme={props.theme}
+                modalVisibleData={modalVisible1}
+                onGetImage={(val) => setfirebaseImage(val)}
+                onGetLoding={(val) => setImageLoading(val)}
+                onGetModalVisible={(val) => setModalVisible1(val)} />}
             <Modal
                 animationType="slide"
                 transparent={true}
@@ -225,19 +183,19 @@ const TrasportGuruAccount = (props) => {
 
                                     textInput: {
                                         borderWidth: 2,
-                                        borderColor: props.theme ? color.drakAdminprimaryColors:color.adminprimaryColors,
+                                        borderColor: props.theme ? color.drakAdminprimaryColors : color.adminprimaryColors,
                                         padding: 10,
                                         fontSize: 18,
                                         borderRadius: 10,
                                         marginHorizontal: 30
                                     },
                                     description: {
-                                        color: props.theme ? color.drakAdminprimaryColors:color.adminprimaryColors,
+                                        color: props.theme ? color.drakAdminprimaryColors : color.adminprimaryColors,
                                         fontSize: 18,
 
                                     }, listView: {
                                         borderWidth: 2,
-                                        borderColor:props.theme ? color.drakAdminprimaryColors:color.adminprimaryColors,
+                                        borderColor: props.theme ? color.drakAdminprimaryColors : color.adminprimaryColors,
                                         padding: 10,
                                         fontSize: 18,
                                         borderRadius: 10,
@@ -251,7 +209,7 @@ const TrasportGuruAccount = (props) => {
                     </View>
                     <TouchableOpacity onPress={() => { setModalVisible(false) }} style={{ alignItems: 'center', bottom: 40 }}>
                         <Image source={icons.close} style={{ width: 35, height: 35, tintColor: props.theme ? color.drakAdminprimaryColors : color.adminprimaryColors, }} />
-                        </TouchableOpacity>
+                    </TouchableOpacity>
                 </View>
             </Modal>
             <AdminHeaderWithBackButton name={"Transport Account"} navigation={props.navigation} />
@@ -260,7 +218,7 @@ const TrasportGuruAccount = (props) => {
                     {!imageLoading ?
                         <View style={{ marginHorizontal: 10 }}>
                             {!firebaseImage ?
-                                <TouchableOpacity onPress={GalleryLaunch}>
+                                <TouchableOpacity onPress={() => { setModalVisible1(true) }}>
                                     <Image
                                         style={{
                                             alignSelf: 'center',
@@ -274,14 +232,14 @@ const TrasportGuruAccount = (props) => {
                                         source={icons.add_photo}
                                     />
                                 </TouchableOpacity> :
-                                <View style={styles.image}>
+                                <TouchableOpacity style={styles.image} onPress={() => { setModalVisible1(true) }}>
                                     <Image
                                         style={{
                                             width: 110, height: 110, alignSelf: "center"
 
                                         }}
                                         source={{ uri: firebaseImage }}
-                                    /></View>}
+                                    /></TouchableOpacity>}
 
 
                         </View>
@@ -322,14 +280,14 @@ const useSelector = (state) => {
         token: state.token.token,
         admindata: state.admin.data,
         loading: state.admin.loading,
-        theme:state.token.theme
+        theme: state.token.theme
     }
 }
 const useDispatch = (dispatch) => {
     return {
         transportAccount: (data) => dispatch(transportAccount(data)),
         getUserDetails: (data) => dispatch(getUserDetails(data)),
-       
+
     }
 }
 export default connect(useSelector, useDispatch)(TrasportGuruAccount)

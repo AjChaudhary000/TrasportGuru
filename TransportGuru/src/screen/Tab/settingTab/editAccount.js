@@ -6,9 +6,7 @@ import React from 'react'
 import color from '../../../contents/color'
 import icons from '../../../contents/icons'
 import { connect } from 'react-redux'
-import { transportAccount } from '../../../Redux/transportAccountSlice'
 import { getUserDetails } from '../../../Redux/UserDetails'
-import image from '../../../contents/image'
 import LottieView from 'lottie-react-native';
 import Toast from 'react-native-simple-toast';
 import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
@@ -20,7 +18,6 @@ const EditAccount = (props) => {
     const [imageLoading, setImageLoading] = React.useState(false)
     const [modalVisible, setModalVisible] = React.useState(false);
     const [modalVisible1, setModalVisible1] = React.useState(false);
-    const [transferred, setTransferred] = React.useState(0);
     const [data, setData] = React.useState({
         username: props.route.params.item.username || '',
         UserAddress: props.route.params.item?.address || 'Address',

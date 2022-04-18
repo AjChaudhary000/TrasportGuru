@@ -4,7 +4,7 @@ const hyva = require('../assets/images/hyva.png')
 const trailor = require('../assets/images/trailor.png')
 const lcv = require('../assets/images/lcv.png')
 const tanker = require('../assets/images/tanker.png')
-const truck = require('../assets/images/truck.png')
+const truck = require('../assets/images/Truck.png')
 const user = require('../assets/images/user.jpg')
 const bgtruck = require('../assets/images/bgtruck.png')
 export default { Tg, user, container, hyva, trailor, lcv, tanker, truck, bgtruck };

@@ -12,7 +12,7 @@ import { getJWTToken } from '../../Redux/helper';
 import { getDriverList } from '../../Redux/Admin/driverListSlice';
 import { getTruckList } from '../../Redux/Admin/truckListSlice';
 import DatePicker from 'react-native-date-picker'
-import image from '../../contents/image';
+import AnimatedLoader from "react-native-animated-loader";
 import { getRouteList } from '../../Redux/Admin/routeSlice';
 import { addTransport, setTransportData, updateTransport } from '../../Redux/Admin/transportSlice';
 import { getCountTransport } from '../../Redux/Admin/countAddSlice';
