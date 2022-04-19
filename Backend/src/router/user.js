@@ -12,23 +12,23 @@ router.post('/sendemail', async (req, res) => {
 
     try {
         const otpvalue = Math.round(Math.random() * 100000).toString().slice(0, 4);
-        // let testAccount = await nodemailer.createTestAccount();
-        // let transporter = nodemailer.createTransport({
-        //     host: "smtp.gmail.com",
-        //     port: 465,
-        //     secure: true,
-        //     auth: {
-        //         user: "transportguru8@gmail.com",
-        //         pass: "chaudhary.dcs22",
-        //     },
-        // });
-        // let info = await transporter.sendMail({
-        //     from: "transportguru8@gmail.com",
-        //     to: req.body.email,
-        //     subject: "Trasport guru send otp ... ✔",
-        //     text: `hii ${req.body.email} OTP ${otpvalue}`,
-        //     //  html: "<b>Hello world?</b>",
-        // })
+        let testAccount = await nodemailer.createTestAccount();
+        let transporter = nodemailer.createTransport({
+            host: "smtp.gmail.com",
+            port: 465,
+            secure: true,
+            auth: {
+                user: "transportguru8@gmail.com",
+                pass: "chaudhary.dcs22",
+            },
+        });
+        let info = await transporter.sendMail({
+            from: "transportguru8@gmail.com",
+            to: req.body.email,
+            subject: "Trasport guru send otp ... ✔",
+            text: `hii ${req.body.email} OTP ${otpvalue}`,
+            //  html: "<b>Hello world?</b>",
+        })
         const otp = new OTP({ email: req.body.email, otp: otpvalue });
         await otp.save()
         res.status(201).send({ email: req.body.email, status: true })
