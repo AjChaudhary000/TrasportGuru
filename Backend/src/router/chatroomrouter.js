@@ -5,9 +5,11 @@ const router = express.Router();
 router.use(express.json());
 router.post('/chat', auth, async (req, res) => {
     try {
+        const io = req.app.get("io")
         const ConvessationRoom = new ChatRoom({ userId: req.user._id, ...req.body });
         const data = await ConvessationRoom.save();
-        res.send(data)
+        io.to(req.body.convessationId).emit("onSendMesssage",data)
+        res.send({data,status:true})
     } catch (e) {
         res.send(e.toString())
     }
@@ -16,7 +18,7 @@ router.post('/chatroom', auth, async (req, res) => {
     try {
         const data = await ChatRoom.find({ ...req.body });
         // console.log("data", data)
-        res.send(data)
+        res.send({data,status:true})
     } catch (e) {
         res.send(e.toString())
     }

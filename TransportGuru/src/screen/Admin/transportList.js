@@ -9,7 +9,9 @@ import { getCountTransport } from '../../Redux/Admin/countAddSlice'
 import icons from '../../contents/icons'
 import { deleteTransport, getTransportList, setTransportData ,setTransportList} from '../../Redux/Admin/transportSlice'
 import Toast from 'react-native-simple-toast';
+
 import AnimatedLoader from "react-native-animated-loader";
+import { getUserDetails } from '../../Redux/UserDetails'
 const TransportListDetails = (props) => {
     const [token, setToken] = React.useState('');
     const [driver, setDriver] = React.useState({ type: false, id: '' });

@@ -1,4 +1,4 @@
-import { View, Text, FlatList, Image, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, Text, FlatList, Image, TouchableOpacity, StyleSheet, RefreshControl, ScrollView } from 'react-native';
 import React from 'react';
 import AdminHeader from '../../components/adminHeader'
 import AnimatedLoader from "react-native-animated-loader";
@@ -6,9 +6,19 @@ import { connect } from 'react-redux'
 import { getJWTToken } from '../../Redux/helper';
 import color from '../../contents/color';
 import { getUserMessageList } from '../../Redux/messageListSlice';
+const wait = (timeout) => {
+    return new Promise(resolve => setTimeout(resolve, timeout));
+}
 const AdminMessage = (props) => {
     const [token, setToken] = React.useState('');
     const [id, setId] = React.useState('');
+    const [refreshing, setRefreshing] = React.useState(false);
+
+    const onRefresh = React.useCallback(() => {
+        setRefreshing(true);
+        props.getUserMessageList({ token })
+        wait(2000).then(() => setRefreshing(false));
+    }, [token]);
     const fetchToken = async () => {
         try {
             const data = await getJWTToken();
@@ -50,41 +60,48 @@ const AdminMessage = (props) => {
     return (
         <View style={styles.container}>
             <AnimatedLoader
-        visible={props.loading}
-        overlayColor="rgba(255,255,255,0.75)"
-        source={require("../../assets/json/loder.json")}
-        animationStyle={{
-          width: 100,
-          height: 100
-        }}
-        speed={1}
-      >
-        <Text>Loading...</Text>
-      </AnimatedLoader>
+                visible={props.loading}
+                overlayColor="rgba(255,255,255,0.75)"
+                source={require("../../assets/json/loder.json")}
+                animationStyle={{
+                    width: 100,
+                    height: 100
+                }}
+                speed={1}
+            >
+                <Text>Loading...</Text>
+            </AnimatedLoader>
             <AdminHeader name={"Messages"} />
-            <FlatList data={props.messageList} renderItem={(item) => (
+            <ScrollView refreshControl={
+                <RefreshControl
+                    refreshing={refreshing}
+                    onRefresh={onRefresh}
+                />
+            }>
+                <FlatList data={props.messageList} renderItem={(item) => (
 
-                <TouchableOpacity style={{ flexDirection: 'row', marginVertical: 10, marginHorizontal: 20 }}
-                    onPress={() => { props.navigation.navigate('ChatDetails', { item: item.item.userId }) }}>
-                    <View style={styles.image}>
-                        <Image source={{ uri: item.item.userId?.image }}
-                            style={{
-                                width: 60, height: 60, alignSelf: "center"
+                    <TouchableOpacity style={{ flexDirection: 'row', marginVertical: 10, marginHorizontal: 20 }}
+                        onPress={() => { props.navigation.navigate('ChatDetails', { item: item.item.userId }) }}>
+                        <View style={styles.image}>
+                            <Image source={{ uri: item.item.userId?.image }}
+                                style={{
+                                    width: 60, height: 60, alignSelf: "center"
 
-                            }} />
-                    </View>
-                    <View style={{
-                        justifyContent: 'center', borderBottomWidth: 2,
-                        borderBottomColor: color.adminprimaryColors, width: '80%', justifyContent: 'center'
-                    }}>
+                                }} />
+                        </View>
+                        <View style={{
+                            justifyContent: 'center', borderBottomWidth: 2,
+                            borderBottomColor: color.adminprimaryColors, width: '80%', justifyContent: 'center'
+                        }}>
 
-                        <Text style={styles.text}>
-                            {item.item.userId?.username}</Text>
-                    </View>
+                            <Text style={styles.text}>
+                                {item.item.userId?.username}</Text>
+                        </View>
 
-                </TouchableOpacity>
-            )}
-            />
+                    </TouchableOpacity>
+                )}
+                />
+            </ScrollView>
         </View>
     );
 };

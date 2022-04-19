@@ -35,6 +35,7 @@ const call = require('../assets/icons/call.png')
 const share = require('../assets/icons/share.png')
 const info = require('../assets/icons/info.png')
 const transfer = require('../assets/icons/transfer.png')
+const send = require('../assets/icons/send.png')
 export default {
     email,
     right_arrow,
@@ -63,5 +64,5 @@ export default {
     contrast,
     addtotruck,
     driver, box,
-    editdate, close, move, call, share, info,transfer
+    editdate, close, move, call, share, info, transfer, send
 };

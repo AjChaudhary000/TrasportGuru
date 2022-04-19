@@ -11,6 +11,7 @@ const chatRoomSchema = mongoose.Schema({
     },
     convessationId: {
         type: mongoose.Schema.Types.ObjectId,
+        ref: 'ConvessationRoom',
         required: true
     },
     message: {

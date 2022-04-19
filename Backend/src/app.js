@@ -17,6 +17,7 @@ const paymentroute = require('./router/payment');
 const trackingroute = require('./router/tracking');
 const server = app.listen(port, () => console.log(`Example app listening on port ${port}!`))
 const io = socketio(server)
+app.set("io",io);
 app.use(userRouter)
 app.use(truckRouter)
 app.use(route)

@@ -34,6 +34,7 @@ import Confirmation from '../screen/Tab/confirmation';
 import NetInfo from "@react-native-community/netinfo";
 import { getUserDetails } from '../Redux/UserDetails';
 import TrackingDetails from '../screen/Tab/trackingDetails';
+import AdminTrackingDetails from '../screen/Admin/adminTrackingDetails';
 const Stack = createNativeStackNavigator();
 const Router = (props) => {
     const [token, setTokenData] = React.useState('')
@@ -43,7 +44,7 @@ const Router = (props) => {
         try {
             const mytoken = await getJWTToken();
             const theme = await getTheme()
-            console.log("r43t34t34", mytoken)
+           
             setTokenData(mytoken)
             props.setToken(mytoken)
             props.getUserDetails(mytoken)
@@ -53,7 +54,6 @@ const Router = (props) => {
 
         }
     }
-    console.log("mytoken Router 9090909090", props.token.token);
     React.useEffect(() => {
         gettoken()
         setTimeout(() => {
@@ -130,6 +130,7 @@ const Router = (props) => {
                 <Stack.Screen name='TransportListDetails' component={TransportListDetails} options={{ headerShown: false }} />
                 <Stack.Screen name='AdminEditAccount' component={AdminEditAccount} options={{ headerShown: false }} />
                 <Stack.Screen name='ChatDetails' component={ChatDetails} options={{ headerShown: false }} />
+                <Stack.Screen name='AdminTrackingDetails' component={AdminTrackingDetails} options={{ headerShown: false }} />
                 {/* AdminSide End */}
             </Stack.Navigator>
         </NavigationContainer>

@@ -18,7 +18,7 @@ const Otp = (props) => {
         if (props?.otpdata.account === "0" && props?.otpdata.status) {
             props.navigation.replace('UserProfile')
             props.setotpData({})
-            Toast.show("User SignIn successful");
+            Toast.show("User SignUp successful");
         }
         if (props?.otpdata.account === "1" && props?.otpdata.status) {
             props.navigation.replace('Tab')

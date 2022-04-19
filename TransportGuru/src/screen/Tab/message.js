@@ -1,5 +1,3 @@
-
-
 import { View, Text, FlatList, Image, TouchableOpacity, StyleSheet, RefreshControl, ScrollView } from 'react-native';
 import React from 'react';
 import Header from '../../components/header'
@@ -118,7 +116,6 @@ const useSelector = (state) => (
   {
     loading: state.message.loading,
     messageList: state.message.messageList,
-    userData: state.user.userData,
     theme: state.token.theme
   }
 )

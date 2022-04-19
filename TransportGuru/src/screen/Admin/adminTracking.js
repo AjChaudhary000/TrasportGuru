@@ -120,7 +120,7 @@ const AdminTracking = (props) => {
                 />
             } showsVerticalScrollIndicator={false}>
                 <FlatList data={data} renderItem={(item) => (
-                    <TouchableOpacity style={styles.listBox} onPress={() => props.navigation.navigate("TrackingDetails", { id: item.item._id })} >
+                    <TouchableOpacity style={styles.listBox} onPress={() => props.navigation.navigate("AdminTrackingDetails", { id: item.item._id })} >
                         <View style={{ marginHorizontal: 10, marginVertical: 5, flexDirection: "row", justifyContent: 'space-between' }}>
                             <View >
 

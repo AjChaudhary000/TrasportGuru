@@ -22,7 +22,7 @@ const TrasportList = (props) => {
         setRefreshing(true);
 
         props.getTransportCompanyList(token)
-        //  props.getUserDetails(token);
+        props.getUserDetails(token);
         wait(2000).then(() => setRefreshing(false));
     }, [token]);
     const fetchToken = async () => {
@@ -164,7 +164,7 @@ const TrasportList = (props) => {
                                     <Image source={icons.call} style={styles.icon} />
                                 </TouchableOpacity>
                                 <TouchableOpacity style={{ width: "30%" }} onPress={() => {
-                                    if (item.item?._id === props.userData._id) {
+                                    if (item.item?._id === props?.userData?._id) {
                                         Toast.show("not found ...")
                                     } else {
                                         props.navigation.navigate("ChatDetails", { item: item.item })
@@ -192,7 +192,7 @@ const TrasportList = (props) => {
 const useDispatch = (dispatch) => {
     return {
         getTransportCompanyList: (data) => dispatch(getTransportCompanyList(data)),
-        // getUserDetails: (data) => dispatch(getUserDetails(data)),
+        getUserDetails: (data) => dispatch(getUserDetails(data)),
     };
 }
 const useSelector = (state) => (

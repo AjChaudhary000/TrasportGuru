@@ -31,9 +31,29 @@ const HomeScreen = (props) => {
         },
         capicity: '',
     })
+    const AndroidPerMissionGranted = async() =>{
+        try {
+          const granted = await PermissionsAndroid.request(
+            PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+            {
+              title: 'ReactNativeCode Location Permission',
+              message: 'ReactNativeCode App needs access to your location ',
+            },
+          );
+          if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+          
+          } else {
+             Alert.alert("Location Permission Not Granted");
+          }
+        } catch (err) {
+          console.log(err)
+        }
+       }
     React.useEffect(() => {
         LogBox.ignoreLogs(["VirtualizedLists should never be nested"])
-
+        if (Platform.OS == 'android') {
+            AndroidPerMissionGranted();
+        } 
     }, [])
     const SearchRoute = () => {
         if (data.from.name === "From") {

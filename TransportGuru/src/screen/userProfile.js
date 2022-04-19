@@ -21,9 +21,9 @@ const UserProfile = (props) => {
     const [modalVisible1, setModalVisible1] = React.useState(false);
     const uploadData = () => {
 
-        if (data.username == "") {
+        if (data.username === "") {
             Toast.show("Enter username")
-        } else if (firebaseImage = "") {
+        } else if (firebaseImage === "") {
             Toast.show("Select Image")
         } else {
             props.userProfile({ ...data, image: firebaseImage || '', token: props.token })
