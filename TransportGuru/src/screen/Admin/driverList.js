@@ -4,34 +4,25 @@ import { AdminHeaderWithBackButton } from '../../components/adminHeader'
 import color from '../../contents/color'
 import image from '../../contents/image'
 import { connect } from 'react-redux'
-import { getJWTToken } from '../../Redux/helper'
+
 import { getDriverList } from '../../Redux/Admin/driverListSlice'
 import { deleteDriver } from '../../Redux/Admin/addDriverSlice'
 import { getCountDriver } from '../../Redux/Admin/countAddSlice'
 import Toast from 'react-native-simple-toast';
 import AnimatedLoader from "react-native-animated-loader";
 const DriverList = (props) => {
-    const [token, setToken] = React.useState('');
-    const fetchToken = async () => {
-        try {
-            const data = await getJWTToken();
-            setToken(data)
 
-        } catch (e) {
-            console.log()
-        }
-    }
     React.useEffect(() => {
-        fetchToken()
-        props.getDriverList(token)
-    }, [token])
+
+        props.getDriverList(props.token)
+    }, [])
     React.useEffect(() => {
-        props.getCountDriver(token)
-        props.deletedata.status && props.getDriverList(token)
-    }, [token, props])
+        props.getCountDriver(props.token)
+        props.deletedata.status && props.getDriverList(props.token)
+    }, [props])
     const DeleteDriver = (id) => {
         Toast.show(" Driver remove successful")
-        props.deleteDriver({ id: id, token: token })
+        props.deleteDriver({ id: id, token: props.token })
     }
     const EditDriver = (item) => {
 
@@ -40,16 +31,16 @@ const DriverList = (props) => {
     const styles = StyleSheet.create({
         container: {
             flex: 1,
-            backgroundColor: props.theme?color.drakBackgroundColor:color.backgroundColor
+            backgroundColor: props.theme ? color.drakBackgroundColor : color.backgroundColor
         }, listBox: {
-    
+
             height: 150,
-            backgroundColor: props.theme?color.drakBackgroundColor:color.backgroundColor,
+            backgroundColor: props.theme ? color.drakBackgroundColor : color.backgroundColor,
             marginHorizontal: 15,
             borderRadius: 20,
             justifyContent: 'center',
             flexDirection: 'row',
-            shadowColor:props.theme?color.drakFontcolor:color.fontcolor,
+            shadowColor: props.theme ? color.drakFontcolor : color.fontcolor,
             shadowOffset: {
                 width: 0,
                 height: 2
@@ -62,7 +53,7 @@ const DriverList = (props) => {
         image: {
             width: '30%',
             borderWidth: 3,
-            borderColor: props.theme ? color.drakAdminprimaryColors:color.adminprimaryColors,
+            borderColor: props.theme ? color.drakAdminprimaryColors : color.adminprimaryColors,
             borderRadius: 15,
             marginVertical: 10,
             marginLeft: 20,
@@ -75,11 +66,11 @@ const DriverList = (props) => {
         }, driverName: {
             fontSize: 20,
             fontWeight: 'bold',
-            color:props.theme?color.drakFontcolor:color.fontcolor
+            color: props.theme ? color.drakFontcolor : color.fontcolor
         }, driverMobileNo: {
             fontSize: 16,
             fontWeight: 'bold',
-            color: props.theme ? color.drakAdminprimaryColors:color.adminprimaryColors,
+            color: props.theme ? color.drakAdminprimaryColors : color.adminprimaryColors,
             paddingVertical: 3
         },
         driverEmail: {
@@ -87,7 +78,7 @@ const DriverList = (props) => {
             fontWeight: 'bold',
             color: 'gray'
         },
-    
+
         edit: {
             fontSize: 16,
             fontWeight: 'bold',
@@ -102,17 +93,17 @@ const DriverList = (props) => {
     return (
         <View style={styles.container}>
             <AnimatedLoader
-        visible={props.loading}
-        overlayColor="rgba(255,255,255,0.75)"
-        source={require("../../assets/json/loder.json")}
-        animationStyle={{
-          width: 100,
-          height: 100
-        }}
-        speed={1}
-      >
-        <Text>Loading...</Text>
-      </AnimatedLoader>
+                visible={props.loading}
+                overlayColor="rgba(255,255,255,0.75)"
+                source={require("../../assets/json/loder.json")}
+                animationStyle={{
+                    width: 100,
+                    height: 100
+                }}
+                speed={1}
+            >
+                <Text>Loading...</Text>
+            </AnimatedLoader>
             <AdminHeaderWithBackButton name={"Driver List"} navigation={props.navigation} />
             <FlatList data={props.driverList} renderItem={(item) => (
                 <View style={styles.listBox}>
@@ -156,7 +147,8 @@ const useSelector = (state) => (
         loading: state.driverList.loading,
         driverList: state.driverList.driverList,
         deletedata: state.addDriver.deletedata,
-        theme:state.token.theme
+        theme: state.token.theme,
+        token: state.token.token,
 
     }
 )

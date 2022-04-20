@@ -2,13 +2,11 @@ import { View, Text, StyleSheet, TextInput, TouchableOpacity, Image, FlatList, S
 import React from 'react'
 import color from '../../../contents/color'
 import icons from '../../../contents/icons'
-import * as ImagePicker from 'react-native-image-picker'
 import { connect } from 'react-redux'
 import { transportAccount } from '../../../Redux/transportAccountSlice'
 import { getUserDetails } from '../../../Redux/UserDetails'
 import image from '../../../contents/image'
 import LottieView from 'lottie-react-native';
-import storage from '@react-native-firebase/storage';
 import Toast from 'react-native-simple-toast';
 import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
 import ImageModel from '../../../components/imageModel'
@@ -37,8 +35,6 @@ const TrasportGuruAccount = (props) => {
             }
             props.getUserDetails(props.token)
         }, 2000)
-
-
     }, [props])
 
 

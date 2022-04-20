@@ -2,7 +2,6 @@ import { View, Text, StyleSheet, FlatList, Image, TouchableOpacity, ScrollView, 
 import React from 'react'
 import { connect } from 'react-redux';
 import { HeaderWithBackButton } from '../../components/header'
-import { getJWTToken } from '../../Redux/helper';
 import color from '../../contents/color';
 import icons from '../../contents/icons';
 import { getUserDetails } from '../../Redux/UserDetails';
@@ -15,25 +14,12 @@ import { updateTransport } from '../../Redux/Admin/transportSlice';
 import { tracking, setTrackingData } from '../../Redux/trackingSlice';
 import AnimatedLoader from "react-native-animated-loader";
 const Booking = (props) => {
-  //console.log("props1", props.route.params)
-  const [token, setToken] = React.useState('');
   const [modalVisible1, setModalVisible1] = React.useState(false);
   const [amount, setAmount] = React.useState(0)
-  const fetchToken = async () => {
-    try {
-      const data = await getJWTToken();
-      setToken(data)
-
-    } catch (e) {
-      console.log()
-    }
-  }
   React.useEffect(() => {
-    fetchToken()
-    props.transportListById({ id: props.route.params.tarsportId, token: token })
-    // props.getUserDetails(token)
-  }, [token])
-  //console.log(props.transportList)
+    props.transportListById({ id: props.route.params.tarsportId, token: props.token })
+    
+  }, [])
   const styles = StyleSheet.create({
     container: {
       flex: 1,
@@ -139,8 +125,8 @@ const Booking = (props) => {
     }
     const totalCapicity = (Number(props.route.params.capicity) + Number(truckCapicty))
     console.log(totalCapicity)
-    props.updateTransport({ data: { capicity: totalCapicity }, id: props.route.params.tarsportId, token: token })
-    props.payment({ data, token })
+    props.updateTransport({ data: { capicity: totalCapicity }, id: props.route.params.tarsportId, token: props.token })
+    props.payment({ data, token:props.token })
   }
   React.useEffect(() => {
     if (props.paymentData?.status) {
@@ -148,7 +134,7 @@ const Booking = (props) => {
         data: {
           tarsportId: props.route.params.tarsportId,
           paymentid: props.paymentData.data._id
-        }, token
+        }, token:props.token
       })
       props.setPaymentData([])
     }
@@ -510,7 +496,8 @@ const useSelector = (state) => (
     userData: state.user.userData,
     theme: state.token.theme,
     transportList: state.fetchById.transportList,
-    loading: state.fetchById.loading
+    loading: state.fetchById.loading,
+    token: state.token.token,
   }
 )
 export default connect(useSelector, useDispatch)(Booking);

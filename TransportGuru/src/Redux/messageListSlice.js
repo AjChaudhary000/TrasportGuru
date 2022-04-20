@@ -3,13 +3,13 @@ import TrasportApi from '../api/TrasportApi'
 export const getMessageList = createAsyncThunk('message/getMessageList',
     async (obj, getState) => {
         try {
-            console.log(obj.token)
+         
             const response = await TrasportApi.get('/adminMessageList', {
                 headers: {
                     Authorization: `Bearer ${obj.token}`,
                 }
             });
-            console.log(response.data)
+
             return response.data.data
 
         } catch (e) {
@@ -19,13 +19,13 @@ export const getMessageList = createAsyncThunk('message/getMessageList',
 export const getUserMessageList = createAsyncThunk('message/getUserMessageList',
     async (obj, getState) => {
         try {
-            console.log(obj.token)
+
             const response = await TrasportApi.get('/userMessageList', {
                 headers: {
                     Authorization: `Bearer ${obj.token}`,
                 }
             });
-            console.log(response.data)
+
             return response.data.data
 
         } catch (e) {

@@ -31,7 +31,7 @@ export const sendMessage = createAsyncThunk('chat/sendMessage',
 export const getmessage = createAsyncThunk('chat/getmessage',
     async (obj, getState) => {
         try {
-            console.log(obj)
+          
             const response = await TrasportApi.post(`/chatroom`, obj.data, {
                 headers: {
                     Authorization: `Bearer ${obj.token}`,

@@ -7,18 +7,15 @@ import { AdminHeaderWithBackButton } from '../../components/adminHeader';
 import color from '../../contents/color'
 import icons from '../../contents/icons';
 import { connect } from 'react-redux'
-import { getJWTToken } from '../../Redux/helper';
 import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
 import { addRoute, setRouteData, updateRoute } from '../../Redux/Admin/routeSlice';
 import { getCountRoute } from '../../Redux/Admin/countAddSlice';
 import DraggableFlatList from 'react-native-draggable-flatlist';
 import Toast from 'react-native-simple-toast';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
-import AnimatedLoader from "react-native-animated-loader";
 const AddRoute = (props) => {
     const [modalVisible, setModalVisible] = React.useState(false);
     const [placetype, setPlaceType] = React.useState()
-    const [token, setToken] = React.useState('');
     const [data, setData] = React.useState({
         from: {
             name: props.route.params?.item?.from.name || 'From',
@@ -36,30 +33,17 @@ const AddRoute = (props) => {
     const [stopList, setStopList] = React.useState(props.route.params?.item?.routeStop || []);
     const [inputBox, setInputBox] = React.useState(false)
     const [moveBox, setMoveBox] = React.useState(false)
-    // setStopList([..stopList,{num:"1.6","str":"cup jg"}])
-    const fetchToken = async () => {
-        try {
-            const data = await getJWTToken();
-            setToken(data)
-
-        } catch (e) {
-            console.log()
-        }
-    }
-    React.useEffect(() => {
-        fetchToken()
-    }, [token])
     React.useEffect(() => {
         LogBox.ignoreLogs(["VirtualizedLists should never be nested"])
     }, [])
     React.useEffect(() => {
         if (props?.routeData.status) {
-            props.getCountRoute(token)
+            props.getCountRoute(props.token)
             props.setRouteData({})
             props.navigation.goBack();
         }
         ;
-    }, [props, token])
+    }, [props])
     const AddRoute = () => {
         if (data.from.name === "From") {
             Toast.show("Enter loading from")
@@ -68,7 +52,7 @@ const AddRoute = (props) => {
         } else if (stopList === []) {
             Toast.show("Enter truck rotes")
         } else {
-            props.addRoute({ ...data, routeStop: stopList, token: token })
+            props.addRoute({ ...data, routeStop: stopList, token: props.token })
         }
     }
     const UpdateRoute = () => {
@@ -79,7 +63,7 @@ const AddRoute = (props) => {
         } else if (stopList === []) {
             Toast.show("Enter truck rotes")
         } else {
-            props.updateRoute({ ...data, id: props.route.params?.item?._id, routeStop: stopList, token: token })
+            props.updateRoute({ ...data, id: props.route.params?.item?._id, routeStop: stopList, token: props.token })
         }
     }
 
@@ -405,6 +389,7 @@ const useDispatch = (dispatch) => {
 const useSelector = (state) => (
 
     {
+        token: state.token.token,
         routeData: state.route.data,
         theme: state.token.theme
     }

@@ -1,8 +1,6 @@
 import { View, Text, StyleSheet, FlatList, Image, TouchableOpacity, RefreshControl, ScrollView } from 'react-native'
 import React from 'react'
 import { connect } from 'react-redux';
-
-import { getJWTToken } from '../../Redux/helper';
 import color from '../../contents/color';
 import icons from '../../contents/icons';
 import Header from '../../components/header';
@@ -15,30 +13,17 @@ const wait = (timeout) => {
 }
 
 const TrasportList = (props) => {
-    const [token, setToken] = React.useState('');
     const [refreshing, setRefreshing] = React.useState(false);
-
     const onRefresh = React.useCallback(() => {
         setRefreshing(true);
 
-        props.getTransportCompanyList(token)
-        props.getUserDetails(token);
+        props.getTransportCompanyList(props.token)
+        props.getUserDetails(props.token);
         wait(2000).then(() => setRefreshing(false));
-    }, [token]);
-    const fetchToken = async () => {
-        try {
-            const data = await getJWTToken();
-            setToken(data)
-
-        } catch (e) {
-            console.log()
-        }
-    }
+    }, []);
     React.useEffect(() => {
-        fetchToken()
-        props.getTransportCompanyList(token)
-        //  props.getUserDetails(token);
-    }, [token])
+        props.getTransportCompanyList(props.token)
+    }, [])
 
     const styles = StyleSheet.create({
         container: {
@@ -201,7 +186,8 @@ const useSelector = (state) => (
         loading: state.transportCompanyList.loading,
         userData: state.user.userData,
         theme: state.token.theme,
-        data: state.transportCompanyList.data
+        data: state.transportCompanyList.data,
+        token: state.token.token,
     }
 )
 export default connect(useSelector, useDispatch)(TrasportList);

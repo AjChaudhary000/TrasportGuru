@@ -6,22 +6,13 @@ import icons from '../../contents/icons'
 import AdminHeader from '../../components/adminHeader'
 import { Paragraph, Caption, Text, Title } from 'react-native-paper'
 import { getUserDetails } from '../../Redux/UserDetails'
-import { getJWTToken } from '../../Redux/helper'
 import AnimatedLoader from "react-native-animated-loader";
 const AdminSetting = (props) => {
-    const [token, setToken] = React.useState('');
-    const fetchToken = async () => {
-        try {
-            const data = await getJWTToken();
-            setToken(data)
-        } catch (e) {
-            console.log()
-        }
-    }
+  
     React.useEffect(() => {
-        fetchToken()
-        props.getUserDetails(token);
-    }, [token])
+       
+        props.getUserDetails(props.token);
+    }, [])
     const styles = StyleSheet.create({
         container: {
             flex: 1,
@@ -73,17 +64,17 @@ const AdminSetting = (props) => {
     return (
         <View style={styles.container}>
             <AnimatedLoader
-        visible={props.loading}
-        overlayColor="rgba(255,255,255,0.75)"
-        source={require("../../assets/json/loder.json")}
-        animationStyle={{
-          width: 100,
-          height: 100
-        }}
-        speed={1}
-      >
-        <Text>Loading...</Text>
-      </AnimatedLoader>
+                visible={props.loading}
+                overlayColor="rgba(255,255,255,0.75)"
+                source={require("../../assets/json/loder.json")}
+                animationStyle={{
+                    width: 100,
+                    height: 100
+                }}
+                speed={1}
+            >
+                <Text>Loading...</Text>
+            </AnimatedLoader>
             <AdminHeader name={"Setting"} />
             <ScrollView style={{ marginBottom: 80 }} showsVerticalScrollIndicator={false}>
                 <View style={styles.backimage}>
@@ -98,7 +89,7 @@ const AdminSetting = (props) => {
                     <Caption style={{ fontWeight: 'bold', color: 'gray' }}>{props.adminData?.email}</Caption>
                 </View>
 
-                <TouchableOpacity style={styles.option} onPress={()=>{props.navigation.navigate("AdminEditAccount", { item: props.adminData })}} activeOpacity={0.60}>
+                <TouchableOpacity style={styles.option} onPress={() => { props.navigation.navigate("AdminEditAccount", { item: props.adminData }) }} activeOpacity={0.60}>
                     <View style={styles.menuIcon}>
                         <Image source={icons.edit} style={styles.menuiconStyle} />
                     </View>
@@ -131,7 +122,8 @@ const useSelector = (state) => (
     {
         adminData: state.user.userData,
         loading: state.user.loading,
-        theme: state.token.theme
+        theme: state.token.theme,
+        token: state.token.token,
     }
 )
 export default connect(useSelector, useDispatch)(AdminSetting);

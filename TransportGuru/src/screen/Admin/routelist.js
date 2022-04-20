@@ -4,38 +4,27 @@ import { AdminHeaderWithBackButton } from '../../components/adminHeader'
 import color from '../../contents/color'
 import image from '../../contents/image'
 import { connect } from 'react-redux'
-import { getJWTToken } from '../../Redux/helper'
 import { deleteRoute, getRouteList, setRouteData } from '../../Redux/Admin/routeSlice'
 import { getCountRoute } from '../../Redux/Admin/countAddSlice'
 import icons from '../../contents/icons'
 import Toast from 'react-native-simple-toast';
 import AnimatedLoader from "react-native-animated-loader";
 const Routelist = (props) => {
-    const [token, setToken] = React.useState('');
-    const fetchToken = async () => {
-        try {
-            const data = await getJWTToken();
-            setToken(data)
-
-        } catch (e) {
-            console.log()
-        }
-    }
     React.useEffect(() => {
-        fetchToken()
-        props.getRouteList(token)
-    }, [token])
+      
+        props.getRouteList(props.token)
+    }, [])
     React.useEffect(() => {
 
         if (props.deletedata.status) {
-            props.getRouteList(token)
-            props.getCountRoute(token)
-            props.setRouteData(token)
+            props.getRouteList(props.token)
+            props.getCountRoute(props.token)
+            props.setRouteData(props.token)
         }
-    }, [token, props])
+    }, [props])
     const DeleteDriver = (id) => {
         Toast.show(" Route remove successful")
-        props.deleteRoute({ id: id, token: token })
+        props.deleteRoute({ id: id, token: props.token })
     }
     const EditDriver = (item) => {
         console.log(item)
@@ -79,17 +68,17 @@ const Routelist = (props) => {
     return (
         <View style={styles.container}>
             <AnimatedLoader
-        visible={props.loading}
-        overlayColor="rgba(255,255,255,0.75)"
-        source={require("../../assets/json/loder.json")}
-        animationStyle={{
-          width: 100,
-          height: 100
-        }}
-        speed={1}
-      >
-        <Text>Loading...</Text>
-      </AnimatedLoader>
+                visible={props.loading}
+                overlayColor="rgba(255,255,255,0.75)"
+                source={require("../../assets/json/loder.json")}
+                animationStyle={{
+                    width: 100,
+                    height: 100
+                }}
+                speed={1}
+            >
+                <Text>Loading...</Text>
+            </AnimatedLoader>
             <AdminHeaderWithBackButton name={"Route List"} navigation={props.navigation} />
             <FlatList data={props.routelist} renderItem={(item) => (
                 <View style={styles.listBox}>
@@ -160,7 +149,8 @@ const useSelector = (state) => (
         loading: state.route.loading,
         routelist: state.route.routeList,
         deletedata: state.route.data,
-        theme: state.token.theme
+        theme: state.token.theme,
+        token: state.token.token,
     }
 )
 export default connect(useSelector, useDispatch)(Routelist);

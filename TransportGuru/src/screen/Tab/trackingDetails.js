@@ -1,7 +1,7 @@
 import { View, Text, StyleSheet, RefreshControl, ScrollView, FlatList, Image, TouchableOpacity } from 'react-native'
 import React from 'react'
 import { connect } from 'react-redux';
-import { getJWTToken } from '../../Redux/helper';
+
 import color from '../../contents/color';
 import AnimatedLoader from "react-native-animated-loader";
 import icons from '../../contents/icons';
@@ -9,6 +9,7 @@ import calcKmFind from '../../components/kmFind';
 import { updatePayment, setPaymentData } from '../../Redux/paymentSlice';
 import { trackingDetailsById } from '../../Redux/fetchByIDSlice';
 import { HeaderWithBackButton } from '../../components/header';
+import Toast from 'react-native-simple-toast';
 const wait = (timeout) => {
     return new Promise(resolve => setTimeout(resolve, timeout));
 }
@@ -17,34 +18,25 @@ const TrackingDetails = (props) => {
     const [refreshing, setRefreshing] = React.useState(false);
 
     const [amount, setAmount] = React.useState(0)
-    const [token, setToken] = React.useState('');
-    const fetchToken = async () => {
-        try {
-            const data = await getJWTToken();
-            setToken(data)
-        } catch (e) {
-            console.log()
-        }
-    }
     React.useEffect(() => {
         if (props.paymentData?.status) {
-            props.trackingDetailsById({ token, id: props.route.params.id });
+            props.trackingDetailsById({ token: props.token, id: props.route.params.id });
             props.setPaymentData([])
 
             props.navigation.navigate('Confirmation', { payment: amount, type: "pay" });
         }
     }, [props])
     const onRefresh = React.useCallback(() => {
-        console.log("mytoken")
-        props.trackingDetailsById({ token, id: props.route.params.id });
+
+        props.trackingDetailsById({ token: props.token, id: props.route.params.id });
         setRefreshing(true);
         //  props.getUserDetails(token);
         wait(2000).then(() => setRefreshing(false));
-    }, [token]);
+    }, []);
     React.useEffect(() => {
-        fetchToken()
-        props.trackingDetailsById({ token, id: props.route.params.id });
-    }, [token])
+
+        props.trackingDetailsById({ token: props.token, id: props.route.params.id });
+    }, [])
     const styles = StyleSheet.create({
         container: {
             flex: 1,
@@ -107,7 +99,7 @@ const TrackingDetails = (props) => {
         setAmount(payment)
         let paymentHistory = [...item.paymentHistory, { payment }]
         paymentStatus = "Completing"
-        props.updatePayment({ data: { paymentHistory, paymentStatus }, id: item._id, token })
+        props.updatePayment({ data: { paymentHistory, paymentStatus }, id: item._id, token: props.token })
     }
     return (
         <View style={styles.container}>
@@ -413,6 +405,7 @@ const useSelector = (state) => (
         loading: state.tracking.loading,
         paymentData: state.payment.paymentdata,
         userData: state.user.userData,
+        token: state.token.token,
     }
 )
 const useDispatch = (dispatch) => {

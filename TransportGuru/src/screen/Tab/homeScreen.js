@@ -4,7 +4,7 @@ import {
     TouchableOpacity,
     KeyboardAvoidingView,
     TouchableWithoutFeedback,
-    Keyboard, Platform, Modal, Dimensions, FlatList, ScrollView, LogBox
+    Keyboard, Platform, Modal, Dimensions, ScrollView, LogBox, PermissionsAndroid
 } from 'react-native'
 import Toast from 'react-native-simple-toast';
 import React from 'react'
@@ -13,8 +13,6 @@ import icons from '../../contents/icons'
 import { connect } from 'react-redux';
 import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
 import MapView, { PROVIDER_GOOGLE } from "react-native-maps"
-
-
 const HomeScreen = (props) => {
     const [modalVisible, setModalVisible] = React.useState(false);
     const [placetype, setPlaceType] = React.useState()
@@ -31,29 +29,29 @@ const HomeScreen = (props) => {
         },
         capicity: '',
     })
-    const AndroidPerMissionGranted = async() =>{
+    const AndroidPerMissionGranted = async () => {
         try {
-          const granted = await PermissionsAndroid.request(
-            PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
-            {
-              title: 'ReactNativeCode Location Permission',
-              message: 'ReactNativeCode App needs access to your location ',
-            },
-          );
-          if (granted === PermissionsAndroid.RESULTS.GRANTED) {
-          
-          } else {
-             Alert.alert("Location Permission Not Granted");
-          }
+            const granted = await PermissionsAndroid.request(
+                PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+                {
+                    title: 'ReactNativeCode Location Permission',
+                    message: 'ReactNativeCode App needs access to your location ',
+                },
+            );
+            if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+
+            } else {
+                Alert.alert("Location Permission Not Granted");
+            }
         } catch (err) {
-          console.log(err)
+            console.log(err)
         }
-       }
+    }
     React.useEffect(() => {
         LogBox.ignoreLogs(["VirtualizedLists should never be nested"])
         if (Platform.OS == 'android') {
             AndroidPerMissionGranted();
-        } 
+        }
     }, [])
     const SearchRoute = () => {
         if (data.from.name === "From") {
@@ -64,7 +62,7 @@ const HomeScreen = (props) => {
             Toast.show("Enter capicity")
         } else {
             props.navigation.navigate("SearchTransportList", data)
-            console.log(data)
+
         }
     }
     const styles = StyleSheet.create({

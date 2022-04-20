@@ -3,7 +3,6 @@ import React from 'react'
 import { connect } from 'react-redux';
 import Header from '../../components/header'
 import { getTracking } from '../../Redux/trackingSlice'
-import { getJWTToken } from '../../Redux/helper';
 import color from '../../contents/color';
 import AnimatedLoader from "react-native-animated-loader";
 import icons from '../../contents/icons';
@@ -16,35 +15,26 @@ const Tracking = (props) => {
     const [refreshing, setRefreshing] = React.useState(false);
 
     const [amount, setAmount] = React.useState(0)
-    const [token, setToken] = React.useState('');
-    const fetchToken = async () => {
-        try {
-            const data = await getJWTToken();
-            setToken(data)
-        } catch (e) {
-            console.log()
-        }
-    }
     React.useEffect(() => {
         if (props.paymentData?.status) {
 
-            props.getTracking(token);
+            props.getTracking(props.token);
             props.setPaymentData([])
 
             props.navigation.navigate('Confirmation', { payment: amount, type: "pay" });
         }
     }, [props])
     const onRefresh = React.useCallback(() => {
-        console.log("mytoken")
-        props.getTracking(token);
+
+        props.getTracking(props.token);
         setRefreshing(true);
         //  props.getUserDetails(token);
         wait(2000).then(() => setRefreshing(false));
-    }, [token]);
+    }, []);
     React.useEffect(() => {
-        fetchToken()
-        props.getTracking(token);
-    }, [token])
+
+        props.getTracking(props.token);
+    }, [])
     const styles = StyleSheet.create({
         container: {
             flex: 1,
@@ -93,7 +83,7 @@ const Tracking = (props) => {
         setAmount(payment)
         let paymentHistory = [...item.paymentHistory, { payment }]
         paymentStatus = "Completing"
-        props.updatePayment({ data: { paymentHistory, paymentStatus }, id: item._id, token })
+        props.updatePayment({ data: { paymentHistory, paymentStatus }, id: item._id, token: props.token })
     }
     return (
         <View style={styles.container}>
@@ -192,6 +182,7 @@ const useSelector = (state) => (
         trackingList: state.tracking.trackingdata,
         loading: state.tracking.loading,
         paymentData: state.payment.paymentdata,
+        token: state.token.token,
     }
 )
 const useDispatch = (dispatch) => {

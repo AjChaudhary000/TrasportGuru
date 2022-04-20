@@ -6,7 +6,7 @@ export const addTransport = createAsyncThunk(
     async (obj, getState) => {
         try {
             const data = {
-                capicity: obj.capicity,
+               
                 Truckdate: obj.Truckdate,
                 routeId: obj.routeId,
                 truckId: obj.truckId,
@@ -46,7 +46,7 @@ export const updateTransport = createAsyncThunk(
     })
 export const getTransportList = createAsyncThunk('transport/getTransportList',
     async (obj, getState) => {
-        console.log(obj)
+       
         try {
             const response = await TrasportApi.get(`/transport?skip=${obj.skip}&limit=${obj.limit}`, {
                 headers: {

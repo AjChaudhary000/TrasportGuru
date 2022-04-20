@@ -3,7 +3,7 @@ import React from 'react';
 import Header from '../../components/header'
 import { getMessageList } from '../../Redux/messageListSlice';
 import { connect } from 'react-redux'
-import { getJWTToken } from '../../Redux/helper';
+
 import color from '../../contents/color';
 import AnimatedLoader from "react-native-animated-loader";
 const wait = (timeout) => {
@@ -11,33 +11,19 @@ const wait = (timeout) => {
 }
 
 const Message = (props) => {
-  const [token, setToken] = React.useState('');
   const [refreshing, setRefreshing] = React.useState(false);
-
   const onRefresh = React.useCallback(() => {
     setRefreshing(true);
-    props.getMessageList({ token })
+    props.getMessageList({ token: props.token })
     wait(2000).then(() => setRefreshing(false));
-  }, [token]);
-  const fetchToken = async () => {
-    try {
-      const data = await getJWTToken();
-      setToken(data)
-
-
-    } catch (e) {
-      console.log()
-    }
-  }
+  }, []);
   React.useEffect(() => {
-    fetchToken();
-    props.getMessageList({ token })
-  }, [token])
+    props.getMessageList({ token: props.token })
+  }, [])
   const styles = StyleSheet.create({
     container: {
       flex: 1,
       backgroundColor: props.theme ? color.drakBackgroundColor : color.backgroundColor,
-
     },
     image: {
       width: '20%',
@@ -116,7 +102,9 @@ const useSelector = (state) => (
   {
     loading: state.message.loading,
     messageList: state.message.messageList,
-    theme: state.token.theme
+    theme: state.token.theme,
+    token: state.token.token,
+    internet: state.token.internet,
   }
 )
 export default connect(useSelector, useDispatch)(Message);

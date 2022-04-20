@@ -8,11 +8,9 @@ import color from '../../contents/color'
 import icons from '../../contents/icons';
 import { connect } from 'react-redux'
 import { Dropdown } from 'react-native-element-dropdown';
-import { getJWTToken } from '../../Redux/helper';
 import { getDriverList } from '../../Redux/Admin/driverListSlice';
 import { getTruckList } from '../../Redux/Admin/truckListSlice';
 import DatePicker from 'react-native-date-picker'
-import AnimatedLoader from "react-native-animated-loader";
 import { getRouteList } from '../../Redux/Admin/routeSlice';
 import { addTransport, setTransportData, updateTransport } from '../../Redux/Admin/transportSlice';
 import { getCountTransport } from '../../Redux/Admin/countAddSlice';
@@ -20,53 +18,42 @@ import Toast from 'react-native-simple-toast';
 const AddTrasportDetails = (props) => {
     const [modalVisible, setModalVisible] = React.useState(false);
     const [placetype, setPlaceType] = React.useState()
-    const [token, setToken] = React.useState('');
     const [value, setValue] = React.useState(null);
     const [date, setDate] = React.useState(new Date())
     const [open, setOpen] = React.useState(false)
     const [data, setData] = React.useState({
         routeId: props.route.params?.item?.routeId || '',
-        capicity: props.route.params?.item?.capicity || '',
+       
         Truckdate: props.route.params?.item?.Truckdate || '',
         truckId: props.route.params?.item?.truckId || "",
         driverId: props.route.params?.item?.driverId || "",
         truckPrice: props.route.params?.item?.truckPrice
     })
-    const fetchToken = async () => {
-        try {
-            const data = await getJWTToken();
-            setToken(data)
-
-        } catch (e) {
-            console.log()
-        }
-    }
+   
     React.useEffect(() => {
-        fetchToken()
-        props.getDriverList(token)
-        props.getTruckList(token)
-        props.getRouteList(token)
-    }, [token])
+       
+        props.getDriverList(props.token)
+        props.getTruckList(props.token)
+        props.getRouteList(props.token)
+    }, [])
     React.useEffect(() => {
         if (props?.transportData.status) {
-            props.getCountTransport(token)
+            props.getCountTransport(props.token)
             props.setTransportData({})
             props.navigation.goBack();
         }
-    }, [props, token])
+    }, [props])
     const AddTrasport = () => {
         if (data.routeId === "") {
             Toast.show("Select Route")
         } else if (data.Truckdate === "") {
             Toast.show("Select Truck Date")
-        } else if (data.capicity === "") {
-            Toast.show("Enter Goods capicity ")
         } else if (data.driverId === "") {
             Toast.show("Select Driver")
         } else if (data.truckPrice === "") {
             Toast.show("Enter Truck Price ")
         } else {
-            props.addTransport({ ...data, token })
+            props.addTransport({ ...data, token:props.token })
         }
 
     }
@@ -75,8 +62,6 @@ const AddTrasportDetails = (props) => {
             Toast.show("Select Route")
         } else if (data.Truckdate === "") {
             Toast.show("Select Truck Date")
-        } else if (data.capicity === "") {
-            Toast.show("Enter Goods capicity ")
         } else if (data.driverId === "") {
             Toast.show("Select Driver")
         } else if (data.truckId === "") {
@@ -84,7 +69,7 @@ const AddTrasportDetails = (props) => {
         } else if (data.truckPrice === "") {
             Toast.show("Enter Truck Price ")
         } else {
-            props.updateTransport({ data, id: props.route.params?.item?._id, token: token })
+            props.updateTransport({ data, id: props.route.params?.item?._id, token: props.token })
         }
     }
     const renderItemDriver = (item) => {
@@ -353,15 +338,7 @@ const AddTrasportDetails = (props) => {
 
                             </View>
 
-                            <View style={{ margin: 10 }}>
-                                <TextInput style={styles.input}
-                                    placeholder={"eg. Truck Capicity"}
-                                    placeholderTextColor={'gray'}
-                                    onChangeText={(val) => setData({ ...data, capicity: val })}
-                                    autoCapitalize={'none'}
-                                    keyboardType={'number-pad'} />
-
-                            </View>
+                           
                             <View style={{ margin: 10, flexDirection: 'row', justifyContent: 'space-between' }}>
                                 <View style={{ width: "85%" }}>
                                     <TextInput style={styles.input}
@@ -478,16 +455,7 @@ const AddTrasportDetails = (props) => {
 
                             </View>
 
-                            <View style={{ margin: 10 }}>
-                                <TextInput style={styles.input}
-                                    placeholder={"eg. Truck Capicity"}
-                                    placeholderTextColor={'gray'}
-                                    defaultValue={props.route.params?.item?.capicity}
-                                    onChangeText={(val) => setData({ ...data, capicity: val })}
-                                    autoCapitalize={'none'}
-                                    keyboardType={'number-pad'} />
-
-                            </View>
+                            
                             <View style={{ margin: 10, flexDirection: 'row', justifyContent: 'space-between' }}>
                                 <View style={{ width: "85%" }}>
                                     <TextInput style={styles.input}

@@ -9,11 +9,10 @@ import UserProfile from '../screen/userProfile';
 import { connect } from 'react-redux';
 import { getJWTToken, getTheme } from '../Redux/helper';
 import Tab from './tab';
-import Home from '../screen/Home';
 import LottieView from 'lottie-react-native';
 import color from '../contents/color';
 import EditAccount from '../screen/Tab/settingTab/editAccount';
-import { getThemeMode, getToken, setToken } from '../Redux/tokenSlice';
+import { getNetwork, getThemeMode, getToken } from '../Redux/tokenSlice';
 import TrasportGuruAccount from '../screen/Tab/settingTab/trasportGuruAccount';
 import image from '../contents/image';
 import AdminTab from './adminTab';
@@ -37,19 +36,18 @@ import TrackingDetails from '../screen/Tab/trackingDetails';
 import AdminTrackingDetails from '../screen/Admin/adminTrackingDetails';
 const Stack = createNativeStackNavigator();
 const Router = (props) => {
-    const [token, setTokenData] = React.useState('')
-    const [netCheck, setNetCheck] = React.useState(false);
     const [isloading, setloadingData] = React.useState(true)
     const gettoken = async () => {
         try {
             const mytoken = await getJWTToken();
             const theme = await getTheme()
-           
-            setTokenData(mytoken)
-            props.setToken(mytoken)
+            console.log(mytoken)
+            props.getToken(mytoken)
             props.getUserDetails(mytoken)
             theme === "true" ? props.getThemeMode(true) : props.getThemeMode(false)
-
+            NetInfo.fetch().then(state => {
+                props.getNetwork(state.isConnected)
+            });
         } catch (e) {
 
         }
@@ -59,15 +57,7 @@ const Router = (props) => {
         setTimeout(() => {
             setloadingData(false)
         }, 2000)
-
     }, [])
-    React.useEffect(() => {
-        NetInfo.fetch().then(state => {
-            //console.log("Connection type", state.type);
-            console.log("Is connected?", state.isConnected);
-            setNetCheck(state.isConnected)
-        });
-    }, [netCheck])
     if (isloading) {
         return (
             <View style={{
@@ -81,7 +71,7 @@ const Router = (props) => {
             </View>
         );
     }
-    if (!netCheck) {
+    if (!props.internet) {
         return (
             <View style={{
                 flex: 1,
@@ -99,13 +89,12 @@ const Router = (props) => {
         <NavigationContainer>
             <Stack.Navigator>
                 {/* User Login /SignUp  Start */}
-                {!props.token.token && <Stack.Screen name='SignIn' component={SignIn} options={{ headerShown: false }} />}
+                {!props.token && <Stack.Screen name='SignIn' component={SignIn} options={{ headerShown: false }} />}
                 {/* User Login /SignUp  End  */}
 
                 {/* userSide Start */}
 
                 <Stack.Screen name='Tab' component={Tab} options={{ headerShown: false }} />
-                <Stack.Screen name='Home' component={Home} options={{ headerShown: false }} />
                 <Stack.Screen name='Onboardring' component={Onboardring} options={{ headerShown: false }} />
                 <Stack.Screen name='UserProfile' component={UserProfile} options={{ headerShown: false }} />
                 <Stack.Screen name='Otp' component={Otp} options={{ headerShown: false }} />
@@ -138,16 +127,18 @@ const Router = (props) => {
 }
 const useSelector = (state) => {
     return {
-        token: state.token,
+        token: state.token.token,
+        internet: state.token.internet,
         theme: state.token.theme
     }
 }
 const useDispatch = (dispatch) => {
     return {
 
-        setToken: (data) => dispatch(setToken(data)),
+        getToken: (data) => dispatch(getToken(data)),
         getThemeMode: (data) => dispatch(getThemeMode(data)),
         getUserDetails: (data) => dispatch(getUserDetails(data)),
+        getNetwork: (data) => dispatch(getNetwork(data)),
 
     }
 }

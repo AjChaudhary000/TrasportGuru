@@ -1,51 +1,41 @@
-import { View, Text, StyleSheet, Image, TouchableOpacity, Dimensions ,ScrollView,RefreshControl} from 'react-native'
+import { View, Text, StyleSheet, Image, TouchableOpacity, Dimensions, ScrollView, RefreshControl } from 'react-native'
 import React from 'react'
 import color from '../../contents/color'
 import AdminHeader from '../../components/adminHeader'
 import { connect } from 'react-redux'
 import { getCountDriver, getCountTruck, getCountRoute, getCountTransport } from '../../Redux/Admin/countAddSlice'
-import { getJWTToken } from '../../Redux/helper'
 import icons from '../../contents/icons'
-import LottieView from 'lottie-react-native';
 import AnimatedLoader from "react-native-animated-loader";
 const wait = (timeout) => {
     return new Promise(resolve => setTimeout(resolve, timeout));
-  }
+}
 const AdminHome = (props) => {
-    const [token, setToken] = React.useState('');
+    
     const [refreshing, setRefreshing] = React.useState(false);
 
     const onRefresh = React.useCallback(() => {
-      setRefreshing(true);
-      fetchToken()
-        props.getCountTruck(token)
-        props.getCountDriver(token)
-        props.getCountRoute(token),
-            props.getCountTransport(token)
-      wait(2000).then(() => setRefreshing(false));
-    }, [token]);
-    const fetchToken = async () => {
-        try {
-            const data = await getJWTToken();
-            setToken(data)
-
-        } catch (e) {
-            console.log()
-        }
-    }
-    React.useEffect(() => {
-        fetchToken()
-        props.getCountTruck(token)
-        props.getCountDriver(token)
-        props.getCountRoute(token),
-            props.getCountTransport(token)
-    }, [token])
-   
+        setRefreshing(true);
       
-       const styles = StyleSheet.create({
+        props.getCountTruck(props.token)
+        props.getCountDriver(props.token)
+        props.getCountRoute(props.token),
+            props.getCountTransport(props.token)
+        wait(2000).then(() => setRefreshing(false));
+    }, []);
+   
+    React.useEffect(() => {
+     
+        props.getCountTruck(props.token)
+        props.getCountDriver(props.token)
+        props.getCountRoute(props.token),
+            props.getCountTransport(props.token)
+    }, [])
+
+
+    const styles = StyleSheet.create({
         container: {
             flex: 1,
-            backgroundColor:  props.theme ? color.drakBackgroundColor:color.backgroundColor ,
+            backgroundColor: props.theme ? color.drakBackgroundColor : color.backgroundColor,
         },
         box: {
             flexDirection: 'row',
@@ -54,12 +44,12 @@ const AdminHome = (props) => {
         adminCard: {
             width: Dimensions.get('window').width / 2 - 40,
             height: 150,
-            backgroundColor: props.theme ? color.drakBackgroundColor:color.backgroundColor ,
+            backgroundColor: props.theme ? color.drakBackgroundColor : color.backgroundColor,
             marginHorizontal: 15,
             borderRadius: 20,
             justifyContent: 'center',
-    
-            shadowColor: props.theme ? color.drakFontcolor:color.fontcolor ,
+
+            shadowColor: props.theme ? color.drakFontcolor : color.fontcolor,
             shadowOffset: {
                 width: 0,
                 height: 2
@@ -76,7 +66,7 @@ const AdminHome = (props) => {
         menuText: {
             fontSize: 50,
             fontWeight: 'bold',
-            color:props.theme ? color.drakAdminprimaryColors:color.adminprimaryColors ,
+            color: props.theme ? color.drakAdminprimaryColors : color.adminprimaryColors,
         }, icon: {
             flexDirection: 'row',
             justifyContent: 'space-between',
@@ -85,84 +75,84 @@ const AdminHome = (props) => {
         title: {
             fontSize: 18,
             fontWeight: 'bold',
-            color: props.theme ? color.drakFontcolor:color.fontcolor ,
+            color: props.theme ? color.drakFontcolor : color.fontcolor,
             marginVertical: 10
         }
     })
     return (
         <View style={styles.container}>
             <AnimatedLoader
-        visible={props.loading}
-        overlayColor="rgba(255,255,255,0.75)"
-        source={require("../../assets/json/loder.json")}
-        animationStyle={{
-          width: 100,
-          height: 100
-        }}
-        speed={1}
-      >
-        <Text>Loading...</Text>
-      </AnimatedLoader>
+                visible={props.loading}
+                overlayColor="rgba(255,255,255,0.75)"
+                source={require("../../assets/json/loder.json")}
+                animationStyle={{
+                    width: 100,
+                    height: 100
+                }}
+                speed={1}
+            >
+                <Text>Loading...</Text>
+            </AnimatedLoader>
             <AdminHeader name={"Transport Deshboard"} />
-            <ScrollView style={{marginBottom:50}} showsVerticalScrollIndicator={false} refreshControl={
-          <RefreshControl
-            refreshing={refreshing}
-            onRefresh={onRefresh}
-          />
-        }>
-            <View style={styles.box}>
-                <TouchableOpacity style={styles.adminCard} activeOpacity={0.80} onPress={() => props.navigation.navigate('TruckList')}>
-                    <View style={styles.Text}>
-                        <Text style={styles.menuText}>{props.countTruck}</Text>
-                    </View>
-                    <View style={styles.icon}>
-                        <Image source={icons.truck} style={{ width: 40, height: 40, tintColor: color.adminprimaryColors }} />
-                        <Text style={styles.title}>Truck</Text>
-                    </View>
-                </TouchableOpacity>
-                <TouchableOpacity style={styles.adminCard} activeOpacity={0.80} onPress={() => props.navigation.navigate('DriverList')}>
-                    <View style={styles.Text}>
-                        <Text style={styles.menuText}>{props.countDriver}</Text>
-                    </View>
-                    <View style={styles.icon}>
-                        <Image source={icons.driver} style={{ width: 40, height: 40, tintColor: color.adminprimaryColors }} />
-                        <Text style={styles.title}>Driver</Text>
-                    </View>
-                </TouchableOpacity>
-            </View>
-            <View style={styles.box}>
-                <TouchableOpacity style={styles.adminCard} activeOpacity={0.80} onPress={() => props.navigation.navigate('Routelist')}>
-                    <View style={styles.Text}>
-                        <Text style={styles.menuText}>{props.countRoute}</Text>
-                    </View>
-                    <View style={styles.icon}>
-                        <Image source={icons.tracking} style={{ width: 40, height: 40, tintColor: color.adminprimaryColors }} />
-                        <Text style={styles.title} >Routes</Text>
-                    </View>
-                </TouchableOpacity>
-                <TouchableOpacity style={styles.adminCard} activeOpacity={0.80} onPress={() => props.navigation.navigate('TransportListDetails')}>
-                    <View style={styles.Text}>
-                        <Text style={styles.menuText}>{props.countTransport}</Text>
-                    </View>
-                    <View style={styles.icon}>
-                        <Image source={icons.addtotruck} style={{ width: 40, height: 40, tintColor: color.adminprimaryColors }} />
-                        <Text style={styles.title} >Details</Text>
-                    </View>
-                </TouchableOpacity>
-            </View>
-            <View style={styles.box}>
-                <TouchableOpacity style={styles.adminCard} activeOpacity={0.80}>
-                    <View style={styles.Text}>
-                        <Text style={styles.menuText}>0</Text>
-                    </View>
-                    <View style={styles.icon}>
-                        <Image source={icons.box} style={{ width: 40, height: 40, tintColor: color.adminprimaryColors }} />
-                        <Text style={styles.title} > Booking</Text>
-                    </View>
-                </TouchableOpacity>
+            <ScrollView style={{ marginBottom: 50 }} showsVerticalScrollIndicator={false} refreshControl={
+                <RefreshControl
+                    refreshing={refreshing}
+                    onRefresh={onRefresh}
+                />
+            }>
+                <View style={styles.box}>
+                    <TouchableOpacity style={styles.adminCard} activeOpacity={0.80} onPress={() => props.navigation.navigate('TruckList')}>
+                        <View style={styles.Text}>
+                            <Text style={styles.menuText}>{props.countTruck}</Text>
+                        </View>
+                        <View style={styles.icon}>
+                            <Image source={icons.truck} style={{ width: 40, height: 40, tintColor: color.adminprimaryColors }} />
+                            <Text style={styles.title}>Truck</Text>
+                        </View>
+                    </TouchableOpacity>
+                    <TouchableOpacity style={styles.adminCard} activeOpacity={0.80} onPress={() => props.navigation.navigate('DriverList')}>
+                        <View style={styles.Text}>
+                            <Text style={styles.menuText}>{props.countDriver}</Text>
+                        </View>
+                        <View style={styles.icon}>
+                            <Image source={icons.driver} style={{ width: 40, height: 40, tintColor: color.adminprimaryColors }} />
+                            <Text style={styles.title}>Driver</Text>
+                        </View>
+                    </TouchableOpacity>
+                </View>
+                <View style={styles.box}>
+                    <TouchableOpacity style={styles.adminCard} activeOpacity={0.80} onPress={() => props.navigation.navigate('Routelist')}>
+                        <View style={styles.Text}>
+                            <Text style={styles.menuText}>{props.countRoute}</Text>
+                        </View>
+                        <View style={styles.icon}>
+                            <Image source={icons.tracking} style={{ width: 40, height: 40, tintColor: color.adminprimaryColors }} />
+                            <Text style={styles.title} >Routes</Text>
+                        </View>
+                    </TouchableOpacity>
+                    <TouchableOpacity style={styles.adminCard} activeOpacity={0.80} onPress={() => props.navigation.navigate('TransportListDetails')}>
+                        <View style={styles.Text}>
+                            <Text style={styles.menuText}>{props.countTransport}</Text>
+                        </View>
+                        <View style={styles.icon}>
+                            <Image source={icons.addtotruck} style={{ width: 40, height: 40, tintColor: color.adminprimaryColors }} />
+                            <Text style={styles.title} >Details</Text>
+                        </View>
+                    </TouchableOpacity>
+                </View>
+                <View style={styles.box}>
+                    <TouchableOpacity style={styles.adminCard} activeOpacity={0.80}>
+                        <View style={styles.Text}>
+                            <Text style={styles.menuText}>0</Text>
+                        </View>
+                        <View style={styles.icon}>
+                            <Image source={icons.box} style={{ width: 40, height: 40, tintColor: color.adminprimaryColors }} />
+                            <Text style={styles.title} > Booking</Text>
+                        </View>
+                    </TouchableOpacity>
 
 
-            </View>
+                </View>
             </ScrollView>
         </View>
     )
@@ -173,7 +163,7 @@ const useDispatch = (dispatch) => {
         getCountDriver: (data) => dispatch(getCountDriver(data)),
         getCountRoute: (data) => dispatch(getCountRoute(data)),
         getCountTransport: (data) => dispatch(getCountTransport(data)),
-       
+
     };
 }
 const useSelector = (state) => (
@@ -183,8 +173,9 @@ const useSelector = (state) => (
         countDriver: state.count.countDriver,
         countRoute: state.count.countRoute,
         countTransport: state.count.countTransport,
-        loading:state.count.loading,
-        theme:state.token.theme
+        loading: state.count.loading,
+        theme: state.token.theme,
+        token: state.token.token,
     }
 )
 export default connect(useSelector, useDispatch)(AdminHome);

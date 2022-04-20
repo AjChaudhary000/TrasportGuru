@@ -5,23 +5,18 @@ import {
 import React from 'react'
 import { AdminHeaderWithBackButton } from '../../components/adminHeader';
 import color from '../../contents/color'
-import * as ImagePicker from 'react-native-image-picker'
 import icons from '../../contents/icons';
 import { connect } from 'react-redux'
 import { Dropdown } from 'react-native-element-dropdown';
 import { getTruckType } from '../../Redux/Admin/trucktypeSlice';
-import { getJWTToken } from '../../Redux/helper';
 import { addTruck, setTruckData, updateTruck } from '../../Redux/Admin/addTruckSlice';
 import { getCountTruck } from '../../Redux/Admin/countAddSlice'
 import LottieView from 'lottie-react-native';
-import storage from '@react-native-firebase/storage';
 import image from '../../contents/image';
 import Toast from 'react-native-simple-toast';
 import AnimatedLoader from "react-native-animated-loader";
 import ImageModel from '../../components/imageModel';
 const AddTruck = (props) => {
-
-    const [token, setToken] = React.useState('');
     const [firebaseImage, setfirebaseImage] = React.useState(props.route.params?.item?.truckImage || '');
     const [imageLoading, setImageLoading] = React.useState(false)
     const [modalVisible1, setModalVisible1] = React.useState(false);
@@ -34,28 +29,18 @@ const AddTruck = (props) => {
         truckTypeId: props.route.params?.item?.truckTypeId || ''
     })
     let regno = "";
-    const fetchToken = async () => {
-        try {
-            const data = await getJWTToken();
-            setToken(data)
-
-        } catch (e) {
-            console.log()
-        }
-    }
     React.useEffect(() => {
-        fetchToken()
-        props.getTruckType(token)
-    }, [token])
+        props.getTruckType(props.token)
+    }, [])
     React.useEffect(() => {
 
         if (props?.truckData.status) {
-            props.getCountTruck(token)
+            props.getCountTruck(props.token)
             props.setTruckData({})
             props.navigation.goBack();
         }
         ;
-    }, [props, token])
+    }, [props])
 
     const AddTruck = () => {
 
@@ -76,7 +61,7 @@ const AddTruck = (props) => {
         else if (data.truckCapicity === "") {
             Toast.show("Enter Truck capicity")
         } else {
-            props.addTruck({ ...data, truckImage: firebaseImage, token: token })
+            props.addTruck({ ...data, truckImage: firebaseImage, token: props.token })
         }
 
     }
@@ -96,7 +81,7 @@ const AddTruck = (props) => {
         else if (data.truckCapicity === "") {
             Toast.show("Enter Truck capicity")
         } else {
-            props.updateTruck({ ...data, truckImage: firebaseImage, id: props.route.params?.item?._id, token: token })
+            props.updateTruck({ ...data, truckImage: firebaseImage, id: props.route.params?.item?._id, token: props.token })
         }
 
     }

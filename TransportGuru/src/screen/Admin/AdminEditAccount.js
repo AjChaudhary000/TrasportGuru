@@ -27,8 +27,7 @@ const AdminEditAccount = (props) => {
         if (props.userprofile?.status) {
             props.getTransportCompanyList(props.token)
             props.getUserDetails(props.token);
-            props.setUserData({})
-            
+            props.setUserData({})     
             props.navigation.goBack();
         }
     }, [props])

@@ -6,23 +6,13 @@ import icons from '../../contents/icons';
 import SettingMenu from './settingMenu';
 import { connect } from 'react-redux'
 import { getUserDetails } from '../../Redux/UserDetails';
-import { getJWTToken, getTheme, removeJWTToken, saveTheme } from '../../Redux/helper';
+import {  removeJWTToken, saveTheme } from '../../Redux/helper';
 import Header from '../../components/header';
 import { getThemeMode, logoutToken } from '../../Redux/tokenSlice';
 import AnimatedLoader from "react-native-animated-loader";
 const Setting = (props) => {
-  const [token, setToken] = React.useState('');
   const [isEnabled, setIsEnabled] = React.useState(props.theme);
   const toggleSwitch = () => setIsEnabled(previousState => !previousState);
-  const fetchToken = async () => {
-    try {
-      const data = await getJWTToken();
-      setToken(data)
-    } catch (e) {
-      console.log()
-    }
-  }
- 
   const saveThemeData = async (drakmode) => {
     try {
       await saveTheme(drakmode)
@@ -35,10 +25,8 @@ const Setting = (props) => {
     props.getThemeMode(isEnabled)
   }, [isEnabled])
   const logout = async () => {
-    console.log("dd3d3wqd");
-
     try {
-      console.log("dd3d3wqd");
+
       props.logoutToken();
       await removeJWTToken()
       props.navigation.replace("SignIn")
@@ -47,10 +35,9 @@ const Setting = (props) => {
     }
   }
   React.useEffect(() => {
-    fetchToken()
-    props.getUserDetails(token);
-  }, [token])
- 
+    props.getUserDetails(props.token);
+  }, [])
+
   const styles = StyleSheet.create({
     container: {
       flex: 1,
@@ -110,7 +97,7 @@ const Setting = (props) => {
       {/* <View style={styles.header}>
           <Text style={styles.headerName}>Settings</Text>
         </View> */}
-        <AnimatedLoader
+      <AnimatedLoader
         visible={props.loading}
         overlayColor="rgba(255,255,255,0.75)"
         source={require("../../assets/json/loder.json")}
@@ -187,7 +174,8 @@ const useSelector = (state) => (
   {
     userData: state.user.userData,
     loading: state.user.loading,
-    theme: state.token.theme
+    theme: state.token.theme,
+    token: state.token.token,
   }
 )
 export default connect(useSelector, useDispatch)(Setting);

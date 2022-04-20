@@ -1,7 +1,6 @@
 import { View, Text, StyleSheet, RefreshControl, ScrollView, FlatList, Image, TouchableOpacity } from 'react-native'
 import React from 'react'
 import { connect } from 'react-redux';
-import { getJWTToken } from '../../Redux/helper';
 import color from '../../contents/color';
 import AnimatedLoader from "react-native-animated-loader";
 import icons from '../../contents/icons';
@@ -9,38 +8,27 @@ import calcKmFind from '../../components/kmFind';
 
 import AdminHeader from '../../components/adminHeader';
 import { getTransportList, setTransportList } from '../../Redux/Admin/transportSlice';
-import { set } from 'immer/dist/internal';
 const wait = (timeout) => {
     return new Promise(resolve => setTimeout(resolve, timeout));
 }
 const AdminTracking = (props) => {
     const [refreshing, setRefreshing] = React.useState(false);
     const [data, setData] = React.useState([])
-
-    const [token, setToken] = React.useState('');
     const limitValue = 4
     const [isSkip, setIsSkip] = React.useState(0);
-    const fetchToken = async () => {
-        try {
-            const data = await getJWTToken();
-            setToken(data)
-            props.getTransportList({ token: data, skip: 0, limit: limitValue })
-        } catch (e) {
-            console.log()
-        }
-    }
+    
 
     const onRefresh = React.useCallback(() => {
-        console.log("mytoken")
+
         setIsSkip(0)
         setData([])
-        fetchToken()
+        
         setRefreshing(true);
-        //  props.getUserDetails(token);
+        props.getTransportList({ token: props.token, skip: 0, limit: limitValue })
         wait(2000).then(() => setRefreshing(false));
-    }, [token]);
+    }, []);
     React.useEffect(() => {
-        fetchToken()
+        props.getTransportList({ token: props.token, skip: 0, limit: limitValue })
     }, [])
     React.useEffect(() => {
         if (props.transportList?.status) {
@@ -171,7 +159,7 @@ const AdminTracking = (props) => {
                                 </View>
                             </View>
                         </View>
-                        <View style={{marginHorizontal:10}}>
+                        <View style={{ marginHorizontal: 10 }}>
                             <Text style={{ fontWeight: 'bold', color: 'gray' }}>Delivery Date</Text>
                             <Text style={{ color: props.theme ? color.drakFontcolor : color.fontcolor, fontWeight: 'bold', fontSize: 14, paddingRight: 2 }}>
                                 {new Date(new Date(item.item.Truckdate)
@@ -190,7 +178,7 @@ const AdminTracking = (props) => {
                         console.log("isSkip", count)
                         setIsSkip(count);
 
-                        props.getTransportList({ token, skip: count, limit: limitValue })
+                        props.getTransportList({ token:props.token, skip: count, limit: limitValue })
                     }}
                     onEndReachedThreshold={0.5}
                     ListFooterComponent={handleListFooterComponent}
@@ -208,6 +196,7 @@ const useSelector = (state) => (
         transportList: state.transport.transportList,
         loading: state.transport.loading,
         paymentData: state.payment.paymentdata,
+        token: state.token.token,
     }
 )
 const useDispatch = (dispatch) => {

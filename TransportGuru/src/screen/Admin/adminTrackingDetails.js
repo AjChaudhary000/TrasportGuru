@@ -1,7 +1,6 @@
 import { View, Text, StyleSheet, RefreshControl, ScrollView, FlatList, Image, TouchableOpacity } from 'react-native'
 import React from 'react'
 import { connect } from 'react-redux';
-import { getJWTToken } from '../../Redux/helper';
 import color from '../../contents/color';
 import AnimatedLoader from "react-native-animated-loader";
 import icons from '../../contents/icons';
@@ -16,29 +15,17 @@ const wait = (timeout) => {
 const AdminTrackingDetails = (props) => {
     // console.log(props.route.params.id)
     const [refreshing, setRefreshing] = React.useState(false);
-
     const [amount, setAmount] = React.useState(0)
-    const [token, setToken] = React.useState('');
-    const fetchToken = async () => {
-        try {
-            const data = await getJWTToken();
-            setToken(data)
-        } catch (e) {
-            console.log()
-        }
-    }
-
     const onRefresh = React.useCallback(() => {
-        console.log("mytoken")
-        props.transportListById({ token, id: props.route.params.id });
+        props.transportListById({ token: props.token, id: props.route.params.id });
         setRefreshing(true);
-        //  props.getUserDetails(token);
+
         wait(2000).then(() => setRefreshing(false));
-    }, [token]);
+    }, []);
     React.useEffect(() => {
-        fetchToken()
-        props.transportListById({ token, id: props.route.params.id });
-    }, [token])
+
+        props.transportListById({ token: props.token, id: props.route.params.id });
+    }, [])
     const styles = StyleSheet.create({
         container: {
             flex: 1,
@@ -101,7 +88,7 @@ const AdminTrackingDetails = (props) => {
         setAmount(payment)
         let paymentHistory = [...item.paymentHistory, { payment }]
         paymentStatus = "Completing"
-        props.updatePayment({ data: { paymentHistory, paymentStatus }, id: item._id, token })
+        props.updatePayment({ data: { paymentHistory, paymentStatus }, id: item._id, token: props.token })
     }
     return (
         <View style={styles.container}>
@@ -326,6 +313,7 @@ const useSelector = (state) => (
         theme: state.token.theme,
         transportList: state.fetchById.transportList,
         loading: state.fetchById.loading,
+        token: state.token.token,
     }
 )
 const useDispatch = (dispatch) => {

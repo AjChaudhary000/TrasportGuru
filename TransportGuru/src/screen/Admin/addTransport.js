@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, Image ,StatusBar} from 'react-native'
+import { View, Text, StyleSheet, Image, StatusBar } from 'react-native'
 import React from 'react'
 import color from '../../contents/color'
 import AdminHeader from '../../components/adminHeader'
@@ -6,37 +6,24 @@ import icons from '../../contents/icons'
 import AdminAddCard from '../../components/adminAddCard'
 import { connect } from 'react-redux'
 import { getCountDriver, getCountRoute, getCountTransport, getCountTruck } from '../../Redux/Admin/countAddSlice'
-import { getJWTToken } from '../../Redux/helper'
-import LottieView from 'lottie-react-native';
 import AnimatedLoader from "react-native-animated-loader";
 const AddTransport = (props) => {
-  const [token, setToken] = React.useState('');
-
-  const fetchToken = async () => {
-    try {
-      const data = await getJWTToken();
-      setToken(data)
-
-    } catch (e) {
-      console.log()
-    }
-  }
   React.useEffect(() => {
-    fetchToken()
-    props.getCountTruck(token)
-    props.getCountDriver(token)
-    props.getCountRoute(token)
-    props.getCountTransport(token)
-    ;
-  }, [token])
   
+    props.getCountTruck(props.token)
+    props.getCountDriver(props.token)
+    props.getCountRoute(props.token)
+    props.getCountTransport(props.token)
+      
+  }, [])
+
   const styles = StyleSheet.create({
     container: {
       flex: 1,
-      backgroundColor: props.theme ? color.drakBackgroundColor:color.backgroundColor,
+      backgroundColor: props.theme ? color.drakBackgroundColor : color.backgroundColor,
       //  paddingTop: 50
     }
-  
+
   })
   return (
     <View style={styles.container}>
@@ -85,7 +72,7 @@ const useDispatch = (dispatch) => {
     getCountDriver: (data) => dispatch(getCountDriver(data)),
     getCountRoute: (data) => dispatch(getCountRoute(data)),
     getCountTransport: (data) => dispatch(getCountTransport(data)),
-   
+
   };
 }
 const useSelector = (state) => (
@@ -95,8 +82,9 @@ const useSelector = (state) => (
     countDriver: state.count.countDriver,
     countRoute: state.count.countRoute,
     countTransport: state.count.countTransport,
-    loading:state.count.loading,
-    theme:state.token.theme
+    loading: state.count.loading,
+    theme: state.token.theme,
+    token: state.token.token,
   }
 )
 export default connect(useSelector, useDispatch)(AddTransport);

@@ -28,7 +28,7 @@ const UserProfile = (props) => {
         } else {
             props.userProfile({ ...data, image: firebaseImage || '', token: props.token })
             //  console.log({ ...data, image: firebaseImage || '', token: props.token })
-            console.log(props.userdata)
+           // console.log(props.userdata)
         }
     }
     const styles = StyleSheet.create({
@@ -214,6 +214,7 @@ const UserProfile = (props) => {
 const useSelector = (state) => {
     return {
         token: state.token.token,
+        internet: state.token.internet,
         userdata: state.userProfile.data,
         theme: state.token.theme,
         loading: state.userProfile.loading,

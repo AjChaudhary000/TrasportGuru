@@ -8,7 +8,6 @@ import color from '../../contents/color'
 import { CountdownCircleTimer } from 'react-native-countdown-circle-timer'
 import icons from '../../contents/icons';
 import { connect } from 'react-redux'
-import { getJWTToken } from '../../Redux/helper';
 import { sendemail, setUserData } from '../../Redux/sendEmailSlice';
 import LottieView from 'lottie-react-native';
 import { addDriver, setDriverData, updateDriver } from '../../Redux/Admin/addDriverSlice';
@@ -19,7 +18,6 @@ import Toast from 'react-native-simple-toast';
 import ImageModel from '../../components/imageModel';
 const AddDriver = (props) => {
     const [isTimerView, setIsTmerView] = React.useState(true);
-    const [token, setToken] = React.useState('');
     const [firebaseImage, setfirebaseImage] = React.useState(props.route.params?.item?.driverImage || '');
     const [imageLoading, setImageLoading] = React.useState(false)
     const [verifyDriverData, setVerifyDriverData] = React.useState(false)
@@ -34,18 +32,6 @@ const AddDriver = (props) => {
         props.sendemail(data.driverEmail);
         setIsTmerView(true)
     }
-    const fetchToken = async () => {
-        try {
-            const data = await getJWTToken();
-            setToken(data)
-
-        } catch (e) {
-            console.log()
-        }
-    }
-    React.useEffect(() => {
-        fetchToken()
-    }, [token])
     React.useEffect(() => {
         if (props?.Driverdata.status) {
             setVerifyDriverData(true)
@@ -53,8 +39,8 @@ const AddDriver = (props) => {
         }
         if (props?.addDriverData.status) {
             Toast.show(" Driver add successful")
-            props.getCountDriver(token)
-            props.getDriverList(token)
+            props.getCountDriver(props.token)
+            props.getDriverList(props.token)
             props.setDriverData({})
             props.navigation.goBack();
         }
@@ -62,7 +48,7 @@ const AddDriver = (props) => {
             Toast.show(props.error);
         }
         ;
-    }, [props, token])
+    }, [props])
 
     const VerifyDriver = () => {
         if (data.driverName === "") {
@@ -93,12 +79,12 @@ const AddDriver = (props) => {
         setVerifyDriverData(false)
     }
     const Finish = () => {
-        console.log(token)
-        props.addDriver({ ...data, driverImage: firebaseImage, token: token })
+      
+        props.addDriver({ ...data, driverImage: firebaseImage, token: props.token })
         console.log("output", data)
     }
     const UpdateFinish = () => {
-        props.updateDriver({ ...data, driverImage: firebaseImage, id: props.route.params?.item?._id, token: token })
+        props.updateDriver({ ...data, driverImage: firebaseImage, id: props.route.params?.item?._id, token: props.token })
 
     }
 

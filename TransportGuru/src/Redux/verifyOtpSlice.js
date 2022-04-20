@@ -1,14 +1,14 @@
 import { createAsyncThunk, createSlice, isRejectedWithValue } from '@reduxjs/toolkit';
 import TrasportApi from '../api/TrasportApi';
-import { setToken } from './tokenSlice';
+import { saveJWTToken } from './helper';
+import { getToken } from './tokenSlice';
 export const verifyOtp = createAsyncThunk('otp/verifyOtp',
     async (obj, getState) => {
         try {
             const response = await TrasportApi.post('/verifyuser', obj);
-
-            await getState.dispatch(setToken(response.data.token))
+            await saveJWTToken(response.data.token);
+            await getState.dispatch(getToken(response.data.token))
             // console.log("Response token", responseToken);
-
             return response.data;
         } catch (e) {
             return getState.rejectWithValue(e.response.data);

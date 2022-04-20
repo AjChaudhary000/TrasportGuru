@@ -4,7 +4,7 @@ import { AdminHeaderWithBackButton } from '../../components/adminHeader'
 import color from '../../contents/color'
 import image from '../../contents/image'
 import { connect } from 'react-redux'
-import { getJWTToken } from '../../Redux/helper'
+
 import { getCountTransport } from '../../Redux/Admin/countAddSlice'
 import icons from '../../contents/icons'
 import { deleteTransport, getTransportList, setTransportData ,setTransportList} from '../../Redux/Admin/transportSlice'
@@ -13,47 +13,35 @@ import Toast from 'react-native-simple-toast';
 import AnimatedLoader from "react-native-animated-loader";
 import { getUserDetails } from '../../Redux/UserDetails'
 const TransportListDetails = (props) => {
-    const [token, setToken] = React.useState('');
     const [driver, setDriver] = React.useState({ type: false, id: '' });
     const [truck, setTruck] = React.useState({ type: false, id: '' });
     const [route, setRoute] = React.useState({ type: false, id: '' })
     const [data,setData] = React.useState([])
     const limitValue = 3
     const [isSkip,setIsSkip] = React.useState(0);
-    const fetchToken = async () => {
-        try {
-            const data = await getJWTToken();
-            setToken(data)
-            props.getTransportList({token:data,skip:isSkip,limit:limitValue})
-
-        } catch (e) {
-            console.log()
-        }
-    }
     React.useEffect(() => {
-        fetchToken()
-      
+       
+        props.getTransportList({token:props.token,skip:isSkip,limit:limitValue})
     }, [])
     React.useEffect(() => {
 
         if (props.deletedata?.status) {
            
-            props.getCountTransport(token)
+            props.getCountTransport(props.token)
             props.setTransportData({})
         }
        if(props.transportList?.status){
-        //console.log(props.transportList)
            setData([...data,...props.transportList.data]);
            props.setTransportList({})
            props.transportList = {}
           
        }
-    }, [token, props])
+    }, [props])
    
     const DeleteDriver = (id) => {
 
         Toast.show(" Transport remove successful")
-        props.deleteTransport({ id: id, token: token })
+        props.deleteTransport({ id: id, token: props.token })
     }
     const EditDriver = (item) => {
 
@@ -316,7 +304,7 @@ const TransportListDetails = (props) => {
                 console.log("isSkip",count)
                 setIsSkip(count);
                
-                props.getTransportList({token,skip:count,limit:limitValue})
+                props.getTransportList({token:props.token,skip:count,limit:limitValue})
             }}
             onEndReachedThreshold={0.2}
             ListFooterComponent={handleListFooterComponent}
@@ -343,7 +331,7 @@ const useSelector = (state) => (
         deletedata: state.transport.data,
         theme: state.token.theme,
         loading: state.transport.loading,
-        
+        token: state.token.token,
 
     }
 )

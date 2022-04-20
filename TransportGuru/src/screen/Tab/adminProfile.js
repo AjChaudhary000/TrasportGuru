@@ -4,24 +4,14 @@ import { connect } from 'react-redux'
 import color from '../../contents/color'
 import icons from '../../contents/icons'
 import { HeaderWithBackButton } from '../../components/header'
-import { Paragraph, Caption, Text, Title } from 'react-native-paper'
+import { Caption, Text, Title } from 'react-native-paper'
 import { getUserDetails } from '../../Redux/UserDetails'
-import { getJWTToken } from '../../Redux/helper'
+
 import Toast from 'react-native-simple-toast';
 const AdminProfile = (props) => {
-    const [token, setToken] = React.useState('');
-    const fetchToken = async () => {
-        try {
-            const data = await getJWTToken();
-            setToken(data)
-        } catch (e) {
-            console.log()
-        }
-    }
     React.useEffect(() => {
-        fetchToken()
-        props.getUserDetails(token);
-    }, [token])
+        props.getUserDetails(props.token);
+    }, [])
     const styles = StyleSheet.create({
         container: {
             flex: 1,
@@ -108,7 +98,8 @@ const useSelector = (state) => (
     {
         userData: state.user.userData,
         loading: state.user.loading,
-        theme: state.token.theme
+        theme: state.token.theme,
+        token: state.token.token,
 
     }
 )

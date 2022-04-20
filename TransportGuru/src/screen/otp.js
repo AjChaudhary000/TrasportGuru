@@ -13,7 +13,7 @@ import AnimatedLoader from "react-native-animated-loader";
 const Otp = (props) => {
     const [isTimerView, setIsTmerView] = React.useState(true);
     const [otp, setOtp] = React.useState()
-    console.log(props.otpdata)
+   
     React.useEffect(() => {
         if (props?.otpdata.account === "0" && props?.otpdata.status) {
             props.navigation.replace('UserProfile')

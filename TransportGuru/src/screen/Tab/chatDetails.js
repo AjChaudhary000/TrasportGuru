@@ -2,7 +2,6 @@ import { View, Text, TextInput, TouchableOpacity, FlatList, Image, StyleSheet } 
 import React, { useEffect } from 'react'
 import { io } from 'socket.io-client'
 import { connect } from 'react-redux'
-import { getJWTToken } from '../../Redux/helper'
 import { HeaderWithBackButton } from '../../components/header'
 import color from '../../contents/color'
 import icons from '../../contents/icons';
@@ -11,47 +10,43 @@ import { getmessage, sendMessage, CreateRoom, getRoom, setChatList, setRoomData 
 const ChatDetails = (props) => {
   const socket = io('http://192.168.200.123:5000');
   const [message, setMessage] = React.useState('');
-  const [convessationId, setConvessationId] = React.useState()
-  const [token, setToken] = React.useState('');
+  const [convessationId, setConvessationId] = React.useState('')
   const [userChatList, setUserChatList] = React.useState([])
   const id = props.route.params.item._id
   const name = props.route.params.item?.trasportAccount[0]?.trasportName || props.route.params.item?.username;
-  const fetchToken = async () => {
-    try {
-      const TokenData = await getJWTToken();
-      const data = {
-        senderId: id
-      }
-      props.setChatList({})
-      props.getRoom({ data, token: TokenData })
-      setToken(TokenData)
-    } catch (e) {
-      console.log()
-    }
-  }
   React.useEffect(() => {
     socket.emit("onJoinChat", convessationId)
   })
   React.useEffect(() => {
     try {
-      fetchToken()
+      const data = {
+        senderId: id
+      }
+      console.log("my id", id)
+      console.log("conver", convessationId)
+      setConvessationId('')
+      props.getRoom({ data, token: props.token })
+      props.setChatList({})
       setChatList([])
     } catch (e) { console.log(e) }
   }, [])
-  React.useEffect(() => {
-    try {
-      props.getmessage({ data: { convessationId }, token })
-    } catch (e) { console.log(e) }
-  }, [convessationId, token])
+
   React.useEffect(() => {
     if (props.roomdata?.data.length !== 0) {
       setConvessationId(props.roomdata?.data[0]?._id)
+      props.setRoomData({ data: [] })
     }
     if (props.chatList?.status) {
       setUserChatList([...userChatList, ...props.chatList.data]);
       props.setChatList({})
     }
   }, [props])
+  React.useEffect(() => {
+    try {
+      console.log(convessationId)
+      if (convessationId !== '') { props.getmessage({ data: { convessationId }, token: props.token }) }
+    } catch (e) { console.log(e) }
+  }, [convessationId])
   React.useEffect(() => {
     socket.on("onSendMesssage", (data) => {
       setUserChatList([...userChatList, data]);
@@ -63,7 +58,7 @@ const ChatDetails = (props) => {
   }, [userChatList])
   const sendMessage = () => {
     try {
-      props.sendMessage({ data: { senderId: id, convessationId: convessationId, message: message }, token })
+      props.sendMessage({ data: { senderId: id, convessationId: convessationId, message: message }, token: props.token })
       setMessage('')
     } catch (e) {
       console.log(e)
@@ -183,6 +178,7 @@ const useSelector = (state) => (
     roomdata: state.chat.roomdata,
     userData: state.user.userData,
     chat: state.chat.chat,
+    token: state.token.token,
   }
 )
 export default connect(useSelector, useDispatch)(ChatDetails);

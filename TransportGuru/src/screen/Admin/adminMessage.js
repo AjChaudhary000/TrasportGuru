@@ -3,36 +3,21 @@ import React from 'react';
 import AdminHeader from '../../components/adminHeader'
 import AnimatedLoader from "react-native-animated-loader";
 import { connect } from 'react-redux'
-import { getJWTToken } from '../../Redux/helper';
 import color from '../../contents/color';
 import { getUserMessageList } from '../../Redux/messageListSlice';
 const wait = (timeout) => {
     return new Promise(resolve => setTimeout(resolve, timeout));
 }
 const AdminMessage = (props) => {
-    const [token, setToken] = React.useState('');
-    const [id, setId] = React.useState('');
     const [refreshing, setRefreshing] = React.useState(false);
-
     const onRefresh = React.useCallback(() => {
         setRefreshing(true);
-        props.getUserMessageList({ token })
+        props.getUserMessageList({ token:props.token })
         wait(2000).then(() => setRefreshing(false));
-    }, [token]);
-    const fetchToken = async () => {
-        try {
-            const data = await getJWTToken();
-            setToken(data)
-
-
-        } catch (e) {
-            console.log()
-        }
-    }
+    }, []);
     React.useEffect(() => {
-        fetchToken();
-        props.getUserMessageList({ token })
-    }, [token, id])
+        props.getUserMessageList({ token:props.token })
+    }, [])
     const styles = StyleSheet.create({
         container: {
             flex: 1,
@@ -116,7 +101,8 @@ const useSelector = (state) => (
         loading: state.message.loading,
         messageList: state.message.usermessageList,
         userData: state.user.userData,
-        theme: state.token.theme
+        theme: state.token.theme,
+        token: state.token.token,
     }
 )
 export default connect(useSelector, useDispatch)(AdminMessage);
