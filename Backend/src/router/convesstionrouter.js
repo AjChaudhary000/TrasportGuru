@@ -8,13 +8,14 @@ router.post('/roomdata', auth, async (req, res) => {
     try {
 
         const data = await convessationRoom.find({ $or: [{ userId: req.user._id, senderId: req.body.senderId }, { userId: req.body.senderId, senderId: req.user._id }] });
-     
+
         if (data.length !== 0) {
             res.send({ data, status: true })
         } else {
             const ConvessationRoom = new convessationRoom({ userId: req.user._id, ...req.body });
-            const data = await ConvessationRoom.save();
-            res.send({ data, status: true })
+            const data1 = await ConvessationRoom.save();
+            
+            res.send({ data: [data1], status: true })
         }
 
     } catch (e) {

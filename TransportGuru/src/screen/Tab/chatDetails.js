@@ -7,6 +7,7 @@ import color from '../../contents/color'
 import icons from '../../contents/icons';
 import AnimatedLoader from "react-native-animated-loader";
 import { getmessage, sendMessage, CreateRoom, getRoom, setChatList, setRoomData } from '../../Redux/chatSlice'
+import { getMessageList } from '../../Redux/messageListSlice'
 const ChatDetails = (props) => {
   const socket = io('http://192.168.200.123:5000');
   const [message, setMessage] = React.useState('');
@@ -14,6 +15,7 @@ const ChatDetails = (props) => {
   const [userChatList, setUserChatList] = React.useState([])
   const id = props.route.params.item._id
   const name = props.route.params.item?.trasportAccount[0]?.trasportName || props.route.params.item?.username;
+
   React.useEffect(() => {
     socket.emit("onJoinChat", convessationId)
   })
@@ -22,7 +24,7 @@ const ChatDetails = (props) => {
       const data = {
         senderId: id
       }
-     
+      props.setRoomData({ data: [] })
       setConvessationId('')
       props.getRoom({ data, token: props.token })
       props.setChatList({})
@@ -33,6 +35,7 @@ const ChatDetails = (props) => {
   React.useEffect(() => {
     if (props.roomdata?.data.length !== 0) {
       setConvessationId(props.roomdata?.data[0]?._id)
+      props.getMessageList({ token: props.token })
       props.setRoomData({ data: [] })
     }
     if (props.chatList?.status) {
@@ -40,9 +43,10 @@ const ChatDetails = (props) => {
       props.setChatList({})
     }
   }, [props])
+
   React.useEffect(() => {
     try {
-     
+
       if (convessationId !== '') { props.getmessage({ data: { convessationId }, token: props.token }) }
     } catch (e) { console.log(e) }
   }, [convessationId])
@@ -58,6 +62,7 @@ const ChatDetails = (props) => {
   const sendMessage = () => {
     try {
       props.sendMessage({ data: { senderId: id, convessationId: convessationId, message: message }, token: props.token })
+
       setMessage('')
     } catch (e) {
       console.log(e)
@@ -119,7 +124,9 @@ const ChatDetails = (props) => {
       >
         <Text>Loading ...</Text>
       </AnimatedLoader>
+
       <HeaderWithBackButton name={name} navigation={props.navigation} />
+
       <FlatList style={{ marginBottom: 100 }} inverted contentContainerStyle={{ flexDirection: 'column-reverse' }}
         data={userChatList} renderItem={(item) => (
           <View>
@@ -164,8 +171,8 @@ const useDispatch = (dispatch) => {
     CreateRoom: (data) => dispatch(CreateRoom(data)),
     getRoom: (data) => dispatch(getRoom(data)),
     setChatList: (data) => dispatch(setChatList(data)),
-    setRoomData: (data) => dispatch(setRoomData(data))
-
+    setRoomData: (data) => dispatch(setRoomData(data)),
+    getMessageList: (data) => dispatch(getMessageList(data)),
   };
 }
 const useSelector = (state) => (

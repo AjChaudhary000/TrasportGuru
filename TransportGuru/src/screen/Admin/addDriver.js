@@ -61,8 +61,8 @@ const AddDriver = (props) => {
             Toast.show("Select Driver Image ")
         } else {
             const regex = /[^\s@]+@[^\s@]+\.[^\s@]+/;
-            if (regex.test(data.driverEmail)) {
-                Toast.show("Enter valid email                                                   ")
+            if (!regex.test(data.driverEmail)) {
+                Toast.show("Enter valid email ")                                                  
             }
             props.sendemail(data.driverEmail);
         }
