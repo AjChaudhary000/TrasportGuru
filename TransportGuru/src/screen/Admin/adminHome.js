@@ -140,19 +140,7 @@ const AdminHome = (props) => {
                         </View>
                     </TouchableOpacity>
                 </View>
-                <View style={styles.box}>
-                    <TouchableOpacity style={styles.adminCard} activeOpacity={0.80}>
-                        <View style={styles.Text}>
-                            <Text style={styles.menuText}>0</Text>
-                        </View>
-                        <View style={styles.icon}>
-                            <Image source={icons.box} style={{ width: 40, height: 40, tintColor: color.adminprimaryColors }} />
-                            <Text style={styles.title} > Booking</Text>
-                        </View>
-                    </TouchableOpacity>
-
-
-                </View>
+               
             </ScrollView>
         </View>
     )

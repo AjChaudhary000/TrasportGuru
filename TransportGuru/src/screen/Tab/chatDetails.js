@@ -22,8 +22,7 @@ const ChatDetails = (props) => {
       const data = {
         senderId: id
       }
-      console.log("my id", id)
-      console.log("conver", convessationId)
+     
       setConvessationId('')
       props.getRoom({ data, token: props.token })
       props.setChatList({})
@@ -43,7 +42,7 @@ const ChatDetails = (props) => {
   }, [props])
   React.useEffect(() => {
     try {
-      console.log(convessationId)
+     
       if (convessationId !== '') { props.getmessage({ data: { convessationId }, token: props.token }) }
     } catch (e) { console.log(e) }
   }, [convessationId])

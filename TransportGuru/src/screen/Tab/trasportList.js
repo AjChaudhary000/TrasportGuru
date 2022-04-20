@@ -109,7 +109,7 @@ const TrasportList = (props) => {
                 <Text>Loading ...</Text>
             </AnimatedLoader>
             <Header name={"Transport List"} />
-            <ScrollView style={{ marginBottom: 60 }} refreshControl={
+            <ScrollView style={{ marginBottom: 60 }}  refreshControl={
                 <RefreshControl
                     refreshing={refreshing}
                     onRefresh={onRefresh}
@@ -161,7 +161,7 @@ const TrasportList = (props) => {
                                     <Image source={icons.share} style={styles.icon} />
                                 </TouchableOpacity>
                             </View>
-                            <TouchableOpacity style={styles.profile} onPress={() => props.navigation.navigate("AdminProfile", { item: item.item })}>
+                            <TouchableOpacity style={styles.profile}  onLongPress={()=>console.log("hello")} onPress={() => props.navigation.navigate("AdminProfile", { item: item.item })}>
                                 <Text style={{ color: 'white', fontWeight: "bold" }}> View Profile</Text>
                             </TouchableOpacity>
                         </View>
