@@ -2,7 +2,8 @@ const mongodb = require('mongoose');
 const TransportSchema = mongodb.Schema({
 
     capicity: {
-        type: String
+        type: String,
+        default: "0"
     },
     Truckdate: {
         type: Date,

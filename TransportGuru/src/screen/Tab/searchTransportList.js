@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, FlatList, Image, TouchableOpacity, ScrollView, Modal, Dimensions } from 'react-native'
+import { View, Text, StyleSheet, FlatList, Image, TouchableOpacity, ScrollView, Modal, Dimensions, Linking } from 'react-native'
 import React from 'react'
 import { connect } from 'react-redux';
 import { HeaderWithBackButton } from '../../components/header'
@@ -10,15 +10,15 @@ import calcKmFind from '../../components/kmFind';
 import AnimatedLoader from "react-native-animated-loader";
 const SearchTransportList = (props) => {
 
- 
+
     const [modalVisible, setModalVisible] = React.useState(false);
     const [route, setRoute] = React.useState({ type: false, id: '' })
 
     React.useEffect(() => {
-       
+
 
         props.getSearchTransportList({ ...props.route.params, token: props.token })
-       
+
     }, [])
 
     const styles = StyleSheet.create({
@@ -144,7 +144,7 @@ const SearchTransportList = (props) => {
                                 <Text style={{ fontSize: 20, fontWeight: 'bold', color: props.theme ? color.drakPrimaryColors : color.primaryColors }}>{item.item.tarsportUserId.trasportAccount[0].trasportName}</Text>
                             </View>
                             <View style={{ width: "30%", flexDirection: "row", justifyContent: 'space-between', paddingVertical: 10 }}>
-                                <TouchableOpacity style={{ width: "50%" }}>
+                                <TouchableOpacity style={{ width: "50%" }} onPress={() => { Linking.canOpenURL(`tel:${item.item.tarsportUserId.trasportAccount[0].trasportmobile}`) }}>
                                     <Image source={icons.call} style={styles.icon} />
                                 </TouchableOpacity>
                                 <TouchableOpacity style={{ width: "50%" }} onPress={() => {
