@@ -41,7 +41,7 @@ const TrackingDetails = (props) => {
         container: {
             flex: 1,
             backgroundColor: props.theme ? color.drakBackgroundColor : color.backgroundColor,
-
+         
         },
         listBox: {
             minHeight: 100,
@@ -123,7 +123,7 @@ const TrackingDetails = (props) => {
                 />
             } showsVerticalScrollIndicator={false}>
                 <FlatList data={props.trackingDetails} renderItem={(item) => (
-                    <View>
+                    <View style={{marginBottom:100}}>
                         <View style={styles.listBox} >
                             <View style={{
                                 marginHorizontal: 20, flexDirection: "row", justifyContent: 'space-between',
@@ -146,15 +146,17 @@ const TrackingDetails = (props) => {
                                     </Text>
                                 </View>
                                 <View style={{ width: "30%", flexDirection: "row", justifyContent: 'space-between', paddingVertical: 10 }}>
-                                    <TouchableOpacity style={{ width: "50%" }}>
+                                    <TouchableOpacity style={{ width: "50%" }} onPress={() => console.log("heloo")}>
                                         <Image source={icons.call} style={styles.icon} />
                                     </TouchableOpacity>
                                     <TouchableOpacity style={{ width: "50%" }} onPress={() => {
-
+                                        console.log(item.item?.tarsportId?.tarsportUserId)
                                         if (item.item?.tarsportId.tarsportUserId._id === props.userData._id) {
                                             Toast.show("not found ...")
                                         } else {
-                                            props.navigation.navigate("ChatDetails", { item: item.item?.tarsportUserId })
+                                            console.log(item.item?.tarsportId?.tarsportUserId)
+                                            props.navigation.navigate("ChatDetails", { item: item.item?.tarsportId?.tarsportUserId })
+
                                         }
                                     }}>
                                         <Image source={icons.message} style={styles.icon} />

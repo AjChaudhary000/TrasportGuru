@@ -9,12 +9,14 @@ import AnimatedLoader from "react-native-animated-loader";
 import { getmessage, sendMessage, CreateRoom, getRoom, setChatList, setRoomData } from '../../Redux/chatSlice'
 import { getMessageList } from '../../Redux/messageListSlice'
 const ChatDetails = (props) => {
+  console.log("props", props)
   const socket = io('https://transportapi-aj.herokuapp.com');
   const [message, setMessage] = React.useState('');
   const [convessationId, setConvessationId] = React.useState('')
   const [userChatList, setUserChatList] = React.useState([])
-  const id = props.route.params.item._id
-  const name = props.route.params.item?.trasportAccount[0]?.trasportName || props.route.params.item?.username;
+
+  const id = props?.route?.params.item?._id 
+ const name = props.route.params.item?.trasportAccount[0]?.trasportName || props.route.params.item?.username;
 
   React.useEffect(() => {
     socket.emit("onJoinChat", convessationId)
@@ -155,7 +157,10 @@ const ChatDetails = (props) => {
         height: 100, width: '100%', borderWidth: 0, flexDirection: 'row', justifyContent: 'center', alignItems: 'center',
       }}>
         <View style={{ width: "90%" }}>
-          <TextInput value={message} style={{ color: props.theme ? color.drakFontcolor : color.fontcolor, height: 45, borderWidth: 1, borderColor: color.primaryColors, marginHorizontal: 10, fontSize: 20, padding: 10, borderRadius: 10 }}
+          <TextInput value={message}
+            placeholder={"message "}
+            placeholderTextColor={"gray"}
+            style={{ color: props.theme ? color.drakFontcolor : color.fontcolor, height: 45, borderWidth: 1, borderColor: color.primaryColors, marginHorizontal: 10, fontSize: 20, padding: 10, borderRadius: 10 }}
             onChangeText={(value) => setMessage(value)} /></View>
         <TouchableOpacity style={{ width: "10%" }} onPress={() => { sendMessage() }} >
           <Image source={icons.send} style={{ width: 30, height: 30, tintColor: props.theme ? color.drakPrimaryColors : color.primaryColors }} />
