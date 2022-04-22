@@ -7,12 +7,12 @@ import SignIn from '../screen/SignIn';
 import Otp from '../screen/otp';
 import UserProfile from '../screen/userProfile';
 import { connect } from 'react-redux';
-import { getJWTToken, getTheme } from '../Redux/helper';
+import { getJWTToken, getOnBording, getTheme } from '../Redux/helper';
 import Tab from './tab';
 import LottieView from 'lottie-react-native';
 import color from '../contents/color';
 import EditAccount from '../screen/Tab/settingTab/editAccount';
-import { getNetwork, getThemeMode, getToken } from '../Redux/tokenSlice';
+import { getNetwork, getOnBordingData, getThemeMode, getToken } from '../Redux/tokenSlice';
 import TrasportGuruAccount from '../screen/Tab/settingTab/trasportGuruAccount';
 import image from '../contents/image';
 import AdminTab from './adminTab';
@@ -34,6 +34,7 @@ import NetInfo from "@react-native-community/netinfo";
 import { getUserDetails } from '../Redux/UserDetails';
 import TrackingDetails from '../screen/Tab/trackingDetails';
 import AdminTrackingDetails from '../screen/Admin/adminTrackingDetails';
+
 const Stack = createNativeStackNavigator();
 const Router = (props) => {
     const [isloading, setloadingData] = React.useState(true)
@@ -41,10 +42,12 @@ const Router = (props) => {
         try {
             const mytoken = await getJWTToken();
             const theme = await getTheme()
+            const onbording = await getOnBording();
             console.log(mytoken)
             props.getToken(mytoken)
             props.getUserDetails(mytoken)
             theme === "true" ? props.getThemeMode(true) : props.getThemeMode(false)
+            onbording === "true" ? props.getOnBordingData(true) : props.getOnBordingData(false)
             NetInfo.fetch().then(state => {
                 props.getNetwork(state.isConnected)
             });
@@ -88,6 +91,7 @@ const Router = (props) => {
     return (
         <NavigationContainer>
             <Stack.Navigator>
+                {!props.onbording && <Stack.Screen name='Onboardring' component={Onboardring} options={{ headerShown: false }} /> }
                 {/* User Login /SignUp  Start */}
                 {!props.token && <Stack.Screen name='SignIn' component={SignIn} options={{ headerShown: false }} />}
                 {/* User Login /SignUp  End  */}
@@ -95,7 +99,7 @@ const Router = (props) => {
                 {/* userSide Start */}
 
                 <Stack.Screen name='Tab' component={Tab} options={{ headerShown: false }} />
-                <Stack.Screen name='Onboardring' component={Onboardring} options={{ headerShown: false }} />
+
                 <Stack.Screen name='UserProfile' component={UserProfile} options={{ headerShown: false }} />
                 <Stack.Screen name='Otp' component={Otp} options={{ headerShown: false }} />
                 <Stack.Screen name='EditAccount' component={EditAccount} options={{ headerShown: false }} />
@@ -129,7 +133,8 @@ const useSelector = (state) => {
     return {
         token: state.token.token,
         internet: state.token.internet,
-        theme: state.token.theme
+        theme: state.token.theme,
+        onbording: state.token.onbording,
     }
 }
 const useDispatch = (dispatch) => {
@@ -139,6 +144,7 @@ const useDispatch = (dispatch) => {
         getThemeMode: (data) => dispatch(getThemeMode(data)),
         getUserDetails: (data) => dispatch(getUserDetails(data)),
         getNetwork: (data) => dispatch(getNetwork(data)),
+        getOnBordingData: (data) => dispatch(getOnBordingData(data)),
 
     }
 }

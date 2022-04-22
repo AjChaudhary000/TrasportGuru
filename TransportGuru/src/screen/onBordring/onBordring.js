@@ -1,10 +1,11 @@
 import React, { useState, useRef } from 'react'
 import { View, StyleSheet, FlatList, Text, useWindowDimensions, Dimensions, Animated, StatusBar } from 'react-native'
 import LottieView from 'lottie-react-native';
-//import AsyncStorage from '@react-native-async-storage/async-storage'
+import AsyncStorage from '@react-native-async-storage/async-storage'
 import NextButton from './nextButton';
 import Page from './page';
 import Slider from './Slider';
+import { saveOnBording } from '../../Redux/helper';
 function Onboardring({ navigation }) {
     const [currentIndex, setCurrentIndex] = useState(0);
     const scrollX = useRef(new Animated.Value(0)).current;
@@ -19,7 +20,7 @@ function Onboardring({ navigation }) {
         }
         else {
             try {
-                // await AsyncStorage.setItem("@Onbordring", 'true')
+                await saveOnBording('true')
                 navigation.replace("SignIn")
             } catch (e) {
                 console.log(e)

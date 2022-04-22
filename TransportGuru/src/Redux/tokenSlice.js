@@ -10,6 +10,7 @@ export const tokenSlice = createSlice({
         token: null,
         theme: false,
         internet: false,
+        onbording: false
     },
     reducers: {
         logoutToken: (state, action) => {
@@ -24,11 +25,14 @@ export const tokenSlice = createSlice({
         },
         getNetwork: (state, action) => {
             state.internet = action.payload
+        },
+        getOnBordingData: (state, action) => {
+            state.onbording = action.payload
         }
 
     },
     extraReducers: {
     }
 });
-export const { logoutToken, getToken, getThemeMode, getNetwork } = tokenSlice.actions;
+export const { logoutToken, getToken, getThemeMode, getNetwork, getOnBordingData } = tokenSlice.actions;
 export default tokenSlice.reducer;

@@ -1,19 +1,19 @@
 export default Slider = [
     {
         id: 1,
-        title: "Create Your Reminder",
+        title: "Choose  Your Source / Destination City",
         Description: "Make your important reminder well organized at work to make your work easier work",
         image: require('../../assets/json/Jo1.json')
     },
     {
         id: 2,
-        title: "Create Your To Do list",
+        title: "Choose Your Transport Companys ",
         Description: "You can easily organize your To Do List and schedule properly so that you are more comfortable while doing work",
         image: require('../../assets/json/Jo2.json')
     },
     {
         id: 3,
-        title: "Choose Your Perfect Subscription ",
+        title: "Payments Methods ",
         Description: "Whats going to happen tomorrow ?",
         image: require('../../assets/json/Jo3.json')
     },

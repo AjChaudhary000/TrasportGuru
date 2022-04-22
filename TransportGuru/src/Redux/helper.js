@@ -12,10 +12,21 @@ export const saveTheme = async (theme) => {
     await AsyncStorage.setItem('@userthemeData', theme.toString());
 };
 export const getTheme = async () => {
-    try{
-        return await AsyncStorage.getItem('@userthemeData') ;
-    }catch(e){
+    try {
+        return await AsyncStorage.getItem('@userthemeData');
+    } catch (e) {
         console.log(e)
     }
-    
+
+};
+export const getOnBording = async () => {
+    try {
+        return await AsyncStorage.getItem('@Onbordring');
+    } catch (e) {
+        console.log(e)
+    }
+
+};
+export const saveOnBording = async (theme) => {
+    await AsyncStorage.setItem('@Onbordring', theme.toString());
 };
