@@ -9,7 +9,7 @@ import AnimatedLoader from "react-native-animated-loader";
 import { getmessage, sendMessage, CreateRoom, getRoom, setChatList, setRoomData } from '../../Redux/chatSlice'
 import { getMessageList } from '../../Redux/messageListSlice'
 const ChatDetails = (props) => {
-  const socket = io('http://192.168.200.123:5000');
+  const socket = io('https://transportapi-aj.herokuapp.com');
   const [message, setMessage] = React.useState('');
   const [convessationId, setConvessationId] = React.useState('')
   const [userChatList, setUserChatList] = React.useState([])
@@ -129,7 +129,7 @@ const ChatDetails = (props) => {
 
       <FlatList style={{ marginBottom: 100 }} inverted contentContainerStyle={{ flexDirection: 'column-reverse' }}
         data={userChatList} renderItem={(item) => (
-          <View>
+          <View style={{ paddingHorizontal: 10 }}>
             {(props.userData?._id !== item.item?.userId) ?
               <View style={{ flexDirection: "row" }}>
                 <View style={styles.left}>

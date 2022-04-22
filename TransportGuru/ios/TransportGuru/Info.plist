@@ -3,7 +3,6 @@
 <plist version="1.0">
 <dict>
 <key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
-	
     <string>Location Permission</string>
     <key>NSLocationAlwaysUsageDescription</key>
     <string>Location Permission</string>
