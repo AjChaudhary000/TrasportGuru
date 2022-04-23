@@ -23,15 +23,12 @@ const AddTrasportDetails = (props) => {
     const [open, setOpen] = React.useState(false)
     const [data, setData] = React.useState({
         routeId: props.route.params?.item?.routeId || '',
-       
         Truckdate: props.route.params?.item?.Truckdate || '',
         truckId: props.route.params?.item?.truckId || "",
         driverId: props.route.params?.item?.driverId || "",
-        truckPrice: props.route.params?.item?.truckPrice
+        truckPrice: props.route.params?.item?.truckPrice || ''
     })
-   
     React.useEffect(() => {
-       
         props.getDriverList(props.token)
         props.getTruckList(props.token)
         props.getRouteList(props.token)
@@ -53,7 +50,7 @@ const AddTrasportDetails = (props) => {
         } else if (data.truckPrice === "") {
             Toast.show("Enter Truck Price ")
         } else {
-            props.addTransport({ ...data, token:props.token })
+            props.addTransport({ ...data, token: props.token })
         }
 
     }
@@ -239,7 +236,7 @@ const AddTrasportDetails = (props) => {
                             <Text style={{ color: 'gray' }}> 1000 = 10 * 10 * 10 </Text>
                             <Text style={{ color: 'red', fontWeight: 'bold' }}>calculated on the basis of minimum distance and weight.</Text>
                         </View>
-                        <TouchableOpacity onPress={() => { setModalVisible(false) }} style={{ alignItems: 'center', bottom: 190,left:  Dimensions.get('screen').width  / 2 -40 }}>
+                        <TouchableOpacity onPress={() => { setModalVisible(false) }} style={{ alignItems: 'center', bottom: 190, left: Dimensions.get('screen').width / 2 - 40 }}>
                             <Image source={icons.close} style={{ width: 35, height: 35, tintColor: props.theme ? color.drakAdminprimaryColors : color.adminprimaryColors, }} />
 
                         </TouchableOpacity>
@@ -338,7 +335,7 @@ const AddTrasportDetails = (props) => {
 
                             </View>
 
-                           
+
                             <View style={{ margin: 10, flexDirection: 'row', justifyContent: 'space-between' }}>
                                 <View style={{ width: "85%" }}>
                                     <TextInput style={styles.input}
@@ -455,7 +452,7 @@ const AddTrasportDetails = (props) => {
 
                             </View>
 
-                            
+
                             <View style={{ margin: 10, flexDirection: 'row', justifyContent: 'space-between' }}>
                                 <View style={{ width: "85%" }}>
                                     <TextInput style={styles.input}

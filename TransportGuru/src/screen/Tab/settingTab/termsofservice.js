@@ -13,10 +13,7 @@ const Termsofservice = (props) => {
 const useSelector = (state) => (
 
     {
-      userData: state.user.userData,
-      loading: state.user.loading,
       theme: state.token.theme,
-      token: state.token.token,
     }
   )
   export default connect(useSelector)(Termsofservice);

@@ -73,7 +73,7 @@ const Router = (props) => {
                 <View>
                     <Image source={image.Tg} style={{ width: 300, height: 200 }} />
                 </View>
-            </View>
+            </View> 
         );
     }
     if (!props.internet) {
@@ -101,7 +101,6 @@ const Router = (props) => {
                 {/* userSide Start */}
 
                 <Stack.Screen name='Tab' component={Tab} options={{ headerShown: false }} />
-
                 <Stack.Screen name='UserProfile' component={UserProfile} options={{ headerShown: false }} />
                 <Stack.Screen name='Otp' component={Otp} options={{ headerShown: false }} />
                 <Stack.Screen name='EditAccount' component={EditAccount} options={{ headerShown: false }} />
