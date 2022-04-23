@@ -2,7 +2,7 @@ import { View, Text, StyleSheet, Image, TouchableOpacity, FlatList } from 'react
 import React from 'react'
 import { AdminHeaderWithBackButton } from '../../components/adminHeader'
 import color from '../../contents/color'
-import image from '../../contents/image'
+import LottieView from 'lottie-react-native';
 import { connect } from 'react-redux'
 import { deleteRoute, getRouteList, setRouteData } from '../../Redux/Admin/routeSlice'
 import { getCountRoute } from '../../Redux/Admin/countAddSlice'
@@ -80,6 +80,16 @@ const Routelist = (props) => {
                 <Text>Loading...</Text>
             </AnimatedLoader>
             <AdminHeaderWithBackButton name={"Route List"} navigation={props.navigation} />
+            {props.routelist.length === 0 ?
+                <View style={{ flex: 1 }}>
+
+                    <View style={{ height: 500, width: 200, alignSelf: 'center' }}>
+                        <LottieView source={require('../../assets/json/notfound.json')} autoPlay loop />
+                    </View>
+
+                </View>
+
+                :
             <FlatList data={props.routelist} renderItem={(item) => (
                 <View style={styles.listBox}>
                     <View style={{ alignItems: "center" }}>
@@ -130,7 +140,7 @@ const Routelist = (props) => {
                     </View>
                 </View>
             )
-            } />
+            } />}
 
         </View >
     )

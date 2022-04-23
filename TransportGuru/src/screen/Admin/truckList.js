@@ -7,6 +7,7 @@ import { getTruckList } from '../../Redux/Admin/truckListSlice'
 import { deleteTruck, setTruckData } from '../../Redux/Admin/addTruckSlice'
 import { getCountTruck } from '../../Redux/Admin/countAddSlice'
 import AnimatedLoader from "react-native-animated-loader";
+import LottieView from 'lottie-react-native';
 import Toast from 'react-native-simple-toast';
 const TruckList = (props) => {
     React.useEffect(() => {
@@ -110,31 +111,44 @@ const TruckList = (props) => {
                 <Text>Loading...</Text>
             </AnimatedLoader>
             <AdminHeaderWithBackButton name={"Truck List"} navigation={props.navigation} />
-            <FlatList data={props.truckList} renderItem={(item) => (
-                <View style={styles.listBox}>
-                    <View style={styles.image}>
-                        <Image source={{ uri: item.item.truckImage }} style={{ width: '100%', height: '100%', overflow: "hidden" }} />
-                    </View>
-                    <View style={styles.listData}>
-                        <Text style={styles.truckname}>{item.item.truckName}</Text>
-                        <Text style={styles.truckmodelname}>{item.item.truckModelName}</Text>
-                        <View style={{ flexDirection: 'row', justifyContent: 'space-between', paddingVertical: 5 }}>
-                            <Text style={styles.truckreg}>{item.item.truckRegistartionNo}</Text>
-                            <Text style={styles.truckcapicity}>{item.item.truckCapicity} /-Tonnes</Text>
-                        </View>
-                        <View style={{ flexDirection: 'row', justifyContent: 'space-between', paddingTop: 10, paddingHorizontal: 20 }}>
-                            <TouchableOpacity onPress={() => { EditTruck(item.item) }}>
-                                <Text style={styles.edit}>Edit</Text>
-                            </TouchableOpacity>
-                            <TouchableOpacity onPress={() => { DeleteTruck(item.item._id) }}>
-                                <Text style={styles.delete}>Delete</Text>
-                            </TouchableOpacity>
+            {props.truckList.length === 0 ?
 
 
-                        </View>
+
+                <View style={{ flex: 1 }}>
+
+                    <View style={{ height: 500, width: 200, alignSelf: 'center' }}>
+                        <LottieView source={require('../../assets/json/notfound.json')} autoPlay loop />
                     </View>
+
                 </View>
-            )} />
+
+                :
+                <FlatList data={props.truckList} renderItem={(item) => (
+                    <View style={styles.listBox}>
+                        <View style={styles.image}>
+                            <Image source={{ uri: item.item.truckImage }} style={{ width: '100%', height: '100%', overflow: "hidden" }} />
+                        </View>
+                        <View style={styles.listData}>
+                            <Text style={styles.truckname}>{item.item.truckName}</Text>
+                            <Text style={styles.truckmodelname}>{item.item.truckModelName}</Text>
+                            <View style={{ flexDirection: 'row', justifyContent: 'space-between', paddingVertical: 5 }}>
+                                <Text style={styles.truckreg}>{item.item.truckRegistartionNo}</Text>
+                                <Text style={styles.truckcapicity}>{item.item.truckCapicity} /-Tonnes</Text>
+                            </View>
+                            <View style={{ flexDirection: 'row', justifyContent: 'space-between', paddingTop: 10, paddingHorizontal: 20 }}>
+                                <TouchableOpacity onPress={() => { EditTruck(item.item) }}>
+                                    <Text style={styles.edit}>Edit</Text>
+                                </TouchableOpacity>
+                                <TouchableOpacity onPress={() => { DeleteTruck(item.item._id) }}>
+                                    <Text style={styles.delete}>Delete</Text>
+                                </TouchableOpacity>
+
+
+                            </View>
+                        </View>
+                    </View>
+                )} />}
 
         </View>
     )

@@ -8,6 +8,7 @@ import AnimatedLoader from "react-native-animated-loader";
 import icons from '../../contents/icons';
 import calcKmFind from '../../components/kmFind';
 import { updatePayment, setPaymentData } from '../../Redux/paymentSlice';
+import LottieView from 'lottie-react-native';
 const wait = (timeout) => {
     return new Promise(resolve => setTimeout(resolve, timeout));
 }
@@ -106,70 +107,83 @@ const Tracking = (props) => {
                     onRefresh={onRefresh}
                 />
             } showsVerticalScrollIndicator={false}>
-                <FlatList data={props.trackingList} renderItem={(item) => (
-                    <TouchableOpacity style={styles.listBox} onPress={() => props.navigation.navigate("TrackingDetails", { id: item.item._id })} >
-                        <View style={{ marginHorizontal: 10, marginVertical: 5, flexDirection: "row", justifyContent: 'space-between' }}>
-                            <View >
+                {props.trackingList.length === 0 ?
 
-                                <Text style={{ color: 'gray', fontWeight: 'bold', fontSize: 14, paddingRight: 2 }}>
-                                    {new Date(new Date(item.item.createdAt)).toLocaleDateString("en-US", { weekday: 'short', month: 'long', day: 'numeric' })}
 
-                                </Text>
-                            </View>
-                            <View >
-                                <Text style={{ color: color.primaryColors, fontWeight: 'bold', fontSize: 14 }}>
-                                    {new Date(new Date(item.item.createdAt)).toLocaleDateString("en-US", { hour: 'numeric', minute: 'numeric', hour12: false }).toString().slice(-5)}
-                                </Text>
 
-                            </View>
+                    <View style={{ flex: 1 }}>
 
+                        <View style={{ height: 500, width: 200, alignSelf: 'center' }}>
+                            <LottieView source={require('../../assets/json/notfound.json')} autoPlay loop />
                         </View>
-                        <View style={{ marginHorizontal: 10, paddingVertical: 4, flexDirection: 'row', justifyContent: 'space-between' }}>
-                            <View style={{ width: '40%', alignItems: "center" }}>
-                                <Text style={{ fontWeight: 'bold', color: props.theme ? color.drakFontcolor : color.fontcolor }}>
 
-                                    {(item.item.paymentid.from.name.split(',').reverse()[2])}
-                                </Text>
+                    </View>
+
+                    :
+                    <FlatList data={props.trackingList} renderItem={(item) => (
+                        <TouchableOpacity style={styles.listBox} onPress={() => props.navigation.navigate("TrackingDetails", { id: item.item._id })} >
+                            <View style={{ marginHorizontal: 10, marginVertical: 5, flexDirection: "row", justifyContent: 'space-between' }}>
+                                <View >
+
+                                    <Text style={{ color: 'gray', fontWeight: 'bold', fontSize: 14, paddingRight: 2 }}>
+                                        {new Date(new Date(item.item.createdAt)).toLocaleDateString("en-US", { weekday: 'short', month: 'long', day: 'numeric' })}
+
+                                    </Text>
+                                </View>
+                                <View >
+                                    <Text style={{ color: color.primaryColors, fontWeight: 'bold', fontSize: 14 }}>
+                                        {new Date(new Date(item.item.createdAt)).toLocaleDateString("en-US", { hour: 'numeric', minute: 'numeric', hour12: false }).toString().slice(-5)}
+                                    </Text>
+
+                                </View>
 
                             </View>
-                            <View style={{ width: '20%', alignItems: "center" }}>
-                                <Image source={icons.transfer} style={{ width: 30, height: 30, tintColor: props.theme ? color.drakPrimaryColors : color.primaryColors }} />
-                            </View>
-                            <View style={{ width: '40%', alignItems: "center" }}>
-                                <Text style={{ fontWeight: 'bold', color: props.theme ? color.drakFontcolor : color.fontcolor }}>
-                                    {(item.item.paymentid.destination.name.split(',').reverse()[2])}</Text>
+                            <View style={{ marginHorizontal: 10, paddingVertical: 4, flexDirection: 'row', justifyContent: 'space-between' }}>
+                                <View style={{ width: '40%', alignItems: "center" }}>
+                                    <Text style={{ fontWeight: 'bold', color: props.theme ? color.drakFontcolor : color.fontcolor }}>
 
-                            </View>
-                        </View>
-                        <View style={{ marginHorizontal: 10, alignItems: "center", paddingVertical: 4, flexDirection: 'row', justifyContent: 'space-between' }}>
-                            <View>
-                                <Text style={{ fontWeight: 'bold', color: 'gray' }}>Delivery Date</Text>
-                                <Text style={{ color: props.theme ? color.drakFontcolor : color.fontcolor, fontWeight: 'bold', fontSize: 14, paddingRight: 2 }}>
-                                    {new Date(new Date(item.item.tarsportId.Truckdate)
-                                        .setHours(new Date(item.item.tarsportId.Truckdate)
-                                            .getHours() + Math.round((calcKmFind(item.item.paymentid.from.lat,
-                                                item.item.paymentid.from.lng,
-                                                item.item.paymentid.destination.lat,
-                                                item.item.paymentid.destination.lng)) / 45))).toLocaleDateString("en-US", { weekday: 'short', month: 'long', day: 'numeric', hour: 'numeric', minute: 'numeric', hour12: false })}
-                                </Text>
-                            </View>
-                            <View>
-                                {item.item.paymentid.paymentStatus === "Completing" ?
-                                    <TouchableOpacity style={styles.paid}
-                                    >
-                                        <Text style={{ color: 'white', fontWeight: "bold", fontSize: 18 }}>Paid</Text>
-                                    </TouchableOpacity> :
-                                    <TouchableOpacity style={styles.pay}
-                                        onPress={() => {
-                                            paymentHendle(item.item.paymentid)
-                                        }}>
-                                        <Text style={{ color: 'white', fontWeight: "bold", fontSize: 18 }}>Pay</Text>
-                                    </TouchableOpacity>}
-                            </View>
-                        </View>
-                    </TouchableOpacity>
+                                        {(item.item.paymentid.from.name.split(',').reverse()[2])}
+                                    </Text>
 
-                )} />
+                                </View>
+                                <View style={{ width: '20%', alignItems: "center" }}>
+                                    <Image source={icons.transfer} style={{ width: 30, height: 30, tintColor: props.theme ? color.drakPrimaryColors : color.primaryColors }} />
+                                </View>
+                                <View style={{ width: '40%', alignItems: "center" }}>
+                                    <Text style={{ fontWeight: 'bold', color: props.theme ? color.drakFontcolor : color.fontcolor }}>
+                                        {(item.item.paymentid.destination.name.split(',').reverse()[2])}</Text>
+
+                                </View>
+                            </View>
+                            <View style={{ marginHorizontal: 10, alignItems: "center", paddingVertical: 4, flexDirection: 'row', justifyContent: 'space-between' }}>
+                                <View>
+                                    <Text style={{ fontWeight: 'bold', color: 'gray' }}>Delivery Date</Text>
+                                    <Text style={{ color: props.theme ? color.drakFontcolor : color.fontcolor, fontWeight: 'bold', fontSize: 14, paddingRight: 2 }}>
+                                        {new Date(new Date(item.item.tarsportId.Truckdate)
+                                            .setHours(new Date(item.item.tarsportId.Truckdate)
+                                                .getHours() + Math.round((calcKmFind(item.item.paymentid.from.lat,
+                                                    item.item.paymentid.from.lng,
+                                                    item.item.paymentid.destination.lat,
+                                                    item.item.paymentid.destination.lng)) / 45))).toLocaleDateString("en-US", { weekday: 'short', month: 'long', day: 'numeric', hour: 'numeric', minute: 'numeric', hour12: false })}
+                                    </Text>
+                                </View>
+                                <View>
+                                    {item.item.paymentid.paymentStatus === "Completing" ?
+                                        <TouchableOpacity style={styles.paid}
+                                        >
+                                            <Text style={{ color: 'white', fontWeight: "bold", fontSize: 18 }}>Paid</Text>
+                                        </TouchableOpacity> :
+                                        <TouchableOpacity style={styles.pay}
+                                            onPress={() => {
+                                                paymentHendle(item.item.paymentid)
+                                            }}>
+                                            <Text style={{ color: 'white', fontWeight: "bold", fontSize: 18 }}>Pay</Text>
+                                        </TouchableOpacity>}
+                                </View>
+                            </View>
+                        </TouchableOpacity>
+
+                    )} />}
             </ScrollView>
         </View>
     )

@@ -4,6 +4,7 @@ import AdminHeader from '../../components/adminHeader'
 import AnimatedLoader from "react-native-animated-loader";
 import { connect } from 'react-redux'
 import color from '../../contents/color';
+import LottieView from 'lottie-react-native';
 import { getUserMessageList } from '../../Redux/messageListSlice';
 const wait = (timeout) => {
     return new Promise(resolve => setTimeout(resolve, timeout));
@@ -12,11 +13,11 @@ const AdminMessage = (props) => {
     const [refreshing, setRefreshing] = React.useState(false);
     const onRefresh = React.useCallback(() => {
         setRefreshing(true);
-        props.getUserMessageList({ token:props.token })
+        props.getUserMessageList({ token: props.token })
         wait(2000).then(() => setRefreshing(false));
     }, []);
     React.useEffect(() => {
-        props.getUserMessageList({ token:props.token })
+        props.getUserMessageList({ token: props.token })
     }, [])
     const styles = StyleSheet.create({
         container: {
@@ -63,29 +64,42 @@ const AdminMessage = (props) => {
                     onRefresh={onRefresh}
                 />
             }>
-                <FlatList data={props.messageList} renderItem={(item) => (
+                {props.messageList.length === 0 ?
 
-                    <TouchableOpacity style={{ flexDirection: 'row', marginVertical: 10, marginHorizontal: 20 }}
-                        onPress={() => { props.navigation.navigate('ChatDetails', { item: item.item.userId }) }}>
-                        <View style={styles.image}>
-                            <Image source={{ uri: item.item.userId?.image }}
-                                style={{
-                                    width: 60, height: 60, alignSelf: "center"
 
-                                }} />
-                        </View>
-                        <View style={{
-                            justifyContent: 'center', borderBottomWidth: 2,
-                            borderBottomColor: color.adminprimaryColors, width: '80%', justifyContent: 'center'
-                        }}>
 
-                            <Text style={styles.text}>
-                                {item.item.userId?.username}</Text>
+                    <View style={{ flex: 1 }}>
+
+                        <View style={{ height: 500, width: 200, alignSelf: 'center' }}>
+                            <LottieView source={require('../../assets/json/notfound.json')} autoPlay loop />
                         </View>
 
-                    </TouchableOpacity>
-                )}
-                />
+                    </View>
+
+                    :
+                    <FlatList data={props.messageList} renderItem={(item) => (
+
+                        <TouchableOpacity style={{ flexDirection: 'row', marginVertical: 10, marginHorizontal: 20 }}
+                            onPress={() => { props.navigation.navigate('ChatDetails', { item: item.item.userId }) }}>
+                            <View style={styles.image}>
+                                <Image source={{ uri: item.item.userId?.image }}
+                                    style={{
+                                        width: 60, height: 60, alignSelf: "center"
+
+                                    }} />
+                            </View>
+                            <View style={{
+                                justifyContent: 'center', borderBottomWidth: 2,
+                                borderBottomColor: color.adminprimaryColors, width: '80%', justifyContent: 'center'
+                            }}>
+
+                                <Text style={styles.text}>
+                                    {item.item.userId?.username}</Text>
+                            </View>
+
+                        </TouchableOpacity>
+                    )}
+                    />}
             </ScrollView>
         </View>
     );

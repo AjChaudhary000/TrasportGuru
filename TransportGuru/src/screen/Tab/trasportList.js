@@ -8,6 +8,7 @@ import { getTransportCompanyList } from '../../Redux/transportCompanyListSlice';
 import { getUserDetails } from '../../Redux/UserDetails';
 import Toast from 'react-native-simple-toast';
 import AnimatedLoader from "react-native-animated-loader";
+import LottieView from 'lottie-react-native';
 const wait = (timeout) => {
     return new Promise(resolve => setTimeout(resolve, timeout));
 }
@@ -109,66 +110,79 @@ const TrasportList = (props) => {
                 <Text>Loading ...</Text>
             </AnimatedLoader>
             <Header name={"Transport List"} />
-            <ScrollView style={{ marginBottom: 60 }}  refreshControl={
+            <ScrollView style={{ marginBottom: 60 }} refreshControl={
                 <RefreshControl
                     refreshing={refreshing}
                     onRefresh={onRefresh}
                 />
             } showsVerticalScrollIndicator={false}>
-                <FlatList data={props.data} renderItem={(item) => (
-                    <View style={styles.listBox}>
-                        <View style={{
-                            marginHorizontal: 20, flexDirection: "row", justifyContent: 'space-between',
-                            paddingVertical: 2
-                        }}>
-                            <View style={{ width: '20%', justifyContent: 'center' }}>
-                                <View style={styles.image}>
-                                    <Image
-                                        style={{
-                                            width: 60, height: 60, alignSelf: "center"
-                                        }}
-                                        source={{ uri: item.item.trasportAccount[0].trasportImage }}
-                                    />
-                                </View>
-                            </View>
-                            <View style={{ justifyContent: 'center', width: '80%', paddingHorizontal: 10 }}>
-                                <Text style={{ fontSize: 20, fontWeight: 'bold', color: props.theme ? color.drakPrimaryColors : color.primaryColors }}>
-                                    {item.item.trasportAccount[0].trasportName}</Text>
-                                <Text style={{ fontSize: 12, fontWeight: 'bold', color: 'gray' }}>
+                {props.data.length === 0 ?
 
-                                    {item.item.trasportAccount[0].trasportAddress.split(',').reverse()[2]},
-                                    {item.item.trasportAccount[0].trasportAddress.split(',').reverse()[1]},
-                                    {item.item.trasportAccount[0].trasportAddress.split(',').reverse()[0]}
-                                </Text>
-                            </View>
 
-                        </View>
-                        <View style={{ flexDirection: "row", justifyContent: 'space-between', padding: 5 }}>
-                            <View style={{ width: "50%", flexDirection: "row", justifyContent: 'space-between', paddingVertical: 10 }}>
-                                <TouchableOpacity style={{ width: "30%" }}>
-                                    <Image source={icons.call} style={styles.icon} />
-                                </TouchableOpacity>
-                                <TouchableOpacity style={{ width: "30%" }} onPress={() => {
-                                    if (item.item?._id === props?.userData?._id) {
-                                        Toast.show("not found ...")
-                                    } else {
-                                        props.navigation.navigate("ChatDetails", { item: item.item })
-                                    }
-                                }}>
-                                    <Image source={icons.message} style={styles.icon} />
-                                </TouchableOpacity>
-                                <TouchableOpacity style={{ width: "30%" }}>
-                                    <Image source={icons.share} style={styles.icon} />
-                                </TouchableOpacity>
-                            </View>
-                            <TouchableOpacity style={styles.profile}  onLongPress={()=>console.log("hello")} onPress={() => props.navigation.navigate("AdminProfile", { item: item.item })}>
-                                <Text style={{ color: 'white', fontWeight: "bold" }}> View Profile</Text>
-                            </TouchableOpacity>
+
+                    <View style={{ flex: 1 }}>
+
+                        <View style={{ height: 500, width: 200, alignSelf: 'center' }}>
+                            <LottieView source={require('../../assets/json/notfound.json')} autoPlay loop />
                         </View>
 
                     </View>
-                )
-                } />
+
+                    :
+                    <FlatList data={props.data} renderItem={(item) => (
+                        <View style={styles.listBox}>
+                            <View style={{
+                                marginHorizontal: 20, flexDirection: "row", justifyContent: 'space-between',
+                                paddingVertical: 2
+                            }}>
+                                <View style={{ width: '20%', justifyContent: 'center' }}>
+                                    <View style={styles.image}>
+                                        <Image
+                                            style={{
+                                                width: 60, height: 60, alignSelf: "center"
+                                            }}
+                                            source={{ uri: item.item.trasportAccount[0].trasportImage }}
+                                        />
+                                    </View>
+                                </View>
+                                <View style={{ justifyContent: 'center', width: '80%', paddingHorizontal: 10 }}>
+                                    <Text style={{ fontSize: 20, fontWeight: 'bold', color: props.theme ? color.drakPrimaryColors : color.primaryColors }}>
+                                        {item.item.trasportAccount[0].trasportName}</Text>
+                                    <Text style={{ fontSize: 12, fontWeight: 'bold', color: 'gray' }}>
+
+                                        {item.item.trasportAccount[0].trasportAddress.split(',').reverse()[2]},
+                                        {item.item.trasportAccount[0].trasportAddress.split(',').reverse()[1]},
+                                        {item.item.trasportAccount[0].trasportAddress.split(',').reverse()[0]}
+                                    </Text>
+                                </View>
+
+                            </View>
+                            <View style={{ flexDirection: "row", justifyContent: 'space-between', padding: 5 }}>
+                                <View style={{ width: "50%", flexDirection: "row", justifyContent: 'space-between', paddingVertical: 10 }}>
+                                    <TouchableOpacity style={{ width: "30%" }}>
+                                        <Image source={icons.call} style={styles.icon} />
+                                    </TouchableOpacity>
+                                    <TouchableOpacity style={{ width: "30%" }} onPress={() => {
+                                        if (item.item?._id === props?.userData?._id) {
+                                            Toast.show("not found ...")
+                                        } else {
+                                            props.navigation.navigate("ChatDetails", { item: item.item })
+                                        }
+                                    }}>
+                                        <Image source={icons.message} style={styles.icon} />
+                                    </TouchableOpacity>
+                                    <TouchableOpacity style={{ width: "30%" }}>
+                                        <Image source={icons.share} style={styles.icon} />
+                                    </TouchableOpacity>
+                                </View>
+                                <TouchableOpacity style={styles.profile} onLongPress={() => console.log("hello")} onPress={() => props.navigation.navigate("AdminProfile", { item: item.item })}>
+                                    <Text style={{ color: 'white', fontWeight: "bold" }}> View Profile</Text>
+                                </TouchableOpacity>
+                            </View>
+
+                        </View>
+                    )
+                    } />}
             </ScrollView>
 
         </View >

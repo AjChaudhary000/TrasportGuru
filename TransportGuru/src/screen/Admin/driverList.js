@@ -2,9 +2,8 @@ import { View, Text, StyleSheet, Image, TouchableOpacity, FlatList } from 'react
 import React from 'react'
 import { AdminHeaderWithBackButton } from '../../components/adminHeader'
 import color from '../../contents/color'
-import image from '../../contents/image'
 import { connect } from 'react-redux'
-
+import LottieView from 'lottie-react-native';
 import { getDriverList } from '../../Redux/Admin/driverListSlice'
 import { deleteDriver } from '../../Redux/Admin/addDriverSlice'
 import { getCountDriver } from '../../Redux/Admin/countAddSlice'
@@ -105,31 +104,41 @@ const DriverList = (props) => {
                 <Text>Loading...</Text>
             </AnimatedLoader>
             <AdminHeaderWithBackButton name={"Driver List"} navigation={props.navigation} />
-            <FlatList data={props.driverList} renderItem={(item) => (
-                <View style={styles.listBox}>
-                    <View style={styles.image}>
-                        <Image source={{ uri: item.item.driverImage }} style={{ width: '100%', height: '100%', overflow: "hidden" }} />
+            {props.driverList.length === 0 ?
+                <View style={{ flex: 1 }}>
+
+                    <View style={{ height: 500, width: 200, alignSelf: 'center' }}>
+                        <LottieView source={require('../../assets/json/notfound.json')} autoPlay loop />
                     </View>
-                    <View style={styles.listData}>
-                        <Text style={styles.driverName}>{item.item.driverName}</Text>
-                        <Text style={styles.driverEmail}>{item.item.driverEmail}</Text>
 
-                        <Text style={styles.driverMobileNo}>{item.item.driverMobileNo}</Text>
+                </View>
 
-                        <View style={{ flexDirection: 'row', justifyContent: 'space-between', paddingTop: 10, paddingHorizontal: 20 }}>
-                            <TouchableOpacity onPress={() => { EditDriver(item.item) }}>
-                                <Text style={styles.edit}>Edit</Text>
-                            </TouchableOpacity>
-                            <TouchableOpacity onPress={() => { DeleteDriver(item.item._id) }}>
-                                <Text style={styles.delete} >Delete</Text>
-                            </TouchableOpacity>
+                :
+                <FlatList data={props.driverList} renderItem={(item) => (
+                    <View style={styles.listBox}>
+                        <View style={styles.image}>
+                            <Image source={{ uri: item.item.driverImage }} style={{ width: '100%', height: '100%', overflow: "hidden" }} />
+                        </View>
+                        <View style={styles.listData}>
+                            <Text style={styles.driverName}>{item.item.driverName}</Text>
+                            <Text style={styles.driverEmail}>{item.item.driverEmail}</Text>
+
+                            <Text style={styles.driverMobileNo}>{item.item.driverMobileNo}</Text>
+
+                            <View style={{ flexDirection: 'row', justifyContent: 'space-between', paddingTop: 10, paddingHorizontal: 20 }}>
+                                <TouchableOpacity onPress={() => { EditDriver(item.item) }}>
+                                    <Text style={styles.edit}>Edit</Text>
+                                </TouchableOpacity>
+                                <TouchableOpacity onPress={() => { DeleteDriver(item.item._id) }}>
+                                    <Text style={styles.delete} >Delete</Text>
+                                </TouchableOpacity>
 
 
+                            </View>
                         </View>
                     </View>
-                </View>
-            )
-            } />
+                )
+                } />}
 
         </View >
     )

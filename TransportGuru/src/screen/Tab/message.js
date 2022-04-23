@@ -3,7 +3,7 @@ import React from 'react';
 import Header from '../../components/header'
 import { getMessageList } from '../../Redux/messageListSlice';
 import { connect } from 'react-redux'
-
+import LottieView from 'lottie-react-native';
 import color from '../../contents/color';
 import AnimatedLoader from "react-native-animated-loader";
 const wait = (timeout) => {
@@ -64,30 +64,42 @@ const Message = (props) => {
           onRefresh={onRefresh}
         />
       }>
+        {props.messageList.length === 0 ?
 
-        <FlatList data={props.messageList} renderItem={(item) => (
 
-          <TouchableOpacity style={{ flexDirection: 'row', marginVertical: 10, marginHorizontal: 20 }}
-            onPress={() => { props.navigation.navigate('ChatDetails', { item: item.item.senderId }) }}>
-            <View style={styles.image}>
-              <Image source={{ uri: item.item.senderId?.trasportAccount[0]?.trasportImage }}
-                style={{
-                  width: 60, height: 60, alignSelf: "center"
 
-                }} />
-            </View>
-            <View style={{
-              justifyContent: 'center', borderBottomWidth: 2,
-              borderBottomColor: color.primaryColors, width: '80%', justifyContent: 'center'
-            }}>
+          <View style={{ flex: 1 }}>
 
-              <Text style={styles.text}>
-                {item.item.senderId?.trasportAccount[0]?.trasportName}</Text>
+            <View style={{ height: 500, width: 200, alignSelf: 'center' }}>
+              <LottieView source={require('../../assets/json/notfound.json')} autoPlay loop />
             </View>
 
-          </TouchableOpacity>
-        )}
-        />
+          </View>
+
+          :
+          <FlatList data={props.messageList} renderItem={(item) => (
+
+            <TouchableOpacity style={{ flexDirection: 'row', marginVertical: 10, marginHorizontal: 20 }}
+              onPress={() => { props.navigation.navigate('ChatDetails', { item: item.item.senderId }) }}>
+              <View style={styles.image}>
+                <Image source={{ uri: item.item.senderId?.trasportAccount[0]?.trasportImage }}
+                  style={{
+                    width: 60, height: 60, alignSelf: "center"
+
+                  }} />
+              </View>
+              <View style={{
+                justifyContent: 'center', borderBottomWidth: 2,
+                borderBottomColor: color.primaryColors, width: '80%', justifyContent: 'center'
+              }}>
+
+                <Text style={styles.text}>
+                  {item.item.senderId?.trasportAccount[0]?.trasportName}</Text>
+              </View>
+
+            </TouchableOpacity>
+          )}
+          />}
       </ScrollView>
     </View>
   );
