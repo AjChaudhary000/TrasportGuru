@@ -1,12 +1,30 @@
-import { View, Text } from 'react-native'
+import { View, Text, StyleSheet } from 'react-native'
 import React from 'react'
-
-const PrivacyPolicy = () => {
+import { connect } from 'react-redux'
+import { HeaderWithBackButton } from '../../../components/header'
+import color from '../../../contents/color'
+const PrivacyPolicy = (props) => {
     return (
-        <View>
-            <Text>PrivacyPolicy</Text>
+        <View style={styles.container(props)}>
+            <HeaderWithBackButton name={"Privacy Policy"} navigation={props.navigation} />
         </View>
     )
 }
 
-export default PrivacyPolicy
+const useSelector = (state) => (
+
+    {
+        userData: state.user.userData,
+        loading: state.user.loading,
+        theme: state.token.theme,
+        token: state.token.token,
+    }
+)
+export default connect(useSelector)(PrivacyPolicy);
+const styles = StyleSheet.create({
+    container: (props) => [{
+        flex: 1,
+        backgroundColor: props.theme ? color.drakBackgroundColor : color.backgroundColor,
+
+    }]
+})

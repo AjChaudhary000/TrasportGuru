@@ -4,7 +4,7 @@ import {
     TouchableOpacity,
     KeyboardAvoidingView,
     TouchableWithoutFeedback,
-    Keyboard, Platform, Modal, Dimensions, ScrollView, LogBox, PermissionsAndroid
+    Keyboard, Platform, Modal, Dimensions, ScrollView, LogBox, PermissionsAndroid, Alert
 } from 'react-native'
 import Toast from 'react-native-simple-toast';
 import React from 'react'

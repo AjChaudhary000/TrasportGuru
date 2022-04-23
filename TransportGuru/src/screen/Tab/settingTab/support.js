@@ -1,12 +1,31 @@
-import { View, Text } from 'react-native'
+import { View, Text, StyleSheet } from 'react-native'
 import React from 'react'
+import { connect } from 'react-redux'
+import { HeaderWithBackButton } from '../../../components/header'
+import color from '../../../contents/color'
+const Support = (props) => {
 
-const Support = () => {
     return (
-        <View>
-            <Text>support</Text>
+        <View style={styles.container(props)}>
+            <HeaderWithBackButton name={"Support"} navigation={props.navigation} />
         </View>
     )
 }
 
-export default Support
+const useSelector = (state) => (
+
+    {
+      userData: state.user.userData,
+      loading: state.user.loading,
+      theme: state.token.theme,
+      token: state.token.token,
+    }
+  )
+  export default connect(useSelector)(Support);
+const styles = StyleSheet.create({
+    container: (props) => [{
+        flex: 1,
+        backgroundColor: props.theme ? color.drakBackgroundColor : color.backgroundColor,
+
+    }]
+})

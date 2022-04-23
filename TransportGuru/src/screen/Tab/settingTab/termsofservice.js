@@ -1,12 +1,29 @@
-import { View, Text } from 'react-native'
+import { View, Text, StyleSheet } from 'react-native'
 import React from 'react'
-
-const Termsofservice = () => {
+import { connect } from 'react-redux'
+import { HeaderWithBackButton } from '../../../components/header'
+import color from '../../../contents/color'
+const Termsofservice = (props) => {
     return (
-        <View>
-            <Text> Termsofservice</Text>
+        <View style={styles.container(props)}>
+            <HeaderWithBackButton name={"Terms of service"} navigation={props.navigation} />
         </View>
     )
 }
+const useSelector = (state) => (
 
-export default Termsofservice
+    {
+      userData: state.user.userData,
+      loading: state.user.loading,
+      theme: state.token.theme,
+      token: state.token.token,
+    }
+  )
+  export default connect(useSelector)(Termsofservice);
+  const styles = StyleSheet.create({
+    container: (props) => [{
+        flex: 1,
+        backgroundColor: props.theme ? color.drakBackgroundColor : color.backgroundColor,
+
+    }]
+})

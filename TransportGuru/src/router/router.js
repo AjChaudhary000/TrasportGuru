@@ -34,7 +34,9 @@ import NetInfo from "@react-native-community/netinfo";
 import { getUserDetails } from '../Redux/UserDetails';
 import TrackingDetails from '../screen/Tab/trackingDetails';
 import AdminTrackingDetails from '../screen/Admin/adminTrackingDetails';
-
+import PrivacyPolicy from '../screen/Tab/settingTab/privacyPolicy';
+import Support from '../screen/Tab/settingTab/support';
+import Termsofservice from '../screen/Tab/settingTab/termsofservice';
 const Stack = createNativeStackNavigator();
 const Router = (props) => {
     const [isloading, setloadingData] = React.useState(true)
@@ -91,7 +93,7 @@ const Router = (props) => {
     return (
         <NavigationContainer>
             <Stack.Navigator>
-                {!props.onbording && <Stack.Screen name='Onboardring' component={Onboardring} options={{ headerShown: false }} /> }
+                {!props.onbording && <Stack.Screen name='Onboardring' component={Onboardring} options={{ headerShown: false }} />}
                 {/* User Login /SignUp  Start */}
                 {!props.token && <Stack.Screen name='SignIn' component={SignIn} options={{ headerShown: false }} />}
                 {/* User Login /SignUp  End  */}
@@ -109,6 +111,9 @@ const Router = (props) => {
                 <Stack.Screen name='Booking' component={Booking} options={{ headerShown: false }} />
                 <Stack.Screen name='Confirmation' component={Confirmation} options={{ headerShown: false }} />
                 <Stack.Screen name='TrackingDetails' component={TrackingDetails} options={{ headerShown: false }} />
+                <Stack.Screen name='PrivacyPolicy' component={PrivacyPolicy} options={{ headerShown: false }} />
+                <Stack.Screen name='Support' component={Support} options={{ headerShown: false }} />
+                <Stack.Screen name='Termsofservice' component={Termsofservice} options={{ headerShown: false }} />
                 {/* userSide End */}
 
                 {/* AdminSide Start */}

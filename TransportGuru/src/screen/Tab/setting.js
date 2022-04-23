@@ -131,7 +131,7 @@ const Setting = (props) => {
           <View style={{ marginTop: 30, marginBottom: 30 }}>
             <SettingMenu icon={icons.edit} menuName={"Edit Account"} onPress={() => { props.navigation.navigate('EditAccount', { item: props.userData }) }} />
             <SettingMenu icon={icons.truck} menuName={"Transport Guru Account"} onPress={() => { props.navigation.navigate('TrasportGuruAccount', { type: props.userData?.accountType }) }} />
-            <SettingMenu icon={icons.message} menuName={"Message"} onPress={() => { console.log("hello") }} />
+           
             <TouchableOpacity style={styles.option} onPress={props.onPress} activeOpacity={0.60}>
               <View style={styles.menuIcon}>
                 <Image source={icons.contrast} style={styles.menuiconStyle} />
@@ -149,9 +149,9 @@ const Setting = (props) => {
                 />
               </View>
             </TouchableOpacity>
-            <SettingMenu icon={icons.privacy_policy} menuName={"Privacy Policy"} onPress={() => { console.log("hello") }} />
-            <SettingMenu icon={icons.accept} menuName={"Terms of service"} onPress={() => { console.log("hello") }} />
-            <SettingMenu icon={icons.support} menuName={"Support"} onPress={() => { console.log("hello") }} />
+            <SettingMenu icon={icons.privacy_policy} menuName={"Privacy Policy"} onPress={() => {  props.navigation.navigate('PrivacyPolicy') }} />
+            <SettingMenu icon={icons.accept} menuName={"Terms of service"} onPress={() => {props.navigation.navigate('Termsofservice') }} />
+            <SettingMenu icon={icons.support} menuName={"Support"} onPress={() => { props.navigation.navigate('Support') }} />
             <SettingMenu icon={icons.logout} menuName={"Logout"} onPress={() => { logout() }} />
 
           </View>
