@@ -186,6 +186,12 @@ const AddRoute = (props) => {
                     <View style={{ flex: 1, justifyContent: 'center' }}>
                         <View style={styles.modelBox}>
                             <ScrollView keyboardShouldPersistTaps="handled" >
+                                <TouchableOpacity onPress={() => { setModalVisible(false) }} style={{ alignItems: 'center', left: Dimensions.get('screen').width / 2 - 40 }}>
+                                    <Image source={icons.close} style={{ width: 35, height: 35, tintColor: props.theme ? color.drakPrimaryColors : color.primaryColors, }} />
+                                </TouchableOpacity>
+                                <View style={{ marginHorizontal: 30, marginVertical: 20 }}>
+                                    <Text style={{ color: 'gray', fontSize: 20, fontWeight: 'bold' }}>Search Stops</Text>
+                                </View>
                                 <GooglePlacesAutocomplete
                                     placeholder={placetype === "from" ? "eg. From" : "eg. destination"}
                                     placeholderTextColor={'gray'}
@@ -243,9 +249,6 @@ const AddRoute = (props) => {
                                 />
                             </ScrollView>
                         </View>
-                        <TouchableOpacity onPress={() => { setModalVisible(false) }} style={{ alignItems: 'center', bottom: 40 }}>
-                            <Image source={icons.close} style={{ width: 35, height: 35, tintColor: props.theme ? color.drakAdminprimaryColors : color.adminprimaryColors, }} />
-                        </TouchableOpacity>
                     </View>
                 </Modal>
                 {!props.route.params?.item?._id ?

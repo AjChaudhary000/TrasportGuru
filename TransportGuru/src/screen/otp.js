@@ -1,5 +1,8 @@
 
-import { View, Text, Image, StyleSheet, Dimensions, TextInput, TouchableOpacity, StatusBar, Animated } from 'react-native'
+import {
+    View, Text, Image, StyleSheet, TextInput,
+    TouchableOpacity, StatusBar, Animated, TouchableWithoutFeedback, Keyboard, KeyboardAvoidingView
+} from 'react-native'
 import React from 'react'
 import { CountdownCircleTimer } from 'react-native-countdown-circle-timer'
 import icons from '../contents/icons';
@@ -42,93 +45,100 @@ const Otp = (props) => {
     }
 
     return (
-        <View style={styles.contentor(props)}>
-            <AnimatedLoader
-                visible={props.loading}
-                overlayColor="rgba(255,255,255,0.75)"
-                source={require("../assets/json/loder.json")}
-                animationStyle={{
-                    width: 100,
-                    height: 100
-                }}
-                speed={1}
-            >
-                <Text>Loading...</Text>
-            </AnimatedLoader>
-            <StatusBar hidden />
-            <View style={styles.truckLogo}>
-                <Image source={image.Tg} style={{ width: 200, height: 100, tintColor: props.theme ? color.drakPrimaryColors : color.primaryColors, }} />
-                {/* <LottieView source={require('../assets/json/loading.json')} autoPlay loop /> */}
-            </View>
-            <View style={styles.titleComponets}>
-                <Text style={styles.title(props)}> Verification</Text>
-                <View>
-                    <Text style={styles.text}>We have sent you an Gmail with a code to the number that you provided.</Text>
-                </View>
-            </View>
-            <View style={styles.emailbox(props)}>
-                <View style={{ width: " 70%", alignItems: 'center' }}>
-                    <Text style={{ fontSize: 20, fontWeight: 'bold', color: props.theme ? color.drakFontcolor : color.fontcolor, }}>{props.route.params.email}</Text>
-                </View>
-                <TouchableOpacity style={{ width: "20%", alignItems: 'center' }} onPress={() => { props.navigation.replace('SignIn') }}>
-                    <Image source={icons.edit} style={{ width: 30, height: 30, tintColor: props.theme ? color.drakPrimaryColors : color.primaryColors, }} />
-                </TouchableOpacity>
-            </View>
-            <View style={styles.inputBox}>
-                <TextInput style={styles.input(props)}
-                    placeholder={"eg. 0000"}
-                    placeholderTextColor={'gray'}
-                    onChangeText={(val) => setOtp(val)}
-                    autoCapitalize={'none'}
-                    keyboardType={'number-pad'}
-                    maxLength={4} />
-            </View>
-
-
-            {isTimerView ? (
-                <View style={{ alignSelf: 'center', height: '10%', bottom: 50 }}>
-                    <CountdownCircleTimer
-                        isPlaying={true}
-                        duration={60}
-                        strokeWidth={0}
-                        size={150}
-                        colors={[
-                            ['#004777', 0.8],
-                            ['#004777', 0.5],
-                            ['#004777', 0.4]
-                        ]}
-                        onComplete={() => {
-                            setIsTmerView(false)
-
+        <KeyboardAvoidingView
+            behavior={Platform.OS === "ios" ? "padding" : "height"}
+            style={styles.contentor(props)}
+        >
+            <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+                <View style={{ flex: 1 }}>
+                    <AnimatedLoader
+                        visible={props.loading}
+                        overlayColor="rgba(255,255,255,0.75)"
+                        source={require("../assets/json/loder.json")}
+                        animationStyle={{
+                            width: 100,
+                            height: 100
                         }}
+                        speed={1}
                     >
-                        {({ remainingTime }) => (
-                            <Animated.Text style={styles.resend(props)}>
-                                Resend Code :{remainingTime}
-                            </Animated.Text>
-                        )}
+                        <Text>Loading...</Text>
+                    </AnimatedLoader>
+                    <StatusBar hidden />
+                    <View style={styles.truckLogo}>
+                        <Image source={image.Tg} style={{ width: 200, height: 100, tintColor: props.theme ? color.drakPrimaryColors : color.primaryColors, }} />
+                        {/* <LottieView source={require('../assets/json/loading.json')} autoPlay loop /> */}
+                    </View>
+                    <View style={styles.titleComponets}>
+                        <Text style={styles.title(props)}> Verification</Text>
+                        <View>
+                            <Text style={styles.text}>We have sent you an Gmail with a code to the number that you provided.</Text>
+                        </View>
+                    </View>
+                    <View style={styles.emailbox(props)}>
+                        <View style={{ width: " 70%", alignItems: 'center' }}>
+                            <Text style={{ fontSize: 20, fontWeight: 'bold', color: props.theme ? color.drakFontcolor : color.fontcolor, }}>{props.route.params.email}</Text>
+                        </View>
+                        <TouchableOpacity style={{ width: "20%", alignItems: 'center' }} onPress={() => { props.navigation.replace('SignIn') }}>
+                            <Image source={icons.edit} style={{ width: 30, height: 30, tintColor: props.theme ? color.drakPrimaryColors : color.primaryColors, }} />
+                        </TouchableOpacity>
+                    </View>
+                    <View style={styles.inputBox}>
+                        <TextInput style={styles.input(props)}
+                            placeholder={"eg. 0000"}
+                            placeholderTextColor={'gray'}
+                            onChangeText={(val) => setOtp(val)}
+                            autoCapitalize={'none'}
+                            keyboardType={'number-pad'}
+                            maxLength={4} />
+                    </View>
 
-                    </CountdownCircleTimer>
+
+                    {isTimerView ? (
+                        <View style={{ alignSelf: 'center', height: '10%', bottom: 50 }}>
+                            <CountdownCircleTimer
+                                isPlaying={true}
+                                duration={60}
+                                strokeWidth={0}
+                                size={150}
+                                colors={[
+                                    ['#004777', 0.8],
+                                    ['#004777', 0.5],
+                                    ['#004777', 0.4]
+                                ]}
+                                onComplete={() => {
+                                    setIsTmerView(false)
+
+                                }}
+                            >
+                                {({ remainingTime }) => (
+                                    <Animated.Text style={styles.resend(props)}>
+                                        Resend Code :{remainingTime}
+                                    </Animated.Text>
+                                )}
+
+                            </CountdownCircleTimer>
+                        </View>
+                    ) : (<View style={{ marginTop: 20, height: '10%' }}>
+                        <TouchableOpacity style={styles.btnresend} onPress={() => resendOtp()}>
+                            <Text style={styles.btnresendText(props)}>
+                                Resend Code
+                            </Text>
+                        </TouchableOpacity>
+                    </View>)}
+
+
+
+                    <View style={{ marginTop: 20, height: '10%' }}>
+                        <TouchableOpacity style={styles.btn(props)} onPress={() => sendOTP()}>
+                            <Text style={styles.btnText}>
+                                Verify
+                            </Text>
+                        </TouchableOpacity>
+                    </View>
+
                 </View>
-            ) : (<View style={{ marginTop: 20, height: '10%' }}>
-                <TouchableOpacity style={styles.btnresend} onPress={() => resendOtp()}>
-                    <Text style={styles.btnresendText(props)}>
-                        Resend Code
-                    </Text>
-                </TouchableOpacity>
-            </View>)}
-
-
-
-            <View style={{ marginTop: 20, height: '10%' }}>
-                <TouchableOpacity style={styles.btn(props)} onPress={() => sendOTP()}>
-                    <Text style={styles.btnText}>
-                        Verify
-                    </Text>
-                </TouchableOpacity>
-            </View>
-
-        </View>
+            </TouchableWithoutFeedback>
+        </KeyboardAvoidingView>
     )
 }
 const useDispatch = (dispatch) => {
@@ -156,14 +166,14 @@ const styles = StyleSheet.create({
         paddingHorizontal: 20,
     }],
     truckLogo: {
-        height: '25%',
+        height: 150,
         width: "40%",
         justifyContent: 'center'
 
     },
     titleComponets: {
         marginHorizontal: 5,
-        height: '20%'
+        height: 150
     },
     title: (props) => [{
         fontSize: 25,
@@ -179,7 +189,7 @@ const styles = StyleSheet.create({
     inputBox: {
         marginVertical: 20,
         width: "85%",
-        height: '10%',
+        height: 50,
         alignSelf: 'center'
     },
     input: (props) => [{

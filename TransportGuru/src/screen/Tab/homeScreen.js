@@ -536,12 +536,13 @@ const HomeScreen = (props) => {
     ]
     return (
         <KeyboardAvoidingView
-            behavior={Platform.OS === "ios" ? "padding" : "height"}
+             behavior={Platform.OS === "ios" ? "padding" : "height"}
             style={styles.container}
         >
             <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
 
-                <View>
+
+                <View style={{ flex: 1 }}>
                     <Modal
                         animationType="slide"
                         transparent={true}
@@ -621,6 +622,7 @@ const HomeScreen = (props) => {
                         </View>
                     </Modal>
                     <View style={styles.mapBox}>
+
                         <MapView
 
                             showsUserLocation={true}
@@ -698,8 +700,8 @@ const HomeScreen = (props) => {
                         </TouchableOpacity>
                     </View>
 
-
                 </View>
+
             </TouchableWithoutFeedback>
 
         </KeyboardAvoidingView>

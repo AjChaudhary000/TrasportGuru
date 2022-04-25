@@ -1,4 +1,4 @@
-import { View, Text, Image, StyleSheet, Dimensions, TextInput, TouchableOpacity, StatusBar } from 'react-native'
+import { View, Text, Image, StyleSheet, KeyboardAvoidingView, TextInput, TouchableOpacity, StatusBar, TouchableWithoutFeedback, Keyboard } from 'react-native'
 import LottieView from 'lottie-react-native';
 import React from 'react'
 import icons from '../contents/icons';
@@ -40,65 +40,71 @@ const SignIn = (props) => {
     }
 
     return (
-        <View style={styles.contentor(props)}>
-            <StatusBar hidden />
-            <AnimatedLoader
-                visible={props.loading}
-                overlayColor="rgba(255,255,255,0.75)"
-                source={require("../assets/json/loder.json")}
-                animationStyle={{
-                    width: 100,
-                    height: 100
-                }}
-                speed={1}
-            >
-                <Text>Loading...</Text>
-            </AnimatedLoader>
-            <View style={styles.truckLogo}>
-                <Image source={image.Tg} style={{ width: 200, height: 100, tintColor: props.theme ? color.drakPrimaryColors : color.primaryColors, }} />
-                {/* <LottieView source={require('../assets/json/loading.json')} autoPlay loop /> */}
-            </View>
-            <View style={styles.titleComponets}>
-                <Text style={styles.title(props)}> Welcome To Transport guru</Text>
-                <View>
-                    <Text style={styles.text}>
-                        Provide your email id,so we can be able  to send your confirmation code.
-                    </Text>
+        <KeyboardAvoidingView
+            behavior={Platform.OS === "ios" ? "padding" : "height"}
+            style={styles.contentor(props)}
+        >
+            <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+                <View style={{ flex: 1 }}>
+                    <StatusBar hidden />
+                    <AnimatedLoader
+                        visible={props.loading}
+                        overlayColor="rgba(255,255,255,0.75)"
+                        source={require("../assets/json/loder.json")}
+                        animationStyle={{
+                            width: 100,
+                            height: 100
+                        }}
+                        speed={1}
+                    >
+                        <Text>Loading...</Text>
+                    </AnimatedLoader>
+                    <View style={styles.truckLogo}>
+                        <Image source={image.Tg} style={{ width: 200, height: 100, tintColor: props.theme ? color.drakPrimaryColors : color.primaryColors, }} />
+                        {/* <LottieView source={require('../assets/json/loading.json')} autoPlay loop /> */}
+                    </View>
+                    <View style={styles.titleComponets}>
+                        <Text style={styles.title(props)}> Welcome To Transport Guru</Text>
+                        <View>
+                            <Text style={styles.text}>
+                                Provide your email id,so we can be able  to send your confirmation code.
+                            </Text>
+                        </View>
+                    </View>
+                    <View style={styles.inputBox}>
+                        <View style={{ width: "10%", paddingTop: 12 }}>
+                            <Image source={icons.email} style={{ width: 35, height: 35, tintColor: props.theme ? color.drakPrimaryColors : color.primaryColors, }} />
+                        </View>
+                        <View style={{ width: "85%", marginHorizontal: 10 }}>
+
+                            <TextInput style={styles.input(props)}
+                                placeholder={"eg. transportguru@gmail.com"}
+                                placeholderTextColor={'gray'}
+                                onChangeText={(val) => emailHandle(val)}
+                                keyboardType={'email-address'}
+                                autoCapitalize={'none'} />
+                            {!isEmailValid && <Text style={{ color: 'red', marginTop: 5 }}> * Enter valid Email  </Text>}
+
+                        </View>
+                    </View>
+
+                    <View style={{ marginTop: 20, height: '10%' }}>
+                        <TouchableOpacity style={styles.btn(props)} onPress={() => sendEmail()}>
+                            <Text style={styles.btnText}>
+                                Continue
+                            </Text>
+                        </TouchableOpacity>
+                    </View>
+                    <View style={styles.google}>
+                        <Text style={styles.googleText(props)}>
+                            Sign in with google
+                        </Text>
+                        <Image source={icons.google} style={{ width: 35, height: 35 }} />
+                    </View>
+
                 </View>
-            </View>
-            <View style={styles.inputBox}>
-                <View style={{ width: "10%", paddingTop: 12 }}>
-                    <Image source={icons.email} style={{ width: 35, height: 35, tintColor: props.theme ? color.drakPrimaryColors : color.primaryColors, }} />
-                </View>
-                <View style={{ width: "85%", marginHorizontal: 10 }}>
-
-                    <TextInput style={styles.input(props)}
-                        placeholder={"eg. transportguru@gmail.com"}
-                        placeholderTextColor={'gray'}
-                        onChangeText={(val) => emailHandle(val)}
-                        keyboardType={'email-address'}
-                        autoCapitalize={'none'} />
-                    {!isEmailValid && <Text style={{ color: 'red', marginTop: 5 }}> * Enter valid Email  </Text>}
-
-                </View>
-            </View>
-
-            <View style={{ marginTop: 20, height: '10%' }}>
-                <TouchableOpacity style={styles.btn(props)} onPress={() => sendEmail()}>
-                    <Text style={styles.btnText}>
-                        Continue
-                    </Text>
-                </TouchableOpacity>
-            </View>
-            <View style={styles.google}>
-                <Text style={styles.googleText(props)}>
-                    Sign in with google
-                </Text>
-                <Image source={icons.google} style={{ width: 35, height: 35 }} />
-            </View>
-
-        </View>
-
+            </TouchableWithoutFeedback>
+        </KeyboardAvoidingView>
     )
 
 }
@@ -125,14 +131,14 @@ const styles = StyleSheet.create({
         backgroundColor: props.theme ? color.drakBackgroundColor : color.backgroundColor
     }],
     truckLogo: {
-        height: '25%',
+        height: 150,
         width: "40%",
         justifyContent: 'center'
 
     },
     titleComponets: {
         marginHorizontal: 5,
-        height: '20%'
+        height: 150
     },
     title: (props) => [{
         fontSize: 25,
@@ -148,7 +154,7 @@ const styles = StyleSheet.create({
     inputBox: {
         marginVertical: 20,
         flexDirection: 'row',
-        height: '10%'
+        height: 50
     },
     input: (props) => [{
         borderWidth: 2,
@@ -178,7 +184,7 @@ const styles = StyleSheet.create({
         marginTop: 20,
         paddingTop: 30,
         alignSelf: 'center',
-        height: "15%"
+        height:150
     },
     googleText: (props) => [{
         fontSize: 20,

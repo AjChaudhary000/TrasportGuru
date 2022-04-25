@@ -1,6 +1,6 @@
 import {
     View, Text, StyleSheet, TextInput, TouchableOpacity, Image,
-    PermissionsAndroid, Modal, ScrollView, Dimensions, Alert, Platform
+    PermissionsAndroid, Modal, ScrollView, Dimensions, Alert, TouchableWithoutFeedback, Keyboard
 } from 'react-native'
 import React from 'react'
 import color from '../../../contents/color'
@@ -26,14 +26,15 @@ const EditAccount = (props) => {
     });
 
     React.useEffect(() => {
-       try{
+        try {
             if (props.userprofile?.status) {
                 props.getUserDetails(props.token);
                 props.setUserData({})
                 props.navigation.goBack();
-            
-        }}catch(e){
-            console.log("mydata ",e)
+
+            }
+        } catch (e) {
+            console.log("mydata ", e)
         }
     }, [props])
     const EditAccount = () => {
@@ -127,167 +128,173 @@ const EditAccount = (props) => {
     })
 
     return (
+        <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+            <View style={styles.container}>
 
-        <View style={styles.container}>
-
-            {modalVisible1 && <ImageModel
-                filename={"user"}
-                theme={props.theme}
-                modalVisibleData={modalVisible1}
-                onGetImage={(val) => setfirebaseImage(val)}
-                onGetLoding={(val) => setImageLoading(val)}
-                onGetModalVisible={(val) => setModalVisible1(val)} />}
-            <Modal
-                animationType="slide"
-                transparent={true}
-                visible={modalVisible}
-                onRequestClose={() => {
-                    Alert.alert("Modal has been closed.");
-                    setModalVisible(!modalVisible);
-                }}
-            >
-                <View style={{ flex: 1, justifyContent: 'center' }}>
-                    <View style={styles.modelBox}>
+                {modalVisible1 && <ImageModel
+                    filename={"user"}
+                    theme={props.theme}
+                    modalVisibleData={modalVisible1}
+                    onGetImage={(val) => setfirebaseImage(val)}
+                    onGetLoding={(val) => setImageLoading(val)}
+                    onGetModalVisible={(val) => setModalVisible1(val)} />}
+                <Modal
+                    animationType="slide"
+                    transparent={true}
+                    visible={modalVisible}
+                    onRequestClose={() => {
+                        Alert.alert("Modal has been closed.");
+                        setModalVisible(!modalVisible);
+                    }}
+                >
+                    <View style={{ flex: 1, justifyContent: 'center' }}>
+                        <View style={styles.modelBox}>
                         <ScrollView keyboardShouldPersistTaps="handled" >
+                                    <TouchableOpacity onPress={() => { setModalVisible(false) }} style={{ alignItems: 'center', left: Dimensions.get('screen').width / 2 - 40 }}>
+                                        <Image source={icons.close} style={{ width: 35, height: 35, tintColor: props.theme ? color.drakPrimaryColors : color.primaryColors, }} />
+                                    </TouchableOpacity>
+                                    <View style={{ marginHorizontal: 30, marginVertical: 20 }}>
+                                        <Text style={{ color: 'gray', fontSize: 20, fontWeight: 'bold' }}>Search Your Address</Text>
+                                    </View>
+                                <GooglePlacesAutocomplete
+                                    placeholder='Address'
+                                    placeholderTextColor={'gray'}
+                                    minLength={2} // minimum length of text to search
+                                    fetchDetails={true}
 
-                            <GooglePlacesAutocomplete
-                                placeholder='Address'
-                                placeholderTextColor={'gray'}
-                                minLength={2} // minimum length of text to search
-                                fetchDetails={true}
+                                    renderDescription={row => row.description} // custom description render
+                                    onPress={(dt, details = null) => {
+                                        console.log(dt)
+                                        setData({ ...data, UserAddress: dt.description });
+                                        setModalVisible(false)
+                                        // console.log(details);
+                                    }}
+                                    getDefaultValue={() => {
+                                        return ''; // text input default value
+                                    }}
+                                    query={{
+                                        // available options: https://developers.google.com/places/web-service/autocomplete
+                                        key: 'AIzaSyDwIVgIMPOY0UMpmXrqO0hOBNSTM7dH2pA',
+                                        language: 'en', // language of the results
+                                        types: '', // default: 'geocode'
+                                    }}
+                                    styles={{
 
-                                renderDescription={row => row.description} // custom description render
-                                onPress={(dt, details = null) => {
-                                    console.log(dt)
-                                    setData({ ...data, UserAddress: dt.description });
-                                    setModalVisible(false)
-                                    // console.log(details);
-                                }}
-                                getDefaultValue={() => {
-                                    return ''; // text input default value
-                                }}
-                                query={{
-                                    // available options: https://developers.google.com/places/web-service/autocomplete
-                                    key: 'AIzaSyDwIVgIMPOY0UMpmXrqO0hOBNSTM7dH2pA',
-                                    language: 'en', // language of the results
-                                    types: '', // default: 'geocode'
-                                }}
-                                styles={{
-
-                                    textInput: {
-                                        borderWidth: 2,
-                                        borderColor: props.theme ? color.drakAdminprimaryColors : color.adminprimaryColors,
-                                        padding: 10,
-                                        fontSize: 18,
-                                        borderRadius: 10,
-                                        marginHorizontal: 30
-                                    },
-                                    description: {
-                                        color: props.theme ? color.drakAdminprimaryColors : color.adminprimaryColors,
-                                        fontSize: 18,
-
-                                    }, listView: {
-                                        borderWidth: 2,
-                                        borderColor: props.theme ? color.drakAdminprimaryColors : color.adminprimaryColors,
-                                        padding: 10,
-                                        fontSize: 18,
-                                        borderRadius: 10,
-                                    }
-                                }}
-
-                                debounce={200}
-                            />
-
-                        </ScrollView>
-                    </View>
-                    <TouchableOpacity onPress={() => { setModalVisible(false) }} style={{ alignItems: 'center', bottom: 40 }}>
-                        <Image source={icons.close} style={{ width: 35, height: 35, tintColor: props.theme ? color.drakAdminprimaryColors : color.adminprimaryColors, }} />
-                    </TouchableOpacity>
-                </View>
-            </Modal>
-            <HeaderWithBackButton name={"Edit Account"} navigation={props.navigation} />
-            <View style={styles.inputBox}>
-                <View style={{ marginHorizontal: 10 }}>
-                    {!imageLoading ?
-                        <View style={{ marginHorizontal: 10 }}>
-                            {!firebaseImage ?
-                                <TouchableOpacity onPress={() => { setModalVisible1(true) }}>
-                                    <Image
-                                        style={{
-                                            alignSelf: 'center',
-                                            width: 100,
-                                            height: 100,
+                                        textInput: {
+                                            borderWidth: 2,
+                                            borderColor: props.theme ? color.drakAdminprimaryColors : color.adminprimaryColors,
+                                            padding: 10,
+                                            fontSize: 18,
                                             borderRadius: 10,
-                                            resizeMode: 'contain',
-                                            marginVertical: 30,
-                                            tintColor: color.primaryColors
-                                        }}
-                                        source={icons.add_photo}
-                                    />
-                                </TouchableOpacity> :
-                                <TouchableOpacity style={styles.image} onPress={() => { setModalVisible1(true) }}>
-                                    <Image
-                                        style={{
-                                            width: 110, height: 110, alignSelf: "center"
+                                            marginHorizontal: 30
+                                        },
+                                        description: {
+                                            color: props.theme ? color.drakAdminprimaryColors : color.adminprimaryColors,
+                                            fontSize: 18,
 
-                                        }}
-                                        source={{ uri: firebaseImage }}
-                                    /></TouchableOpacity>}
+                                        }, listView: {
+                                            borderWidth: 2,
+                                            borderColor: props.theme ? color.drakAdminprimaryColors : color.adminprimaryColors,
+                                            padding: 10,
+                                            fontSize: 18,
+                                            borderRadius: 10,
+                                        }
+                                    }}
 
+                                    debounce={200}
+                                />
+
+                            </ScrollView>
+                        </View>
+                       
+                    </View>
+                </Modal>
+                <ScrollView>
+                    <HeaderWithBackButton name={"Edit Account"} navigation={props.navigation} />
+                    <View style={styles.inputBox}>
+                        <View style={{ marginHorizontal: 10 }}>
+                            {!imageLoading ?
+                                <View style={{ marginHorizontal: 10 }}>
+                                    {!firebaseImage ?
+                                        <TouchableOpacity onPress={() => { setModalVisible1(true) }}>
+                                            <Image
+                                                style={{
+                                                    alignSelf: 'center',
+                                                    width: 100,
+                                                    height: 100,
+                                                    borderRadius: 10,
+                                                    resizeMode: 'contain',
+                                                    marginVertical: 30,
+                                                    tintColor: color.primaryColors
+                                                }}
+                                                source={icons.add_photo}
+                                            />
+                                        </TouchableOpacity> :
+                                        <TouchableOpacity style={styles.image} onPress={() => { setModalVisible1(true) }}>
+                                            <Image
+                                                style={{
+                                                    width: 110, height: 110, alignSelf: "center"
+
+                                                }}
+                                                source={{ uri: firebaseImage }}
+                                            /></TouchableOpacity>}
+
+
+                                </View>
+                                :
+                                <View style={{ height: 100, alignContent: 'center', marginHorizontal: 10 }}>
+                                    <LottieView source={require('../../../assets/json/uploading1.json')} autoPlay loop />
+                                </View>}
+                        </View>
+                        <View style={{ margin: 10 }}>
+                            <TextInput style={styles.input}
+
+                                placeholder={"eg. User Name"}
+                                placeholderTextColor={'gray'}
+                                defaultValue={props.route.params.item.username}
+                                onChangeText={(val) => setData({ ...data, username: val })}
+                                autoCapitalize={'none'} />
 
                         </View>
-                        :
-                        <View style={{ height: 100, alignContent: 'center', marginHorizontal: 10 }}>
-                            <LottieView source={require('../../../assets/json/uploading1.json')} autoPlay loop />
-                        </View>}
-                </View>
-                <View style={{ margin: 10 }}>
-                    <TextInput style={styles.input}
+                        <View style={{ margin: 10 }}>
+                            <TextInput style={styles.input}
 
-                        placeholder={"eg. User Name"}
-                        placeholderTextColor={'gray'}
-                        defaultValue={props.route.params.item.username}
-                        onChangeText={(val) => setData({ ...data, username: val })}
-                        autoCapitalize={'none'} />
+                                placeholder={"eg. email"}
+                                placeholderTextColor={'gray'}
+                                defaultValue={props.route.params.item.email}
+                                onChangeText={(val) => setData({ ...data, email: val })}
+                                autoCapitalize={'none'}
+                                keyboardType={'email-address'} />
 
-                </View>
-                <View style={{ margin: 10 }}>
-                    <TextInput style={styles.input}
+                        </View>
+                        <View style={{ margin: 10 }}>
+                            <TextInput style={styles.input}
 
-                        placeholder={"eg. email"}
-                        placeholderTextColor={'gray'}
-                        defaultValue={props.route.params.item.email}
-                        onChangeText={(val) => setData({ ...data, email: val })}
-                        autoCapitalize={'none'}
-                        keyboardType={'email-address'} />
+                                placeholder={"eg. Mobile no"}
+                                placeholderTextColor={'gray'}
+                                defaultValue={props.route.params.item?.mobileno}
+                                onChangeText={(val) => setData({ ...data, mobileno: val })}
+                                autoCapitalize={'none'}
+                                maxLength={10}
+                                keyboardType={'number-pad'} />
 
-                </View>
-                <View style={{ margin: 10 }}>
-                    <TextInput style={styles.input}
-
-                        placeholder={"eg. Mobile no"}
-                        placeholderTextColor={'gray'}
-                        defaultValue={props.route.params.item?.mobileno}
-                        onChangeText={(val) => setData({ ...data, mobileno: val })}
-                        autoCapitalize={'none'}
-                        maxLength={10}
-                        keyboardType={'number-pad'} />
-
-                </View>
-                <View style={{ margin: 10 }}>
-                    <TouchableOpacity style={{ width: '100%' }} activeOpacity={0.80} onPress={() => { setModalVisible(true) }}>
-                        <Text style={styles.input}>{data.UserAddress}</Text>
-                    </TouchableOpacity>
-                </View>
-                <View style={{ marginHorizontal: 10, marginVertical: 20 }}>
-                    <TouchableOpacity style={styles.btn} onPress={() => { EditAccount() }}>
-                        <Text style={styles.btnText}>
-                            Continue
-                        </Text>
-                    </TouchableOpacity>
-                </View>
+                        </View>
+                        <View style={{ margin: 10 }}>
+                            <TouchableOpacity style={{ width: '100%' }} activeOpacity={0.80} onPress={() => { setModalVisible(true) }}>
+                                <Text style={styles.input}>{data.UserAddress}</Text>
+                            </TouchableOpacity>
+                        </View>
+                        <View style={{ marginHorizontal: 10, marginVertical: 20 }}>
+                            <TouchableOpacity style={styles.btn} onPress={() => { EditAccount() }}>
+                                <Text style={styles.btnText}>
+                                    Continue
+                                </Text>
+                            </TouchableOpacity>
+                        </View>
+                    </View>
+                </ScrollView>
             </View>
-        </View>
+        </TouchableWithoutFeedback>
     )
 }
 const useSelector = (state) => {

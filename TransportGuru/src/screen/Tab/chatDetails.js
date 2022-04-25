@@ -1,4 +1,4 @@
-import { View, Text, TextInput, TouchableOpacity, FlatList, Image, StyleSheet } from 'react-native'
+import { View, Text, TextInput, TouchableOpacity, FlatList, Image, StyleSheet, KeyboardAvoidingView, TouchableWithoutFeedback, Keyboard } from 'react-native'
 import React, { useEffect } from 'react'
 import { io } from 'socket.io-client'
 import { connect } from 'react-redux'
@@ -15,8 +15,8 @@ const ChatDetails = (props) => {
   const [convessationId, setConvessationId] = React.useState('')
   const [userChatList, setUserChatList] = React.useState([])
 
-  const id = props?.route?.params.item?._id 
- const name = props.route.params.item?.trasportAccount[0]?.trasportName || props.route.params.item?.username;
+  const id = props?.route?.params.item?._id
+  const name = props.route.params.item?.trasportAccount[0]?.trasportName || props.route.params.item?.username;
 
   React.useEffect(() => {
     socket.emit("onJoinChat", convessationId)
@@ -113,60 +113,68 @@ const ChatDetails = (props) => {
     }
   });
   return (
-    <View style={styles.container}>
-      <AnimatedLoader
-        visible={props.loading}
-        overlayColor="rgba(255,255,255,0.75)"
-        source={require("../../assets/json/loder.json")}
-        animationStyle={{
-          width: 100,
-          height: 100
-        }}
-        speed={1}
-      >
-        <Text>Loading ...</Text>
-      </AnimatedLoader>
+    <KeyboardAvoidingView
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
+      style={styles.container}
+    >
+      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+        <View style={{ flex: 1 }}>
+          <AnimatedLoader
+            visible={props.loading}
+            overlayColor="rgba(255,255,255,0.75)"
+            source={require("../../assets/json/loder.json")}
+            animationStyle={{
+              width: 100,
+              height: 100
+            }}
+            speed={1}
+          >
+            <Text>Loading ...</Text>
+          </AnimatedLoader>
 
-      <HeaderWithBackButton name={name} navigation={props.navigation} />
-
-      <FlatList style={{ marginBottom: 100 }} inverted contentContainerStyle={{ flexDirection: 'column-reverse' }}
-        data={userChatList} renderItem={(item) => (
-          <View style={{ paddingHorizontal: 10 }}>
-            {(props.userData?._id !== item.item?.userId) ?
-              <View style={{ flexDirection: "row" }}>
-                <View style={styles.left}>
-                  <Text style={styles.text}>{item.item.message}</Text>
+          <HeaderWithBackButton name={name} navigation={props.navigation} />
+          <View style={{ flex: 1 }}>
+            <FlatList inverted contentContainerStyle={{ flexDirection: 'column-reverse' }}
+              data={userChatList} renderItem={(item) => (
+                <View style={{ paddingHorizontal: 10 }}>
+                  {(props.userData?._id !== item.item?.userId) ?
+                    <View style={{ flexDirection: "row" }}>
+                      <View style={styles.left}>
+                        <Text style={styles.text}>{item.item.message}</Text>
+                      </View>
+                      <View style={{ justifyContent: 'flex-end' }}>
+                        <Text style={{ color: 'gray', fontWeight: 'bold', fontSize: 10, paddingHorizontal: 2 }}>{new Date(item.item.createdAt).toLocaleDateString("en-US", { hour: 'numeric', minute: 'numeric', hour12: false }).toString().slice(-5)}</Text>
+                      </View>
+                    </View> :
+                    <View style={{ alignSelf: 'flex-end', flexDirection: 'row' }}>
+                      <View style={{ justifyContent: 'flex-end' }}>
+                        <Text style={{ color: 'gray', fontWeight: 'bold', fontSize: 10, paddingHorizontal: 2 }}>{new Date(item.item.createdAt).toLocaleDateString("en-US", { hour: 'numeric', minute: 'numeric', hour12: false }).toString().slice(-5)}</Text>
+                      </View>
+                      <View style={styles.right}>
+                        <Text style={styles.text}>{item.item.message}</Text>
+                      </View>
+                    </View>}
                 </View>
-                <View style={{ justifyContent: 'flex-end' }}>
-                  <Text style={{ color: 'gray', fontWeight: 'bold', fontSize: 10, paddingHorizontal: 2 }}>{new Date(item.item.createdAt).toLocaleDateString("en-US", { hour: 'numeric', minute: 'numeric', hour12: false }).toString().slice(-5)}</Text>
-                </View>
-              </View> :
-              <View style={{ alignSelf: 'flex-end', flexDirection: 'row' }}>
-                <View style={{ justifyContent: 'flex-end' }}>
-                  <Text style={{ color: 'gray', fontWeight: 'bold', fontSize: 10, paddingHorizontal: 2 }}>{new Date(item.item.createdAt).toLocaleDateString("en-US", { hour: 'numeric', minute: 'numeric', hour12: false }).toString().slice(-5)}</Text>
-                </View>
-                <View style={styles.right}>
-                  <Text style={styles.text}>{item.item.message}</Text>
-                </View>
-              </View>}
+              )} showsVerticalScrollIndicator={false}
+            />
           </View>
-        )} showsVerticalScrollIndicator={false}
-      />
-      <View style={{
-        position: 'absolute', bottom: 0,
-        height: 100, width: '100%', borderWidth: 0, flexDirection: 'row', justifyContent: 'center', alignItems: 'center',
-      }}>
-        <View style={{ width: "90%" }}>
-          <TextInput value={message}
-            placeholder={"message "}
-            placeholderTextColor={"gray"}
-            style={{ color: props.theme ? color.drakFontcolor : color.fontcolor, height: 45, borderWidth: 1, borderColor: color.primaryColors, marginHorizontal: 10, fontSize: 20, padding: 10, borderRadius: 10 }}
-            onChangeText={(value) => setMessage(value)} /></View>
-        <TouchableOpacity style={{ width: "10%" }} onPress={() => { sendMessage() }} >
-          <Image source={icons.send} style={{ width: 30, height: 30, tintColor: props.theme ? color.drakPrimaryColors : color.primaryColors }} />
-        </TouchableOpacity>
-      </View>
-    </View>
+          <View style={{
+
+            height: 100, width: '100%', borderWidth: 0, flexDirection: 'row', justifyContent: 'center', alignItems: 'center',
+          }}>
+            <View style={{ width: "90%" }}>
+              <TextInput value={message}
+                placeholder={"message "}
+                placeholderTextColor={"gray"}
+                style={{ color: props.theme ? color.drakFontcolor : color.fontcolor, height: 45, borderWidth: 1, borderColor: color.primaryColors, marginHorizontal: 10, fontSize: 20, padding: 10, borderRadius: 10 }}
+                onChangeText={(value) => setMessage(value)} /></View>
+            <TouchableOpacity style={{ width: "10%" }} onPress={() => { sendMessage() }} >
+              <Image source={icons.send} style={{ width: 30, height: 30, tintColor: props.theme ? color.drakPrimaryColors : color.primaryColors }} />
+            </TouchableOpacity>
+          </View>
+        </View>
+      </TouchableWithoutFeedback>
+    </KeyboardAvoidingView>
   );
 };
 const useDispatch = (dispatch) => {
