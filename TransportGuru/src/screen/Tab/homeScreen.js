@@ -699,11 +699,10 @@ const styles = StyleSheet.create({
         minHeight: 200,
 
         backgroundColor: props.theme ? color.drakBackgroundColor : color.backgroundColor,
-        alignSelf: 'center',
+       
         borderRadius: 15,
         flexDirection: 'row',
         alignItems: 'center',
-        alignItems: "center",
         shadowColor: props.theme ? color.drakFontcolor : color.fontcolor,
         shadowOffset: {
             width: 0,

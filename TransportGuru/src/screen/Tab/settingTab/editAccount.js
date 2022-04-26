@@ -289,7 +289,7 @@ const styles = StyleSheet.create({
         borderRadius: 15,
         flexDirection: 'row',
         alignItems: 'center',
-        alignItems: "center",
+     
         shadowColor: props.theme ? color.drakFontcolor : color.fontcolor,
         shadowOffset: {
             width: 0,

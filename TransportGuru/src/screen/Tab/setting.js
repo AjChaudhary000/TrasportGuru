@@ -1,5 +1,5 @@
-import { View, StyleSheet, Platform, Image, ScrollView, TouchableOpacity, Switch, StatusBar } from 'react-native'
-import { Paragraph, Caption, Avatar, Text, Title, DarkTheme } from 'react-native-paper'
+import { View, StyleSheet, Image, ScrollView, TouchableOpacity, Switch, Modal, Dimensions } from 'react-native'
+import { Caption, Text, Title } from 'react-native-paper'
 import React from 'react'
 import color from '../../contents/color';
 import icons from '../../contents/icons';
@@ -12,6 +12,7 @@ import { getThemeMode, logoutToken } from '../../Redux/tokenSlice';
 import AnimatedLoader from "react-native-animated-loader";
 const Setting = (props) => {
   const [isEnabled, setIsEnabled] = React.useState(props.theme);
+  const [modalVisible, setModalVisible] = React.useState(false);
   const toggleSwitch = () => setIsEnabled(previousState => !previousState);
   const saveThemeData = async (drakmode) => {
     try {
@@ -42,7 +43,34 @@ const Setting = (props) => {
   return (
 
     <View style={styles.container(props)}>
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={modalVisible}
+        onRequestClose={() => {
+          Alert.alert("Modal has been closed.");
+          setModalVisible(!modalVisible);
+        }}
+      >
+        <View style={{ flex: 1, justifyContent: 'center' }}>
 
+          <View style={styles.modelBox(props)}>
+            <Text style={styles.text}> Are you sure you want to logout ? </Text>
+            <View style={{ flexDirection: 'row', justifyContent: 'space-between', margin: 30 }}>
+              <TouchableOpacity style={styles.btn1} onPress={() => { logout(), setModalVisible(false) }}>
+                <Text style={styles.btntext}>
+                  Yes
+                </Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={styles.btn} onPress={() => setModalVisible(false)}>
+                <Text style={styles.btntext}>
+                  No
+                </Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
+      </Modal>
       <AnimatedLoader
         visible={props.loading}
         overlayColor="rgba(255,255,255,0.75)"
@@ -90,7 +118,7 @@ const Setting = (props) => {
             <SettingMenu icon={icons.privacy_policy} menuName={"Privacy Policy"} onPress={() => { props.navigation.navigate('PrivacyPolicy') }} />
             <SettingMenu icon={icons.accept} menuName={"Terms of service"} onPress={() => { props.navigation.navigate('Termsofservice') }} />
             <SettingMenu icon={icons.support} menuName={"Support"} onPress={() => { props.navigation.navigate('Support') }} />
-            <SettingMenu icon={icons.logout} menuName={"Logout"} onPress={() => { logout() }} />
+            <SettingMenu icon={icons.logout} menuName={"Logout"} onPress={() => { setModalVisible(true) }} />
 
           </View>
 
@@ -157,5 +185,46 @@ const styles = StyleSheet.create({
     width: 25,
     height: 25,
     tintColor: props.theme ? color.drakPrimaryColors : color.primaryColors
-  }]
+  }],
+  modelBox: (props) => [{
+    width: Dimensions.get('screen').width - 20,
+    minHeight: 200,
+    alignSelf: 'center',
+    backgroundColor: props.theme ? color.drakBackgroundColor : color.backgroundColor,
+    borderRadius: 15,
+    justifyContent: 'center',
+    shadowColor: props.theme ? color.drakFontcolor : color.fontcolor,
+    shadowOffset: {
+      width: 0,
+      height: 4
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5,
+
+
+  }],
+  text: {
+    fontSize: 20,
+    color: 'gray',
+    textAlign: 'center'
+  }, btn1: {
+    width: 100,
+    height: 45,
+    borderRadius: 10,
+    backgroundColor: color.primaryColors,
+    justifyContent: 'center',
+    alignItems: "center"
+  },
+  btn: {
+    width: 100,
+    height: 45,
+    borderRadius: 10,
+    backgroundColor: 'red',
+    justifyContent: 'center',
+    alignItems: "center"
+  }, btntext: {
+    fontSize: 18,
+    color: 'white'
+  }
 })
