@@ -87,127 +87,10 @@ const AddDriver = (props) => {
         props.updateDriver({ ...data, driverImage: firebaseImage, id: props.route.params?.item?._id, token: props.token })
 
     }
-
-
-    const styles = StyleSheet.create({
-        container: {
-            flex: 1,
-            backgroundColor: props.theme ? color.drakBackgroundColor : color.backgroundColor,
-
-        }, inputBox: {
-            margin: 20
-        },
-        input: {
-            borderWidth: 2,
-            borderColor: props.theme ? color.drakAdminprimaryColors : color.adminprimaryColors,
-            padding: 10,
-            fontSize: 18,
-            borderRadius: 10,
-            color: props.theme ? color.drakFontcolor : color.fontcolor,
-        }, header: {
-            marginTop: 40,
-            alignItems: 'center',
-            marginHorizontal: 20
-        },
-        headerName: {
-            fontSize: 25,
-            fontWeight: 'bold',
-            letterSpacing: 2,
-            color: "#0D1117"
-        },
-        btn: {
-            width: '90%',
-            height: 50,
-            backgroundColor: props.theme ? color.drakAdminprimaryColors : color.adminprimaryColors,
-            borderRadius: 15,
-            justifyContent: "center",
-            alignItems: 'center',
-            alignSelf: 'center'
-        },
-        btnText: {
-            fontSize: 20,
-            color: 'white',
-            fontWeight: 'bold'
-        },
-        resend: {
-            fontWeight: "bold",
-            color: props.theme ? color.drakAdminprimaryColors : color.adminprimaryColors,
-            fontSize: 18,
-
-        },
-
-        titleComponets: {
-            marginHorizontal: 5,
-            height: '20%', marginVertical: 30
-        },
-        title: {
-            fontSize: 25,
-            fontWeight: 'bold',
-            color: props.theme ? color.drakFontcolor : color.fontcolor,
-        },
-        text: {
-            fontSize: 18,
-            color: 'gray',
-            margin: 10,
-            fontWeight: 'bold',
-
-        },
-        borderStyleBase: {
-            width: 30,
-            height: 45
-        },
-        resend: {
-            fontWeight: "bold",
-            color: props.theme ? color.drakAdminprimaryColors : color.adminprimaryColors,
-            fontSize: 18,
-
-        },
-        resend: {
-            fontWeight: "bold",
-            color: props.theme ? color.drakPrimaryColors : color.primaryColors,
-            fontSize: 18,
-
-        },
-        btnresend: {
-            width: '40%',
-            height: 45,
-            justifyContent: "center",
-            alignItems: 'center',
-            alignSelf: 'center'
-        },
-        emailbox: {
-            alignItems: "center",
-            flexDirection: 'row',
-            backgroundColor: props.theme ? color.drakBackgroundColor : color.backgroundColor,
-            alignSelf: 'center',
-            borderRadius: 15,
-            flexDirection: 'row',
-            alignItems: 'center',
-            alignItems: "center",
-            shadowColor: props.theme ? color.drakFontcolor : color.fontcolor,
-            shadowOffset: {
-                width: 0,
-                height: 2
-            },
-            shadowOpacity: 0.25,
-            shadowRadius: 4,
-            elevation: 5,
-            height: 50
-        }, image: {
-            marginTop: 40,
-            overflow: 'hidden',
-            alignSelf: 'center',
-            width: 120,
-            height: 120,
-            borderRadius: 10,
-            borderWidth: 5,
-            borderColor: props.theme ? color.drakAdminprimaryColors : color.adminprimaryColors,
-        }
-    })
     return (
         <KeyboardAvoidingView
             behavior={Platform.OS === "ios" ? "padding" : "height"}
-            style={styles.container}
+            style={styles.container(props)}
         >
             <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
 
@@ -257,7 +140,7 @@ const AddDriver = (props) => {
                                                         source={icons.add_photo}
                                                     />
                                                 </TouchableOpacity> :
-                                                <TouchableOpacity style={styles.image} onPress={() => { setModalVisible1(true) }}>
+                                                <TouchableOpacity style={styles.image(props)} onPress={() => { setModalVisible1(true) }}>
                                                     <Image
                                                         style={{
                                                             width: 110, height: 110, alignSelf: "center"
@@ -273,7 +156,7 @@ const AddDriver = (props) => {
                                             <LottieView source={require('../../assets/json/uploading1.json')} autoPlay loop />
                                         </View>}
                                     <View style={{ margin: 10 }}>
-                                        <TextInput style={styles.input}
+                                        <TextInput style={styles.input(props)}
 
                                             placeholder={"eg. Driver name"}
                                             placeholderTextColor={'gray'}
@@ -282,7 +165,7 @@ const AddDriver = (props) => {
 
                                     </View>
                                     <View style={{ margin: 10 }}>
-                                        <TextInput style={styles.input}
+                                        <TextInput style={styles.input(props)}
                                             placeholder={"eg. Driver mobile No"}
                                             placeholderTextColor={'gray'}
                                             maxLength={10}
@@ -292,7 +175,7 @@ const AddDriver = (props) => {
 
                                     </View>
                                     <View style={{ margin: 10 }}>
-                                        <TextInput style={styles.input}
+                                        <TextInput style={styles.input(props)}
                                             placeholder={"eg. Driver email"}
                                             placeholderTextColor={'gray'}
                                             keyboardType={'email-address'}
@@ -302,7 +185,7 @@ const AddDriver = (props) => {
                                     </View>
 
                                     <View style={{ marginHorizontal: 10, marginVertical: 10 }}>
-                                        <TouchableOpacity style={styles.btn} onPress={() => { VerifyDriver() }}>
+                                        <TouchableOpacity style={styles.btn(props)} onPress={() => { VerifyDriver() }}>
                                             <Text style={styles.btnText}>
                                                 Verify Driver
                                             </Text>
@@ -312,12 +195,12 @@ const AddDriver = (props) => {
                                 <View style={styles.inputBox}>
 
                                     <View style={styles.titleComponets}>
-                                        <Text style={styles.title}>Driver Verification</Text>
+                                        <Text style={styles.title(props)}>Driver Verification</Text>
                                         <View>
                                             <Text style={styles.text}>We have sent you an Gmail with a code to the number that you provided.</Text>
                                         </View>
                                     </View>
-                                    <View style={styles.emailbox}>
+                                    <View style={styles.emailbox(props)}>
                                         <View style={{ width: " 70%", alignItems: 'center' }}>
                                             <Text style={{ fontSize: 20, fontWeight: 'bold', color: props.theme ? color.drakFontcolor : color.fontcolor }}>{data.driverEmail}</Text>
                                         </View>
@@ -326,7 +209,7 @@ const AddDriver = (props) => {
                                         </TouchableOpacity>
                                     </View>
                                     <View style={{ margin: 10 }}>
-                                        <TextInput style={styles.input}
+                                        <TextInput style={styles.input(props)}
                                             placeholder={"eg. 0000"}
                                             placeholderTextColor={'gray'}
                                             onChangeText={(val) => setData({ ...data, driverOtp: val })}
@@ -353,7 +236,7 @@ const AddDriver = (props) => {
                                                 }}
                                             >
                                                 {({ remainingTime }) => (
-                                                    <Animated.Text style={styles.resend}>
+                                                    <Animated.Text style={styles.resend(props)}>
                                                         Resend Code :{remainingTime}
                                                     </Animated.Text>
                                                 )}
@@ -368,7 +251,7 @@ const AddDriver = (props) => {
                                         </TouchableOpacity>
                                     </View>)}
                                     <View style={{ marginHorizontal: 10, marginVertical: 10 }}>
-                                        <TouchableOpacity style={styles.btn} onPress={() => { Finish() }}>
+                                        <TouchableOpacity style={styles.btn(props)} onPress={() => { Finish() }}>
                                             <Text style={styles.btnText}>
                                                 Finish
                                             </Text>
@@ -400,7 +283,7 @@ const AddDriver = (props) => {
                                                             source={icons.add_photo}
                                                         />
                                                     </TouchableOpacity> :
-                                                    <TouchableOpacity onPress={setModalVisible1(true)} style={styles.image}>
+                                                    <TouchableOpacity onPress={setModalVisible1(true)} style={styles.image(props)}>
                                                         <Image
                                                             style={{
                                                                 width: 110, height: 110, alignSelf: "center"
@@ -418,7 +301,7 @@ const AddDriver = (props) => {
                                     </View>
 
                                     <View style={{ margin: 10 }}>
-                                        <TextInput style={styles.input}
+                                        <TextInput style={styles.input(props)}
 
                                             placeholder={"eg. Driver name"}
                                             placeholderTextColor={'gray'}
@@ -428,7 +311,7 @@ const AddDriver = (props) => {
 
                                     </View>
                                     <View style={{ margin: 10 }}>
-                                        <TextInput style={styles.input}
+                                        <TextInput style={styles.input(props)}
                                             placeholder={"eg. Driver mobile No"}
                                             placeholderTextColor={'gray'}
                                             defaultValue={props.route.params?.item?.driverMobileNo}
@@ -448,7 +331,7 @@ const AddDriver = (props) => {
                                     </View>
 
                                     <View style={{ marginHorizontal: 10, marginVertical: 10 }}>
-                                        <TouchableOpacity style={styles.btn} onPress={() => { VerifyDriver() }}>
+                                        <TouchableOpacity style={styles.btn(props)} onPress={() => { VerifyDriver() }}>
                                             <Text style={styles.btnText}>
                                                 Verify Driver
                                             </Text>
@@ -458,12 +341,12 @@ const AddDriver = (props) => {
                                 <View style={styles.inputBox}>
 
                                     <View style={styles.titleComponets}>
-                                        <Text style={styles.title}>Driver Verification</Text>
+                                        <Text style={styles.title(props)}>Driver Verification</Text>
                                         <View>
                                             <Text style={styles.text}>We have sent you an Gmail with a code to the number that you provided.</Text>
                                         </View>
                                     </View>
-                                    <View style={styles.emailbox}>
+                                    <View style={styles.emailbox(props)}>
                                         <View style={{ width: " 70%", alignItems: 'center' }}>
                                             <Text style={{ fontSize: 20, fontWeight: 'bold' }}>{data.driverEmail}</Text>
                                         </View>
@@ -472,7 +355,7 @@ const AddDriver = (props) => {
                                         </TouchableOpacity>
                                     </View>
                                     <View style={{ margin: 10 }}>
-                                        <TextInput style={styles.input}
+                                        <TextInput style={styles.input(props)}
                                             placeholder={"eg. 0000"}
                                             placeholderTextColor={'gray'}
                                             onChangeText={(val) => setData({ ...data, driverOtp: val })}
@@ -499,7 +382,7 @@ const AddDriver = (props) => {
                                                 }}
                                             >
                                                 {({ remainingTime }) => (
-                                                    <Animated.Text style={styles.resend}>
+                                                    <Animated.Text style={styles.resend(props)}>
                                                         Resend Code :{remainingTime}
                                                     </Animated.Text>
                                                 )}
@@ -514,7 +397,7 @@ const AddDriver = (props) => {
                                         </TouchableOpacity>
                                     </View>)}
                                     <View style={{ marginHorizontal: 10, marginVertical: 10 }}>
-                                        <TouchableOpacity style={styles.btn} onPress={() => { UpdateFinish() }}>
+                                        <TouchableOpacity style={styles.btn(props)} onPress={() => { UpdateFinish() }}>
                                             <Text style={styles.btnText}>
                                                 Finish
                                             </Text>
@@ -552,3 +435,94 @@ const useSelector = (state) => (
     }
 )
 export default connect(useSelector, useDispatch)(AddDriver);
+const styles = StyleSheet.create({
+    container: (props) => [{
+        flex: 1,
+        backgroundColor: props.theme ? color.drakBackgroundColor : color.backgroundColor,
+
+    }], inputBox: {
+        margin: 20
+    },
+    input: (props) => [{
+        borderWidth: 2,
+        borderColor: props.theme ? color.drakAdminprimaryColors : color.adminprimaryColors,
+        padding: 10,
+        fontSize: 18,
+        borderRadius: 10,
+        color: props.theme ? color.drakFontcolor : color.fontcolor,
+    }],
+    btn: (props) => [{
+        width: '90%',
+        height: 50,
+        backgroundColor: props.theme ? color.drakAdminprimaryColors : color.adminprimaryColors,
+        borderRadius: 15,
+        justifyContent: "center",
+        alignItems: 'center',
+        alignSelf: 'center'
+    }],
+    btnText: {
+        fontSize: 20,
+        color: 'white',
+        fontWeight: 'bold'
+    },
+    resend: (props) => [{
+        fontWeight: "bold",
+        color: props.theme ? color.drakAdminprimaryColors : color.adminprimaryColors,
+        fontSize: 18,
+
+    }],
+
+    titleComponets: {
+        marginHorizontal: 5,
+        height: '20%', marginVertical: 30
+    },
+    title: (props) => [{
+        fontSize: 25,
+        fontWeight: 'bold',
+        color: props.theme ? color.drakFontcolor : color.fontcolor,
+    }],
+    text: {
+        fontSize: 18,
+        color: 'gray',
+        margin: 10,
+        fontWeight: 'bold',
+
+    },
+
+
+    btnresend: {
+        width: '40%',
+        height: 45,
+        justifyContent: "center",
+        alignItems: 'center',
+        alignSelf: 'center'
+    },
+    emailbox: (props) => [{
+        alignItems: "center",
+        flexDirection: 'row',
+        backgroundColor: props.theme ? color.drakBackgroundColor : color.backgroundColor,
+        alignSelf: 'center',
+        borderRadius: 15,
+        flexDirection: 'row',
+        alignItems: 'center',
+        alignItems: "center",
+        shadowColor: props.theme ? color.drakFontcolor : color.fontcolor,
+        shadowOffset: {
+            width: 0,
+            height: 2
+        },
+        shadowOpacity: 0.25,
+        shadowRadius: 4,
+        elevation: 5,
+        height: 50
+    }], image: (props) => [{
+        marginTop: 40,
+        overflow: 'hidden',
+        alignSelf: 'center',
+        width: 120,
+        height: 120,
+        borderRadius: 10,
+        borderWidth: 5,
+        borderColor: props.theme ? color.drakAdminprimaryColors : color.adminprimaryColors,
+    }]
+})

@@ -20,31 +20,9 @@ const Message = (props) => {
   React.useEffect(() => {
     props.getMessageList({ token: props.token })
   }, [])
-  const styles = StyleSheet.create({
-    container: {
-      flex: 1,
-      backgroundColor: props.theme ? color.drakBackgroundColor : color.backgroundColor,
-    },
-    image: {
-      width: '20%',
-      overflow: 'hidden',
-      alignSelf: 'center',
-      width: 60,
-      height: 60,
-      borderRadius: 30,
-      borderWidth: 2,
-      borderColor: props.theme ? color.drakPrimaryColors : color.primaryColors,
-    },
-    text: {
-      fontSize: 16,
-      fontWeight: 'bold',
-      letterSpacing: 1,
-      marginLeft: 10,
-      color: 'gray'
-    }
-  })
+
   return (
-    <View style={styles.container}>
+    <View style={styles.container(props)}>
       <AnimatedLoader
         visible={props.loading}
         overlayColor="rgba(255,255,255,0.75)"
@@ -81,7 +59,7 @@ const Message = (props) => {
 
             <TouchableOpacity style={{ flexDirection: 'row', marginVertical: 10, marginHorizontal: 20 }}
               onPress={() => { props.navigation.navigate('ChatDetails', { item: item.item.senderId }) }}>
-              <View style={styles.image}>
+              <View style={styles.image(props)}>
                 <Image source={{ uri: item.item.senderId?.trasportAccount[0]?.trasportImage }}
                   style={{
                     width: 60, height: 60, alignSelf: "center"
@@ -120,4 +98,27 @@ const useSelector = (state) => (
   }
 )
 export default connect(useSelector, useDispatch)(Message);
+const styles = StyleSheet.create({
+  container: (props) => [{
+    flex: 1,
+    backgroundColor: props.theme ? color.drakBackgroundColor : color.backgroundColor,
+  }],
+  image: (props) => [{
+    width: '20%',
+    overflow: 'hidden',
+    alignSelf: 'center',
+    width: 60,
+    height: 60,
+    borderRadius: 30,
+    borderWidth: 2,
+    borderColor: props.theme ? color.drakPrimaryColors : color.primaryColors,
+  }],
+  text: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    letterSpacing: 1,
+    marginLeft: 10,
+    color: 'gray'
+  }
+})
 

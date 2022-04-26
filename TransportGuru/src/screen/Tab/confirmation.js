@@ -22,63 +22,24 @@ const Confirmation = (props) => {
       </View>
     );
   }
-  const styles = StyleSheet.create({
-    container: {
-      flex: 1,
-      backgroundColor: props.theme ? color.drakBackgroundColor : color.backgroundColor,
-      justifyContent: 'center'
-    }, listBox: {
-      minHeight: "40%",
-      backgroundColor: props.theme ? color.drakBackgroundColor : color.backgroundColor,
-      marginHorizontal: 20,
-      borderRadius: 20,
-      justifyContent: 'center',
-      shadowColor: props.theme ? color.drakFontcolor : color.fontcolor,
-      shadowOffset: {
-        width: 0,
-        height: 2
-      },
-      shadowOpacity: 0.25,
-      shadowRadius: 4,
-      elevation: 5,
-      marginVertical: 10,
-      padding: 10
-    },
-    titleText: {
-      textAlign: 'center',
-      fontSize: 30, fontWeight: 'bold',
-      color: props.theme ? color.drakFontcolor : color.fontcolor
-    },
-    btn: {
-      width: "90%",
-      height: 55,
-      backgroundColor: props.theme ? color.drakPrimaryColors : color.primaryColors,
-      borderRadius: 10,
-      justifyContent: "center",
-      alignItems: 'center', marginHorizontal: 10, marginVertical: 20
-    }, payment: {
-      textAlign: 'center',
-      fontSize: 30, fontWeight: 'bold',
-      color: props.theme ? color.drakFontcolor : color.fontcolor, margin: 20
-    }
-  });
+
   return (
-    <View style={styles.container}>
+    <View style={styles.container(props)}>
       <View style={{ height: '50%', backgroundColor: props.theme ? color.drakBackgroundColor : color.backgroundColor }}>
         <View style={{ height: "100%" }}>
           <LottieView source={require('../../assets/json/pay.json')} autoPlay loop />
         </View>
       </View>
-      <View style={styles.listBox}>
-        <Text style={styles.titleText}>Thank You </Text>
-        <Text style={styles.payment}>
-          {(props.route.params.payment)?.toLocaleString('en-IN', {
+      <View style={styles.listBox(props)}>
+        <Text style={styles.titleText(props)}>Thank You </Text>
+        <Text style={styles.payment(props)}>
+          {(props?.route?.params?.payment)?.toLocaleString('en-IN', {
             maximumFractionDigits: 2,
             style: 'currency',
             currency: 'INR'
           })}
         </Text>
-        <TouchableOpacity style={styles.btn}
+        <TouchableOpacity style={styles.btn(props)}
           onPress={() => {
             props.route.params?.type == "0" ?
               props.navigation.popToTop() : props.navigation.goBack()
@@ -100,3 +61,43 @@ const useSelector = (state) => (
   }
 )
 export default connect(useSelector)(Confirmation);
+const styles = StyleSheet.create({
+  container: (props) => [{
+    flex: 1,
+    backgroundColor: props.theme ? color.drakBackgroundColor : color.backgroundColor,
+    justifyContent: 'center'
+  }], listBox: (props) => [{
+    minHeight: "40%",
+    backgroundColor: props.theme ? color.drakBackgroundColor : color.backgroundColor,
+    marginHorizontal: 20,
+    borderRadius: 20,
+    justifyContent: 'center',
+    shadowColor: props.theme ? color.drakFontcolor : color.fontcolor,
+    shadowOffset: {
+      width: 0,
+      height: 2
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5,
+    marginVertical: 10,
+    padding: 10
+  }],
+  titleText: (props) => [{
+    textAlign: 'center',
+    fontSize: 30, fontWeight: 'bold',
+    color: props.theme ? color.drakFontcolor : color.fontcolor
+  }],
+  btn: (props) => [{
+    width: "90%",
+    height: 55,
+    backgroundColor: props.theme ? color.drakPrimaryColors : color.primaryColors,
+    borderRadius: 10,
+    justifyContent: "center",
+    alignItems: 'center', marginHorizontal: 10, marginVertical: 20
+  }], payment: (props) => [{
+    textAlign: 'center',
+    fontSize: 30, fontWeight: 'bold',
+    color: props.theme ? color.drakFontcolor : color.fontcolor, margin: 20
+  }]
+});

@@ -36,46 +36,7 @@ const Tracking = (props) => {
 
         props.getTracking(props.token);
     }, [])
-    const styles = StyleSheet.create({
-        container: {
-            flex: 1,
-            backgroundColor: props.theme ? color.drakBackgroundColor : color.backgroundColor,
 
-        },
-        listBox: {
-            minHeight: 150,
-            backgroundColor: props.theme ? color.drakBackgroundColor : color.backgroundColor,
-            marginHorizontal: 20,
-            borderRadius: 20,
-
-            shadowColor: props.theme ? color.drakFontcolor : color.fontcolor,
-            shadowOffset: {
-                width: 0,
-                height: 2
-            },
-            shadowOpacity: 0.25,
-            shadowRadius: 4,
-            elevation: 5,
-            marginVertical: 10,
-            padding: 10
-        }, pay: {
-            width: 150,
-            height: 50,
-            backgroundColor: props.theme ? color.drakPrimaryColors : color.primaryColors,
-            borderRadius: 10,
-            justifyContent: "center",
-            alignItems: 'center', marginHorizontal: 10
-        },
-        paid: {
-            width: 150,
-            height: 50,
-            backgroundColor: '#32a852',
-            borderRadius: 10,
-            justifyContent: "center",
-            alignItems: 'center', marginHorizontal: 10
-        }
-
-    })
     const paymentHendle = (item) => {
 
         let paymentStatus = "";
@@ -87,7 +48,7 @@ const Tracking = (props) => {
         props.updatePayment({ data: { paymentHistory, paymentStatus }, id: item._id, token: props.token })
     }
     return (
-        <View style={styles.container}>
+        <View style={styles.container(props)}>
             <AnimatedLoader
                 visible={props.loading}
                 overlayColor="rgba(255,255,255,0.75)"
@@ -121,7 +82,7 @@ const Tracking = (props) => {
 
                     :
                     <FlatList data={props.trackingList} renderItem={(item) => (
-                        <TouchableOpacity style={styles.listBox} onPress={() => props.navigation.navigate("TrackingDetails", { id: item.item._id })} >
+                        <TouchableOpacity style={styles.listBox(props)} onPress={() => props.navigation.navigate("TrackingDetails", { id: item.item._id })} >
                             <View style={{ marginHorizontal: 10, marginVertical: 5, flexDirection: "row", justifyContent: 'space-between' }}>
                                 <View >
 
@@ -173,7 +134,7 @@ const Tracking = (props) => {
                                         >
                                             <Text style={{ color: 'white', fontWeight: "bold", fontSize: 18 }}>Paid</Text>
                                         </TouchableOpacity> :
-                                        <TouchableOpacity style={styles.pay}
+                                        <TouchableOpacity style={styles.pay(props)}
                                             onPress={() => {
                                                 paymentHendle(item.item.paymentid)
                                             }}>
@@ -207,3 +168,43 @@ const useDispatch = (dispatch) => {
     };
 }
 export default connect(useSelector, useDispatch)(Tracking);
+const styles = StyleSheet.create({
+    container: (props)=>[{
+        flex: 1,
+        backgroundColor: props.theme ? color.drakBackgroundColor : color.backgroundColor,
+
+    }],
+    listBox: (props)=>[{
+        minHeight: 150,
+        backgroundColor: props.theme ? color.drakBackgroundColor : color.backgroundColor,
+        marginHorizontal: 20,
+        borderRadius: 20,
+
+        shadowColor: props.theme ? color.drakFontcolor : color.fontcolor,
+        shadowOffset: {
+            width: 0,
+            height: 2
+        },
+        shadowOpacity: 0.25,
+        shadowRadius: 4,
+        elevation: 5,
+        marginVertical: 10,
+        padding: 10
+    }], pay:(props)=>[ {
+        width: 150,
+        height: 50,
+        backgroundColor: props.theme ? color.drakPrimaryColors : color.primaryColors,
+        borderRadius: 10,
+        justifyContent: "center",
+        alignItems: 'center', marginHorizontal: 10
+    }],
+    paid: {
+        width: 150,
+        height: 50,
+        backgroundColor: '#32a852',
+        borderRadius: 10,
+        justifyContent: "center",
+        alignItems: 'center', marginHorizontal: 10
+    }
+
+})

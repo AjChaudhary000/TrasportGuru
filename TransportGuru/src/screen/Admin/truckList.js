@@ -30,74 +30,9 @@ const TruckList = (props) => {
 
         props.navigation.navigate("AddTruck", { item: item })
     }
-    const styles = StyleSheet.create({
-        container: {
-            flex: 1,
-            backgroundColor: props.theme ? color.drakBackgroundColor : color.backgroundColor
-        }, listBox: {
 
-            height: 150,
-            backgroundColor: props.theme ? color.drakBackgroundColor : color.backgroundColor,
-            marginHorizontal: 15,
-            borderRadius: 20,
-            justifyContent: 'center',
-            flexDirection: 'row',
-            shadowColor: props.theme ? color.drakFontcolor : color.fontcolor,
-            shadowOffset: {
-                width: 0,
-                height: 2
-            },
-            shadowOpacity: 0.25,
-            shadowRadius: 4,
-            elevation: 5,
-            marginVertical: 10,
-        },
-        image: {
-            width: '30%',
-            borderWidth: 3,
-            borderColor: props.theme ? color.drakAdminprimaryColors : color.adminprimaryColors,
-            borderRadius: 15,
-            marginVertical: 10,
-            marginLeft: 20,
-            alignItems: 'center',
-            overflow: 'hidden'
-        },
-        listData: {
-            width: '70%',
-            padding: 20
-        }, truckname: {
-            fontSize: 25,
-            fontWeight: 'bold',
-            color: props.theme ? color.drakFontcolor : color.fontcolor
-        }, truckmodelname: {
-            fontSize: 16,
-            fontWeight: 'bold',
-            color: props.theme ? color.drakAdminprimaryColors : color.adminprimaryColors,
-            paddingVertical: 3
-        },
-        truckreg: {
-            fontSize: 14,
-            fontWeight: 'bold',
-            color: 'gray'
-        },
-        truckcapicity: {
-            fontSize: 14,
-            fontWeight: 'bold',
-            color: props.theme ? color.drakFontcolor : color.fontcolor
-        },
-        edit: {
-            fontSize: 16,
-            fontWeight: 'bold',
-            color: 'green'
-        },
-        delete: {
-            fontSize: 16,
-            fontWeight: 'bold',
-            color: 'red'
-        }
-    })
     return (
-        <View style={styles.container}>
+        <View style={styles.container(props)}>
             <AnimatedLoader
                 visible={props.loading}
                 // overlayColor="rgba(255,255,255,0.75)"
@@ -125,16 +60,16 @@ const TruckList = (props) => {
 
                 :
                 <FlatList data={props.truckList} renderItem={(item) => (
-                    <View style={styles.listBox}>
-                        <View style={styles.image}>
+                    <View style={styles.listBox(props)}>
+                        <View style={styles.image(props)}>
                             <Image source={{ uri: item.item.truckImage }} style={{ width: '100%', height: '100%', overflow: "hidden" }} />
                         </View>
                         <View style={styles.listData}>
-                            <Text style={styles.truckname}>{item.item.truckName}</Text>
-                            <Text style={styles.truckmodelname}>{item.item.truckModelName}</Text>
+                            <Text style={styles.truckname(props)}>{item.item.truckName}</Text>
+                            <Text style={styles.truckmodelname(props)}>{item.item.truckModelName}</Text>
                             <View style={{ flexDirection: 'row', justifyContent: 'space-between', paddingVertical: 5 }}>
                                 <Text style={styles.truckreg}>{item.item.truckRegistartionNo}</Text>
-                                <Text style={styles.truckcapicity}>{item.item.truckCapicity} /-Tonnes</Text>
+                                <Text style={styles.truckcapicity(props)}>{item.item.truckCapicity} /-Tonnes</Text>
                             </View>
                             <View style={{ flexDirection: 'row', justifyContent: 'space-between', paddingTop: 10, paddingHorizontal: 20 }}>
                                 <TouchableOpacity onPress={() => { EditTruck(item.item) }}>
@@ -172,3 +107,69 @@ const useSelector = (state) => (
     }
 )
 export default connect(useSelector, useDispatch)(TruckList);
+const styles = StyleSheet.create({
+    container: (props)=>[{
+        flex: 1,
+        backgroundColor: props.theme ? color.drakBackgroundColor : color.backgroundColor
+    }], listBox: (props)=>[{
+
+        height: 150,
+        backgroundColor: props.theme ? color.drakBackgroundColor : color.backgroundColor,
+        marginHorizontal: 15,
+        borderRadius: 20,
+        justifyContent: 'center',
+        flexDirection: 'row',
+        shadowColor: props.theme ? color.drakFontcolor : color.fontcolor,
+        shadowOffset: {
+            width: 0,
+            height: 2
+        },
+        shadowOpacity: 0.25,
+        shadowRadius: 4,
+        elevation: 5,
+        marginVertical: 10,
+    }],
+    image: (props)=>[{
+        width: '30%',
+        borderWidth: 3,
+        borderColor: props.theme ? color.drakAdminprimaryColors : color.adminprimaryColors,
+        borderRadius: 15,
+        marginVertical: 10,
+        marginLeft: 20,
+        alignItems: 'center',
+        overflow: 'hidden'
+    }],
+    listData: {
+        width: '70%',
+        padding: 20
+    }, truckname: (props)=>[{
+        fontSize: 25,
+        fontWeight: 'bold',
+        color: props.theme ? color.drakFontcolor : color.fontcolor
+    }], truckmodelname: (props)=>[{
+        fontSize: 16,
+        fontWeight: 'bold',
+        color: props.theme ? color.drakAdminprimaryColors : color.adminprimaryColors,
+        paddingVertical: 3
+    }],
+    truckreg: {
+        fontSize: 14,
+        fontWeight: 'bold',
+        color: 'gray'
+    },
+    truckcapicity:(props)=>[ {
+        fontSize: 14,
+        fontWeight: 'bold',
+        color: props.theme ? color.drakFontcolor : color.fontcolor
+    }],
+    edit: {
+        fontSize: 16,
+        fontWeight: 'bold',
+        color: 'green'
+    },
+    delete: {
+        fontSize: 16,
+        fontWeight: 'bold',
+        color: 'red'
+    }
+})

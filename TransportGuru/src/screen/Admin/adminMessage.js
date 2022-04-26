@@ -19,32 +19,9 @@ const AdminMessage = (props) => {
     React.useEffect(() => {
         props.getUserMessageList({ token: props.token })
     }, [])
-    const styles = StyleSheet.create({
-        container: {
-            flex: 1,
-            backgroundColor: props.theme ? color.drakBackgroundColor : color.backgroundColor,
-            marginBottom: 30
-        },
-        image: {
-            width: '20%',
-            overflow: 'hidden',
-            alignSelf: 'center',
-            width: 60,
-            height: 60,
-            borderRadius: 30,
-            borderWidth: 1,
-            borderColor: props.theme ? color.drakAdminprimaryColors : color.adminprimaryColors,
-        },
-        text: {
-            fontSize: 16,
-            fontWeight: 'bold',
-            letterSpacing: 1,
-            marginLeft: 10,
-            color: 'gray'
-        }
-    })
+
     return (
-        <View style={styles.container}>
+        <View style={styles.container(props)}>
             <AnimatedLoader
                 visible={props.loading}
                 overlayColor="rgba(255,255,255,0.75)"
@@ -65,9 +42,6 @@ const AdminMessage = (props) => {
                 />
             }>
                 {props.messageList.length === 0 ?
-
-
-
                     <View style={{ flex: 1 }}>
 
                         <View style={{ height: 500, width: 200, alignSelf: 'center' }}>
@@ -81,7 +55,7 @@ const AdminMessage = (props) => {
 
                         <TouchableOpacity style={{ flexDirection: 'row', marginVertical: 10, marginHorizontal: 20 }}
                             onPress={() => { props.navigation.navigate('ChatDetails', { item: item.item.userId }) }}>
-                            <View style={styles.image}>
+                            <View style={styles.image(props)}>
                                 <Image source={{ uri: item.item.userId?.image }}
                                     style={{
                                         width: 60, height: 60, alignSelf: "center"
@@ -120,4 +94,28 @@ const useSelector = (state) => (
     }
 )
 export default connect(useSelector, useDispatch)(AdminMessage);
+const styles = StyleSheet.create({
+    container: (props) => [{
+        flex: 1,
+        backgroundColor: props.theme ? color.drakBackgroundColor : color.backgroundColor,
+        marginBottom: 30
+    }],
+    image: (props) => [{
+        width: '20%',
+        overflow: 'hidden',
+        alignSelf: 'center',
+        width: 60,
+        height: 60,
+        borderRadius: 30,
+        borderWidth: 1,
+        borderColor: props.theme ? color.drakAdminprimaryColors : color.adminprimaryColors,
+    }],
+    text: {
+        fontSize: 16,
+        fontWeight: 'bold',
+        letterSpacing: 1,
+        marginLeft: 10,
+        color: 'gray'
+    }
+})
 

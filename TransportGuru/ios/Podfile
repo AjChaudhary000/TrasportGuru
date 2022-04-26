@@ -16,7 +16,6 @@ target 'TransportGuru' do
 
 
 
-  pod 'react-native-splash-screen', :path => '../node_modules/react-native-splash-screen'
 
   target 'TransportGuruTests' do
     inherit! :complete

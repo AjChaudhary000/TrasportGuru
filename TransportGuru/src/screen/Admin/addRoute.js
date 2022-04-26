@@ -89,89 +89,10 @@ const AddRoute = (props) => {
         return Value * Math.PI / 180;
     }
 
-    const styles = StyleSheet.create({
-        container: {
-            flex: 1,
-            backgroundColor: props.theme ? color.drakBackgroundColor : color.backgroundColor
 
-        }, inputBox: {
-            marginHorizontal: 20,
-
-        },
-        input: {
-            borderWidth: 2,
-            borderColor: props.theme ? color.drakAdminprimaryColors : color.adminprimaryColors,
-            padding: 10,
-            fontSize: 18,
-            borderRadius: 10,
-            color: props.theme ? color.drakFontcolor : color.fontcolor
-        }, header: {
-            marginTop: 40,
-            alignItems: 'center',
-            marginHorizontal: 20
-        },
-        headerName: {
-            fontSize: 25,
-            fontWeight: 'bold',
-            letterSpacing: 2,
-            color: "#0D1117"
-        },
-        btn: {
-            width: '90%',
-            height: 50,
-            backgroundColor: props.theme ? color.drakAdminprimaryColors : color.adminprimaryColors,
-            borderRadius: 15,
-            justifyContent: "center",
-            alignItems: 'center',
-            alignSelf: 'center'
-        },
-        btnText: {
-            fontSize: 20,
-            color: 'white',
-            fontWeight: 'bold'
-        },
-
-        modelBox: {
-            width: Dimensions.get('screen').width - 20,
-            minHeight: 200,
-
-            backgroundColor: props.theme ? color.drakBackgroundColor : color.backgroundColor,
-            alignSelf: 'center',
-            borderRadius: 15,
-            flexDirection: 'row',
-            alignItems: 'center',
-            alignItems: "center",
-            shadowColor: props.theme ? color.drakFontcolor : color.fontcolor,
-            shadowOffset: {
-                width: 0,
-                height: 2
-            },
-            shadowOpacity: 0.25,
-            shadowRadius: 4,
-            elevation: 5
-        },
-        stopbox: {
-            height: 50,
-            backgroundColor: props.theme ? color.drakBackgroundColor : color.backgroundColor,
-            marginHorizontal: 8,
-            borderRadius: 10,
-            alignItems: 'center',
-            shadowColor: props.theme ? color.drakFontcolor : color.fontcolor,
-            shadowOffset: {
-                width: 0,
-                height: 2
-            },
-            shadowOpacity: 0.25,
-            shadowRadius: 4,
-            elevation: 5,
-            marginVertical: 2,
-            flexDirection: 'row',
-            justifyContent: "space-between", paddingHorizontal: 10
-        }
-    })
     return (
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-            <View style={styles.container}>
+            <View style={styles.container(props)}>
 
 
                 <Modal
@@ -184,7 +105,7 @@ const AddRoute = (props) => {
                     }}
                 >
                     <View style={{ flex: 1, justifyContent: 'center' }}>
-                        <View style={styles.modelBox}>
+                        <View style={styles.modelBox(props)}>
                             <ScrollView keyboardShouldPersistTaps="handled" >
                                 <TouchableOpacity onPress={() => { setModalVisible(false) }} style={{ alignItems: 'center', left: Dimensions.get('screen').width / 2 - 40 }}>
                                     <Image source={icons.close} style={{ width: 35, height: 35, tintColor: props.theme ? color.drakPrimaryColors : color.primaryColors, }} />
@@ -256,10 +177,10 @@ const AddRoute = (props) => {
                         <AdminHeaderWithBackButton name={"Add Route"} navigation={props.navigation} />
                         <View style={styles.inputBox}>
                             <TouchableOpacity style={{ margin: 10 }} activeOpacity={0.80} onPress={() => { setPlaceType("from"); setModalVisible(true) }}>
-                                <Text style={styles.input}>{data.from.name}</Text>
+                                <Text style={styles.input(props)}>{data.from.name}</Text>
                             </TouchableOpacity>
                             <TouchableOpacity style={{ margin: 10 }} activeOpacity={0.80} onPress={() => { setPlaceType("destination"); setModalVisible(true) }}>
-                                <Text style={styles.input}>{data.destination.name}</Text>
+                                <Text style={styles.input(props)}>{data.destination.name}</Text>
                             </TouchableOpacity>
 
                             <View style={{ marginHorizontal: 10, marginVertical: 20, flexDirection: "row", justifyContent: 'space-between' }}>
@@ -276,7 +197,7 @@ const AddRoute = (props) => {
                             </View>
                             {inputBox && <View style={{ margin: 10 }}>
                                 <TouchableOpacity style={{ margin: 10 }} activeOpacity={0.80} onPress={() => { setPlaceType("addStop"); setModalVisible(true) }}>
-                                    <Text style={styles.input}>Stops</Text>
+                                    <Text style={styles.input(props)}>Stops</Text>
                                 </TouchableOpacity>
 
                             </View>}
@@ -286,7 +207,7 @@ const AddRoute = (props) => {
                                     onDragEnd={({ data }) => setData(data)}
                                     keyExtractor={(item) => item.key}
                                     renderItem={({ item, index, drag }) => (
-                                        <View style={styles.stopbox}>
+                                        <View style={styles.stopbox(props)}>
                                             {moveBox &&
                                                 <TouchableOpacity style={{ alignItems: 'center' }} style={{ flexDirection: 'column' }}
                                                     onLongPress={drag}>
@@ -305,7 +226,7 @@ const AddRoute = (props) => {
                                 />
 
                                 <View style={{ marginHorizontal: 10, marginVertical: 20 }}>
-                                    <TouchableOpacity style={styles.btn} onPress={() => { AddRoute() }}>
+                                    <TouchableOpacity style={styles.btn(props)} onPress={() => { AddRoute() }}>
                                         <Text style={styles.btnText}>
                                             Add Route
                                         </Text>
@@ -318,10 +239,10 @@ const AddRoute = (props) => {
                         <AdminHeaderWithBackButton name={"Update Route"} navigation={props.navigation} />
                         <View style={styles.inputBox}>
                             <TouchableOpacity style={{ margin: 10 }} activeOpacity={0.80} onPress={() => { setPlaceType("from"); setModalVisible(true) }}>
-                                <Text style={styles.input}>{data.from.name}</Text>
+                                <Text style={styles.input(props)}>{data.from.name}</Text>
                             </TouchableOpacity>
                             <TouchableOpacity style={{ margin: 10 }} activeOpacity={0.80} onPress={() => { setPlaceType("destination"); setModalVisible(true) }}>
-                                <Text style={styles.input}>{data.destination.name}</Text>
+                                <Text style={styles.input(props)}>{data.destination.name}</Text>
                             </TouchableOpacity>
 
                             <View style={{ marginHorizontal: 10, marginVertical: 20, flexDirection: "row", justifyContent: 'space-between' }}>
@@ -338,7 +259,7 @@ const AddRoute = (props) => {
                             </View>
                             {inputBox && <View style={{ margin: 10 }}>
                                 <TouchableOpacity style={{ margin: 10 }} activeOpacity={0.80} onPress={() => { setPlaceType("addStop"); setModalVisible(true) }}>
-                                    <Text style={styles.input}>Stops</Text>
+                                    <Text style={styles.input(props)}>Stops</Text>
                                 </TouchableOpacity>
 
                             </View>}
@@ -348,7 +269,7 @@ const AddRoute = (props) => {
                                     onDragEnd={({ data }) => setData(data)}
                                     keyExtractor={(item) => item.key}
                                     renderItem={({ item, index, drag }) => (
-                                        <View style={styles.stopbox}>
+                                        <View style={styles.stopbox(props)}>
                                             {moveBox &&
                                                 <TouchableOpacity style={{ alignItems: 'center' }} style={{ flexDirection: 'column' }}
                                                     onLongPress={drag}>
@@ -367,7 +288,7 @@ const AddRoute = (props) => {
                                 />
 
                                 <View style={{ marginHorizontal: 10, marginVertical: 20 }}>
-                                    <TouchableOpacity style={styles.btn} onPress={() => { UpdateRoute() }}>
+                                    <TouchableOpacity style={styles.btn(props)} onPress={() => { UpdateRoute() }}>
                                         <Text style={styles.btnText}>
                                             Update Route
                                         </Text>
@@ -398,3 +319,73 @@ const useSelector = (state) => (
     }
 )
 export default connect(useSelector, useDispatch)(AddRoute);
+const styles = StyleSheet.create({
+    container: (props)=>[{
+        flex: 1,
+        backgroundColor: props.theme ? color.drakBackgroundColor : color.backgroundColor
+
+    }], inputBox: {
+        marginHorizontal: 20,
+
+    },
+    input: (props)=>[{
+        borderWidth: 2,
+        borderColor: props.theme ? color.drakAdminprimaryColors : color.adminprimaryColors,
+        padding: 10,
+        fontSize: 18,
+        borderRadius: 10,
+        color: props.theme ? color.drakFontcolor : color.fontcolor
+    }],
+    btn: (props)=>[{
+        width: '90%',
+        height: 50,
+        backgroundColor: props.theme ? color.drakAdminprimaryColors : color.adminprimaryColors,
+        borderRadius: 15,
+        justifyContent: "center",
+        alignItems: 'center',
+        alignSelf: 'center'
+    }],
+    btnText: {
+        fontSize: 20,
+        color: 'white',
+        fontWeight: 'bold'
+    },
+
+    modelBox: (props)=>[{
+        width: Dimensions.get('screen').width - 20,
+        minHeight: 200,
+
+        backgroundColor: props.theme ? color.drakBackgroundColor : color.backgroundColor,
+        alignSelf: 'center',
+        borderRadius: 15,
+        flexDirection: 'row',
+        alignItems: 'center',
+        alignItems: "center",
+        shadowColor: props.theme ? color.drakFontcolor : color.fontcolor,
+        shadowOffset: {
+            width: 0,
+            height: 2
+        },
+        shadowOpacity: 0.25,
+        shadowRadius: 4,
+        elevation: 5
+    }],
+    stopbox: (props)=>[{
+        height: 50,
+        backgroundColor: props.theme ? color.drakBackgroundColor : color.backgroundColor,
+        marginHorizontal: 8,
+        borderRadius: 10,
+        alignItems: 'center',
+        shadowColor: props.theme ? color.drakFontcolor : color.fontcolor,
+        shadowOffset: {
+            width: 0,
+            height: 2
+        },
+        shadowOpacity: 0.25,
+        shadowRadius: 4,
+        elevation: 5,
+        marginVertical: 2,
+        flexDirection: 'row',
+        justifyContent: "space-between", paddingHorizontal: 10
+    }]
+})

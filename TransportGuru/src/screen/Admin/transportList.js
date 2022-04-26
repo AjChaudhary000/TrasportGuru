@@ -48,97 +48,7 @@ const TransportListDetails = (props) => {
         props.navigation.navigate("AddTrasportDetails", { item: item })
     }
 
-    const styles = StyleSheet.create({
-        container: {
-            flex: 1,
-            backgroundColor: props.theme ? color.drakBackgroundColor : color.backgroundColor
-        }, listBox: {
-            minHeight: 150,
-            backgroundColor: props.theme ? color.drakBackgroundColor : color.backgroundColor,
-            marginHorizontal: 20,
-            borderRadius: 20,
 
-            shadowColor: props.theme ? color.drakFontcolor : color.fontcolor,
-            shadowOffset: {
-                width: 0,
-                height: 2
-            },
-            shadowOpacity: 0.25,
-            shadowRadius: 4,
-            elevation: 5,
-            marginVertical: 10,
-            padding: 10
-        },
-
-        drivelist: {
-
-            height: 150,
-
-            justifyContent: 'center',
-            flexDirection: 'row',
-
-            marginVertical: 10,
-        },
-
-        edit: {
-            fontSize: 16,
-            fontWeight: 'bold',
-            color: 'green'
-        },
-        delete: {
-            fontSize: 16,
-            fontWeight: 'bold',
-            color: 'red'
-        }, image: {
-            width: '28%',
-            borderWidth: 3,
-            borderColor: props.theme ? color.drakAdminprimaryColors : color.adminprimaryColors,
-            borderRadius: 15,
-            marginVertical: 10,
-            marginLeft: 20,
-            alignItems: 'center',
-            overflow: 'hidden'
-        },
-        listData: {
-            width: '72%',
-            padding: 20
-        }, driverName: {
-            fontSize: 20,
-            fontWeight: 'bold',
-            color: props.theme ? color.drakFontcolor : color.fontcolor
-        }, driverMobileNo: {
-            fontSize: 16,
-            fontWeight: 'bold',
-            color: props.theme ? color.drakAdminprimaryColors : color.adminprimaryColors,
-            paddingVertical: 3
-        },
-        driverEmail: {
-            fontSize: 14,
-            fontWeight: 'bold',
-            color: 'gray'
-        },
-        truckname: {
-            fontSize: 25,
-            fontWeight: 'bold',
-            color: props.theme ? color.drakFontcolor : color.fontcolor
-        }, truckmodelname: {
-            fontSize: 16,
-            fontWeight: 'bold',
-            color: props.theme ? color.drakAdminprimaryColors : color.adminprimaryColors,
-            paddingVertical: 3
-        },
-        truckreg: {
-            fontSize: 14,
-            fontWeight: 'bold',
-            color: 'gray'
-        },
-        truckcapicity: {
-            fontSize: 14,
-            fontWeight: 'bold',
-            color: props.theme ? color.drakFontcolor : color.fontcolor
-        },
-
-    })
     const handleListFooterComponent = () => {
         return (
             (props.loading) ? (
@@ -157,19 +67,8 @@ const TransportListDetails = (props) => {
         )
     }
     return (
-        <View style={styles.container}>
-            {/* <AnimatedLoader
-        visible={props.loading}
-        overlayColor="rgba(255,255,255,0.75)"
-        source={require("../../assets/json/loder.json")}
-        animationStyle={{
-          width: 100,
-          height: 100
-        }}
-        speed={1}
-      >
-        <Text>Loading...</Text>
-      </AnimatedLoader> */}
+        <View style={styles.container(props)}>
+          
             <AdminHeaderWithBackButton name={"Transport List"} navigation={props.navigation} />
             {data.length === 0 ?
 
@@ -185,7 +84,7 @@ const TransportListDetails = (props) => {
 
                 :
                 <FlatList data={data} renderItem={(item) => (
-                    <View style={styles.listBox} key={"A" + item.index}>
+                    <View style={styles.listBox(props)} key={"A" + item.index}>
                         <View style={{ alignItems: "center" }}>
                             <Text style={{ fontWeight: 'bold', color: props.theme ? color.drakFontcolor : color.fontcolor }}>
                                 {item.item.routeId.from.name}
@@ -246,29 +145,29 @@ const TransportListDetails = (props) => {
                         {/* driver data */}
                         {driver.type && driver.id === item.item._id &&
                             <View style={styles.drivelist} >
-                                <View style={styles.image}>
+                                <View style={styles.image(props)}>
                                     <Image source={{ uri: item.item.driverId.driverImage }} style={{ width: '100%', height: '100%', overflow: "hidden" }} />
                                 </View>
 
                                 <View style={styles.listData}>
-                                    <Text style={styles.driverName}>{item.item.driverId.driverName}</Text>
+                                    <Text style={styles.driverName(props)}>{item.item.driverId.driverName}</Text>
                                     <Text style={styles.driverEmail}>{item.item.driverId.driverEmail}</Text>
-                                    <Text style={styles.driverMobileNo}>{item.item.driverId.driverMobileNo}</Text>
+                                    <Text style={styles.driverMobileNo(props)}>{item.item.driverId.driverMobileNo}</Text>
                                 </View>
                             </View>
                         }
                         {/* driver data */}
                         {truck.type && truck.id === item.item._id &&
                             <View style={styles.drivelist}>
-                                <View style={styles.image}>
+                                <View style={styles.image(props)}>
                                     <Image source={{ uri: item.item.truckId.truckImage }} style={{ width: '100%', height: '100%', overflow: "hidden" }} />
                                 </View>
                                 <View style={styles.listData}>
-                                    <Text style={styles.truckname}>{item.item.truckId.truckName}</Text>
-                                    <Text style={styles.truckmodelname}>{item.item.truckId.truckModelName}</Text>
+                                    <Text style={styles.truckname(props)}>{item.item.truckId.truckName}</Text>
+                                    <Text style={styles.truckmodelname(props)}>{item.item.truckId.truckModelName}</Text>
                                     <View style={{ flexDirection: 'row', justifyContent: 'space-between', paddingVertical: 5 }}>
                                         <Text style={styles.truckreg}>{item.item.truckId.truckRegistartionNo}</Text>
-                                        <Text style={styles.truckcapicity}>{item.item.truckId.truckCapicity} /-Tonnes</Text>
+                                        <Text style={styles.truckcapicity(props)}>{item.item.truckId.truckCapicity} /-Tonnes</Text>
                                     </View>
                                 </View>
                             </View>}
@@ -349,3 +248,94 @@ const useSelector = (state) => (
     }
 )
 export default connect(useSelector, useDispatch)(TransportListDetails);
+const styles = StyleSheet.create({
+    container: (props)=>[{
+        flex: 1,
+        backgroundColor: props.theme ? color.drakBackgroundColor : color.backgroundColor
+    }], listBox:(props)=>[ {
+        minHeight: 150,
+        backgroundColor: props.theme ? color.drakBackgroundColor : color.backgroundColor,
+        marginHorizontal: 20,
+        borderRadius: 20,
+
+        shadowColor: props.theme ? color.drakFontcolor : color.fontcolor,
+        shadowOffset: {
+            width: 0,
+            height: 2
+        },
+        shadowOpacity: 0.25,
+        shadowRadius: 4,
+        elevation: 5,
+        marginVertical: 10,
+        padding: 10
+    }],
+
+    drivelist: {
+
+        height: 150,
+
+        justifyContent: 'center',
+        flexDirection: 'row',
+
+        marginVertical: 10,
+    },
+
+    edit: {
+        fontSize: 16,
+        fontWeight: 'bold',
+        color: 'green'
+    },
+    delete: {
+        fontSize: 16,
+        fontWeight: 'bold',
+        color: 'red'
+    }, image: (props)=>[{
+        width: '28%',
+        borderWidth: 3,
+        borderColor: props.theme ? color.drakAdminprimaryColors : color.adminprimaryColors,
+        borderRadius: 15,
+        marginVertical: 10,
+        marginLeft: 20,
+        alignItems: 'center',
+        overflow: 'hidden'
+    }],
+    listData: {
+        width: '72%',
+        padding: 20
+    }, driverName: (props)=>[{
+        fontSize: 20,
+        fontWeight: 'bold',
+        color: props.theme ? color.drakFontcolor : color.fontcolor
+    }], driverMobileNo: (props)=>[{
+        fontSize: 16,
+        fontWeight: 'bold',
+        color: props.theme ? color.drakAdminprimaryColors : color.adminprimaryColors,
+        paddingVertical: 3
+    }],
+    driverEmail: {
+        fontSize: 14,
+        fontWeight: 'bold',
+        color: 'gray'
+    },
+    truckname: (props)=>[{
+        fontSize: 25,
+        fontWeight: 'bold',
+        color: props.theme ? color.drakFontcolor : color.fontcolor
+    }], truckmodelname: (props)=>[{
+        fontSize: 16,
+        fontWeight: 'bold',
+        color: props.theme ? color.drakAdminprimaryColors : color.adminprimaryColors,
+        paddingVertical: 3
+    }],
+    truckreg: {
+        fontSize: 14,
+        fontWeight: 'bold',
+        color: 'gray'
+    },
+    truckcapicity: (props)=>[{
+        fontSize: 14,
+        fontWeight: 'bold',
+        color: props.theme ? color.drakFontcolor : color.fontcolor
+    }],
+
+})

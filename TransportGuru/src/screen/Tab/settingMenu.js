@@ -17,7 +17,6 @@ const SettingMenu = (props) => {
         </TouchableOpacity>
     )
 }
-
 export default SettingMenu;
 const styles = StyleSheet.create({
     option: {

@@ -87,110 +87,17 @@ const AddTruck = (props) => {
     }
     const renderItem = (item) => {
         return (
-            <View style={styles.item}>
-                <Text style={styles.textItem}>{item.TruckType}</Text>
-                <Text style={styles.textItem}>0 - {item.capicity} tonnes</Text>
+            <View style={styles.item(props)}>
+                <Text style={styles.textItem(props)}>{item.TruckType}</Text>
+                <Text style={styles.textItem(props)}>0 - {item.capicity} tonnes</Text>
                 <Image source={image[item.truckTypeImage]} style={{ width: 50, height: 40 }} />
             </View>
         );
     };
-    const styles = StyleSheet.create({
-        container: {
-            flex: 1,
-            backgroundColor: props.theme ? color.drakBackgroundColor : color.backgroundColor
 
-        }, inputBox: {
-            marginHorizontal: 20,
-
-        },
-        input: {
-            borderWidth: 2,
-            borderColor: props.theme ? color.drakAdminprimaryColors : color.adminprimaryColors,
-            color: props.theme ? color.drakFontcolor : color.fontcolor,
-            padding: 10,
-            fontSize: 18,
-            borderRadius: 10
-        }, header: {
-            marginTop: 40,
-            alignItems: 'center',
-            marginHorizontal: 20
-        },
-        headerName: {
-            fontSize: 25,
-            fontWeight: 'bold',
-            letterSpacing: 2,
-            color: "#0D1117"
-        },
-        btn: {
-            width: '90%',
-            height: 50,
-            backgroundColor: color.adminprimaryColors,
-            borderRadius: 15,
-            justifyContent: "center",
-            alignItems: 'center',
-            alignSelf: 'center'
-        },
-        btnText: {
-            fontSize: 20,
-            color: 'white',
-            fontWeight: 'bold'
-        },
-        dropdown: {
-            borderWidth: 2,
-            borderColor: props.theme ? color.drakAdminprimaryColors : color.adminprimaryColors,
-            padding: 10,
-            fontSize: 18,
-            borderRadius: 10,
-
-        },
-        icon: {
-            marginRight: 5,
-        },
-        item: {
-            margin: 10,
-            padding: 10,
-            borderWidth: 2,
-            borderColor: props.theme ? color.drakAdminprimaryColors : color.adminprimaryColors,
-            borderRadius: 10,
-            backgroundColor: props.theme ? color.drakBackgroundColor : color.backgroundColor,
-
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-        },
-        textItem: {
-            flex: 1,
-            fontSize: 16,
-            color: props.theme ? color.drakFontcolor : color.fontcolor,
-        },
-        placeholderStyle: {
-            fontSize: 16,
-            color: props.theme ? color.drakFontcolor : color.fontcolor,
-        },
-        selectedTextStyle: {
-            fontSize: 16,
-            color: props.theme ? color.drakFontcolor : color.fontcolor,
-        },
-        inputSearchStyle: {
-            height: 40,
-            fontSize: 16,
-        }, iconStyle: {
-            width: 20,
-            height: 20,
-        }, image: {
-            marginTop: 40,
-            overflow: 'hidden',
-            alignSelf: 'center',
-            width: 120,
-            height: 120,
-            borderRadius: 10,
-            borderWidth: 5,
-            borderColor: props.theme ? color.drakAdminprimaryColors : color.adminprimaryColors,
-        }
-    })
     return (
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-            <View style={styles.container}>
+            <View style={styles.container(props)}>
                 <AnimatedLoader
                     visible={props.loading}
                     overlayColor="rgba(255,255,255,0.75)"
@@ -232,7 +139,7 @@ const AddTruck = (props) => {
                                                     source={icons.add_photo}
                                                 />
                                             </TouchableOpacity> :
-                                            <TouchableOpacity style={styles.image} onPress={() => { setModalVisible1(true) }}>
+                                            <TouchableOpacity style={styles.image(props)} onPress={() => { setModalVisible1(true) }}>
                                                 <Image
                                                     style={{
                                                         width: 110, height: 110, alignSelf: "center"
@@ -248,9 +155,9 @@ const AddTruck = (props) => {
                             </View>
                             <View style={{ margin: 10 }}>
                                 <Dropdown
-                                    style={styles.dropdown}
-                                    placeholderStyle={styles.placeholderStyle}
-                                    selectedTextStyle={styles.selectedTextStyle}
+                                    style={styles.dropdown(props)}
+                                    placeholderStyle={styles.placeholderStyle(props)}
+                                    selectedTextStyle={styles.selectedTextStyle(props)}
                                     inputSearchStyle={styles.inputSearchStyle}
                                     iconStyle={styles.iconStyle}
                                     data={props.trucktypeData}
@@ -269,7 +176,7 @@ const AddTruck = (props) => {
 
                             </View>
                             <View style={{ margin: 10 }}>
-                                <TextInput style={styles.input}
+                                <TextInput style={styles.input(props)}
 
                                     placeholder={"eg. Truck name"}
                                     placeholderTextColor={'gray'}
@@ -278,7 +185,7 @@ const AddTruck = (props) => {
 
                             </View>
                             <View style={{ margin: 10 }}>
-                                <TextInput style={styles.input}
+                                <TextInput style={styles.input(props)}
                                     placeholder={"eg. Truck model name"}
                                     placeholderTextColor={'gray'}
                                     onChangeText={(val) => setData({ ...data, truckModelName: val })}
@@ -286,7 +193,7 @@ const AddTruck = (props) => {
 
                             </View>
                             <View style={{ margin: 10 }}>
-                                <TextInput style={styles.input}
+                                <TextInput style={styles.input(props)}
                                     placeholder={"eg. Truck RegistartionNo"}
                                     placeholderTextColor={'gray'}
                                     value={data.truckRegistartionNo}
@@ -299,7 +206,7 @@ const AddTruck = (props) => {
                             </View>
 
                             <View style={{ margin: 10 }}>
-                                <TextInput style={styles.input}
+                                <TextInput style={styles.input(props)}
                                     placeholder={"eg. Truck Capicity"}
                                     placeholderTextColor={'gray'}
                                     onChangeText={(val) => setData({ ...data, truckCapicity: val })}
@@ -308,7 +215,7 @@ const AddTruck = (props) => {
 
                             </View>
                             <View style={{ marginHorizontal: 10, marginVertical: 20 }}>
-                                <TouchableOpacity style={styles.btn} onPress={() => { AddTruck() }}>
+                                <TouchableOpacity style={styles.btn(props)} onPress={() => { AddTruck() }}>
                                     <Text style={styles.btnText}>
                                         Add Truck
                                     </Text>
@@ -337,7 +244,7 @@ const AddTruck = (props) => {
                                                     source={icons.add_photo}
                                                 />
                                             </TouchableOpacity> :
-                                            <TouchableOpacity onPress={() => { setModalVisible1(true) }} style={styles.image}>
+                                            <TouchableOpacity onPress={() => { setModalVisible1(true) }} style={styles.image(props)}>
                                                 <Image
                                                     style={{
                                                         width: 110, height: 110, alignSelf: "center"
@@ -355,9 +262,9 @@ const AddTruck = (props) => {
                             </View>
                             <View style={{ margin: 10 }}>
                                 <Dropdown
-                                    style={styles.dropdown}
-                                    placeholderStyle={styles.placeholderStyle}
-                                    selectedTextStyle={styles.selectedTextStyle}
+                                    style={styles.dropdown(props)}
+                                    placeholderStyle={styles.placeholderStyle(props)}
+                                    selectedTextStyle={styles.selectedTextStyle(props)}
                                     inputSearchStyle={styles.inputSearchStyle}
                                     iconStyle={styles.iconStyle}
                                     data={props.trucktypeData}
@@ -376,7 +283,7 @@ const AddTruck = (props) => {
 
                             </View>
                             <View style={{ margin: 10 }}>
-                                <TextInput style={styles.input}
+                                <TextInput style={styles.input(props)}
                                     defaultValue={props.route.params?.item?.truckName}
                                     placeholder={"eg. Truck name"}
                                     placeholderTextColor={'gray'}
@@ -385,7 +292,7 @@ const AddTruck = (props) => {
 
                             </View>
                             <View style={{ margin: 10 }}>
-                                <TextInput style={styles.input}
+                                <TextInput style={styles.input(props)}
                                     defaultValue={props.route.params?.item?.truckModelName}
                                     placeholder={"eg. Truck model name"}
                                     placeholderTextColor={'gray'}
@@ -394,7 +301,7 @@ const AddTruck = (props) => {
 
                             </View>
                             <View style={{ margin: 10 }}>
-                                <TextInput style={styles.input}
+                                <TextInput style={styles.input(props)}
                                     defaultValue={props.route.params?.item?.truckRegistartionNo}
                                     placeholder={"eg. Truck RegistartionNo"}
                                     placeholderTextColor={'gray'}
@@ -404,7 +311,7 @@ const AddTruck = (props) => {
                             </View>
 
                             <View style={{ margin: 10 }}>
-                                <TextInput style={styles.input}
+                                <TextInput style={styles.input(props)}
                                     defaultValue={props.route.params?.item?.truckCapicity}
                                     placeholder={"eg. Truck Capicity"}
                                     placeholderTextColor={'gray'}
@@ -415,7 +322,7 @@ const AddTruck = (props) => {
 
                             </View>
                             <View style={{ marginHorizontal: 10, marginVertical: 20 }}>
-                                <TouchableOpacity style={styles.btn} onPress={() => { UpdateTruck() }}>
+                                <TouchableOpacity style={styles.btn(props)} onPress={() => { UpdateTruck() }}>
                                     <Text style={styles.btnText}>
                                         Update Truck
                                     </Text>
@@ -448,3 +355,84 @@ const useSelector = (state) => (
     }
 )
 export default connect(useSelector, useDispatch)(AddTruck);
+const styles = StyleSheet.create({
+    container: (props) => [{
+        flex: 1,
+        backgroundColor: props.theme ? color.drakBackgroundColor : color.backgroundColor
+
+    }], inputBox: {
+        marginHorizontal: 20,
+
+    },
+    input: (props) => [{
+        borderWidth: 2,
+        borderColor: props.theme ? color.drakAdminprimaryColors : color.adminprimaryColors,
+        color: props.theme ? color.drakFontcolor : color.fontcolor,
+        padding: 10,
+        fontSize: 18,
+        borderRadius: 10
+    }],
+    btn: (props) => [{
+        width: '90%',
+        height: 50,
+        backgroundColor: props.theme ? color.drakAdminprimaryColors : color.adminprimaryColors,
+        borderRadius: 15,
+        justifyContent: "center",
+        alignItems: 'center',
+        alignSelf: 'center'
+    }],
+    btnText: {
+        fontSize: 20,
+        color: 'white',
+        fontWeight: 'bold'
+    },
+    dropdown: (props) => [{
+        borderWidth: 2,
+        borderColor: props.theme ? color.drakAdminprimaryColors : color.adminprimaryColors,
+        padding: 10,
+        fontSize: 18,
+        borderRadius: 10,
+
+    }],
+    item: (props) => [{
+        margin: 10,
+        padding: 10,
+        borderWidth: 2,
+        borderColor: props.theme ? color.drakAdminprimaryColors : color.adminprimaryColors,
+        borderRadius: 10,
+        backgroundColor: props.theme ? color.drakBackgroundColor : color.backgroundColor,
+
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+    }],
+    textItem: (props) => [{
+        flex: 1,
+        fontSize: 16,
+        color: props.theme ? color.drakFontcolor : color.fontcolor,
+    }],
+    placeholderStyle: (props) => [{
+        fontSize: 16,
+        color: props.theme ? color.drakFontcolor : color.fontcolor,
+    }],
+    selectedTextStyle: (props) => [{
+        fontSize: 16,
+        color: props.theme ? color.drakFontcolor : color.fontcolor,
+    }],
+    inputSearchStyle: {
+        height: 40,
+        fontSize: 16,
+    }, iconStyle: {
+        width: 20,
+        height: 20,
+    }, image: (props) => [{
+        marginTop: 40,
+        overflow: 'hidden',
+        alignSelf: 'center',
+        width: 120,
+        height: 120,
+        borderRadius: 10,
+        borderWidth: 5,
+        borderColor: props.theme ? color.drakAdminprimaryColors : color.adminprimaryColors,
+    }]
+})

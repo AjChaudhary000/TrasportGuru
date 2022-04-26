@@ -37,60 +37,7 @@ const TrackingDetails = (props) => {
 
         props.trackingDetailsById({ token: props.token, id: props.route.params.id });
     }, [])
-    const styles = StyleSheet.create({
-        container: {
-            flex: 1,
-            backgroundColor: props.theme ? color.drakBackgroundColor : color.backgroundColor,
-         
-        },
-        listBox: {
-            minHeight: 100,
-            backgroundColor: props.theme ? color.drakBackgroundColor : color.backgroundColor,
-            marginHorizontal: 20,
-            borderRadius: 20,
 
-            shadowColor: props.theme ? color.drakFontcolor : color.fontcolor,
-            shadowOffset: {
-                width: 0,
-                height: 2
-            },
-            shadowOpacity: 0.25,
-            shadowRadius: 4,
-            elevation: 5,
-            marginVertical: 10,
-            padding: 10
-        }, pay: {
-            width: 150,
-            height: 50,
-            backgroundColor: props.theme ? color.drakPrimaryColors : color.primaryColors,
-            borderRadius: 10,
-            justifyContent: "center",
-            alignItems: 'center', marginHorizontal: 10
-        },
-        paid: {
-            width: 150,
-            height: 50,
-            backgroundColor: '#32a852',
-            borderRadius: 10,
-            justifyContent: "center",
-            alignItems: 'center', marginHorizontal: 10
-        }, icon: {
-            width: 30,
-            height: 30,
-            tintColor: props.theme ? color.drakPrimaryColors : color.primaryColors
-        },
-        image: {
-            overflow: 'hidden',
-            alignSelf: 'center',
-            width: 60,
-            height: 60,
-            borderRadius: 30,
-            borderWidth: 3,
-            borderColor: props.theme ? color.drakPrimaryColors : color.primaryColors,
-            justifyContent: 'center'
-        },
-
-    })
     const paymentHendle = (item) => {
 
         let paymentStatus = "";
@@ -102,7 +49,7 @@ const TrackingDetails = (props) => {
         props.updatePayment({ data: { paymentHistory, paymentStatus }, id: item._id, token: props.token })
     }
     return (
-        <View style={styles.container}>
+        <View style={styles.container(props)}>
             <AnimatedLoader
                 visible={props.loading}
                 overlayColor="rgba(255,255,255,0.75)"
@@ -123,14 +70,14 @@ const TrackingDetails = (props) => {
                 />
             } showsVerticalScrollIndicator={false}>
                 <FlatList data={props.trackingDetails} renderItem={(item) => (
-                    <View style={{marginBottom:100}}>
-                        <View style={styles.listBox} >
+                    <View style={{ marginBottom: 100 }}>
+                        <View style={styles.listBox(props)} >
                             <View style={{
                                 marginHorizontal: 20, flexDirection: "row", justifyContent: 'space-between',
                                 paddingVertical: 2
                             }}>
                                 <View style={{ width: '20%', justifyContent: 'center' }}>
-                                    <View style={styles.image}>
+                                    <View style={styles.image(props)}>
                                         <Image
                                             style={{
                                                 width: 60, height: 60, alignSelf: "center"
@@ -147,7 +94,7 @@ const TrackingDetails = (props) => {
                                 </View>
                                 <View style={{ width: "30%", flexDirection: "row", justifyContent: 'space-between', paddingVertical: 10 }}>
                                     <TouchableOpacity style={{ width: "50%" }} onPress={() => console.log("heloo")}>
-                                        <Image source={icons.call} style={styles.icon} />
+                                        <Image source={icons.call} style={styles.icon(props)} />
                                     </TouchableOpacity>
                                     <TouchableOpacity style={{ width: "50%" }} onPress={() => {
                                         console.log(item.item?.tarsportId?.tarsportUserId)
@@ -159,7 +106,7 @@ const TrackingDetails = (props) => {
 
                                         }
                                     }}>
-                                        <Image source={icons.message} style={styles.icon} />
+                                        <Image source={icons.message} style={styles.icon(props)} />
                                     </TouchableOpacity>
                                 </View>
                             </View>
@@ -350,7 +297,7 @@ const TrackingDetails = (props) => {
                                         >
                                             <Text style={{ color: 'white', fontWeight: "bold", fontSize: 18 }}>Paid</Text>
                                         </TouchableOpacity> :
-                                        <TouchableOpacity style={styles.pay}
+                                        <TouchableOpacity style={styles.pay(props)}
                                             onPress={() => {
                                                 paymentHendle(item.item.paymentid)
                                             }}>
@@ -404,7 +351,7 @@ const useSelector = (state) => (
     {
         theme: state.token.theme,
         trackingDetails: state.fetchById.trackingDetails,
-        loading: state.tracking.loading,
+        loading: state.fetchById.loading,
         paymentData: state.payment.paymentdata,
         userData: state.user.userData,
         token: state.token.token,
@@ -418,3 +365,57 @@ const useDispatch = (dispatch) => {
     };
 }
 export default connect(useSelector, useDispatch)(TrackingDetails);
+const styles = StyleSheet.create({
+    container: (props) => [{
+        flex: 1,
+        backgroundColor: props.theme ? color.drakBackgroundColor : color.backgroundColor,
+
+    }],
+    listBox: (props) => [{
+        minHeight: 100,
+        backgroundColor: props.theme ? color.drakBackgroundColor : color.backgroundColor,
+        marginHorizontal: 20,
+        borderRadius: 20,
+
+        shadowColor: props.theme ? color.drakFontcolor : color.fontcolor,
+        shadowOffset: {
+            width: 0,
+            height: 2
+        },
+        shadowOpacity: 0.25,
+        shadowRadius: 4,
+        elevation: 5,
+        marginVertical: 10,
+        padding: 10
+    }], pay: (props) => [{
+        width: 150,
+        height: 50,
+        backgroundColor: props.theme ? color.drakPrimaryColors : color.primaryColors,
+        borderRadius: 10,
+        justifyContent: "center",
+        alignItems: 'center', marginHorizontal: 10
+    }],
+    paid: {
+        width: 150,
+        height: 50,
+        backgroundColor: '#32a852',
+        borderRadius: 10,
+        justifyContent: "center",
+        alignItems: 'center', marginHorizontal: 10
+    }, icon: (props) => [{
+        width: 30,
+        height: 30,
+        tintColor: props.theme ? color.drakPrimaryColors : color.primaryColors
+    }],
+    image: (props) => [{
+        overflow: 'hidden',
+        alignSelf: 'center',
+        width: 60,
+        height: 60,
+        borderRadius: 30,
+        borderWidth: 3,
+        borderColor: props.theme ? color.drakPrimaryColors : color.primaryColors,
+        justifyContent: 'center'
+    }],
+
+})

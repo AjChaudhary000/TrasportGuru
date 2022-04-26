@@ -12,41 +12,14 @@ const AdminProfile = (props) => {
     React.useEffect(() => {
         props.getUserDetails(props.token);
     }, [])
-    const styles = StyleSheet.create({
-        container: {
-            flex: 1,
-            backgroundColor: props.theme ? color.drakBackgroundColor : color.backgroundColor
-        }, backimage: {
-            width: "100%",
-            height: 250,
-            borderBottomWidth: 5, borderBottomColor: props.theme ? color.drakPrimaryColors : color.primaryColors,
-        }, image: {
-            marginTop: -60,
-            overflow: 'hidden',
-            alignSelf: 'center',
-            width: 120,
-            height: 120,
-            borderRadius: 60,
-            borderWidth: 5,
-            backgroundColor: props.theme ? color.drakBackgroundColor : color.backgroundColor,
-            borderColor: props.theme ? color.drakPrimaryColors : color.primaryColors
-        }, body: {
-            marginHorizontal: 20
-        }
-        , icon: {
-            width: 30,
-            height: 30,
-            tintColor: props.theme ? color.drakPrimaryColors : color.primaryColors
-        },
-    })
     return (
-        <View style={styles.container}>
+        <View style={styles.container(props)}>
             <HeaderWithBackButton name={"Admin Profile"} navigation={props.navigation} />
             <ScrollView style={{ marginBottom: 0 }} showsVerticalScrollIndicator={false}>
-                <View style={styles.backimage}>
+                <View style={styles.backimage(props)}>
                     <Image source={{ uri: "https://www.freepnglogos.com/uploads/truck-png/truck-png-transparent-truck-images-pluspng-20.png" }} style={{ height: "100%", width: "100%" }} />
                 </View>
-                <View style={styles.image}>
+                <View style={styles.image(props)}>
                     <Image style={{ width: 110, height: 110, alignSelf: "center" }}
                         source={{ uri: props.route.params.item.trasportAccount[0].trasportImage }} />
                 </View>
@@ -57,7 +30,7 @@ const AdminProfile = (props) => {
 
                 <View style={{ width: "99%", flexDirection: "row", justifyContent: 'space-between', paddingVertical: 10, marginHorizontal: 50 }}>
                     <TouchableOpacity style={{ width: "33%" }}>
-                        <Image source={icons.call} style={styles.icon} />
+                        <Image source={icons.call} style={styles.icon(props)} />
                     </TouchableOpacity>
                     <TouchableOpacity style={{ width: "33%" }}
                         onPress={() => {
@@ -67,10 +40,10 @@ const AdminProfile = (props) => {
                                 props.navigation.navigate("ChatDetails", { item: props.route.params.item })
                             }
                         }}>
-                        <Image source={icons.message} style={styles.icon} />
+                        <Image source={icons.message} style={styles.icon(props)} />
                     </TouchableOpacity>
                     <TouchableOpacity style={{ width: "33%" }}>
-                        <Image source={icons.share} style={styles.icon} />
+                        <Image source={icons.share} style={styles.icon(props)} />
                     </TouchableOpacity>
                 </View>
 
@@ -104,3 +77,30 @@ const useSelector = (state) => (
     }
 )
 export default connect(useSelector, useDispatch)(AdminProfile);
+const styles = StyleSheet.create({
+    container: (props) => [{
+        flex: 1,
+        backgroundColor: props.theme ? color.drakBackgroundColor : color.backgroundColor
+    }], backimage: (props) => [{
+        width: "100%",
+        height: 250,
+        borderBottomWidth: 5, borderBottomColor: props.theme ? color.drakPrimaryColors : color.primaryColors,
+    }], image: (props) => [{
+        marginTop: -60,
+        overflow: 'hidden',
+        alignSelf: 'center',
+        width: 120,
+        height: 120,
+        borderRadius: 60,
+        borderWidth: 5,
+        backgroundColor: props.theme ? color.drakBackgroundColor : color.backgroundColor,
+        borderColor: props.theme ? color.drakPrimaryColors : color.primaryColors
+    }], body: {
+        marginHorizontal: 20
+    }
+    , icon: (props) => [{
+        width: 30,
+        height: 30,
+        tintColor: props.theme ? color.drakPrimaryColors : color.primaryColors
+    }],
+})

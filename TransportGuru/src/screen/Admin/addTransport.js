@@ -9,24 +9,17 @@ import { getCountDriver, getCountRoute, getCountTransport, getCountTruck } from 
 import AnimatedLoader from "react-native-animated-loader";
 const AddTransport = (props) => {
   React.useEffect(() => {
-  
+
     props.getCountTruck(props.token)
     props.getCountDriver(props.token)
     props.getCountRoute(props.token)
     props.getCountTransport(props.token)
-      
+
   }, [])
 
-  const styles = StyleSheet.create({
-    container: {
-      flex: 1,
-      backgroundColor: props.theme ? color.drakBackgroundColor : color.backgroundColor,
-      //  paddingTop: 50
-    }
 
-  })
   return (
-    <View style={styles.container}>
+    <View style={styles.container(props)}>
       <AnimatedLoader
         visible={props.loading}
         overlayColor="rgba(255,255,255,0.75)"
@@ -40,9 +33,6 @@ const AddTransport = (props) => {
         <Text>Loading...</Text>
       </AnimatedLoader>
       <AdminHeader name={"Add Transport"} />
-      {/* <View style={styles.header}>
-        <Text style={styles.headerName}>Add Transport Services</Text>
-      </View> */}
       <AdminAddCard
         icons={icons.truck}
         name={"Add Truck"}
@@ -88,3 +78,10 @@ const useSelector = (state) => (
   }
 )
 export default connect(useSelector, useDispatch)(AddTransport);
+const styles = StyleSheet.create({
+  container: (props)=>[{
+    flex: 1,
+    backgroundColor: props.theme ? color.drakBackgroundColor : color.backgroundColor,
+  }]
+
+})

@@ -21,96 +21,8 @@ const SearchTransportList = (props) => {
         props.getSearchTransportList({ ...props.route.params, token: props.token })
 
     }, [])
-
-    const styles = StyleSheet.create({
-        container: {
-            flex: 1,
-            backgroundColor: props.theme ? color.drakBackgroundColor : color.backgroundColor
-        }, listBox: {
-            minHeight: 150,
-            backgroundColor: props.theme ? color.drakBackgroundColor : color.backgroundColor,
-            marginHorizontal: 20,
-            borderRadius: 20,
-
-            shadowColor: props.theme ? color.drakFontcolor : color.fontcolor,
-            shadowOffset: {
-                width: 0,
-                height: 2
-            },
-            shadowOpacity: 0.25,
-            shadowRadius: 4,
-            elevation: 5,
-            marginVertical: 10,
-            padding: 10
-        },
-
-        drivelist: {
-
-            height: 150,
-            backgroundColor: props.theme ? color.drakBackgroundColor : color.backgroundColor,
-            marginHorizontal: 2,
-            borderRadius: 20,
-            justifyContent: 'center',
-            flexDirection: 'row',
-            shadowColor: props.theme ? color.drakFontcolor : color.fontcolor,
-            shadowOffset: {
-                width: 0,
-                height: 2
-            },
-            shadowOpacity: 0.25,
-            shadowRadius: 4,
-            elevation: 5,
-            marginVertical: 10,
-        }, image: {
-            overflow: 'hidden',
-            alignSelf: 'center',
-            width: 60,
-            height: 60,
-            borderRadius: 30,
-            borderWidth: 3,
-            borderColor: props.theme ? color.drakPrimaryColors : color.primaryColors,
-            justifyContent: 'center'
-        },
-        listData: {
-            width: '72%',
-            padding: 20
-        },
-
-        pay: {
-            width: "90%",
-            height: 45,
-            backgroundColor: props.theme ? color.drakPrimaryColors : color.primaryColors,
-            borderRadius: 10,
-            justifyContent: "center",
-            alignItems: 'center',
-            alignSelf: "center"
-        }, icon: {
-            width: 30,
-            height: 30,
-            tintColor: props.theme ? color.drakPrimaryColors : color.primaryColors
-        }, modelBox: {
-            width: Dimensions.get('screen').width - 20,
-            minHeight: 200,
-            paddingHorizontal: 20,
-            backgroundColor: props.theme ? color.drakBackgroundColor : color.backgroundColor,
-            alignSelf: 'center',
-            borderRadius: 15,
-            justifyContent: "center",
-            alignItems: 'center',
-            alignItems: "center",
-            shadowColor: props.theme ? color.drakFontcolor : color.fontcolor,
-            shadowOffset: {
-                width: 0,
-                height: 2
-            },
-            shadowOpacity: 0.25,
-            shadowRadius: 4,
-            elevation: 5
-        },
-    })
-
     return (
-        <View style={styles.container}>
+        <View style={styles.container(props)}>
             <AnimatedLoader
                 visible={props.loading}
                 overlayColor="rgba(255,255,255,0.75)"
@@ -131,21 +43,21 @@ const SearchTransportList = (props) => {
 
                     <View style={{ flex: 1 }}>
 
-                        <View style={{ height: 500,width:200,alignSelf:'center'}}>
+                        <View style={{ height: 500, width: 200, alignSelf: 'center' }}>
                             <LottieView source={require('../../assets/json/notfound.json')} autoPlay loop />
                         </View>
-                       
+
                     </View>
 
                     :
                     <FlatList data={props.searchList} renderItem={(item) => (
-                        <View style={styles.listBox}>
+                        <View style={styles.listBox(props)}>
                             <View style={{
                                 marginHorizontal: 20, flexDirection: "row", justifyContent: 'space-between',
                                 paddingVertical: 2
                             }}>
                                 <View style={{ width: '20%', justifyContent: 'center' }}>
-                                    <View style={styles.image}>
+                                    <View style={styles.image(props)}>
                                         <Image
                                             style={{
                                                 width: 60, height: 60, alignSelf: "center"
@@ -159,7 +71,7 @@ const SearchTransportList = (props) => {
                                 </View>
                                 <View style={{ width: "30%", flexDirection: "row", justifyContent: 'space-between', paddingVertical: 10 }}>
                                     <TouchableOpacity style={{ width: "50%" }} onPress={() => { Linking.canOpenURL(`tel:${item.item.tarsportUserId.trasportAccount[0].trasportmobile}`) }}>
-                                        <Image source={icons.call} style={styles.icon} />
+                                        <Image source={icons.call} style={styles.icon(props)} />
                                     </TouchableOpacity>
                                     <TouchableOpacity style={{ width: "50%" }} onPress={() => {
 
@@ -169,7 +81,7 @@ const SearchTransportList = (props) => {
                                             props.navigation.navigate("ChatDetails", { item: item.item?.tarsportUserId })
                                         }
                                     }}>
-                                        <Image source={icons.message} style={styles.icon} />
+                                        <Image source={icons.message} style={styles.icon(props)} />
                                     </TouchableOpacity>
                                 </View>
                             </View>
@@ -276,7 +188,7 @@ const SearchTransportList = (props) => {
                                     }} >
                                     <View style={{ flex: 1, justifyContent: 'center' }}>
 
-                                        <View style={styles.modelBox}>
+                                        <View style={styles.modelBox(props)}>
                                             <TouchableOpacity onPress={() => { setRoute({ type: !route.type, id: item.item.routeId._id }), setModalVisible(false) }} style={{ alignItems: 'center', left: Dimensions.get('screen').width / 2 - 40 }}>
                                                 <Image source={icons.close} style={{ width: 35, height: 35, tintColor: props.theme ? color.drakPrimaryColors : color.primaryColors, }} />
                                             </TouchableOpacity>
@@ -412,7 +324,7 @@ const SearchTransportList = (props) => {
 
 
 
-                            <TouchableOpacity style={styles.pay}
+                            <TouchableOpacity style={styles.pay(props)}
                                 onPress={() => {
                                     props.navigation.navigate("Booking", {
                                         tarsportId: item.item._id,
@@ -448,3 +360,70 @@ const useSelector = (state) => (
     }
 )
 export default connect(useSelector, useDispatch)(SearchTransportList);
+const styles = StyleSheet.create({
+    container: (props) => [{
+        flex: 1,
+        backgroundColor: props.theme ? color.drakBackgroundColor : color.backgroundColor
+    }], listBox: (props) => [{
+        minHeight: 150,
+        backgroundColor: props.theme ? color.drakBackgroundColor : color.backgroundColor,
+        marginHorizontal: 20,
+        borderRadius: 20,
+
+        shadowColor: props.theme ? color.drakFontcolor : color.fontcolor,
+        shadowOffset: {
+            width: 0,
+            height: 2
+        },
+        shadowOpacity: 0.25,
+        shadowRadius: 4,
+        elevation: 5,
+        marginVertical: 10,
+        padding: 10
+    }], image: (props) => [{
+        overflow: 'hidden',
+        alignSelf: 'center',
+        width: 60,
+        height: 60,
+        borderRadius: 30,
+        borderWidth: 3,
+        borderColor: props.theme ? color.drakPrimaryColors : color.primaryColors,
+        justifyContent: 'center'
+    }],
+    listData: {
+        width: '72%',
+        padding: 20
+    },
+
+    pay: (props) => [{
+        width: "90%",
+        height: 45,
+        backgroundColor: props.theme ? color.drakPrimaryColors : color.primaryColors,
+        borderRadius: 10,
+        justifyContent: "center",
+        alignItems: 'center',
+        alignSelf: "center"
+    }], icon: (props) => [{
+        width: 30,
+        height: 30,
+        tintColor: props.theme ? color.drakPrimaryColors : color.primaryColors
+    }], modelBox: (props) => [{
+        width: Dimensions.get('screen').width - 20,
+        minHeight: 200,
+        paddingHorizontal: 20,
+        backgroundColor: props.theme ? color.drakBackgroundColor : color.backgroundColor,
+        alignSelf: 'center',
+        borderRadius: 15,
+        justifyContent: "center",
+        alignItems: 'center',
+        alignItems: "center",
+        shadowColor: props.theme ? color.drakFontcolor : color.fontcolor,
+        shadowOffset: {
+            width: 0,
+            height: 2
+        },
+        shadowOpacity: 0.25,
+        shadowRadius: 4,
+        elevation: 5
+    }],
+})

@@ -8,61 +8,14 @@ import { Paragraph, Caption, Text, Title } from 'react-native-paper'
 import { getUserDetails } from '../../Redux/UserDetails'
 import AnimatedLoader from "react-native-animated-loader";
 const AdminSetting = (props) => {
-  
+
     React.useEffect(() => {
-       
+
         props.getUserDetails(props.token);
     }, [])
-    const styles = StyleSheet.create({
-        container: {
-            flex: 1,
-            backgroundColor: props.theme ? color.drakBackgroundColor : color.backgroundColor
-        }, backimage: {
-            width: "100%",
-            height: 250,
-            borderBottomWidth: 5, borderBottomColor: color.drakAdminprimaryColors
-        }, image: {
-            marginTop: -55,
-            overflow: 'hidden',
-            alignSelf: 'center',
-            width: 120,
-            height: 120,
-            borderRadius: 60,
-            borderWidth: 5,
-            backgroundColor: props.theme ? color.drakBackgroundColor : color.backgroundColor,
-            borderColor: color.drakAdminprimaryColors
-        }, body: {
-            marginHorizontal: 20
-        }
-        , option: {
-            width: '50%',
-            flexDirection: 'row',
-            alignSelf: 'center',
-            marginVertical: 20
-        },
-        menuIcon: {
-            width: '20%',
-            justifyContent: 'center',
-            alignItems: "center"
-        },
-        menuname: {
-            width: '80%',
-            justifyContent: 'center'
-        },
 
-        menuText: {
-            color: color.adminprimaryColors,
-            fontWeight: 'bold',
-            fontSize: 18
-        },
-        menuiconStyle: {
-            width: 25,
-            height: 25,
-            tintColor: color.adminprimaryColors
-        }
-    })
     return (
-        <View style={styles.container}>
+        <View style={styles.container(props)}>
             <AnimatedLoader
                 visible={props.loading}
                 overlayColor="rgba(255,255,255,0.75)"
@@ -77,10 +30,10 @@ const AdminSetting = (props) => {
             </AnimatedLoader>
             <AdminHeader name={"Setting"} />
             <ScrollView style={{ marginBottom: 80 }} showsVerticalScrollIndicator={false}>
-                <View style={styles.backimage}>
+                <View style={styles.backimage(props)}>
                     <Image source={{ uri: "https://www.freepnglogos.com/uploads/truck-png/truck-png-transparent-truck-images-pluspng-20.png" }} style={{ height: "100%", width: "100%" }} />
                 </View>
-                <View style={styles.image}>
+                <View style={styles.image(props)}>
                     <Image style={{ width: 110, height: 110, alignSelf: "center" }}
                         source={{ uri: props.adminData?.trasportAccount[0].trasportImage }} />
                 </View>
@@ -127,3 +80,51 @@ const useSelector = (state) => (
     }
 )
 export default connect(useSelector, useDispatch)(AdminSetting);
+const styles = StyleSheet.create({
+    container: (props)=>[{
+        flex: 1,
+        backgroundColor: props.theme ? color.drakBackgroundColor : color.backgroundColor
+    }], backimage: (props)=>[{
+        width: "100%",
+        height: 250,
+        borderBottomWidth: 5, borderBottomColor: color.drakAdminprimaryColors
+    }], image: (props)=>[{
+        marginTop: -55,
+        overflow: 'hidden',
+        alignSelf: 'center',
+        width: 120,
+        height: 120,
+        borderRadius: 60,
+        borderWidth: 5,
+        backgroundColor: props.theme ? color.drakBackgroundColor : color.backgroundColor,
+        borderColor: color.drakAdminprimaryColors
+    }], body: {
+        marginHorizontal: 20
+    }
+    , option: {
+        width: '50%',
+        flexDirection: 'row',
+        alignSelf: 'center',
+        marginVertical: 20
+    },
+    menuIcon: {
+        width: '20%',
+        justifyContent: 'center',
+        alignItems: "center"
+    },
+    menuname: {
+        width: '80%',
+        justifyContent: 'center'
+    },
+
+    menuText: {
+        color: color.adminprimaryColors,
+        fontWeight: 'bold',
+        fontSize: 18
+    },
+    menuiconStyle: {
+        width: 25,
+        height: 25,
+        tintColor: color.adminprimaryColors
+    }
+})

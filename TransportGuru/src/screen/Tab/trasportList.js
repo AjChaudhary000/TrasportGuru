@@ -25,78 +25,8 @@ const TrasportList = (props) => {
     React.useEffect(() => {
         props.getTransportCompanyList(props.token)
     }, [])
-
-    const styles = StyleSheet.create({
-        container: {
-            flex: 1,
-            backgroundColor: props.theme ? color.drakBackgroundColor : color.backgroundColor
-        }, listBox: {
-            minHeight: 150,
-            backgroundColor: props.theme ? color.drakBackgroundColor : color.backgroundColor,
-            marginHorizontal: 20,
-            borderRadius: 20,
-
-            shadowColor: props.theme ? color.drakFontcolor : color.fontcolor,
-            shadowOffset: {
-                width: 0,
-                height: 2
-            },
-            shadowOpacity: 0.25,
-            shadowRadius: 4,
-            elevation: 5,
-            marginVertical: 10,
-            padding: 10
-        },
-
-        drivelist: {
-
-            height: 150,
-            backgroundColor: props.theme ? color.drakBackgroundColor : color.backgroundColor,
-            marginHorizontal: 2,
-            borderRadius: 20,
-            justifyContent: 'center',
-            flexDirection: 'row',
-            shadowColor: props.theme ? color.drakFontcolor : color.fontcolor,
-            shadowOffset: {
-                width: 0,
-                height: 2
-            },
-            shadowOpacity: 0.25,
-            shadowRadius: 4,
-            elevation: 5,
-            marginVertical: 10,
-        }, image: {
-            overflow: 'hidden',
-            alignSelf: 'center',
-            width: 60,
-            height: 60,
-            borderRadius: 30,
-            borderWidth: 3,
-            borderColor: props.theme ? color.drakPrimaryColors : color.primaryColors,
-            justifyContent: 'center'
-        },
-        listData: {
-            width: '72%',
-            padding: 20
-        },
-
-        profile: {
-            width: "45%",
-            height: 45,
-            backgroundColor: props.theme ? color.drakPrimaryColors : color.primaryColors,
-            borderRadius: 10,
-            justifyContent: "center",
-            alignItems: 'center', marginHorizontal: 10
-        }, icon: {
-            width: 30,
-            height: 30,
-            tintColor: props.theme ? color.drakPrimaryColors : color.primaryColors
-        },
-
-    })
-
     return (
-        <View style={styles.container}>
+        <View style={styles.container(props)}>
             <AnimatedLoader
                 visible={props.loading}
                 overlayColor="rgba(255,255,255,0.75)"
@@ -130,13 +60,13 @@ const TrasportList = (props) => {
 
                     :
                     <FlatList data={props.data} renderItem={(item) => (
-                        <View style={styles.listBox}>
+                        <View style={styles.listBox(props)}>
                             <View style={{
                                 marginHorizontal: 20, flexDirection: "row", justifyContent: 'space-between',
                                 paddingVertical: 2
                             }}>
                                 <View style={{ width: '20%', justifyContent: 'center' }}>
-                                    <View style={styles.image}>
+                                    <View style={styles.image(props)}>
                                         <Image
                                             style={{
                                                 width: 60, height: 60, alignSelf: "center"
@@ -160,7 +90,7 @@ const TrasportList = (props) => {
                             <View style={{ flexDirection: "row", justifyContent: 'space-between', padding: 5 }}>
                                 <View style={{ width: "50%", flexDirection: "row", justifyContent: 'space-between', paddingVertical: 10 }}>
                                     <TouchableOpacity style={{ width: "30%" }}>
-                                        <Image source={icons.call} style={styles.icon} />
+                                        <Image source={icons.call} style={styles.icon(props)} />
                                     </TouchableOpacity>
                                     <TouchableOpacity style={{ width: "30%" }} onPress={() => {
                                         if (item.item?._id === props?.userData?._id) {
@@ -169,13 +99,13 @@ const TrasportList = (props) => {
                                             props.navigation.navigate("ChatDetails", { item: item.item })
                                         }
                                     }}>
-                                        <Image source={icons.message} style={styles.icon} />
+                                        <Image source={icons.message} style={styles.icon(props)} />
                                     </TouchableOpacity>
                                     <TouchableOpacity style={{ width: "30%" }}>
-                                        <Image source={icons.share} style={styles.icon} />
+                                        <Image source={icons.share} style={styles.icon(props)} />
                                     </TouchableOpacity>
                                 </View>
-                                <TouchableOpacity style={styles.profile} onLongPress={() => console.log("hello")} onPress={() => props.navigation.navigate("AdminProfile", { item: item.item })}>
+                                <TouchableOpacity style={styles.profile(props)} onLongPress={() => console.log("hello")} onPress={() => props.navigation.navigate("AdminProfile", { item: item.item })}>
                                     <Text style={{ color: 'white', fontWeight: "bold" }}> View Profile</Text>
                                 </TouchableOpacity>
                             </View>
@@ -205,3 +135,47 @@ const useSelector = (state) => (
     }
 )
 export default connect(useSelector, useDispatch)(TrasportList);
+const styles = StyleSheet.create({
+    container: (props) => [{
+        flex: 1,
+        backgroundColor: props.theme ? color.drakBackgroundColor : color.backgroundColor
+    }], listBox: (props) => [{
+        minHeight: 150,
+        backgroundColor: props.theme ? color.drakBackgroundColor : color.backgroundColor,
+        marginHorizontal: 20,
+        borderRadius: 20,
+
+        shadowColor: props.theme ? color.drakFontcolor : color.fontcolor,
+        shadowOffset: {
+            width: 0,
+            height: 2
+        },
+        shadowOpacity: 0.25,
+        shadowRadius: 4,
+        elevation: 5,
+        marginVertical: 10,
+        padding: 10
+    }], image: (props) => [{
+        overflow: 'hidden',
+        alignSelf: 'center',
+        width: 60,
+        height: 60,
+        borderRadius: 30,
+        borderWidth: 3,
+        borderColor: props.theme ? color.drakPrimaryColors : color.primaryColors,
+        justifyContent: 'center'
+    }],
+    profile: (props) => [{
+        width: "45%",
+        height: 45,
+        backgroundColor: props.theme ? color.drakPrimaryColors : color.primaryColors,
+        borderRadius: 10,
+        justifyContent: "center",
+        alignItems: 'center', marginHorizontal: 10
+    }], icon: (props) => [{
+        width: 30,
+        height: 30,
+        tintColor: props.theme ? color.drakPrimaryColors : color.primaryColors
+    }],
+
+})

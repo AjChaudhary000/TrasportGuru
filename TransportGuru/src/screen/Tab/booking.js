@@ -18,94 +18,9 @@ const Booking = (props) => {
   const [amount, setAmount] = React.useState(0)
   React.useEffect(() => {
     props.transportListById({ id: props.route.params.tarsportId, token: props.token })
-    
+
   }, [])
-  const styles = StyleSheet.create({
-    container: {
-      flex: 1,
-      backgroundColor: props.theme ? color.drakBackgroundColor : color.backgroundColor,
 
-    }, listBox: {
-      minHeight: 150,
-      backgroundColor: props.theme ? color.drakBackgroundColor : color.backgroundColor,
-
-
-
-      marginVertical: 10,
-      padding: 10
-    },
-
-    drivelist: {
-
-      height: 150,
-      backgroundColor: props.theme ? color.drakBackgroundColor : color.backgroundColor,
-      marginHorizontal: 2,
-      borderRadius: 20,
-      justifyContent: 'center',
-      flexDirection: 'row',
-      shadowColor: props.theme ? color.drakFontcolor : color.fontcolor,
-      shadowOffset: {
-        width: 0,
-        height: 2
-      },
-      shadowOpacity: 0.25,
-      shadowRadius: 4,
-      elevation: 5,
-      marginVertical: 10,
-    }, image: {
-      overflow: 'hidden',
-      alignSelf: 'center',
-      width: 60,
-      height: 60,
-      borderRadius: 30,
-      borderWidth: 3,
-      borderColor: props.theme ? color.drakPrimaryColors : color.primaryColors,
-      justifyContent: 'center'
-    },
-    listData: {
-      width: '72%',
-      padding: 20
-    },
-
-    pay: {
-      width: "40%",
-      height: 55,
-      backgroundColor: props.theme ? color.drakPrimaryColors : color.primaryColors,
-      borderRadius: 10,
-      justifyContent: "center",
-      alignItems: 'center', marginHorizontal: 10
-    }, payText: {
-      width: "40%",
-
-      marginHorizontal: 10
-    },
-    icon: {
-      width: 30,
-      height: 30,
-      tintColor: props.theme ? color.drakPrimaryColors : color.primaryColors
-    },
-    modelBox1: {
-      width: Dimensions.get('screen').width,
-      height: 120,
-      position: 'absolute',
-      bottom: 0,
-      backgroundColor: props.theme ? color.drakBackgroundColor : color.backgroundColor,
-      alignSelf: 'center',
-      borderTopLeftRadius: 20,
-      borderTopRightRadius: 20,
-      flexDirection: 'row',
-      alignItems: 'center',
-      alignItems: "center",
-      shadowColor: props.theme ? color.drakFontcolor : color.fontcolor,
-      shadowOffset: {
-        width: 0,
-        height: 2
-      },
-      shadowOpacity: 0.25,
-      shadowRadius: 4,
-      elevation: 5
-    },
-  })
   const paymentHendle = (price, truckCapicty) => {
     const totalPayment = ((calcKmFind(props.route.params.from.lat,
       props.route.params.from.lng,
@@ -126,7 +41,7 @@ const Booking = (props) => {
     const totalCapicity = (Number(props.route.params.capicity) + Number(truckCapicty))
     console.log(totalCapicity)
     props.updateTransport({ data: { capicity: totalCapicity }, id: props.route.params.tarsportId, token: props.token })
-    props.payment({ data, token:props.token })
+    props.payment({ data, token: props.token })
   }
   React.useEffect(() => {
     if (props.paymentData?.status) {
@@ -134,7 +49,7 @@ const Booking = (props) => {
         data: {
           tarsportId: props.route.params.tarsportId,
           paymentid: props.paymentData.data._id
-        }, token:props.token
+        }, token: props.token
       })
       props.setPaymentData([])
     }
@@ -146,7 +61,7 @@ const Booking = (props) => {
   }, [props])
   console.log(props.paymentData)
   return (
-    <View style={styles.container}>
+    <View style={styles.container(props)}>
       <AnimatedLoader
         visible={props.loading}
         overlayColor="rgba(255,255,255,0.75)"
@@ -162,13 +77,13 @@ const Booking = (props) => {
       <HeaderWithBackButton name={"Booking Details"} navigation={props.navigation} />
       <ScrollView style={{ marginBottom: 0 }} showsVerticalScrollIndicator={false}>
         <FlatList data={props.transportList} renderItem={(item) => (
-          <View style={styles.listBox}>
+          <View style={styles.listBox(props)}>
             <View style={{
               marginHorizontal: 20, flexDirection: "row", justifyContent: 'space-between',
               paddingVertical: 2
             }}>
               <View style={{ width: '20%', justifyContent: 'center' }}>
-                <View style={styles.image}>
+                <View style={styles.image(props)}>
                   <Image
                     style={{
                       width: 60, height: 60, alignSelf: "center"
@@ -182,7 +97,7 @@ const Booking = (props) => {
               </View>
               <View style={{ width: "30%", flexDirection: "row", justifyContent: 'space-between', paddingVertical: 10 }}>
                 <TouchableOpacity style={{ width: "50%" }}>
-                  <Image source={icons.call} style={styles.icon} />
+                  <Image source={icons.call} style={styles.icon(props)} />
                 </TouchableOpacity>
                 <TouchableOpacity style={{ width: "50%" }} onPress={() => {
 
@@ -192,7 +107,7 @@ const Booking = (props) => {
                     props.navigation.navigate("ChatDetails", { item: item.item?.tarsportUserId })
                   }
                 }}>
-                  <Image source={icons.message} style={styles.icon} />
+                  <Image source={icons.message} style={styles.icon(props)} />
                 </TouchableOpacity>
               </View>
             </View>
@@ -443,7 +358,7 @@ const Booking = (props) => {
 
             >
 
-              <View style={styles.modelBox1}>
+              <View style={styles.modelBox1(props)}>
                 <View style={styles.payText}>
                   <Text style={{
                     color: "gray",
@@ -459,7 +374,7 @@ const Booking = (props) => {
                     currency: 'INR'
                   })}</Text>
                 </View>
-                <TouchableOpacity style={styles.pay}
+                <TouchableOpacity style={styles.pay(props)}
                   onPress={() => {
                     paymentHendle(item.item.truckPrice, item.item.capicity)
                   }}>
@@ -501,3 +416,65 @@ const useSelector = (state) => (
   }
 )
 export default connect(useSelector, useDispatch)(Booking);
+const styles = StyleSheet.create({
+  container: (props)=>[{
+    flex: 1,
+    backgroundColor: props.theme ? color.drakBackgroundColor : color.backgroundColor,
+
+  }], listBox: (props)=>[{
+    minHeight: 150,
+    backgroundColor: props.theme ? color.drakBackgroundColor : color.backgroundColor,
+    marginVertical: 10,
+    padding: 10
+  }],
+ image: (props)=>[{
+    overflow: 'hidden',
+    alignSelf: 'center',
+    width: 60,
+    height: 60,
+    borderRadius: 30,
+    borderWidth: 3,
+    borderColor: props.theme ? color.drakPrimaryColors : color.primaryColors,
+    justifyContent: 'center'
+  }],
+ 
+
+  pay:(props)=>[ {
+    width: "40%",
+    height: 55,
+    backgroundColor: props.theme ? color.drakPrimaryColors : color.primaryColors,
+    borderRadius: 10,
+    justifyContent: "center",
+    alignItems: 'center', marginHorizontal: 10
+  }], payText: {
+    width: "40%",
+
+    marginHorizontal: 10
+  },
+  icon: (props)=>[{
+    width: 30,
+    height: 30,
+    tintColor: props.theme ? color.drakPrimaryColors : color.primaryColors
+  }],
+  modelBox1: (props)=>[{
+    width: Dimensions.get('screen').width,
+    height: 120,
+    position: 'absolute',
+    bottom: 0,
+    backgroundColor: props.theme ? color.drakBackgroundColor : color.backgroundColor,
+    alignSelf: 'center',
+    borderTopLeftRadius: 20,
+    borderTopRightRadius: 20,
+    flexDirection: 'row',
+    alignItems: 'center',
+    alignItems: "center",
+    shadowColor: props.theme ? color.drakFontcolor : color.fontcolor,
+    shadowOffset: {
+      width: 0,
+      height: 2
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5
+  }],
+})

@@ -26,60 +26,7 @@ const AdminTrackingDetails = (props) => {
 
         props.transportListById({ token: props.token, id: props.route.params.id });
     }, [])
-    const styles = StyleSheet.create({
-        container: {
-            flex: 1,
-            backgroundColor: props.theme ? color.drakBackgroundColor : color.backgroundColor,
 
-        },
-        listBox: {
-            minHeight: 100,
-            backgroundColor: props.theme ? color.drakBackgroundColor : color.backgroundColor,
-            marginHorizontal: 20,
-            borderRadius: 20,
-
-            shadowColor: props.theme ? color.drakFontcolor : color.fontcolor,
-            shadowOffset: {
-                width: 0,
-                height: 2
-            },
-            shadowOpacity: 0.25,
-            shadowRadius: 4,
-            elevation: 5,
-            marginVertical: 10,
-            padding: 10
-        }, pay: {
-            width: 150,
-            height: 50,
-            backgroundColor: props.theme ? color.drakPrimaryColors : color.primaryColors,
-            borderRadius: 10,
-            justifyContent: "center",
-            alignItems: 'center', marginHorizontal: 10
-        },
-        paid: {
-            width: 150,
-            height: 50,
-            backgroundColor: '#32a852',
-            borderRadius: 10,
-            justifyContent: "center",
-            alignItems: 'center', marginHorizontal: 10
-        }, icon: {
-            width: 30,
-            height: 30,
-            tintColor: props.theme ? color.drakPrimaryColors : color.primaryColors
-        },
-        image: {
-            overflow: 'hidden',
-            alignSelf: 'center',
-            width: 60,
-            height: 60,
-            borderRadius: 30,
-            borderWidth: 3,
-            borderColor: props.theme ? color.drakPrimaryColors : color.primaryColors,
-            justifyContent: 'center'
-        },
-
-    })
     const paymentHendle = (item) => {
 
         let paymentStatus = "";
@@ -91,7 +38,7 @@ const AdminTrackingDetails = (props) => {
         props.updatePayment({ data: { paymentHistory, paymentStatus }, id: item._id, token: props.token })
     }
     return (
-        <View style={styles.container}>
+        <View style={styles.container(props)}>
             <AnimatedLoader
                 visible={props.loading}
                 overlayColor="rgba(255,255,255,0.75)"
@@ -113,7 +60,7 @@ const AdminTrackingDetails = (props) => {
             } showsVerticalScrollIndicator={false}>
                 <FlatList data={props.transportList} renderItem={(item) => (
                     <View>
-                        <View style={styles.listBox} >
+                        <View style={styles.listBox(props)} >
 
                             <View style={{ alignItems: "flex-start", paddingVertical: 4, marginHorizontal: 20, }}>
                                 <Text style={{ fontWeight: 'bold', color: 'gray' }}>Truck Reg No : {item.item?.truckId.truckRegistartionNo}</Text>
@@ -323,3 +270,27 @@ const useDispatch = (dispatch) => {
     };
 }
 export default connect(useSelector, useDispatch)(AdminTrackingDetails);
+const styles = StyleSheet.create({
+    container: (props) => [{
+        flex: 1,
+        backgroundColor: props.theme ? color.drakBackgroundColor : color.backgroundColor,
+
+    }],
+    listBox: (props) => [{
+        minHeight: 100,
+        backgroundColor: props.theme ? color.drakBackgroundColor : color.backgroundColor,
+        marginHorizontal: 20,
+        borderRadius: 20,
+
+        shadowColor: props.theme ? color.drakFontcolor : color.fontcolor,
+        shadowOffset: {
+            width: 0,
+            height: 2
+        },
+        shadowOpacity: 0.25,
+        shadowRadius: 4,
+        elevation: 5,
+        marginVertical: 10,
+        padding: 10
+    }],
+})

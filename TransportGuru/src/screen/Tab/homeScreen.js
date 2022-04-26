@@ -65,99 +65,7 @@ const HomeScreen = (props) => {
 
         }
     }
-    const styles = StyleSheet.create({
-        container: {
-            flex: 1,
-            paddingBottom: 40,
-            backgroundColor: props.theme ? color.drakBackgroundColor : color.backgroundColor,
-        },
-        mapBox: {
-            height: "40%"
 
-
-        },
-        searchBox: {
-            height: "60%",
-            backgroundColor: props.theme ? color.drakBackgroundColor : color.backgroundColor,
-            bottom: 0,
-            borderTopLeftRadius: 40,
-            borderTopRightRadius: 40,
-            justifyContent: 'center',
-
-        },
-        fromToDesc: {
-            height: 180,
-            backgroundColor: props.theme ? color.drakBackgroundColor : color.backgroundColor,
-            marginHorizontal: 35,
-            borderRadius: 20,
-            justifyContent: 'center',
-            flexDirection: 'row',
-            shadowColor: props.theme ? color.drakFontcolor : color.fontcolor,
-            shadowOffset: {
-                width: 0,
-                height: 2
-            },
-            shadowOpacity: 0.25,
-            shadowRadius: 4,
-            elevation: 5,
-
-        }, inputBox: {
-            borderWidth: 2,
-            borderColor: props.theme ? color.drakPrimaryColors : color.primaryColors,
-            padding: 10,
-            fontSize: 18,
-            borderRadius: 10,
-            marginHorizontal: 10, color: 'gray'
-
-        }, reverseBtn: {
-            width: 50,
-            height: 50,
-            borderRadius: 25,
-            backgroundColor: props.theme ? color.drakPrimaryColors : color.primaryColors,
-            bottom: Platform.OS === 'android' ? '59%' : "57%", left: '70%',
-            justifyContent: 'center',
-            alignItems: 'center', position: "absolute"
-        },
-        btn: {
-            width: '90%',
-            height: 50,
-            backgroundColor: props.theme ? color.drakPrimaryColors : color.primaryColors,
-            borderRadius: 15,
-            justifyContent: "center",
-            alignItems: 'center',
-            alignSelf: 'center'
-        },
-        btnText: {
-            fontSize: 20,
-            color: 'white',
-            fontWeight: 'bold'
-        },
-        dateOrCapicity: {
-            flexDirection: "row",
-            justifyContent: 'center',
-            marginVertical: 10,
-            marginHorizontal: 20
-        }, modelBox: {
-            width: Dimensions.get('screen').width - 20,
-            minHeight: 200,
-
-            backgroundColor: props.theme ? color.drakBackgroundColor : color.backgroundColor,
-            alignSelf: 'center',
-            borderRadius: 15,
-            flexDirection: 'row',
-            alignItems: 'center',
-            alignItems: "center",
-            shadowColor: props.theme ? color.drakFontcolor : color.fontcolor,
-            shadowOffset: {
-                width: 0,
-                height: 4
-            },
-            shadowOpacity: 0.25,
-            shadowRadius: 4,
-            elevation: 5
-        },
-
-    })
     const drakmap = [
         {
             "elementType": "geometry",
@@ -537,7 +445,7 @@ const HomeScreen = (props) => {
     return (
         <KeyboardAvoidingView
             behavior={Platform.OS === "ios" ? "padding" : "height"}
-            style={styles.container}
+            style={styles.container(props)}
         >
             <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
 
@@ -554,7 +462,7 @@ const HomeScreen = (props) => {
                     >
                         <View style={{ flex: 1, justifyContent: 'center' }}>
 
-                            <View style={styles.modelBox}>
+                            <View style={styles.modelBox(props)}>
 
                                 <ScrollView keyboardShouldPersistTaps="handled" >
                                     <TouchableOpacity onPress={() => { setModalVisible(false) }} style={{ alignItems: 'center', left: Dimensions.get('screen').width / 2 - 40 }}>
@@ -644,9 +552,9 @@ const HomeScreen = (props) => {
                         </MapView>
 
                     </View>
-                    <View style={styles.searchBox} >
+                    <View style={styles.searchBox(props)} >
 
-                        <View style={styles.fromToDesc}>
+                        <View style={styles.fromToDesc(props)}>
                             <View style={{ width: "10%", justifyContent: 'center' }}>
                                 <Image source={icons.journey} style={{ width: 50, height: 115, tintColor: props.theme ? color.drakPrimaryColors : color.primaryColors, }} />
                             </View>
@@ -656,7 +564,7 @@ const HomeScreen = (props) => {
                                         <Image source={icons.forword} style={{ width: 20, height: 20, tintColor: props.theme ? color.drakPrimaryColors : color.primaryColors, }} />
                                     </View>
                                     <TouchableOpacity style={{ width: '95%' }} activeOpacity={0.80} onPress={() => { setPlaceType("from"); setModalVisible(true) }}>
-                                        <Text style={styles.inputBox}>{data.from.name}</Text>
+                                        <Text style={styles.inputBox(props)}>{data.from.name}</Text>
                                     </TouchableOpacity>
                                 </View>
                                 <View style={{ margin: 10, flexDirection: 'row' }}>
@@ -664,12 +572,12 @@ const HomeScreen = (props) => {
                                         <Image source={icons.forword} style={{ width: 20, height: 20, tintColor: props.theme ? color.drakPrimaryColors : color.primaryColors, }} />
                                     </View>
                                     <TouchableOpacity style={{ width: '95%' }} activeOpacity={0.80} onPress={() => { setPlaceType("destination"); setModalVisible(true) }}>
-                                        <Text style={styles.inputBox}>{data.destination.name}</Text>
+                                        <Text style={styles.inputBox(props)}>{data.destination.name}</Text>
                                     </TouchableOpacity>
                                 </View>
                             </View>
                         </View>
-                        <View style={styles.reverseBtn}>
+                        <View style={styles.reverseBtn(props)}>
                             <Image source={icons.upToDown} style={{ width: 30, height: 30, tintColor: 'white' }} />
                         </View>
                         <View style={styles.dateOrCapicity}>
@@ -693,7 +601,7 @@ const HomeScreen = (props) => {
                                 <Text style={{ fontWeight: "bold", fontSize: 18, color: props.theme ? color.drakPrimaryColors : color.primaryColors, }}>/ Tonnes</Text>
                             </View>
                         </View>
-                        <TouchableOpacity style={styles.btn} onPress={() => { SearchRoute() }}>
+                        <TouchableOpacity style={styles.btn(props)} onPress={() => { SearchRoute() }}>
                             <Text style={styles.btnText}>
                                 Search
                             </Text>
@@ -707,15 +615,103 @@ const HomeScreen = (props) => {
         </KeyboardAvoidingView>
     )
 }
-const useDispatch = (dispatch) => {
-    return {
 
-    };
-}
 const useSelector = (state) => (
-
     {
         theme: state.token.theme
     }
 )
-export default connect(useSelector, useDispatch)(HomeScreen);
+export default connect(useSelector)(HomeScreen);
+const styles = StyleSheet.create({
+    container: (props) => [{
+        flex: 1,
+        paddingBottom: 40,
+        backgroundColor: props.theme ? color.drakBackgroundColor : color.backgroundColor,
+    }],
+    mapBox: {
+        height: "40%"
+
+
+    },
+    searchBox: (props) => [{
+        height: "60%",
+        backgroundColor: props.theme ? color.drakBackgroundColor : color.backgroundColor,
+        bottom: 0,
+        borderTopLeftRadius: 40,
+        borderTopRightRadius: 40,
+        justifyContent: 'center',
+
+    }],
+    fromToDesc: (props) => [{
+        height: 180,
+        backgroundColor: props.theme ? color.drakBackgroundColor : color.backgroundColor,
+        marginHorizontal: 35,
+        borderRadius: 20,
+        justifyContent: 'center',
+        flexDirection: 'row',
+        shadowColor: props.theme ? color.drakFontcolor : color.fontcolor,
+        shadowOffset: {
+            width: 0,
+            height: 2
+        },
+        shadowOpacity: 0.25,
+        shadowRadius: 4,
+        elevation: 5,
+
+    }], inputBox: (props) => [{
+        borderWidth: 2,
+        borderColor: props.theme ? color.drakPrimaryColors : color.primaryColors,
+        padding: 10,
+        fontSize: 18,
+        borderRadius: 10,
+        marginHorizontal: 10, color: 'gray'
+
+    }], reverseBtn: (props) => [{
+        width: 50,
+        height: 50,
+        borderRadius: 25,
+        backgroundColor: props.theme ? color.drakPrimaryColors : color.primaryColors,
+        bottom: Platform.OS === 'android' ? '59%' : "57%", left: '70%',
+        justifyContent: 'center',
+        alignItems: 'center', position: "absolute"
+    }],
+    btn: (props) => [{
+        width: '90%',
+        height: 50,
+        backgroundColor: props.theme ? color.drakPrimaryColors : color.primaryColors,
+        borderRadius: 15,
+        justifyContent: "center",
+        alignItems: 'center',
+        alignSelf: 'center'
+    }],
+    btnText: {
+        fontSize: 20,
+        color: 'white',
+        fontWeight: 'bold'
+    },
+    dateOrCapicity: {
+        flexDirection: "row",
+        justifyContent: 'center',
+        marginVertical: 10,
+        marginHorizontal: 20
+    }, modelBox: (props) => [{
+        width: Dimensions.get('screen').width - 20,
+        minHeight: 200,
+
+        backgroundColor: props.theme ? color.drakBackgroundColor : color.backgroundColor,
+        alignSelf: 'center',
+        borderRadius: 15,
+        flexDirection: 'row',
+        alignItems: 'center',
+        alignItems: "center",
+        shadowColor: props.theme ? color.drakFontcolor : color.fontcolor,
+        shadowOffset: {
+            width: 0,
+            height: 4
+        },
+        shadowOpacity: 0.25,
+        shadowRadius: 4,
+        elevation: 5
+    }],
+
+})

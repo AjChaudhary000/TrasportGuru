@@ -71,8 +71,8 @@ const AddTrasportDetails = (props) => {
     }
     const renderItemDriver = (item) => {
         return (
-            <View style={styles.item}>
-                <Text style={styles.textItem}>{item.driverName}</Text>
+            <View style={styles.item(props)}>
+                <Text style={styles.textItem(props)}>{item.driverName}</Text>
                 <Image source={{ uri: item.driverImage }} style={{ width: 30, height: 30 }} />
             </View>
         );
@@ -80,8 +80,8 @@ const AddTrasportDetails = (props) => {
     const renderItemTruck = (item) => {
 
         return (
-            <View style={styles.item}>
-                <Text style={styles.textItem}>{item.truckRegistartionNo}</Text>
+            <View style={styles.item(props)}>
+                <Text style={styles.textItem(props)}>{item.truckRegistartionNo}</Text>
                 <Image source={{ uri: item.truckImage }} style={{ width: 30, height: 30 }} />
             </View>
         );
@@ -107,114 +107,11 @@ const AddTrasportDetails = (props) => {
             </View >
         );
     };
-    const styles = StyleSheet.create({
-        container: {
-            flex: 1,
-            backgroundColor: props.theme ? color.drakBackgroundColor : color.backgroundColor,
 
-        }, inputBox: {
-            marginHorizontal: 20,
-
-        },
-        input: {
-            borderWidth: 2,
-            borderColor: props.theme ? color.drakAdminprimaryColors : color.adminprimaryColors,
-            padding: 10,
-            fontSize: 18,
-            borderRadius: 10,
-            color: props.theme ? color.drakFontcolor : color.fontcolor,
-        }, header: {
-            marginTop: 40,
-            alignItems: 'center',
-            marginHorizontal: 20
-        },
-        headerName: {
-            fontSize: 25,
-            fontWeight: 'bold',
-            letterSpacing: 2,
-            color: "#0D1117"
-        },
-        btn: {
-            width: '90%',
-            height: 50,
-            backgroundColor: props.theme ? color.drakAdminprimaryColors : color.adminprimaryColors,
-            borderRadius: 15,
-            justifyContent: "center",
-            alignItems: 'center',
-            alignSelf: 'center'
-        },
-        btnText: {
-            fontSize: 20,
-            color: 'white',
-            fontWeight: 'bold'
-        },
-        dropdown: {
-            borderWidth: 2,
-            borderColor: props.theme ? color.drakAdminprimaryColors : color.adminprimaryColors,
-            padding: 10,
-            fontSize: 18,
-            borderRadius: 10,
-
-        },
-        icon: {
-            marginRight: 5,
-        },
-        item: {
-            margin: 10,
-            padding: 10,
-            borderWidth: 2,
-            borderColor: props.theme ? color.drakAdminprimaryColors : color.adminprimaryColors,
-            borderRadius: 10,
-            backgroundColor: props.theme ? color.drakBackgroundColor : color.backgroundColor,
-
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-        },
-        textItem: {
-            flex: 1,
-            fontSize: 16,
-            color: props.theme ? color.drakFontcolor : color.fontcolor,
-        },
-        placeholderStyle: {
-            fontSize: 16,
-            color: props.theme ? color.drakFontcolor : color.fontcolor,
-        },
-        selectedTextStyle: {
-            fontSize: 16,
-            color: props.theme ? color.drakFontcolor : color.fontcolor,
-        },
-        inputSearchStyle: {
-            height: 40,
-            fontSize: 16,
-        }, iconStyle: {
-            width: 20,
-            height: 20,
-        },
-        modelBox: {
-            width: Dimensions.get('screen').width - 20,
-            minHeight: 200,
-            paddingHorizontal: 20,
-            backgroundColor: props.theme ? color.drakBackgroundColor : color.backgroundColor,
-            alignSelf: 'center',
-            borderRadius: 15,
-            justifyContent: "center",
-            alignItems: 'center',
-            alignItems: "center",
-            shadowColor: props.theme ? color.drakFontcolor : color.fontcolor,
-            shadowOffset: {
-                width: 0,
-                height: 2
-            },
-            shadowOpacity: 0.25,
-            shadowRadius: 4,
-            elevation: 5
-        },
-    })
     return (
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
 
-            <View style={styles.container}>
+            <View style={styles.container(props)}>
                 <Modal
                     animationType="slide"
                     transparent={true}
@@ -225,7 +122,7 @@ const AddTrasportDetails = (props) => {
                     }}
                 >
                     <View style={{ flex: 1, justifyContent: 'center' }}>
-                        <View style={styles.modelBox}>
+                        <View style={styles.modelBox(props)}>
                             <Text style={{ color: 'red', fontWeight: 'bold' }}>*Note :- Truck calculation  </Text>
 
                             <Text style={{ color: 'red', fontWeight: 'bold' }}>* Ex: 10 Km , 10 Tonne , Price 10, </Text>
@@ -248,9 +145,9 @@ const AddTrasportDetails = (props) => {
                         <View style={styles.inputBox}>
                             <View style={{ margin: 10 }}>
                                 <Dropdown
-                                    style={styles.dropdown}
-                                    placeholderStyle={styles.placeholderStyle}
-                                    selectedTextStyle={styles.selectedTextStyle}
+                                    style={styles.dropdown(props)}
+                                    placeholderStyle={styles.placeholderStyle(props)}
+                                    selectedTextStyle={styles.selectedTextStyle(props)}
                                     inputSearchStyle={styles.inputSearchStyle}
                                     iconStyle={styles.iconStyle}
                                     data={props.routeList}
@@ -270,9 +167,9 @@ const AddTrasportDetails = (props) => {
                             </View>
                             <View style={{ margin: 10 }}>
                                 <Dropdown
-                                    style={styles.dropdown}
-                                    placeholderStyle={styles.placeholderStyle}
-                                    selectedTextStyle={styles.selectedTextStyle}
+                                    style={styles.dropdown(props)}
+                                    placeholderStyle={styles.placeholderStyle(props)}
+                                    selectedTextStyle={styles.selectedTextStyle(props)}
                                     inputSearchStyle={styles.inputSearchStyle}
                                     iconStyle={styles.iconStyle}
                                     data={props.truckList}
@@ -292,9 +189,9 @@ const AddTrasportDetails = (props) => {
                             </View>
                             <View style={{ margin: 10 }}>
                                 <Dropdown
-                                    style={styles.dropdown}
-                                    placeholderStyle={styles.placeholderStyle}
-                                    selectedTextStyle={styles.selectedTextStyle}
+                                    style={styles.dropdown(props)}
+                                    placeholderStyle={styles.placeholderStyle(props)}
+                                    selectedTextStyle={styles.selectedTextStyle(props)}
                                     inputSearchStyle={styles.inputSearchStyle}
                                     iconStyle={styles.iconStyle}
                                     data={props.driverList}
@@ -327,7 +224,7 @@ const AddTrasportDetails = (props) => {
                                         setOpen(false)
                                     }} />
                                 <View style={{ width: "85%" }}>
-                                    <Text style={styles.input}>{data.Truckdate ? data.Truckdate : "Date"}</Text>
+                                    <Text style={styles.input(props)}>{data.Truckdate ? data.Truckdate : "Date"}</Text>
                                 </View>
                                 <TouchableOpacity style={{ width: "10%", justifyContent: 'center' }} onPress={() => setOpen(true)}>
                                     <Image source={icons.editdate} style={{ width: 35, height: 35, tintColor: props.theme ? color.drakAdminprimaryColors : color.adminprimaryColors }} />
@@ -338,7 +235,7 @@ const AddTrasportDetails = (props) => {
 
                             <View style={{ margin: 10, flexDirection: 'row', justifyContent: 'space-between' }}>
                                 <View style={{ width: "85%" }}>
-                                    <TextInput style={styles.input}
+                                    <TextInput style={styles.input(props)}
                                         placeholder={"eg. Truck Price"}
                                         placeholderTextColor={'gray'}
 
@@ -352,7 +249,7 @@ const AddTrasportDetails = (props) => {
 
                             </View>
                             <View style={{ marginHorizontal: 10, marginVertical: 20 }}>
-                                <TouchableOpacity style={styles.btn} onPress={() => { AddTrasport() }}>
+                                <TouchableOpacity style={styles.btn(props)} onPress={() => { AddTrasport() }}>
                                     <Text style={styles.btnText}>
                                         Add Transport Details
                                     </Text>
@@ -365,9 +262,9 @@ const AddTrasportDetails = (props) => {
                         <View style={styles.inputBox}>
                             <View style={{ margin: 10 }}>
                                 <Dropdown
-                                    style={styles.dropdown}
-                                    placeholderStyle={styles.placeholderStyle}
-                                    selectedTextStyle={styles.selectedTextStyle}
+                                    style={styles.dropdown(props)}
+                                    placeholderStyle={styles.placeholderStyle(props)}
+                                    selectedTextStyle={styles.selectedTextStyle(props)}
                                     inputSearchStyle={styles.inputSearchStyle}
                                     iconStyle={styles.iconStyle}
                                     data={props.routeList}
@@ -387,9 +284,9 @@ const AddTrasportDetails = (props) => {
                             </View>
                             <View style={{ margin: 10 }}>
                                 <Dropdown
-                                    style={styles.dropdown}
-                                    placeholderStyle={styles.placeholderStyle}
-                                    selectedTextStyle={styles.selectedTextStyle}
+                                    style={styles.dropdown(props)}
+                                    placeholderStyle={styles.placeholderStyle(props)}
+                                    selectedTextStyle={styles.selectedTextStyle(props)}
                                     inputSearchStyle={styles.inputSearchStyle}
                                     iconStyle={styles.iconStyle}
                                     data={props.truckList}
@@ -409,9 +306,9 @@ const AddTrasportDetails = (props) => {
                             </View>
                             <View style={{ margin: 10 }}>
                                 <Dropdown
-                                    style={styles.dropdown}
-                                    placeholderStyle={styles.placeholderStyle}
-                                    selectedTextStyle={styles.selectedTextStyle}
+                                    style={styles.dropdown(props)}
+                                    placeholderStyle={styles.placeholderStyle(props)}
+                                    selectedTextStyle={styles.selectedTextStyle(props)}
                                     inputSearchStyle={styles.inputSearchStyle}
                                     iconStyle={styles.iconStyle}
                                     data={props.driverList}
@@ -444,7 +341,7 @@ const AddTrasportDetails = (props) => {
                                         setOpen(false)
                                     }} />
                                 <View style={{ width: "85%" }}>
-                                    <Text style={styles.input}>{data.Truckdate ? data.Truckdate : "Date"}</Text>
+                                    <Text style={styles.input(props)}>{data.Truckdate ? data.Truckdate : "Date"}</Text>
                                 </View>
                                 <TouchableOpacity style={{ width: "10%", justifyContent: 'center' }} onPress={() => setOpen(true)}>
                                     <Image source={icons.editdate} style={{ width: 35, height: 35, tintColor: props.theme ? color.drakAdminprimaryColors : color.adminprimaryColors }} />
@@ -455,7 +352,7 @@ const AddTrasportDetails = (props) => {
 
                             <View style={{ margin: 10, flexDirection: 'row', justifyContent: 'space-between' }}>
                                 <View style={{ width: "85%" }}>
-                                    <TextInput style={styles.input}
+                                    <TextInput style={styles.input(props)}
                                         placeholder={"eg. Truck Price"}
                                         placeholderTextColor={'gray'}
                                         defaultValue={props.route.params?.item?.truckPrice}
@@ -469,7 +366,7 @@ const AddTrasportDetails = (props) => {
 
                             </View>
                             <View style={{ marginHorizontal: 10, marginVertical: 20 }}>
-                                <TouchableOpacity style={styles.btn} onPress={() => { UpdateTrasport() }}>
+                                <TouchableOpacity style={styles.btn(props)} onPress={() => { UpdateTrasport() }}>
                                     <Text style={styles.btnText}>
                                         Update Transport Details
                                     </Text>
@@ -506,5 +403,97 @@ const useSelector = (state) => (
     }
 )
 export default connect(useSelector, useDispatch)(AddTrasportDetails);
+const styles = StyleSheet.create({
+    container: (props) => [{
+        flex: 1,
+        backgroundColor: props.theme ? color.drakBackgroundColor : color.backgroundColor,
+
+    }], inputBox: {
+        marginHorizontal: 20,
+
+    },
+    input: (props) => [{
+        borderWidth: 2,
+        borderColor: props.theme ? color.drakAdminprimaryColors : color.adminprimaryColors,
+        padding: 10,
+        fontSize: 18,
+        borderRadius: 10,
+        color: props.theme ? color.drakFontcolor : color.fontcolor,
+    }],
+    btn: (props) => [{
+        width: '90%',
+        height: 50,
+        backgroundColor: props.theme ? color.drakAdminprimaryColors : color.adminprimaryColors,
+        borderRadius: 15,
+        justifyContent: "center",
+        alignItems: 'center',
+        alignSelf: 'center'
+    }],
+    btnText: {
+        fontSize: 20,
+        color: 'white',
+        fontWeight: 'bold'
+    },
+    dropdown: (props) => [{
+        borderWidth: 2,
+        borderColor: props.theme ? color.drakAdminprimaryColors : color.adminprimaryColors,
+        padding: 10,
+        fontSize: 18,
+        borderRadius: 10,
+
+    }],
+
+    item: (props) => [{
+        margin: 10,
+        padding: 10,
+        borderWidth: 2,
+        borderColor: props.theme ? color.drakAdminprimaryColors : color.adminprimaryColors,
+        borderRadius: 10,
+        backgroundColor: props.theme ? color.drakBackgroundColor : color.backgroundColor,
+
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+    }],
+    textItem: (props) => [{
+        flex: 1,
+        fontSize: 16,
+        color: props.theme ? color.drakFontcolor : color.fontcolor,
+    }],
+    placeholderStyle: (props) => [{
+        fontSize: 16,
+        color: props.theme ? color.drakFontcolor : color.fontcolor,
+    }],
+    selectedTextStyle: (props) => [{
+        fontSize: 16,
+        color: props.theme ? color.drakFontcolor : color.fontcolor,
+    }],
+    inputSearchStyle: {
+        height: 40,
+        fontSize: 16,
+    }, iconStyle: {
+        width: 20,
+        height: 20,
+    },
+    modelBox: (props) => [{
+        width: Dimensions.get('screen').width - 20,
+        minHeight: 200,
+        paddingHorizontal: 20,
+        backgroundColor: props.theme ? color.drakBackgroundColor : color.backgroundColor,
+        alignSelf: 'center',
+        borderRadius: 15,
+        justifyContent: "center",
+        alignItems: 'center',
+        alignItems: "center",
+        shadowColor: props.theme ? color.drakFontcolor : color.fontcolor,
+        shadowOffset: {
+            width: 0,
+            height: 2
+        },
+        shadowOpacity: 0.25,
+        shadowRadius: 4,
+        elevation: 5
+    }],
+})
 
 

@@ -49,78 +49,10 @@ const AdminEditAccount = (props) => {
         }
     };
 
-    const styles = StyleSheet.create({
-        container: {
-            flex: 1,
-            backgroundColor: props.theme ? color.drakBackgroundColor : color.backgroundColor,
 
-        }, inputBox: {
-            marginHorizontal: 20,
-
-        },
-        input: {
-            borderWidth: 2,
-            borderColor: props.theme ? color.drakPrimaryColors : color.primaryColors,
-            padding: 10,
-            fontSize: 18,
-            borderRadius: 10, color: props.theme ? color.drakFontcolor : color.fontcolor,
-        }, header: {
-            marginTop: 40,
-            alignItems: 'center',
-            marginHorizontal: 20
-        },
-        headerName: {
-            fontSize: 25,
-            fontWeight: 'bold',
-            letterSpacing: 2,
-            color: "#0D1117"
-        },
-        btn: {
-            width: '90%',
-            height: 50,
-            backgroundColor: props.theme ? color.drakPrimaryColors : color.primaryColors,
-            borderRadius: 15,
-            justifyContent: "center",
-            alignItems: 'center',
-            alignSelf: 'center'
-        },
-        btnText: {
-            fontSize: 20,
-            color: 'white',
-            fontWeight: 'bold'
-        },
-        image: {
-            marginTop: 40,
-            overflow: 'hidden',
-            alignSelf: 'center',
-            width: 120,
-            height: 120,
-            borderRadius: 10,
-            borderWidth: 5,
-            borderColor: props.theme ? color.drakPrimaryColors : color.primaryColors,
-        }, modelBox: {
-            width: Dimensions.get('screen').width - 20,
-            minHeight: 200,
-
-            backgroundColor: props.theme ? color.drakBackgroundColor : color.backgroundColor,
-            alignSelf: 'center',
-            borderRadius: 15,
-            flexDirection: 'row',
-            alignItems: 'center',
-            alignItems: "center",
-            shadowColor: props.theme ? color.drakFontcolor : color.fontcolor,
-            shadowOffset: {
-                width: 0,
-                height: 2
-            },
-            shadowOpacity: 0.25,
-            shadowRadius: 4,
-            elevation: 5
-        },
-    })
     return (
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-            <View style={styles.container}>
+            <View style={styles.container(props)}>
                 <AnimatedLoader
                     visible={props.loading}
                     overlayColor="rgba(255,255,255,0.75)"
@@ -150,7 +82,7 @@ const AdminEditAccount = (props) => {
                     }}
                 >
                     <View style={{ flex: 1, justifyContent: 'center' }}>
-                        <View style={styles.modelBox}>
+                        <View style={styles.modelBox(props)}>
                             <ScrollView keyboardShouldPersistTaps="handled" >
 
                                 <GooglePlacesAutocomplete
@@ -228,7 +160,7 @@ const AdminEditAccount = (props) => {
                                             source={icons.add_photo}
                                         />
                                     </TouchableOpacity> :
-                                    <TouchableOpacity style={styles.image} onPress={() => { setModalVisible1(true) }}>
+                                    <TouchableOpacity style={styles.image(props)} onPress={() => { setModalVisible1(true) }}>
                                         <Image
                                             style={{
                                                 width: 110, height: 110, alignSelf: "center"
@@ -245,7 +177,7 @@ const AdminEditAccount = (props) => {
                             </View>}
                     </View>
                     <View style={{ margin: 10 }}>
-                        <TextInput style={styles.input}
+                        <TextInput style={styles.input(props)}
 
                             placeholder={"eg. Trasport Name"}
                             placeholderTextColor={'gray'}
@@ -256,7 +188,7 @@ const AdminEditAccount = (props) => {
                     </View>
 
                     <View style={{ margin: 10 }}>
-                        <TextInput style={styles.input}
+                        <TextInput style={styles.input(props)}
 
                             placeholder={"eg. Mobile no"}
                             placeholderTextColor={'gray'}
@@ -269,11 +201,11 @@ const AdminEditAccount = (props) => {
                     </View>
                     <View style={{ margin: 10 }}>
                         <TouchableOpacity style={{ width: '100%' }} activeOpacity={0.80} onPress={() => { setModalVisible(true) }}>
-                            <Text style={styles.input}>{data.trasportAddress}</Text>
+                            <Text style={styles.input(props)}>{data.trasportAddress}</Text>
                         </TouchableOpacity>
                     </View>
                     <View style={{ marginHorizontal: 10, marginVertical: 20 }}>
-                        <TouchableOpacity style={styles.btn} onPress={() => { EditAccount() }}>
+                        <TouchableOpacity style={styles.btn(props)} onPress={() => { EditAccount() }}>
                             <Text style={styles.btnText}>
                                 Continue
                             </Text>
@@ -300,4 +232,63 @@ const useDispatch = (dispatch) => {
         getTransportCompanyList: (data) => dispatch(getTransportCompanyList(data))
     }
 }
-export default connect(useSelector, useDispatch)(AdminEditAccount)
+export default connect(useSelector, useDispatch)(AdminEditAccount);
+const styles = StyleSheet.create({
+    container:(props)=>[ {
+        flex: 1,
+        backgroundColor: props.theme ? color.drakBackgroundColor : color.backgroundColor,
+
+    }], inputBox: {
+        marginHorizontal: 20,
+
+    },
+    input: (props)=>[{
+        borderWidth: 2,
+        borderColor: props.theme ? color.drakPrimaryColors : color.primaryColors,
+        padding: 10,
+        fontSize: 18,
+        borderRadius: 10, color: props.theme ? color.drakFontcolor : color.fontcolor,
+    }],
+    btn:(props)=>[ {
+        width: '90%',
+        height: 50,
+        backgroundColor: props.theme ? color.drakPrimaryColors : color.primaryColors,
+        borderRadius: 15,
+        justifyContent: "center",
+        alignItems: 'center',
+        alignSelf: 'center'
+    }],
+    btnText: {
+        fontSize: 20,
+        color: 'white',
+        fontWeight: 'bold'
+    },
+    image: (props)=>[{
+        marginTop: 40,
+        overflow: 'hidden',
+        alignSelf: 'center',
+        width: 120,
+        height: 120,
+        borderRadius: 10,
+        borderWidth: 5,
+        borderColor: props.theme ? color.drakPrimaryColors : color.primaryColors,
+    }], modelBox:(props)=>[ {
+        width: Dimensions.get('screen').width - 20,
+        minHeight: 200,
+
+        backgroundColor: props.theme ? color.drakBackgroundColor : color.backgroundColor,
+        alignSelf: 'center',
+        borderRadius: 15,
+        flexDirection: 'row',
+        alignItems: 'center',
+        alignItems: "center",
+        shadowColor: props.theme ? color.drakFontcolor : color.fontcolor,
+        shadowOffset: {
+            width: 0,
+            height: 2
+        },
+        shadowOpacity: 0.25,
+        shadowRadius: 4,
+        elevation: 5
+    }],
+})

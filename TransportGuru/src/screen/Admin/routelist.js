@@ -11,7 +11,7 @@ import Toast from 'react-native-simple-toast';
 import AnimatedLoader from "react-native-animated-loader";
 const Routelist = (props) => {
     React.useEffect(() => {
-      
+
         props.getRouteList(props.token)
     }, [])
     React.useEffect(() => {
@@ -30,43 +30,9 @@ const Routelist = (props) => {
         console.log(item)
         props.navigation.navigate("AddRoute", { item: item })
     }
-    const styles = StyleSheet.create({
-        container: {
-            flex: 1,
-            backgroundColor: props.theme ? color.drakBackgroundColor : color.backgroundColor
-        }, listBox: {
-            minHeight: 150,
-            backgroundColor: props.theme ? color.drakBackgroundColor : color.backgroundColor,
-            marginHorizontal: 20,
-            borderRadius: 20,
 
-            shadowColor: props.theme ? color.drakFontcolor : color.fontcolor,
-            shadowOffset: {
-                width: 0,
-                height: 2
-            },
-            shadowOpacity: 0.25,
-            shadowRadius: 4,
-            elevation: 5,
-            marginVertical: 10,
-            padding: 20
-        },
-
-
-
-        edit: {
-            fontSize: 16,
-            fontWeight: 'bold',
-            color: 'green'
-        },
-        delete: {
-            fontSize: 16,
-            fontWeight: 'bold',
-            color: 'red'
-        }
-    })
     return (
-        <View style={styles.container}>
+        <View style={styles.container(props)}>
             <AnimatedLoader
                 visible={props.loading}
                 overlayColor="rgba(255,255,255,0.75)"
@@ -90,57 +56,57 @@ const Routelist = (props) => {
                 </View>
 
                 :
-            <FlatList data={props.routelist} renderItem={(item) => (
-                <View style={styles.listBox}>
-                    <View style={{ alignItems: "center" }}>
-                        <Text style={{ fontWeight: 'bold', color: props.theme ? color.drakFontcolor : color.fontcolor }}>
-                            {item.item.from.name}
-                        </Text>
-                    </View>
-                    <View style={{ alignItems: "center", paddingVertical: 20 }}>
-                        <Image source={icons.upToDown} style={{ width: 30, height: 30, tintColor: props.theme ? color.drakAdminprimaryColors : color.adminprimaryColors }} />
-                    </View>
-                    <View style={{ alignItems: "center" }}>
-                        <Text style={{ fontWeight: 'bold', color: props.theme ? color.drakFontcolor : color.fontcolor }}>
-                            {item.item.destination.name}
-                        </Text>
-                    </View>
-                    <View style={{ flexDirection: 'row' }}>
-                        <View style={{ width: "5%", justifyContent: 'center' }}>
-                            <Image source={icons.journey} style={{ width: 10, height: 40 * item.item.routeStop.length, tintColor: props.theme ? color.drakAdminprimaryColors : color.adminprimaryColors }} />
+                <FlatList data={props.routelist} renderItem={(item) => (
+                    <View style={styles.listBox(props)}>
+                        <View style={{ alignItems: "center" }}>
+                            <Text style={{ fontWeight: 'bold', color: props.theme ? color.drakFontcolor : color.fontcolor }}>
+                                {item.item.from.name}
+                            </Text>
                         </View>
-                        <View style={{ width: "95%", justifyContent: 'center' }}>
+                        <View style={{ alignItems: "center", paddingVertical: 20 }}>
+                            <Image source={icons.upToDown} style={{ width: 30, height: 30, tintColor: props.theme ? color.drakAdminprimaryColors : color.adminprimaryColors }} />
+                        </View>
+                        <View style={{ alignItems: "center" }}>
+                            <Text style={{ fontWeight: 'bold', color: props.theme ? color.drakFontcolor : color.fontcolor }}>
+                                {item.item.destination.name}
+                            </Text>
+                        </View>
+                        <View style={{ flexDirection: 'row' }}>
+                            <View style={{ width: "5%", justifyContent: 'center' }}>
+                                <Image source={icons.journey} style={{ width: 10, height: 40 * item.item.routeStop.length, tintColor: props.theme ? color.drakAdminprimaryColors : color.adminprimaryColors }} />
+                            </View>
+                            <View style={{ width: "95%", justifyContent: 'center' }}>
 
 
-                            <FlatList data={item.item.routeStop} renderItem={(item) => (
-                                <View style={{ margin: 10, flexDirection: 'row' }}>
+                                <FlatList data={item.item.routeStop} renderItem={(item) => (
+                                    <View style={{ margin: 10, flexDirection: 'row' }}>
 
-                                    <View style={{ width: '5%', justifyContent: 'center' }}>
-                                        <Image source={icons.forword} style={{ width: 20, height: 20, tintColor: props.theme ? color.drakAdminprimaryColors : color.adminprimaryColors }} />
-                                    </View>
-                                    <View style={{ width: '95%' }}>
-                                        <Text style={{ marginHorizontal: 10, fontWeight: 'bold', color: 'gray' }}>{item.item.stops}</Text>
-                                    </View>
-                                </View>)}
-                            />
+                                        <View style={{ width: '5%', justifyContent: 'center' }}>
+                                            <Image source={icons.forword} style={{ width: 20, height: 20, tintColor: props.theme ? color.drakAdminprimaryColors : color.adminprimaryColors }} />
+                                        </View>
+                                        <View style={{ width: '95%' }}>
+                                            <Text style={{ marginHorizontal: 10, fontWeight: 'bold', color: 'gray' }}>{item.item.stops}</Text>
+                                        </View>
+                                    </View>)}
+                                />
+
+
+                            </View>
+                        </View>
+                        <View style={{ flexDirection: 'row', justifyContent: 'space-between', paddingVertical: 20, paddingHorizontal: 30 }}>
+                            <TouchableOpacity onPress={() => { EditDriver(item.item) }}>
+                                <Text style={styles.edit}>Edit</Text>
+                            </TouchableOpacity>
+                            <TouchableOpacity onPress={() => { DeleteDriver(item.item._id) }}>
+                                <Text style={styles.delete} >Delete</Text>
+                            </TouchableOpacity>
+
 
 
                         </View>
                     </View>
-                    <View style={{ flexDirection: 'row', justifyContent: 'space-between', paddingVertical: 20, paddingHorizontal: 30 }}>
-                        <TouchableOpacity onPress={() => { EditDriver(item.item) }}>
-                            <Text style={styles.edit}>Edit</Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity onPress={() => { DeleteDriver(item.item._id) }}>
-                            <Text style={styles.delete} >Delete</Text>
-                        </TouchableOpacity>
-
-
-
-                    </View>
-                </View>
-            )
-            } />}
+                )
+                } />}
 
         </View >
     )
@@ -164,3 +130,38 @@ const useSelector = (state) => (
     }
 )
 export default connect(useSelector, useDispatch)(Routelist);
+const styles = StyleSheet.create({
+    container: (props) => [{
+        flex: 1,
+        backgroundColor: props.theme ? color.drakBackgroundColor : color.backgroundColor
+    }], listBox: (props) => [{
+        minHeight: 150,
+        backgroundColor: props.theme ? color.drakBackgroundColor : color.backgroundColor,
+        marginHorizontal: 20,
+        borderRadius: 20,
+
+        shadowColor: props.theme ? color.drakFontcolor : color.fontcolor,
+        shadowOffset: {
+            width: 0,
+            height: 2
+        },
+        shadowOpacity: 0.25,
+        shadowRadius: 4,
+        elevation: 5,
+        marginVertical: 10,
+        padding: 20
+    }],
+
+
+
+    edit: {
+        fontSize: 16,
+        fontWeight: 'bold',
+        color: 'green'
+    },
+    delete: {
+        fontSize: 16,
+        fontWeight: 'bold',
+        color: 'red'
+    }
+})

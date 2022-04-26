@@ -70,52 +70,11 @@ const ChatDetails = (props) => {
       console.log(e)
     }
   }
-  const styles = StyleSheet.create({
-    container: {
-      flex: 1,
-      backgroundColor: props.theme ? color.drakBackgroundColor : color.backgroundColor,
 
-      justifyContent: 'center'
-    },
-    right: {
-      marginTop: 10,
-      minWidth: '15%',
-      maxWidth: '70%',
-
-      alignItems: 'center',
-      minHeight: 40,
-
-      backgroundColor: props.theme ? color.drakPrimaryColors : color.primaryColors,
-      justifyContent: 'center',
-      padding: 10,
-      borderTopLeftRadius: 10,
-      borderBottomLeftRadius: 10,
-      borderTopRightRadius: 10
-
-    },
-    left: {
-      marginTop: 10,
-      minWidth: '15%',
-      maxWidth: '70%',
-
-      alignItems: 'center',
-      minHeight: 40,
-
-      backgroundColor: props.theme ? color.drakAdminprimaryColors : color.adminprimaryColors,
-      justifyContent: 'center',
-      padding: 10,
-      borderTopLeftRadius: 10,
-      borderBottomRightRadius: 10,
-      borderTopRightRadius: 10
-    },
-    text: {
-      color: props.theme ? color.drakFontcolor : color.fontcolor
-    }
-  });
   return (
     <KeyboardAvoidingView
       behavior={Platform.OS === "ios" ? "padding" : "height"}
-      style={styles.container}
+      style={styles.container(props)}
     >
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         <View style={{ flex: 1 }}>
@@ -139,7 +98,7 @@ const ChatDetails = (props) => {
                 <View style={{ paddingHorizontal: 10 }}>
                   {(props.userData?._id !== item.item?.userId) ?
                     <View style={{ flexDirection: "row" }}>
-                      <View style={styles.left}>
+                      <View style={styles.left(props)}>
                         <Text style={styles.text}>{item.item.message}</Text>
                       </View>
                       <View style={{ justifyContent: 'flex-end' }}>
@@ -150,8 +109,8 @@ const ChatDetails = (props) => {
                       <View style={{ justifyContent: 'flex-end' }}>
                         <Text style={{ color: 'gray', fontWeight: 'bold', fontSize: 10, paddingHorizontal: 2 }}>{new Date(item.item.createdAt).toLocaleDateString("en-US", { hour: 'numeric', minute: 'numeric', hour12: false }).toString().slice(-5)}</Text>
                       </View>
-                      <View style={styles.right}>
-                        <Text style={styles.text}>{item.item.message}</Text>
+                      <View style={styles.right(props)}>
+                        <Text style={styles.text(props)}>{item.item.message}</Text>
                       </View>
                     </View>}
                 </View>
@@ -201,3 +160,45 @@ const useSelector = (state) => (
   }
 )
 export default connect(useSelector, useDispatch)(ChatDetails);
+const styles = StyleSheet.create({
+  container: (props) => [{
+    flex: 1,
+    backgroundColor: props.theme ? color.drakBackgroundColor : color.backgroundColor,
+
+    justifyContent: 'center'
+  }],
+  right: (props) => [{
+    marginTop: 10,
+    minWidth: '15%',
+    maxWidth: '70%',
+
+    alignItems: 'center',
+    minHeight: 40,
+
+    backgroundColor: props.theme ? color.drakPrimaryColors : color.primaryColors,
+    justifyContent: 'center',
+    padding: 10,
+    borderTopLeftRadius: 10,
+    borderBottomLeftRadius: 10,
+    borderTopRightRadius: 10
+
+  }],
+  left: (props) => [{
+    marginTop: 10,
+    minWidth: '15%',
+    maxWidth: '70%',
+
+    alignItems: 'center',
+    minHeight: 40,
+
+    backgroundColor: props.theme ? color.drakAdminprimaryColors : color.adminprimaryColors,
+    justifyContent: 'center',
+    padding: 10,
+    borderTopLeftRadius: 10,
+    borderBottomRightRadius: 10,
+    borderTopRightRadius: 10
+  }],
+  text: (props) => [{
+    color: props.theme ? color.drakFontcolor : color.fontcolor
+  }]
+});
