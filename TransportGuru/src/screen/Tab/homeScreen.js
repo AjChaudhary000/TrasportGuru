@@ -41,7 +41,7 @@ const HomeScreen = (props) => {
             if (granted === PermissionsAndroid.RESULTS.GRANTED) {
 
             } else {
-                Alert.alert("Location Permission Not Granted");
+                Toast.show("Location Permission Not Granted");
             }
         } catch (err) {
             console.log(err)
@@ -536,7 +536,7 @@ const HomeScreen = (props) => {
     ]
     return (
         <KeyboardAvoidingView
-             behavior={Platform.OS === "ios" ? "padding" : "height"}
+            behavior={Platform.OS === "ios" ? "padding" : "height"}
             style={styles.container}
         >
             <TouchableWithoutFeedback onPress={Keyboard.dismiss}>

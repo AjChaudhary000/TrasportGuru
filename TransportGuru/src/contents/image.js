@@ -1,4 +1,4 @@
-const Tg = require('../assets/images/Tg.png')
+const Tg = require('../assets/images/icon.png')
 const container = require('../assets/images/container.png')
 const hyva = require('../assets/images/hyva.png')
 const trailor = require('../assets/images/trailor.png')

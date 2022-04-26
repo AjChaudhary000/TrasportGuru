@@ -11,6 +11,7 @@ buildscript {
         playServicesVersion = '18.0.1'
         androidMapsUtilsVersion = '2.3.0'
         androidXCore = "1.7.0"
+ kotlinVersion = '1.4.20'
     }
     repositories {
         google()
@@ -19,6 +20,9 @@ buildscript {
     dependencies {
         classpath('com.android.tools.build:gradle:7.1.2')
          classpath 'com.google.gms:google-services:4.3.10'
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:1.5.30"
+
+
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
     }

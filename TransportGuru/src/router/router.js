@@ -38,8 +38,9 @@ import PrivacyPolicy from '../screen/Tab/settingTab/privacyPolicy';
 import Support from '../screen/Tab/settingTab/support';
 import Termsofservice from '../screen/Tab/settingTab/termsofservice';
 const Stack = createNativeStackNavigator();
+import SplashScreen from 'react-native-splash-screen'
 const Router = (props) => {
-    const [isloading, setloadingData] = React.useState(true)
+  
     const gettoken = async () => {
         try {
             const mytoken = await getJWTToken();
@@ -60,22 +61,11 @@ const Router = (props) => {
     React.useEffect(() => {
         gettoken()
         setTimeout(() => {
-            setloadingData(false)
+            SplashScreen.hide();
+          
         }, 2000)
     }, [])
-    if (isloading) {
-        return (
-            <View style={{
-                flex: 1, justifyContent: 'center', alignItems: 'center',
-                backgroundColor: props.theme ? color.drakPrimaryColors : color.primaryColors,
-            }}>
-                <StatusBar hidden />
-                <View>
-                    <Image source={image.Tg} style={{ width: 300, height: 200 }} />
-                </View>
-            </View> 
-        );
-    }
+   
     if (!props.internet) {
         return (
             <View style={{

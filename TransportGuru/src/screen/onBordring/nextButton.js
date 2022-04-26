@@ -16,7 +16,7 @@ function NextButton({ percentage, scrollTo }) {
             <Svg width={size} height={size} >
                 <G rotation="-90" origin={center}>
                     <Circle stroke="#E6E7E8" cx={center} cy={center} r={radius} strokeWidth={strokewidth} />
-                    <Circle stroke="#1C22B8"
+                    <Circle stroke="#119CB9"
                         cx={center}
                         cy={center}
                         r={radius}
@@ -29,12 +29,12 @@ function NextButton({ percentage, scrollTo }) {
 
                 </G>
             </Svg>
-            <TouchableOpacity onPress={scrollTo} style={{
+            <TouchableOpacity activeOpacity={0.60} onPress={scrollTo} style={{
                 width: size - 20, height: size - 20,
-                backgroundColor: '#1C22B8', borderRadius: ((size - 20) / 2),
+                backgroundColor: '#119CB9', borderRadius: ((size - 20) / 2),
                 justifyContent: 'center', alignItems: 'center', position: 'absolute'
             }}>
-                <Image source={icons.right_arrow} style={{ width: 30, height: 30 }} />
+                <Image source={icons.right_arrow} style={{ width: 30, height: 30 ,tintColor:'white' }} />
             </TouchableOpacity>
         </View>
     );

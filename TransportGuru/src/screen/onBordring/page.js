@@ -19,7 +19,7 @@ function Page({ data, scrollX }) {
                         outputRange: [0.3, 0.8, 0.3],
                         extrapolate: 'clamp',
                     })
-                    return <Animated.View style={{ height: 10, margin: 2, borderRadius: 5, backgroundColor: '#1C22B8', width: dotinput, opacity }} key={i.toString()} />
+                    return <Animated.View style={{ height: 10, margin: 2, borderRadius: 5, backgroundColor: '#119CB9', width: dotinput, opacity }} key={i.toString()} />
                 })
             }
         </View>
