@@ -16,13 +16,20 @@
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="Tg" translatesAutoresizingMaskIntoConstraints="NO" id="69u-aC-Clq">
-                                <rect key="frame" x="20" y="336" width="332" height="225"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Tg" translatesAutoresizingMaskIntoConstraints="NO" id="69u-aC-Clq">
+                                <rect key="frame" x="57" y="298" width="300" height="300"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="300" id="Uft-kL-j8l"/>
+                                    <constraint firstAttribute="height" constant="300" id="yyo-nm-LdH"/>
+                                </constraints>
                             </imageView>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="Bcu-3y-fUS"/>
                         <color key="backgroundColor" red="0.066666666666666666" green="0.61176470588235299" blue="0.72549019607843135" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <constraints>
+                            <constraint firstItem="69u-aC-Clq" firstAttribute="centerX" secondItem="Ze5-6b-2t3" secondAttribute="centerX" id="l38-S2-b1N"/>
+                            <constraint firstItem="69u-aC-Clq" firstAttribute="centerY" secondItem="Ze5-6b-2t3" secondAttribute="centerY" id="zyI-0v-KRq"/>
+                        </constraints>
                         <variation key="heightClass=regular-widthClass=compact">
                             <color key="backgroundColor" red="0.066666666666666666" green="0.61176470588235299" blue="0.72549019607843135" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         </variation>
@@ -34,6 +41,6 @@
         </scene>
     </scenes>
     <resources>
-        <image name="Tg" width="620" height="402"/>
+        <image name="Tg" width="310" height="201"/>
     </resources>
 </document>

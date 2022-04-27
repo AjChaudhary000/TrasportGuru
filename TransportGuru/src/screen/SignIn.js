@@ -97,7 +97,7 @@ const SignIn = (props) => {
                     </View>
                     <View style={styles.google}>
                         <Text style={styles.googleText(props)}>
-                            Sign in with google
+                            Sign in with Google
                         </Text>
                         <Image source={icons.google} style={{ width: 35, height: 35 }} />
                     </View>
@@ -128,7 +128,8 @@ const styles = StyleSheet.create({
     contentor: (props) => [{
         flex: 1,
         paddingHorizontal: 20,
-        backgroundColor: props.theme ? color.drakBackgroundColor : color.backgroundColor
+        backgroundColor: props.theme ? color.drakBackgroundColor : color.backgroundColor,
+       
     }],
     truckLogo: {
         height: 150,
