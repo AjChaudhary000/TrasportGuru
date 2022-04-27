@@ -699,7 +699,7 @@ const styles = StyleSheet.create({
         minHeight: 200,
 
         backgroundColor: props.theme ? color.drakBackgroundColor : color.backgroundColor,
-       
+        alignSelf: 'center',
         borderRadius: 15,
         flexDirection: 'row',
         alignItems: 'center',
