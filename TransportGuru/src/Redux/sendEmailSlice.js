@@ -15,13 +15,14 @@ export const sendemail = createAsyncThunk('login/sendemail',
 );
 export const sendSms = createAsyncThunk('login/sendSms',
     async (mobileno, { getState }) => {
+        console.log(mobileno)
         try {
 
             const response = await TrasportApi.post('/sendsms', { mobileno });
             console.log("Response data of send sms", response.data)
             return response.data;
         } catch (e) {
-            console.log("message ", e)
+            console.log("message ", e.toString())
         }
     }
 );
