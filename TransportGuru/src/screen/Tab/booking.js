@@ -13,12 +13,14 @@ import { payment, setPaymentData } from '../../Redux/paymentSlice';
 import { updateTransport } from '../../Redux/Admin/transportSlice';
 import { tracking, setTrackingData } from '../../Redux/trackingSlice';
 import AnimatedLoader from "react-native-animated-loader";
+import RazorpayCheckout from 'react-native-razorpay';
 const Booking = (props) => {
+
   const [modalVisible1, setModalVisible1] = React.useState(false);
   const [amount, setAmount] = React.useState(0)
+
   React.useEffect(() => {
     props.transportListById({ id: props.route.params.tarsportId, token: props.token })
-
   }, [])
 
   const paymentHendle = (price, truckCapicty) => {
@@ -56,7 +58,30 @@ const Booking = (props) => {
     if (props.trackingData?.status) {
       setModalVisible1(false);
       props.setTrackingData([])
-      props.navigation.navigate('Confirmation', { payment: amount, type: "0" });
+      var options = {
+        description: 'Transport Guru Payments ',
+        image: 'https://i.imgur.com/3g7nmJC.png',
+        currency: 'INR',
+        key: 'rzp_test_K3zMkXzdEHbAqq',
+        amount: '200',
+        name: 'Acme Corp',
+        prefill: {
+          email: 'arjunchaudhary@example.com',
+          contact: '9106614742',
+          name: 'Arjun chaudhary'
+        },
+        theme: { color: '#119CB9' }
+      }
+      RazorpayCheckout.open(options).then((data) => {
+        props.navigation.navigate('Confirmation', { payment: amount, type: "0" }); // handle success
+        alert(`Success: ${data.razorpay_payment_id}`);
+      }).catch((error) => {
+        // handle failure
+        console.log(error)
+        alert(`Error: ${error.code} | ${error.description}`);
+        props.navigation.navigate('Confirmation', { payment: amount, type: "0" });
+      });
+
     }
   }, [props])
   console.log(props.paymentData)
@@ -417,17 +442,17 @@ const useSelector = (state) => (
 )
 export default connect(useSelector, useDispatch)(Booking);
 const styles = StyleSheet.create({
-  container: (props)=>[{
+  container: (props) => [{
     flex: 1,
     backgroundColor: props.theme ? color.drakBackgroundColor : color.backgroundColor,
 
-  }], listBox: (props)=>[{
+  }], listBox: (props) => [{
     minHeight: 150,
     backgroundColor: props.theme ? color.drakBackgroundColor : color.backgroundColor,
     marginVertical: 10,
     padding: 10
   }],
- image: (props)=>[{
+  image: (props) => [{
     overflow: 'hidden',
     alignSelf: 'center',
     width: 60,
@@ -437,9 +462,9 @@ const styles = StyleSheet.create({
     borderColor: props.theme ? color.drakPrimaryColors : color.primaryColors,
     justifyContent: 'center'
   }],
- 
 
-  pay:(props)=>[ {
+
+  pay: (props) => [{
     width: "40%",
     height: 55,
     backgroundColor: props.theme ? color.drakPrimaryColors : color.primaryColors,
@@ -451,12 +476,12 @@ const styles = StyleSheet.create({
 
     marginHorizontal: 10
   },
-  icon: (props)=>[{
+  icon: (props) => [{
     width: 30,
     height: 30,
     tintColor: props.theme ? color.drakPrimaryColors : color.primaryColors
   }],
-  modelBox1: (props)=>[{
+  modelBox1: (props) => [{
     width: Dimensions.get('screen').width,
     height: 120,
     position: 'absolute',

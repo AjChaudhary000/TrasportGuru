@@ -202,8 +202,10 @@ dependencies {
     implementation "com.facebook.react:react-native:+"  // From node_modules
     implementation platform('com.google.firebase:firebase-bom:29.2.1')
     implementation "androidx.swiperefreshlayout:swiperefreshlayout:1.0.0"
-
+implementation project(':react-native-razorpay')
  implementation 'com.google.android.gms:play-services-auth:15.0.1'
+    implementation project(path: ':@react-native-google-signin_google-signin')
+    
     debugImplementation("com.facebook.flipper:flipper:${FLIPPER_VERSION}") {
         exclude group:'com.facebook.fbjni'
     }

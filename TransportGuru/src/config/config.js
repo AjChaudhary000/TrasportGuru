@@ -1,4 +1,4 @@
 export default {
     GooglePlaceAPI: "AIzaSyDwIVgIMPOY0UMpmXrqO0hOBNSTM7dH2pA",
-    BaseUrl: "http://localhost:5000"
+    BaseUrl: "https://transportapi-aj.herokuapp.com/"
 }

@@ -12,6 +12,7 @@ import { GoogleSignin, statusCodes, GoogleSigninButton } from '@react-native-goo
 const SignIn = (props) => {
     const Google = async () => {
         await GoogleSignin.configure({
+            androidClientId: '459209492909-kiacksmffb1kuho98ke3seh5j0kk4he4.apps.googleusercontent.com',
             webClientId: '459209492909-qrafmo68rov0eh02edddjiba9ga850j2.apps.googleusercontent.com',
             offlineAccess: true
         });
@@ -36,7 +37,7 @@ const SignIn = (props) => {
     const onGoogleButtonPress = async () => {
         if (Platform.OS === "android") {
             try {
-                await GoogleSignin.hasPlayServices();
+                await GoogleSignin.hasPlayServices({ showPlayServicesUpdateDialog: true });
                 const userInfo = await GoogleSignin.signIn();
                 console.log("userInfo", userInfo)
             } catch (error) {
