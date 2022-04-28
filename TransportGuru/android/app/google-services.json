@@ -14,6 +14,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "459209492909-q5jkut4v9hd9ge8gdkcadjtrcdhi1n63.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.transportguru",
+            "certificate_hash": "86de0ca54d4aba91a5c27fdb43a47efc6a136142"
+          }
+        },
+        {
           "client_id": "459209492909-qrafmo68rov0eh02edddjiba9ga850j2.apps.googleusercontent.com",
           "client_type": 3
         }

@@ -13,6 +13,7 @@ import icons from '../../contents/icons'
 import { connect } from 'react-redux';
 import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
 import MapView, { PROVIDER_GOOGLE } from "react-native-maps"
+import config from '../../config/config';
 const HomeScreen = (props) => {
     const [modalVisible, setModalVisible] = React.useState(false);
     const [placetype, setPlaceType] = React.useState()
@@ -493,7 +494,7 @@ const HomeScreen = (props) => {
                                         }}
                                         query={{
                                             // available options: https://developers.google.com/places/web-service/autocomplete
-                                            key: 'AIzaSyDwIVgIMPOY0UMpmXrqO0hOBNSTM7dH2pA',
+                                            key: config.GooglePlaceAPI,
                                             language: 'en', // language of the results
                                             types: '(cities)', // default: 'geocode'
                                         }}

@@ -8,6 +8,9 @@ const nodemailer = require("nodemailer");
 const OTP = require('../model/otp');
 const auth = require('../middleware/auth');
 const Driver = require('../model/Driver');
+const accountSid = "ACfeb6acb7c389dcfa42a021d7ac8236ea";
+const authToken = "2734bccec803bc8ad5c29486568a2de2";
+const client = require('twilio')(accountSid, authToken);
 router.post('/sendemail', async (req, res) => {
 
     try {
@@ -37,6 +40,24 @@ router.post('/sendemail', async (req, res) => {
         res.status(400).send(e)
     }
 });
+router.post('/sendsms', async (req, res) => {
+    try {
+        const otpvalue = Math.round(Math.random() * 100000).toString().slice(0, 4);
+        // client.messages
+        //     .create({
+        //         body: `Trasnport Guru Verify Otp :- ${otpvalue}`,
+        //         from: '+19378263797',
+        //         to: req.body.mobileno
+        //     })
+        //     .then(message => console.log(message.sid));
+        const otp = new OTP({ mobileno: req.body.mobileno, otp: otpvalue });
+        await otp.save()
+        res.status(201).send({ mobileno: req.body.mobileno, status: true })
+    } catch (e) {
+        console.log(e.toString())
+        res.status(400).send(e)
+    }
+});
 router.post('/verifyuser', async (req, res) => {
     try {
         const UserData = await OTP.findOne({ email: req.body.email, otp: req.body.otp })
@@ -56,19 +77,44 @@ router.post('/verifyuser', async (req, res) => {
         res.status(400).send(e.toString())
     }
 })
+router.post('/verifySmsUser', async (req, res) => {
+    try {
+        const UserData = await OTP.findOne({ mobileno: req.body.mobileno, otp: req.body.otp })
+        if (UserData === null) return res.status(404).send({ data: 'otp invalid ' })
+        const UserList = await User.findOne({ mobileno: req.body.mobileno });
+        if (UserList) {
+            console.log("my data ", UserList)
+            const token = await UserList.genrateToken();
+            console.log("my token", token)
+            return res.status(201).send({ data: UserList, token: token, account: '1', status: true })
+        } else {
+            const user = new User({ mobileno: req.body.mobileno, accountType: "User" });
+            console.log("my user ", user)
+            const data = await user.save()
+            console.log("my user ", data)
+            const token = await data.genrateToken();
+            return res.status(201).send({ data: data, token: token, account: '0', status: true })
+        }
+    } catch (e) {
+        res.status(400).send(e.toString())
+    }
+})
 router.post('/user/me', auth, async (req, res) => {
     req.user.username = req.body.username;
     req.user.image = req.body.image;
     const data = await req.user.save();
     res.send({ data, status: 'true' })
 
-}, (error, req, res, next) => { res.send(error.message) })
-
+},
+    (error, req, res, next) => {
+        res.send(error.message)
+    })
 router.get('/user/me', auth, async (req, res) => {
     res.send({ data: await req.user })
 
-}, (error, req, res, next) => { res.send(error.message) })
-
+}, (error, req, res, next) => {
+    res.send(error.message)
+})
 router.post('/user/trasportaccount', auth, async (req, res) => {
     try {
         req.user.accountType = "Admin"

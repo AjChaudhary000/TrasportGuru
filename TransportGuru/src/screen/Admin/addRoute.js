@@ -13,6 +13,8 @@ import { getCountRoute } from '../../Redux/Admin/countAddSlice';
 import DraggableFlatList from 'react-native-draggable-flatlist';
 import Toast from 'react-native-simple-toast';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import config from '../../config/config';
+
 const AddRoute = (props) => {
     const [modalVisible, setModalVisible] = React.useState(false);
     const [placetype, setPlaceType] = React.useState()
@@ -139,7 +141,7 @@ const AddRoute = (props) => {
                                     }}
                                     query={{
                                         // available options: https://developers.google.com/places/web-service/autocomplete
-                                        key: 'AIzaSyDwIVgIMPOY0UMpmXrqO0hOBNSTM7dH2pA',
+                                        key: config.GooglePlaceAPI,
                                         language: 'en', // language of the results
                                         types: '(cities)', // default: 'geocode'
                                     }}
@@ -320,7 +322,7 @@ const useSelector = (state) => (
 )
 export default connect(useSelector, useDispatch)(AddRoute);
 const styles = StyleSheet.create({
-    container: (props)=>[{
+    container: (props) => [{
         flex: 1,
         backgroundColor: props.theme ? color.drakBackgroundColor : color.backgroundColor
 
@@ -328,7 +330,7 @@ const styles = StyleSheet.create({
         marginHorizontal: 20,
 
     },
-    input: (props)=>[{
+    input: (props) => [{
         borderWidth: 2,
         borderColor: props.theme ? color.drakAdminprimaryColors : color.adminprimaryColors,
         padding: 10,
@@ -336,7 +338,7 @@ const styles = StyleSheet.create({
         borderRadius: 10,
         color: props.theme ? color.drakFontcolor : color.fontcolor
     }],
-    btn: (props)=>[{
+    btn: (props) => [{
         width: '90%',
         height: 50,
         backgroundColor: props.theme ? color.drakAdminprimaryColors : color.adminprimaryColors,
@@ -351,7 +353,7 @@ const styles = StyleSheet.create({
         fontWeight: 'bold'
     },
 
-    modelBox: (props)=>[{
+    modelBox: (props) => [{
         width: Dimensions.get('screen').width - 20,
         minHeight: 200,
 
@@ -370,7 +372,7 @@ const styles = StyleSheet.create({
         shadowRadius: 4,
         elevation: 5
     }],
-    stopbox: (props)=>[{
+    stopbox: (props) => [{
         height: 50,
         backgroundColor: props.theme ? color.drakBackgroundColor : color.backgroundColor,
         marginHorizontal: 8,

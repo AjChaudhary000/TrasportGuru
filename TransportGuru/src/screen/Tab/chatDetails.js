@@ -8,9 +8,10 @@ import icons from '../../contents/icons';
 import AnimatedLoader from "react-native-animated-loader";
 import { getmessage, sendMessage, CreateRoom, getRoom, setChatList, setRoomData } from '../../Redux/chatSlice'
 import { getMessageList } from '../../Redux/messageListSlice'
+import config from '../../config/config'
 const ChatDetails = (props) => {
   console.log("props", props)
-  const socket = io('https://transportapi-aj.herokuapp.com');
+  const socket = io(config.BaseUrl);
   const [message, setMessage] = React.useState('');
   const [convessationId, setConvessationId] = React.useState('')
   const [userChatList, setUserChatList] = React.useState([])

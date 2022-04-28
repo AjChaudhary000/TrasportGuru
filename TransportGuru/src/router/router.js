@@ -4,6 +4,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
 import Onboardring from '../screen/onBordring/onBordring';
 import SignIn from '../screen/SignIn';
+
 import Otp from '../screen/otp';
 import UserProfile from '../screen/userProfile';
 import { connect } from 'react-redux';
@@ -39,6 +40,7 @@ import Support from '../screen/Tab/settingTab/support';
 import Termsofservice from '../screen/Tab/settingTab/termsofservice';
 const Stack = createNativeStackNavigator();
 import SplashScreen from 'react-native-splash-screen'
+import SignInWithPhone from '../screen/SignInWithPhone';
 const Router = (props) => {
   
     const gettoken = async () => {
@@ -103,6 +105,7 @@ const Router = (props) => {
                 <Stack.Screen name='PrivacyPolicy' component={PrivacyPolicy} options={{ headerShown: false }} />
                 <Stack.Screen name='Support' component={Support} options={{ headerShown: false }} />
                 <Stack.Screen name='Termsofservice' component={Termsofservice} options={{ headerShown: false }} />
+                <Stack.Screen name='SignInWithPhone' component={SignInWithPhone} options={{ headerShown: false }} />
                 {/* userSide End */}
 
                 {/* AdminSide Start */}

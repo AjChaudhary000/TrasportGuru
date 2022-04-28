@@ -13,6 +13,7 @@ import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplet
 import { HeaderWithBackButton } from '../../../components/header'
 import { usereditAccount, setUserData } from '../../../Redux/userProfileSlice'
 import ImageModel from '../../../components/imageModel'
+import config from '../../../config/config'
 const EditAccount = (props) => {
     const [firebaseImage, setfirebaseImage] = React.useState(props.route.params.item.image || '');
     const [imageLoading, setImageLoading] = React.useState(false)
@@ -102,7 +103,7 @@ const EditAccount = (props) => {
                                     }}
                                     query={{
                                         // available options: https://developers.google.com/places/web-service/autocomplete
-                                        key: 'AIzaSyDwIVgIMPOY0UMpmXrqO0hOBNSTM7dH2pA',
+                                        key: config.GooglePlaceAPI,
                                         language: 'en', // language of the results
                                         types: '', // default: 'geocode'
                                     }}

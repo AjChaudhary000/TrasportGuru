@@ -13,6 +13,7 @@ import { AdminHeaderWithBackButton } from '../../components/adminHeader'
 import { usereditAccount, setUserData } from '../../Redux/userProfileSlice';
 import { getTransportCompanyList } from '../../Redux/transportCompanyListSlice';
 import AnimatedLoader from "react-native-animated-loader";
+import config from '../../config/config';
 const AdminEditAccount = (props) => {
     const [firebaseImage, setfirebaseImage] = React.useState(props.route.params.item.trasportAccount[0].trasportImage || '');
     const [imageLoading, setImageLoading] = React.useState(false)
@@ -103,7 +104,7 @@ const AdminEditAccount = (props) => {
                                     }}
                                     query={{
                                         // available options: https://developers.google.com/places/web-service/autocomplete
-                                        key: 'AIzaSyDwIVgIMPOY0UMpmXrqO0hOBNSTM7dH2pA',
+                                        key: config.GooglePlaceAPI,
                                         language: 'en', // language of the results
                                         types: '', // default: 'geocode'
                                     }}
@@ -234,7 +235,7 @@ const useDispatch = (dispatch) => {
 }
 export default connect(useSelector, useDispatch)(AdminEditAccount);
 const styles = StyleSheet.create({
-    container:(props)=>[ {
+    container: (props) => [{
         flex: 1,
         backgroundColor: props.theme ? color.drakBackgroundColor : color.backgroundColor,
 
@@ -242,14 +243,14 @@ const styles = StyleSheet.create({
         marginHorizontal: 20,
 
     },
-    input: (props)=>[{
+    input: (props) => [{
         borderWidth: 2,
         borderColor: props.theme ? color.drakPrimaryColors : color.primaryColors,
         padding: 10,
         fontSize: 18,
         borderRadius: 10, color: props.theme ? color.drakFontcolor : color.fontcolor,
     }],
-    btn:(props)=>[ {
+    btn: (props) => [{
         width: '90%',
         height: 50,
         backgroundColor: props.theme ? color.drakPrimaryColors : color.primaryColors,
@@ -263,7 +264,7 @@ const styles = StyleSheet.create({
         color: 'white',
         fontWeight: 'bold'
     },
-    image: (props)=>[{
+    image: (props) => [{
         marginTop: 40,
         overflow: 'hidden',
         alignSelf: 'center',
@@ -272,7 +273,7 @@ const styles = StyleSheet.create({
         borderRadius: 10,
         borderWidth: 5,
         borderColor: props.theme ? color.drakPrimaryColors : color.primaryColors,
-    }], modelBox:(props)=>[ {
+    }], modelBox: (props) => [{
         width: Dimensions.get('screen').width - 20,
         minHeight: 200,
 

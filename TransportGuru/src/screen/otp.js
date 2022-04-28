@@ -7,8 +7,8 @@ import React from 'react'
 import { CountdownCircleTimer } from 'react-native-countdown-circle-timer'
 import icons from '../contents/icons';
 import { connect } from 'react-redux';
-import { setotpData, verifyOtp } from '../Redux/verifyOtpSlice';
-import { sendemail } from '../Redux/sendEmailSlice';
+import { setotpData, verifyOtp, verifySms } from '../Redux/verifyOtpSlice';
+import { sendemail, sendSms } from '../Redux/sendEmailSlice';
 import color from '../contents/color';
 import image from '../contents/image';
 import Toast from 'react-native-simple-toast';
@@ -16,7 +16,6 @@ import AnimatedLoader from "react-native-animated-loader";
 const Otp = (props) => {
     const [isTimerView, setIsTmerView] = React.useState(true);
     const [otp, setOtp] = React.useState()
-
     React.useEffect(() => {
         if (props?.otpdata.account === "0" && props?.otpdata.status) {
             props.navigation.replace('UserProfile')
@@ -33,14 +32,16 @@ const Otp = (props) => {
 
     }, [props])
     const sendOTP = async () => {
-
-        props.verifyOtp({ email: props.route.params.email, otp: otp })
-
+        props.route.params?.email ?
+            props.verifyOtp({ email: props.route.params.email, otp: otp }) :
+            props.verifySms({ mobileno: props.route.params.mobileno, otp: otp })
         setOtp('')
         //  props.navigation.navigate('UserProfile')
     }
     const resendOtp = () => {
-        props.sendemail(props.route.params.email);
+        props.route.params?.email ?
+            props.sendemail(props.route.params?.email) :
+            props.sendSms(props.route.params?.mobileno)
         setIsTmerView(true)
     }
 
@@ -71,14 +72,25 @@ const Otp = (props) => {
                     <View style={styles.titleComponets}>
                         <Text style={styles.title(props)}> Verification</Text>
                         <View>
-                            <Text style={styles.text}>We have sent you an Gmail with a code to the number that you provided.</Text>
+                            {props.route.params?.email ?
+                                <Text style={styles.text}>We have sent you an Gmail with a code to the number that you provided.</Text>
+                                :
+                                <Text style={styles.text}>We have sent you an SMS with a code to the number that you provided.</Text>
+                            }
                         </View>
                     </View>
                     <View style={styles.emailbox(props)}>
                         <View style={{ width: " 70%", alignItems: 'center' }}>
-                            <Text style={{ fontSize: 20, fontWeight: 'bold', color: props.theme ? color.drakFontcolor : color.fontcolor, }}>{props.route.params.email}</Text>
+                            <Text style={{
+                                fontSize: 20, fontWeight: 'bold',
+                                color: props.theme ? color.drakFontcolor : color.fontcolor,
+                            }}>
+                                {props.route.params?.email ? props.route.params?.email : props.route.params?.mobileno}</Text>
                         </View>
-                        <TouchableOpacity style={{ width: "20%", alignItems: 'center' }} onPress={() => { props.navigation.replace('SignIn') }}>
+                        <TouchableOpacity style={{ width: "20%", alignItems: 'center' }}
+                            onPress={() => {
+                                props.navigation.replace(props.route.params?.email ? 'SignIn' : 'SignInWithPhone')
+                            }}>
                             <Image source={icons.edit} style={{ width: 30, height: 30, tintColor: props.theme ? color.drakPrimaryColors : color.primaryColors, }} />
                         </TouchableOpacity>
                     </View>
@@ -144,7 +156,9 @@ const Otp = (props) => {
 const useDispatch = (dispatch) => {
     return {
         verifyOtp: (data) => dispatch(verifyOtp(data)),
+        verifySms: (data) => dispatch(verifySms(data)),
         sendemail: (data) => dispatch(sendemail(data)),
+        sendSms: (data) => dispatch(sendSms(data)),
         setotpData: (data) => dispatch(setotpData(data)),
 
     };

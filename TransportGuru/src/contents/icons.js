@@ -36,10 +36,13 @@ const share = require('../assets/icons/share.png')
 const info = require('../assets/icons/info.png')
 const transfer = require('../assets/icons/transfer.png')
 const send = require('../assets/icons/send.png')
+const phone = require('../assets/icons/phone.png')
+const gmail = require('../assets/icons/gmail.png')
 export default {
     email,
     right_arrow,
-    google, user,
+    google,
+    user,
     profileimage,
     upload,
     add,
@@ -59,10 +62,19 @@ export default {
     privacy_policy,
     accept,
     support,
-    logout, add_photo,
+    logout,
+    add_photo,
     back,
     contrast,
     addtotruck,
     driver, box,
-    editdate, close, move, call, share, info, transfer, send
+    editdate,
+    close,
+    move, call,
+    share,
+    info,
+    transfer,
+    send,
+    phone,
+    gmail
 };

@@ -13,6 +13,18 @@ export const sendemail = createAsyncThunk('login/sendemail',
         }
     }
 );
+export const sendSms = createAsyncThunk('login/sendSms',
+    async (mobileno, { getState }) => {
+        try {
+
+            const response = await TrasportApi.post('/sendsms', { mobileno });
+            console.log("Response data of send sms", response.data)
+            return response.data;
+        } catch (e) {
+            console.log("message ", e)
+        }
+    }
+);
 export const sendEmailSlice = createSlice({
     name: 'login',
     initialState: {
@@ -37,6 +49,19 @@ export const sendEmailSlice = createSlice({
             state.error = action.payload;
         },
         [sendemail.rejected]: (state, action) => {
+            state.loading = true;
+        },
+        [sendSms.fulfilled]: (state, action) => {
+
+            state.userdata = action.payload;
+            state.loading = false;
+        },
+        [sendSms.pending]: (state, action) => {
+
+            state.loading = true;
+            state.error = action.payload;
+        },
+        [sendSms.rejected]: (state, action) => {
             state.loading = true;
         }
     }

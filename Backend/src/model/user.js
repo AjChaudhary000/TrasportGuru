@@ -6,7 +6,6 @@ const userSchema = mongodb.Schema({
     },
     email: {
         type: String,
-        required: true,
         unique: true
     },
     image: {
@@ -16,7 +15,8 @@ const userSchema = mongodb.Schema({
         type: String
     },
     mobileno: {
-        type: String
+        type: String,     
+        unique: true
     },
     accountType: {
         type: String,

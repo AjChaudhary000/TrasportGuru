@@ -11,6 +11,7 @@ import Toast from 'react-native-simple-toast';
 import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
 import ImageModel from '../../../components/imageModel'
 import { AdminHeaderWithBackButton } from '../../../components/adminHeader'
+import config from '../../../config/config'
 const TrasportGuruAccount = (props) => {
     const [firebaseImage, setfirebaseImage] = React.useState('');
     const [imageLoading, setImageLoading] = React.useState(false)
@@ -108,7 +109,7 @@ const TrasportGuruAccount = (props) => {
                                 }}
                                 query={{
                                     // available options: https://developers.google.com/places/web-service/autocomplete
-                                    key: 'AIzaSyDwIVgIMPOY0UMpmXrqO0hOBNSTM7dH2pA',
+                                    key: config.GooglePlaceAPI,
                                     language: 'en', // language of the results
                                     types: '', // default: 'geocode'
                                 }}

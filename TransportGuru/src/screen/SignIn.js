@@ -1,4 +1,4 @@
-import { View, Text, Image, StyleSheet, KeyboardAvoidingView, TextInput, TouchableOpacity, StatusBar, TouchableWithoutFeedback, Keyboard } from 'react-native'
+import { View, Text, Image, StyleSheet, KeyboardAvoidingView, TextInput, TouchableOpacity, StatusBar, TouchableWithoutFeedback, Keyboard, Platform } from 'react-native'
 import LottieView from 'lottie-react-native';
 import React from 'react'
 import icons from '../contents/icons';
@@ -8,22 +8,53 @@ import color from '../contents/color';
 import image from '../contents/image';
 import Toast from 'react-native-simple-toast';
 import AnimatedLoader from "react-native-animated-loader";
+import { GoogleSignin, statusCodes, GoogleSigninButton } from '@react-native-google-signin/google-signin';
 const SignIn = (props) => {
+    const Google = async () => {
+        await GoogleSignin.configure({
+            webClientId: '459209492909-qrafmo68rov0eh02edddjiba9ga850j2.apps.googleusercontent.com',
+            offlineAccess: true
+        });
+    }
+    React.useEffect(() => {
+        if (Platform.OS === "android") Google()
+    }, [])
     const [email, setEmail] = React.useState('');
     const [isEmailValid, setIsEmailValid] = React.useState(true);
     React.useEffect(() => {
 
-        if (props.userdata?.status) {
-            props.navigation.replace('Otp', { email: props.userdata.email })
-            props.setUserData({})
-        }
         try {
-
+            if (props.userdata?.status) {
+                props.navigation.replace('Otp', { email: props.userdata.email })
+                props.setUserData({})
+            }
         } catch (e) {
             console.log(e)
         }
     }, [props])
 
+    const onGoogleButtonPress = async () => {
+        if (Platform.OS === "android") {
+            try {
+                await GoogleSignin.hasPlayServices();
+                const userInfo = await GoogleSignin.signIn();
+                console.log("userInfo", userInfo)
+            } catch (error) {
+                if (error.code === statusCodes.SIGN_IN_CANCELLED) {
+                    // user cancelled the login flow
+                } else if (error.code === statusCodes.IN_PROGRESS) {
+                    // operation (e.g. sign in) is in progress already
+                } else if (error.code === statusCodes.PLAY_SERVICES_NOT_AVAILABLE) {
+                    // play services not available or outdated
+                } else {
+                    // some other error happened
+                }
+                console.log("my error", error)
+            }
+        }
+
+
+    }
     const sendEmail = async () => {
         if (isEmailValid && email) {
             props.sendemail(email);
@@ -96,10 +127,52 @@ const SignIn = (props) => {
                         </TouchableOpacity>
                     </View>
                     <View style={styles.google}>
+
                         <Text style={styles.googleText(props)}>
-                            Sign in with Google
+                            Or
                         </Text>
-                        <Image source={icons.google} style={{ width: 35, height: 35 }} />
+
+
+                        <TouchableOpacity onPress={() => onGoogleButtonPress()} style={{
+                            flexDirection: 'row',
+                            justifyContent: 'center',
+                            borderWidth: 2,
+                            borderColor: color.primaryColors,
+                            padding: 5,
+                            marginVertical: 10,
+                            borderRadius: 5,
+                            width: 230
+                        }}>
+                            <View style={{ width: '20%', alignItems: 'center' }}>
+                                <Image source={icons.google} style={{ width: 35, height: 35 }} />
+                            </View>
+                            <View style={{ width: '80%', alignItems: 'center', justifyContent: 'center' }}>
+                                <Text style={{ color: props.theme ? color.drakFontcolor : color.fontcolor }}>
+                                    SignIn with google
+                                </Text>
+                            </View>
+                        </TouchableOpacity>
+                        <TouchableOpacity onPress={() => props.navigation.replace("SignInWithPhone")} style={{
+                            flexDirection: 'row',
+                            justifyContent: 'center',
+                            borderWidth: 2,
+                            borderColor: color.primaryColors,
+                            padding: 5,
+                            borderRadius: 5,
+                            width: 230
+                        }}>
+                            <View style={{ width: '20%', alignItems: 'center' }}>
+                                <Image source={icons.phone} style={{
+                                    width: 35, height: 35,
+                                    tintColor: props.theme ? color.drakPrimaryColors : color.primaryColors
+                                }} />
+                            </View>
+                            <View style={{ width: '80%', alignItems: 'center', justifyContent: 'center' }}>
+                                <Text style={{ color: props.theme ? color.drakFontcolor : color.fontcolor }}>
+                                    SignIn with phone no
+                                </Text>
+                            </View>
+                        </TouchableOpacity>
                     </View>
 
                 </View>
@@ -129,7 +202,7 @@ const styles = StyleSheet.create({
         flex: 1,
         paddingHorizontal: 20,
         backgroundColor: props.theme ? color.drakBackgroundColor : color.backgroundColor,
-       
+
     }],
     truckLogo: {
         height: 150,
@@ -182,10 +255,9 @@ const styles = StyleSheet.create({
     google: {
         alignItems: 'center',
         width: '60%',
-        marginTop: 20,
-        paddingTop: 30,
+        marginVertical: 20,
         alignSelf: 'center',
-        height:150
+        height: 150
     },
     googleText: (props) => [{
         fontSize: 20,
