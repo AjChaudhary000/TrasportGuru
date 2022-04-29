@@ -14,6 +14,7 @@ import { updateTransport } from '../../Redux/Admin/transportSlice';
 import { tracking, setTrackingData } from '../../Redux/trackingSlice';
 import AnimatedLoader from "react-native-animated-loader";
 import RazorpayCheckout from 'react-native-razorpay';
+import { round } from 'react-native-reanimated';
 const Booking = (props) => {
 
   const [modalVisible1, setModalVisible1] = React.useState(false);
@@ -42,7 +43,7 @@ const Booking = (props) => {
       image: `${props.transportList[0]?.tarsportUserId.trasportAccount[0].trasportImage}`,
       currency: 'INR',
       key: 'rzp_test_K3zMkXzdEHbAqq',
-      amount: 2000,
+      amount: Math.round(amount * 100),
       name: props.transportList[0]?.tarsportUserId.trasportAccount[0].trasportName,
       prefill: {
         email: props.userData?.email,

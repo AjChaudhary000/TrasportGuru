@@ -49,7 +49,7 @@ const Tracking = (props) => {
             image: `${Admindata.trasportAccount[0].trasportImage}`,
             currency: 'INR',
             key: 'rzp_test_K3zMkXzdEHbAqq',
-            amount: 2000,
+            amount: Math.round(amount * 100),
             name: Admindata.trasportAccount[0].trasportName,
             prefill: {
                 email: props.userData?.email,
