@@ -15,7 +15,7 @@ import color from '../contents/color';
 import EditAccount from '../screen/Tab/settingTab/editAccount';
 import { getNetwork, getOnBordingData, getThemeMode, getToken } from '../Redux/tokenSlice';
 import TrasportGuruAccount from '../screen/Tab/settingTab/trasportGuruAccount';
-import image from '../contents/image';
+
 import AdminTab from './adminTab';
 import AddTruck from '../screen/Admin/addTruck';
 import AddDriver from '../screen/Admin/addDriver';
@@ -42,7 +42,7 @@ const Stack = createNativeStackNavigator();
 import SplashScreen from 'react-native-splash-screen'
 import SignInWithPhone from '../screen/SignInWithPhone';
 const Router = (props) => {
-  
+
     const gettoken = async () => {
         try {
             const mytoken = await getJWTToken();
@@ -64,10 +64,10 @@ const Router = (props) => {
         gettoken()
         setTimeout(() => {
             SplashScreen.hide();
-          
+
         }, 2000)
     }, [])
-   
+
     if (!props.internet) {
         return (
             <View style={{
@@ -87,7 +87,7 @@ const Router = (props) => {
             <Stack.Navigator>
                 {!props.onbording && <Stack.Screen name='Onboardring' component={Onboardring} options={{ headerShown: false }} />}
                 {/* User Login /SignUp  Start */}
-                {!props.token && <Stack.Screen name='SignIn' component={SignIn} options={{ headerShown: false }} />}
+                {(!props.token) && <Stack.Screen name='SignIn' component={SignIn} options={{ headerShown: false }} />}
                 {/* User Login /SignUp  End  */}
 
                 {/* userSide Start */}

@@ -10,6 +10,7 @@ import { updatePayment, setPaymentData } from '../../Redux/paymentSlice';
 import { trackingDetailsById } from '../../Redux/fetchByIDSlice';
 import { HeaderWithBackButton } from '../../components/header';
 import Toast from 'react-native-simple-toast';
+import RazorpayCheckout from 'react-native-razorpay';
 const wait = (timeout) => {
     return new Promise(resolve => setTimeout(resolve, timeout));
 }
@@ -22,7 +23,6 @@ const TrackingDetails = (props) => {
         if (props.paymentData?.status) {
             props.trackingDetailsById({ token: props.token, id: props.route.params.id });
             props.setPaymentData([])
-
             props.navigation.navigate('Confirmation', { payment: amount, type: "pay" });
         }
     }, [props])
@@ -46,7 +46,29 @@ const TrackingDetails = (props) => {
         setAmount(payment)
         let paymentHistory = [...item.paymentHistory, { payment }]
         paymentStatus = "Completing"
-        props.updatePayment({ data: { paymentHistory, paymentStatus }, id: item._id, token: props.token })
+        var options = {
+            description: 'Transport Guru Payments ',
+            image: `${props.trackingDetails[0]?.tarsportId?.tarsportUserId.trasportAccount[0].trasportImage}`,
+            currency: 'INR',
+            key: 'rzp_test_K3zMkXzdEHbAqq',
+            amount: 2000,
+            name: props.trackingDetails[0]?.tarsportId?.tarsportUserId.trasportAccount[0].trasportName,
+            prefill: {
+                email: props.userData?.email,
+                contact: props.userData?.mobileno || '9106614742',
+                name: props.userData?.username
+            },
+            theme: { color: '#119CB9' }
+        }
+        RazorpayCheckout.open(options).then((data) => {
+            props.updatePayment({ data: { paymentHistory, paymentStatus }, id: item._id, token: props.token })
+
+
+        }).catch((error) => {
+            // handle failure
+            console.log(error)
+        });
+
     }
     return (
         <View style={styles.container(props)}>

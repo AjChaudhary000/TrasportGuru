@@ -1,35 +1,59 @@
 {
   "project_info": {
-    "project_number": "459209492909",
-    "project_id": "trasnsportguru",
-    "storage_bucket": "trasnsportguru.appspot.com"
+    "project_number": "261927963238",
+    "project_id": "transportguru-631cd",
+    "storage_bucket": "transportguru-631cd.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:459209492909:android:395d71a056608759e07924",
+        "mobilesdk_app_id": "1:261927963238:android:d156bf045c18def6e77ba7",
         "android_client_info": {
           "package_name": "com.transportguru"
         }
       },
       "oauth_client": [
         {
-          "client_id": "459209492909-kiacksmffb1kuho98ke3seh5j0kk4he4.apps.googleusercontent.com",
+          "client_id": "261927963238-gmcnetkutak3143ao29152gm3b6d8q94.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.transportguru",
-            "certificate_hash": "86de0ca54d4aba91a5c27fdb43a47efc6a136142"
+            "certificate_hash": "4cc7e81f020084e819205492d283a28eac2996b0"
           }
+        },
+        {
+          "client_id": "261927963238-iqc3ok5sl8b2ovk74f70nokrshmfudks.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.transportguru",
+            "certificate_hash": "5e8f16062ea3cd2c4a0d547876baa6f38cabf625"
+          }
+        },
+        {
+          "client_id": "261927963238-50up6aujv23o3c01hnn83ihq7rkt4t8k.apps.googleusercontent.com",
+          "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyCzmEN9jYyAZ8AY_UP5SR_9oaPrP1lQXCg"
+          "current_key": "AIzaSyAxwJWG7Tx4T_L_-vQwEX6tJNjtQVlCJjc"
         }
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "261927963238-50up6aujv23o3c01hnn83ihq7rkt4t8k.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "261927963238-fpe7uuvosvhfso6vh80tbhcm35gtjj7q.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.company.TransportGuru"
+              }
+            }
+          ]
         }
       }
     }

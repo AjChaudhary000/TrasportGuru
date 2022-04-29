@@ -9,6 +9,7 @@ import icons from '../../contents/icons';
 import calcKmFind from '../../components/kmFind';
 import { updatePayment, setPaymentData } from '../../Redux/paymentSlice';
 import LottieView from 'lottie-react-native';
+import RazorpayCheckout from 'react-native-razorpay';
 const wait = (timeout) => {
     return new Promise(resolve => setTimeout(resolve, timeout));
 }
@@ -18,10 +19,8 @@ const Tracking = (props) => {
     const [amount, setAmount] = React.useState(0)
     React.useEffect(() => {
         if (props.paymentData?.status) {
-
             props.getTracking(props.token);
             props.setPaymentData([])
-
             props.navigation.navigate('Confirmation', { payment: amount, type: "pay" });
         }
     }, [props])
@@ -37,7 +36,7 @@ const Tracking = (props) => {
         props.getTracking(props.token);
     }, [])
 
-    const paymentHendle = (item) => {
+    const paymentHendle = (item, Admindata) => {
 
         let paymentStatus = "";
         const payment = item.totalPayment - item.paymentHistory[0].payment
@@ -45,8 +44,32 @@ const Tracking = (props) => {
         setAmount(payment)
         let paymentHistory = [...item.paymentHistory, { payment }]
         paymentStatus = "Completing"
-        props.updatePayment({ data: { paymentHistory, paymentStatus }, id: item._id, token: props.token })
+        var options = {
+            description: 'Transport Guru Payments ',
+            image: `${Admindata.trasportAccount[0].trasportImage}`,
+            currency: 'INR',
+            key: 'rzp_test_K3zMkXzdEHbAqq',
+            amount: 2000,
+            name: Admindata.trasportAccount[0].trasportName,
+            prefill: {
+                email: props.userData?.email,
+                contact: props.userData?.mobileno || '9106614742',
+                name: props.userData?.username
+            },
+            theme: { color: '#119CB9' }
+        }
+        RazorpayCheckout.open(options).then((data) => {
+            props.updatePayment({ data: { paymentHistory, paymentStatus }, id: item._id, token: props.token })
+
+        }).catch((error) => {
+            // handle failure
+            console.log(error)
+        });
+
+
+
     }
+
     return (
         <View style={styles.container(props)}>
             <AnimatedLoader
@@ -136,7 +159,7 @@ const Tracking = (props) => {
                                         </TouchableOpacity> :
                                         <TouchableOpacity style={styles.pay(props)}
                                             onPress={() => {
-                                                paymentHendle(item.item.paymentid)
+                                                paymentHendle(item.item.paymentid, item.item.tarsportId.tarsportUserId)
                                             }}>
                                             <Text style={{ color: 'white', fontWeight: "bold", fontSize: 18 }}>Pay</Text>
                                         </TouchableOpacity>}
@@ -169,12 +192,12 @@ const useDispatch = (dispatch) => {
 }
 export default connect(useSelector, useDispatch)(Tracking);
 const styles = StyleSheet.create({
-    container: (props)=>[{
+    container: (props) => [{
         flex: 1,
         backgroundColor: props.theme ? color.drakBackgroundColor : color.backgroundColor,
 
     }],
-    listBox: (props)=>[{
+    listBox: (props) => [{
         minHeight: 150,
         backgroundColor: props.theme ? color.drakBackgroundColor : color.backgroundColor,
         marginHorizontal: 20,
@@ -190,7 +213,7 @@ const styles = StyleSheet.create({
         elevation: 5,
         marginVertical: 10,
         padding: 10
-    }], pay:(props)=>[ {
+    }], pay: (props) => [{
         width: 150,
         height: 50,
         backgroundColor: props.theme ? color.drakPrimaryColors : color.primaryColors,

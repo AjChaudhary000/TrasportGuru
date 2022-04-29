@@ -14,15 +14,19 @@ import { GoogleSignin, statusCodes } from '@react-native-google-signin/google-si
 import { CountryCode } from '../contents/CountryCode'
 import { Dropdown } from 'react-native-element-dropdown';
 import { ScrollView } from 'react-native-gesture-handler';
+import { verifyGoogle } from '../Redux/verifyOtpSlice';
+import { getOnBording } from '../Redux/helper';
+import { getOnBordingData } from '../Redux/tokenSlice';
 const SignInWithPhone = (props) => {
     const Google = async () => {
+        const onbording = await getOnBording();
+        onbording === "true" ? props.getOnBordingData(true) : props.getOnBordingData(false)
         await GoogleSignin.configure({
-            webClientId: '459209492909-qrafmo68rov0eh02edddjiba9ga850j2.apps.googleusercontent.com',
-            offlineAccess: true
+            webClientId: "261927963238-50up6aujv23o3c01hnn83ihq7rkt4t8k.apps.googleusercontent.com"
         });
     }
     React.useEffect(() => {
-        if (Platform.OS === "android") Google()
+        Google()
     }, [])
     const [value, setValue] = React.useState("+91");
     const [phone, setPhone] = React.useState('');
@@ -40,26 +44,24 @@ const SignInWithPhone = (props) => {
     }, [props])
 
     const onGoogleButtonPress = async () => {
-        if (Platform.OS === "android") {
-            try {
-                await GoogleSignin.hasPlayServices();
-                const userInfo = await GoogleSignin.signIn();
-                console.log("userInfo", userInfo)
-            } catch (error) {
-                if (error.code === statusCodes.SIGN_IN_CANCELLED) {
-                    // user cancelled the login flow
-                } else if (error.code === statusCodes.IN_PROGRESS) {
-                    // operation (e.g. sign in) is in progress already
-                } else if (error.code === statusCodes.PLAY_SERVICES_NOT_AVAILABLE) {
-                    // play services not available or outdated
-                } else {
-                    // some other error happened
+        try {
+
+            const { idToken } = await GoogleSignin.signIn();
+            const googleCredential = auth.GoogleAuthProvider.credential(idToken);
+            const userinfo = auth().signInWithCredential(googleCredential);
+            userinfo.then((res) => {
+                const googleData = {
+                    username: res.user.displayName,
+                    email: res.user.email,
+                    image: res.user.photoURL
                 }
-                console.log("my error", error.toString())
-            }
+                props.verifyGoogle(googleData)
+
+            }).catch((e) => { console.log(e) })
+            await GoogleSignin.signOut();
+        } catch (error) {
+            console.log("my error", error)
         }
-
-
     }
     const sendEmail = async () => {
         if (phone !== "") {
@@ -126,7 +128,7 @@ const SignInWithPhone = (props) => {
                             </View>
                         </View>
                         <View style={styles.inputBox}>
-                            <View style={{ width: "92%", marginHorizontal: 20 }}>
+                            <View style={{ width: "100%" }}>
                                 <Dropdown
                                     style={styles.dropdown(props)}
                                     placeholderStyle={styles.placeholderStyle(props)}
@@ -153,11 +155,11 @@ const SignInWithPhone = (props) => {
                             <View style={{
                                 width: "20%", justifyContent: 'center', alignItems: 'center', borderWidth: 2
                                 , borderColor: color.primaryColors,
-                                borderRadius: 10
+                                borderRadius: 5
                             }}>
                                 <Text style={{ color: 'gray', fontSize: 20 }}>{value}</Text>
                             </View>
-                            <View style={{ width: "75%", marginHorizontal: 10 }}>
+                            <View style={{ width: "75%" }}>
 
                                 <TextInput style={styles.input(props)}
                                     placeholder={"eg. Phone No "}
@@ -183,42 +185,25 @@ const SignInWithPhone = (props) => {
                             </Text>
 
 
-                            <TouchableOpacity onPress={() => onGoogleButtonPress()} style={{
-                                flexDirection: 'row',
-                                justifyContent: 'center',
-                                borderWidth: 2,
-                                borderColor: color.primaryColors,
-                                padding: 5,
-                                marginVertical: 10,
-                                borderRadius: 5,
-                                width: 230
-                            }}>
-                                <View style={{ width: '20%', alignItems: 'center' }}>
+                            <TouchableOpacity onPress={() => onGoogleButtonPress()} style={styles.googleBox}>
+                                <View style={{ width: '20%', alignItems: 'center', justifyContent: 'center' }}>
                                     <Image source={icons.google} style={{ width: 35, height: 35 }} />
                                 </View>
-                                <View style={{ width: '80%', alignItems: 'center', justifyContent: 'center' }}>
-                                    <Text style={{ color: props.theme ? color.drakFontcolor : color.fontcolor }}>
-                                        SignIn with google
+                                <View style={{ width: '80%', alignItems: 'center', justifyContent: 'center', backgroundColor: '#4185F4' }}>
+                                    <Text style={{ color: color.drakFontcolor, fontWeight: "bold" }}>
+                                        Sign In with Google
                                     </Text>
                                 </View>
                             </TouchableOpacity>
-                            <TouchableOpacity onPress={() => props.navigation.replace("SignIn")} style={{
-                                flexDirection: 'row',
-                                justifyContent: 'center',
-                                borderWidth: 2,
-                                borderColor: color.primaryColors,
-                                padding: 5,
-                                borderRadius: 5,
-                                width: 230
-                            }}>
-                                <View style={{ width: '20%', alignItems: 'center' }}>
+                            <TouchableOpacity onPress={() => props.navigation.replace("SignIn")} style={styles.googleBox}>
+                                <View style={{ width: '20%', alignItems: 'center', justifyContent: 'center' }}>
                                     <Image source={icons.gmail} style={{
                                         width: 35, height: 35
                                     }} />
                                 </View>
-                                <View style={{ width: '80%', alignItems: 'center', justifyContent: 'center' }}>
-                                    <Text style={{ color: props.theme ? color.drakFontcolor : color.fontcolor }}>
-                                        signIn with email
+                                <View style={{ width: '80%', alignItems: 'center', justifyContent: 'center', backgroundColor: color.primaryColors }}>
+                                    <Text style={{ color: color.drakFontcolor, fontWeight: "bold" }}>
+                                        Sign In with Email
                                     </Text>
                                 </View>
                             </TouchableOpacity>
@@ -229,13 +214,13 @@ const SignInWithPhone = (props) => {
             </TouchableWithoutFeedback>
         </KeyboardAvoidingView >
     )
-
 }
 const useDispatch = (dispatch) => {
     return {
         sendSms: (data) => dispatch(sendSms(data)),
         setUserData: (data) => dispatch(setUserData(data)),
-
+        verifyGoogle: (data) => dispatch(verifyGoogle(data)),
+        getOnBordingData: (data) => dispatch(getOnBordingData(data)),
     };
 }
 const useSelector = (state) => (
@@ -243,7 +228,10 @@ const useSelector = (state) => (
     {
         userdata: state.login.userdata,
         loading: state.login.loading,
-        theme: state.token.theme
+        theme: state.token.theme,
+        otpdata: state.otp.otpdata,
+        error: state.otp.error,
+        loading1: state.otp.loading,
     }
 )
 export default connect(useSelector, useDispatch)(SignInWithPhone);
@@ -278,21 +266,23 @@ const styles = StyleSheet.create({
     inputBox: {
         marginVertical: 10,
         flexDirection: 'row',
-        height: 50
+        height: 50,
+        justifyContent: 'space-between'
     },
     input: (props) => [{
         borderWidth: 2,
         borderColor: props.theme ? color.drakPrimaryColors : color.primaryColors,
         padding: 10,
         fontSize: 18,
-        borderRadius: 10,
+        borderRadius: 5,
+        height: 50,
         color: props.theme ? color.drakFontcolor : color.fontcolor
     }],
     btn: (props) => [{
         width: '100%',
         height: 50,
         backgroundColor: props.theme ? color.drakPrimaryColors : color.primaryColors,
-        borderRadius: 15,
+        borderRadius: 5,
         justifyContent: "center",
         alignItems: 'center',
         alignSelf: 'center',
@@ -305,9 +295,10 @@ const styles = StyleSheet.create({
     },
     google: {
         alignItems: 'center',
-        width: '60%',
+
+        marginVertical: 20,
         alignSelf: 'center',
-        marginVertical: 20
+        height: 150
     },
     googleText: (props) => [{
         fontSize: 20,
@@ -320,7 +311,7 @@ const styles = StyleSheet.create({
         borderColor: props.theme ? color.drakPrimaryColors : color.primaryColors,
         padding: 10,
         fontSize: 18,
-        borderRadius: 10,
+        borderRadius: 5,
 
     }],
     item: (props) => [{
@@ -328,7 +319,7 @@ const styles = StyleSheet.create({
         padding: 10,
         borderWidth: 2,
         borderColor: props.theme ? color.drakPrimaryColors : color.primaryColors,
-        borderRadius: 10,
+        borderRadius: 5,
         backgroundColor: props.theme ? color.drakBackgroundColor : color.backgroundColor,
         flexDirection: 'row',
         alignItems: 'center',
@@ -352,5 +343,18 @@ const styles = StyleSheet.create({
     }, iconStyle: {
         width: 20,
         height: 20,
+    },
+    googleBox: {
+
+        flexDirection: 'row',
+        justifyContent: 'center',
+        borderWidth: 1,
+        borderColor: color.primaryColors,
+
+        marginVertical: 10,
+        borderRadius: 5,
+
+        height: 50
+
     }
 })

@@ -31,6 +31,21 @@ export const verifySms = createAsyncThunk('otp/verifySms',
         }
     }
 );
+export const verifyGoogle = createAsyncThunk('otp/verifyGoogle',
+    async (obj, getState) => {
+       
+        try {
+            const response = await TrasportApi.post('/googleSignIn', obj);
+            await saveJWTToken(response.data.token);
+            await getState.dispatch(getToken(response.data.token))
+           
+            return response.data;
+        } catch (e) {
+            return getState.rejectWithValue(e.response.data);
+
+        }
+    }
+);
 export const verifyOtpSlice = createSlice({
     name: 'login',
     initialState: {
@@ -65,6 +80,18 @@ export const verifyOtpSlice = createSlice({
             state.error = action.payload;
         },
         [verifySms.rejected]: (state, action) => {
+            state.loading = false;
+            state.error = action.payload.data;
+        },
+        [verifyGoogle.fulfilled]: (state, action) => {
+            state.otpdata = action.payload;
+            state.loading = false;
+        },
+        [verifyGoogle.pending]: (state, action) => {
+            state.loading = true;
+            state.error = action.payload;
+        },
+        [verifyGoogle.rejected]: (state, action) => {
             state.loading = false;
             state.error = action.payload.data;
         }

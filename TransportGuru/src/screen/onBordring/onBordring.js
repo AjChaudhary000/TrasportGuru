@@ -1,7 +1,6 @@
 import React, { useState, useRef } from 'react'
 import { View, StyleSheet, FlatList, Text, useWindowDimensions, Dimensions, Animated, StatusBar } from 'react-native'
 import LottieView from 'lottie-react-native';
-import AsyncStorage from '@react-native-async-storage/async-storage'
 import NextButton from './nextButton';
 import Page from './page';
 import Slider from './Slider';

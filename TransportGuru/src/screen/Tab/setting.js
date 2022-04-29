@@ -10,6 +10,8 @@ import { removeJWTToken, saveTheme } from '../../Redux/helper';
 import Header from '../../components/header';
 import { getThemeMode, logoutToken } from '../../Redux/tokenSlice';
 import AnimatedLoader from "react-native-animated-loader";
+import { setotpData } from '../../Redux/verifyOtpSlice';
+
 const Setting = (props) => {
   const [isEnabled, setIsEnabled] = React.useState(props.theme);
   const [modalVisible, setModalVisible] = React.useState(false);
@@ -27,7 +29,7 @@ const Setting = (props) => {
   }, [isEnabled])
   const logout = async () => {
     try {
-
+      props.setotpData({})
       props.logoutToken();
       await removeJWTToken()
       props.navigation.replace("SignIn")
@@ -132,7 +134,8 @@ const useDispatch = (dispatch) => {
   return {
     getUserDetails: (data) => dispatch(getUserDetails(data)),
     logoutToken: () => dispatch(logoutToken()),
-    getThemeMode: (data) => dispatch(getThemeMode(data))
+    getThemeMode: (data) => dispatch(getThemeMode(data)),
+    setotpData: (data) => dispatch(setotpData(data))
   };
 }
 const useSelector = (state) => (

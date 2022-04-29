@@ -34,16 +34,41 @@ const Booking = (props) => {
     } else {
       paymentStatus = "Pending"
     }
-    const data = {
-      ...props.route.params,
-      totalPayment: totalPayment,
-      paymentHistory: [{ payment: amount }],
-      paymentStatus
-    }
+
     const totalCapicity = (Number(props.route.params.capicity) + Number(truckCapicty))
     console.log(totalCapicity)
-    props.updateTransport({ data: { capicity: totalCapicity }, id: props.route.params.tarsportId, token: props.token })
-    props.payment({ data, token: props.token })
+    var options = {
+      description: 'Transport Guru Payments ',
+      image: `${props.transportList[0]?.tarsportUserId.trasportAccount[0].trasportImage}`,
+      currency: 'INR',
+      key: 'rzp_test_K3zMkXzdEHbAqq',
+      amount: 2000,
+      name: props.transportList[0]?.tarsportUserId.trasportAccount[0].trasportName,
+      prefill: {
+        email: props.userData?.email,
+        contact: props.userData?.mobileno || '9106614742',
+        name: props.userData?.username
+      },
+      theme: { color: '#119CB9' }
+    }
+    RazorpayCheckout.open(options).then((res) => {
+      const data = {
+        ...props.route.params,
+        totalPayment: totalPayment,
+        paymentHistory: [{ payment: amount }],
+        paymentStatus
+      }
+      props.updateTransport({ data: { capicity: totalCapicity }, id: props.route.params.tarsportId, token: props.token })
+      props.payment({ data, token: props.token })
+
+
+    }).catch((error) => {
+      // handle failure
+      console.log(error)
+
+
+    });
+
   }
   React.useEffect(() => {
     if (props.paymentData?.status) {
@@ -58,30 +83,7 @@ const Booking = (props) => {
     if (props.trackingData?.status) {
       setModalVisible1(false);
       props.setTrackingData([])
-      var options = {
-        description: 'Transport Guru Payments ',
-        image: 'https://i.imgur.com/3g7nmJC.png',
-        currency: 'INR',
-        key: 'rzp_test_K3zMkXzdEHbAqq',
-        amount: '200',
-        name: 'Acme Corp',
-        prefill: {
-          email: 'arjunchaudhary@example.com',
-          contact: '9106614742',
-          name: 'Arjun chaudhary'
-        },
-        theme: { color: '#119CB9' }
-      }
-      RazorpayCheckout.open(options).then((data) => {
-        props.navigation.navigate('Confirmation', { payment: amount, type: "0" }); // handle success
-        alert(`Success: ${data.razorpay_payment_id}`);
-      }).catch((error) => {
-        // handle failure
-        console.log(error)
-        alert(`Error: ${error.code} | ${error.description}`);
-        props.navigation.navigate('Confirmation', { payment: amount, type: "0" });
-      });
-
+      props.navigation.navigate('Confirmation', { payment: amount, type: "0" }); // handle success
     }
   }, [props])
   console.log(props.paymentData)
