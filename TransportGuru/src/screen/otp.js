@@ -207,8 +207,8 @@ const styles = StyleSheet.create({
         alignSelf: 'center'
     },
     input: (props) => [{
-        borderWidth: 2,
-        borderColor: props.theme ? color.drakPrimaryColors : color.primaryColors,
+        borderBottomWidth: 2,
+        borderBottomColor: props.theme ? color.drakPrimaryColors : color.primaryColors,
         padding: 10,
         fontSize: 18,
         borderRadius: 10,
@@ -218,7 +218,7 @@ const styles = StyleSheet.create({
         width: '90%',
         height: 50,
         backgroundColor: props.theme ? color.drakPrimaryColors : color.primaryColors,
-        borderRadius: 15,
+        borderRadius: 5,
         justifyContent: "center",
         alignItems: 'center',
         alignSelf: 'center'
@@ -253,7 +253,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         backgroundColor: props.theme ? color.drakBackgroundColor : color.backgroundColor,
         alignSelf: 'center',
-        borderRadius: 15,
+        borderRadius: 5,
         flexDirection: 'row',
         alignItems: 'center',
         alignItems: "center",

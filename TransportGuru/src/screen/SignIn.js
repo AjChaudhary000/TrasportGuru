@@ -1,4 +1,4 @@
-import { View, Text, Image, StyleSheet, KeyboardAvoidingView, TextInput, TouchableOpacity, StatusBar, TouchableWithoutFeedback, Keyboard, Platform } from 'react-native'
+import { View, Text, Image, StyleSheet, KeyboardAvoidingView, TextInput, Dimensions, TouchableOpacity, StatusBar, TouchableWithoutFeedback, Keyboard, Platform } from 'react-native'
 import LottieView from 'lottie-react-native';
 import React from 'react'
 import icons from '../contents/icons';
@@ -95,6 +95,7 @@ const SignIn = (props) => {
                         <Image source={image.Tg} style={{ width: 200, height: 100, tintColor: props.theme ? color.drakPrimaryColors : color.primaryColors, }} />
                         {/* <LottieView source={require('../assets/json/loading.json')} autoPlay loop /> */}
                     </View>
+
                     <View style={styles.titleComponets}>
                         <Text style={styles.title(props)}> Welcome To Transport Guru</Text>
                         <View>
@@ -103,6 +104,7 @@ const SignIn = (props) => {
                             </Text>
                         </View>
                     </View>
+
                     <View style={styles.inputBox}>
                         <View style={{ width: "10%", paddingTop: 12 }}>
                             <Image source={icons.email} style={{ width: 35, height: 35, tintColor: props.theme ? color.drakPrimaryColors : color.primaryColors, }} />
@@ -119,8 +121,6 @@ const SignIn = (props) => {
 
                         </View>
                     </View>
-
-
                     <TouchableOpacity style={styles.btn(props)} onPress={() => sendEmail()}>
                         <Text style={styles.btnText}>
                             Continue
@@ -200,7 +200,7 @@ const styles = StyleSheet.create({
     },
     titleComponets: {
         marginHorizontal: 5,
-        height: 150
+        height: 100
     },
     title: (props) => [{
         fontSize: 25,
@@ -220,8 +220,8 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between'
     },
     input: (props) => [{
-        borderWidth: 2,
-        borderColor: props.theme ? color.drakPrimaryColors : color.primaryColors,
+        borderBottomWidth: 2,
+        borderBottomColor: props.theme ? color.drakPrimaryColors : color.primaryColors,
         padding: 10,
         fontSize: 18,
         borderRadius: 5,
@@ -235,7 +235,8 @@ const styles = StyleSheet.create({
         borderRadius: 5,
         justifyContent: "center",
         alignItems: 'center',
-        alignSelf: 'center'
+        alignSelf: 'flex-end',
+        marginTop: 50
     }],
     btnText: {
         fontSize: 20,
@@ -265,5 +266,23 @@ const styles = StyleSheet.create({
         borderRadius: 5,
         height: 50
 
-    }
+    },
+    box: (props) => [{
+        width: Dimensions.get('screen').width - 20,
+        minHeight: 350,
+        backgroundColor: props.theme ? color.drakBackgroundColor : color.backgroundColor,
+        alignSelf: 'center',
+        borderRadius: 15,
+        justifyContent: 'center',
+        alignItems: 'center',
+        shadowColor: props.theme ? color.drakFontcolor : color.fontcolor,
+        shadowOffset: {
+            width: 0,
+            height: 4
+        },
+        shadowOpacity: 0.25,
+        shadowRadius: 4,
+        elevation: 5,
+        marginHorizontal: 20, paddingHorizontal: 10
+    }],
 })

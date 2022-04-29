@@ -153,8 +153,8 @@ const SignInWithPhone = (props) => {
                         </View>
                         <View style={styles.inputBox}>
                             <View style={{
-                                width: "20%", justifyContent: 'center', alignItems: 'center', borderWidth: 2
-                                , borderColor: color.primaryColors,
+                                width: "20%", justifyContent: 'center', alignItems: 'center', borderBottomWidth: 2
+                                , borderBottomColor: color.primaryColors,
                                 borderRadius: 5
                             }}>
                                 <Text style={{ color: 'gray', fontSize: 20 }}>{value}</Text>
@@ -270,8 +270,8 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between'
     },
     input: (props) => [{
-        borderWidth: 2,
-        borderColor: props.theme ? color.drakPrimaryColors : color.primaryColors,
+        borderBottomWidth: 2,
+        borderBottomColor: props.theme ? color.drakPrimaryColors : color.primaryColors,
         padding: 10,
         fontSize: 18,
         borderRadius: 5,
@@ -307,8 +307,8 @@ const styles = StyleSheet.create({
         marginBottom: 10
     }],
     dropdown: (props) => [{
-        borderWidth: 2,
-        borderColor: props.theme ? color.drakPrimaryColors : color.primaryColors,
+        borderBottomWidth: 2,
+        borderBottomColor: props.theme ? color.drakPrimaryColors : color.primaryColors,
         padding: 10,
         fontSize: 18,
         borderRadius: 5,

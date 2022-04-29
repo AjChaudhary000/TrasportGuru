@@ -169,17 +169,17 @@ const styles = StyleSheet.create({
         height: 50
     },
     input: (props) => [{
-        borderWidth: 2,
-        borderColor: props.theme ? color.drakPrimaryColors : color.primaryColors,
+        borderBottomWidth: 2,
+        borderBottomColor: props.theme ? color.drakPrimaryColors : color.primaryColors,
         padding: 10,
         fontSize: 18,
-        borderRadius: 10, color: props.theme ? color.drakFontcolor : color.fontcolor
+        borderRadius: 5, color: props.theme ? color.drakFontcolor : color.fontcolor
     }],
     btn: (props) => [{
         width: '90%',
         height: 50,
         backgroundColor: props.theme ? color.drakPrimaryColors : color.primaryColors,
-        borderRadius: 15,
+        borderRadius: 5,
         justifyContent: "center",
         alignItems: 'center',
         alignSelf: 'center'
