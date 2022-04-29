@@ -496,7 +496,8 @@ const HomeScreen = (props) => {
                                             // available options: https://developers.google.com/places/web-service/autocomplete
                                             key: config.GooglePlaceAPI,
                                             language: 'en', // language of the results
-                                            types: '(cities)', // default: 'geocode'
+                                            types: '(cities)',
+                                            // default: 'geocode'
                                         }}
                                         styles={{
 
