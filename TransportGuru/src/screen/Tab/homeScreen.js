@@ -666,7 +666,7 @@ const styles = StyleSheet.create({
         padding: 10,
         fontSize: 18,
         borderRadius: 10,
-        marginHorizontal: 10, color: 'gray'
+        marginHorizontal: 10, color: props.theme? "gray" : "#111"
 
     }], reverseBtn: (props) => [{
         width: 50,

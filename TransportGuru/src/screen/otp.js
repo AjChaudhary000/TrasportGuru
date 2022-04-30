@@ -91,7 +91,7 @@ const Otp = (props) => {
                             onPress={() => {
                                 props.navigation.replace(props.route.params?.email ? 'SignIn' : 'SignInWithPhone')
                             }}>
-                            <Image source={icons.edit} style={{ width: 30, height: 30, tintColor: props.theme ? color.drakPrimaryColors : color.primaryColors, }} />
+                            <Image source={icons.edit} style={{ width: 20, height: 20, tintColor: props.theme ? color.drakPrimaryColors : color.primaryColors, }} />
                         </TouchableOpacity>
                     </View>
                     <View style={styles.inputBox}>

@@ -48,13 +48,14 @@ const Setting = (props) => {
       <Modal
         animationType="slide"
         transparent={true}
+
         visible={modalVisible}
         onRequestClose={() => {
           Alert.alert("Modal has been closed.");
           setModalVisible(!modalVisible);
         }}
       >
-        <View style={{ flex: 1, justifyContent: 'center' }}>
+        <View style={{ flex: 1, justifyContent: 'center', backgroundColor: 'rgba(0, 0, 0, 0.75)' }}>
 
           <View style={styles.modelBox(props)}>
             <Text style={styles.text}> Are you sure you want to logout ? </Text>
@@ -109,7 +110,7 @@ const Setting = (props) => {
               </View>
               <View style={styles.menuclick}>
                 <Switch
-                  trackColor={{ false: "#767577", true: color.primaryColors }}
+                  trackColor={{ false: "#767577", true: `${color.primaryColors}11` }}
                   thumbColor={isEnabled ? color.primaryColors : color.primaryColors}
                   ios_backgroundColor="#3e3e3e"
                   onValueChange={toggleSwitch}

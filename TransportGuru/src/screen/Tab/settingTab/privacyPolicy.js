@@ -10,7 +10,7 @@ const PrivacyPolicy = (props) => {
             <HeaderWithBackButton name={"Privacy Policy"} navigation={props.navigation} />
             <WebView
                 source={{
-                    uri: 'https://www.lohono.com/privacy-policy?utm_source=Google&utm_medium=CPC&utm_campaign=Goa-Main-Dynamic&gclid=CjwKCAjwjZmTBhB4EiwAynRmD6pnlFonhwcRNFGSRqrHWg6hRMl87P7gta2RctBO8loOD773BKiMjhoCM0EQAvD_BwE'
+                    uri: 'https://lx-crypto-app.netlify.app/'
                 }}
 
             />

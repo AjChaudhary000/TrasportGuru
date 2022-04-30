@@ -51,7 +51,6 @@ const EditAccount = (props) => {
         } else if (firebaseImage === "") {
             Toast.show("Select Transport Image")
         } else {
-            console.log(data)
             console.log("firebase", firebaseImage)
             props.usereditAccount({ data: { ...data, image: firebaseImage }, id: props.route.params.item?._id, token: props.token })
         }
@@ -204,7 +203,7 @@ const EditAccount = (props) => {
                                 defaultValue={props.route.params.item?.mobileno}
                                 onChangeText={(val) => setData({ ...data, mobileno: val })}
                                 autoCapitalize={'none'}
-                                maxLength={10}
+                                maxLength={13}
                                 keyboardType={'number-pad'} />
 
                         </View>
