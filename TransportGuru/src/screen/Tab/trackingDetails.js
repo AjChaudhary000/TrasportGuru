@@ -211,7 +211,7 @@ const TrackingDetails = (props) => {
                                         <View style={{ margin: 5, flexDirection: 'row' }}>
 
                                             <View style={{ width: '5%', justifyContent: 'center' }}>
-                                                <Image source={icons.forword} style={{ width: 20, height: 20, tintColor: "green" }} />
+                                                <Image source={icons.forword} style={{ width: 20, height: 20, tintColor: (new Date(item.item.tarsportId.Truckdate) <= new Date()) ? "green" : color.primaryColors }} />
                                             </View>
                                             <View style={{ width: '95%' }}>
                                                 <Text style={{ marginHorizontal: 10, fontWeight: 'bold', color: 'gray', fontSize: 16 }}>
@@ -240,7 +240,11 @@ const TrackingDetails = (props) => {
                                             <View style={{ margin: 5, flexDirection: 'row' }}>
 
                                                 <View style={{ width: '5%', justifyContent: 'center' }}>
-                                                    <Image source={icons.forword} style={{ width: 20, height: 20, tintColor: "green" }} />
+                                                    <Image source={icons.forword} style={{
+                                                        width: 20, height: 20, tintColor: ((new Date(new Date(item.item.tarsportId.Truckdate)
+                                                            .setHours(new Date(item.item.tarsportId.Truckdate)
+                                                                .getHours() + data.item.avgTime))) <= new Date()) ? "green" : color.primaryColors
+                                                    }} />
                                                 </View>
                                                 <View style={{ width: '95%' }}>
                                                     <Text style={{ marginHorizontal: 10, fontWeight: 'bold', color: 'gray', fontSize: 16 }}>{data.item.stops}</Text>
@@ -272,7 +276,11 @@ const TrackingDetails = (props) => {
                                         <View style={{ margin: 5, flexDirection: 'row' }}>
 
                                             <View style={{ width: '5%', justifyContent: 'center' }}>
-                                                <Image source={icons.forword} style={{ width: 20, height: 20, tintColor: props.theme ? color.drakPrimaryColors : color.primaryColors }} />
+                                                <Image source={icons.forword} style={{
+                                                    width: 20, height: 20, tintColor: ((new Date(new Date(item.item.tarsportId.Truckdate)
+                                                        .setHours(new Date(item.item.tarsportId.Truckdate)
+                                                            .getHours() + item.item.tarsportId.routeId.destination.avgTime))) <= new Date()) ? "green" : color.primaryColors
+                                                }} />
                                             </View>
                                             <View style={{ width: '95%' }}>
                                                 <Text style={{ marginHorizontal: 10, fontWeight: 'bold', color: 'gray', fontSize: 16 }}>

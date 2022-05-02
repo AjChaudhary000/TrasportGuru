@@ -12,6 +12,8 @@ import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplet
 import ImageModel from '../../../components/imageModel'
 import { AdminHeaderWithBackButton } from '../../../components/adminHeader'
 import config from '../../../config/config'
+import ModelBox from '../../../components/modelBox'
+ModelBox
 const TrasportGuruAccount = (props) => {
     const [firebaseImage, setfirebaseImage] = React.useState('');
     const [imageLoading, setImageLoading] = React.useState(false)
@@ -73,76 +75,66 @@ const TrasportGuruAccount = (props) => {
                 onGetImage={(val) => setfirebaseImage(val)}
                 onGetLoding={(val) => setImageLoading(val)}
                 onGetModalVisible={(val) => setModalVisible1(val)} />}
-            <Modal
-                animationType="slide"
-                transparent={true}
-                visible={modalVisible}
-                onRequestClose={() => {
-                    Alert.alert("Modal has been closed.");
-                    setModalVisible(!modalVisible);
-                }}
-            >
-                <View style={{ flex: 1, justifyContent: 'center' }}>
-                    <View style={styles.modelBox(props)}>
-                        <ScrollView keyboardShouldPersistTaps="handled" >
-                            <TouchableOpacity onPress={() => { setModalVisible(false) }} style={{ alignItems: 'center', left: Dimensions.get('screen').width / 2 - 40 }}>
-                                <Image source={icons.close} style={{ width: 35, height: 35, tintColor: props.theme ? color.drakPrimaryColors : color.primaryColors, }} />
-                            </TouchableOpacity>
-                            <View style={{ marginHorizontal: 30, marginVertical: 20 }}>
-                                <Text style={{ color: 'gray', fontSize: 20, fontWeight: 'bold' }}>Search Your Address</Text>
-                            </View>
-                            <GooglePlacesAutocomplete
-                                placeholder='Address'
-                                placeholderTextColor={'gray'}
-                                minLength={2} // minimum length of text to search
-                                fetchDetails={true}
-
-                                renderDescription={row => row.description} // custom description render
-                                onPress={(dt, details = null) => {
-                                    console.log(dt)
-                                    setData({ ...data, trasportAddress: dt.description });
-                                    setModalVisible(false)
-                                    // console.log(details);
-                                }}
-                                getDefaultValue={() => {
-                                    return ''; // text input default value
-                                }}
-                                query={{
-                                    // available options: https://developers.google.com/places/web-service/autocomplete
-                                    key: config.GooglePlaceAPI,
-                                    language: 'en', // language of the results
-                                    types: '', // default: 'geocode'
-                                }}
-                                styles={{
-
-                                    textInput: {
-                                        borderWidth: 2,
-                                        borderColor: props.theme ? color.drakAdminprimaryColors : color.adminprimaryColors,
-                                        padding: 10,
-                                        fontSize: 18,
-                                        borderRadius: 10,
-                                        marginHorizontal: 30
-                                    },
-                                    description: {
-                                        color: props.theme ? color.drakAdminprimaryColors : color.adminprimaryColors,
-                                        fontSize: 18,
-
-                                    }, listView: {
-                                        borderWidth: 2,
-                                        borderColor: props.theme ? color.drakAdminprimaryColors : color.adminprimaryColors,
-                                        padding: 10,
-                                        fontSize: 18,
-                                        borderRadius: 10,
-                                    }
-                                }}
-
-                                debounce={200}
-                            />
-
-                        </ScrollView>
+            {modalVisible && <ModelBox
+                modalVisibleData={modalVisible}
+                theme={props.theme}>
+                <ScrollView keyboardShouldPersistTaps="handled" >
+                    <TouchableOpacity onPress={() => { setModalVisible(false) }} style={{ alignItems: 'center', left: Dimensions.get('screen').width / 2 - 40 }}>
+                        <Image source={icons.close} style={{ width: 35, height: 35, tintColor: props.theme ? color.drakPrimaryColors : color.primaryColors, }} />
+                    </TouchableOpacity>
+                    <View style={{ marginHorizontal: 30, marginVertical: 20 }}>
+                        <Text style={{ color: 'gray', fontSize: 20, fontWeight: 'bold' }}>Search Your Address</Text>
                     </View>
-                </View>
-            </Modal>
+                    <GooglePlacesAutocomplete
+                        placeholder='Address'
+                        placeholderTextColor={'gray'}
+                        minLength={2} // minimum length of text to search
+                        fetchDetails={true}
+
+                        renderDescription={row => row.description} // custom description render
+                        onPress={(dt, details = null) => {
+                            console.log(dt)
+                            setData({ ...data, trasportAddress: dt.description });
+                            setModalVisible(false)
+                            // console.log(details);
+                        }}
+                        getDefaultValue={() => {
+                            return ''; // text input default value
+                        }}
+                        query={{
+                            // available options: https://developers.google.com/places/web-service/autocomplete
+                            key: config.GooglePlaceAPI,
+                            language: 'en', // language of the results
+                            types: '', // default: 'geocode'
+                        }}
+                        styles={{
+
+                            textInput: {
+                                borderWidth: 2,
+                                borderColor: props.theme ? color.drakAdminprimaryColors : color.adminprimaryColors,
+                                padding: 10,
+                                fontSize: 18,
+                                borderRadius: 10,
+                                marginHorizontal: 30
+                            },
+                            description: {
+                                color: props.theme ? color.drakAdminprimaryColors : color.adminprimaryColors,
+                                fontSize: 18,
+
+                            }, listView: {
+                                borderWidth: 2,
+                                borderColor: props.theme ? color.drakAdminprimaryColors : color.adminprimaryColors,
+                                padding: 10,
+                                fontSize: 18,
+                                borderRadius: 10,
+                            }
+                        }}
+
+                        debounce={200}
+                    />
+
+                </ScrollView>
+            </ModelBox>}
             <AdminHeaderWithBackButton name={"Transport Account"} navigation={props.navigation} />
             <View style={styles.inputBox}>
                 <View style={{ marginHorizontal: 10 }}>
@@ -261,23 +253,5 @@ const styles = StyleSheet.create({
         borderRadius: 10,
         borderWidth: 5,
         borderColor: props.theme ? color.drakAdminprimaryColors : color.adminprimaryColors,
-    }], modelBox: (props) => [{
-        width: Dimensions.get('screen').width - 20,
-        minHeight: 200,
-
-        backgroundColor: props.theme ? color.drakBackgroundColor : color.backgroundColor,
-        alignSelf: 'center',
-        borderRadius: 15,
-        flexDirection: 'row',
-        alignItems: 'center',
-        alignSelf: 'center',
-        shadowColor: props.theme ? color.drakFontcolor : color.fontcolor,
-        shadowOffset: {
-            width: 0,
-            height: 2
-        },
-        shadowOpacity: 0.25,
-        shadowRadius: 4,
-        elevation: 5
-    }],
+    }]
 })

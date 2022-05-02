@@ -41,6 +41,7 @@ import Termsofservice from '../screen/Tab/settingTab/termsofservice';
 const Stack = createNativeStackNavigator();
 import SplashScreen from 'react-native-splash-screen'
 import SignInWithPhone from '../screen/SignInWithPhone';
+import BookingHistory from '../screen/Admin/BookingHistory';
 const Router = (props) => {
 
     const gettoken = async () => {
@@ -106,6 +107,7 @@ const Router = (props) => {
                 <Stack.Screen name='Support' component={Support} options={{ headerShown: false }} />
                 <Stack.Screen name='Termsofservice' component={Termsofservice} options={{ headerShown: false }} />
                 <Stack.Screen name='SignInWithPhone' component={SignInWithPhone} options={{ headerShown: false }} />
+                <Stack.Screen name='BookingHistory' component={BookingHistory} options={{ headerShown: false }} />
                 {/* userSide End */}
 
                 {/* AdminSide Start */}

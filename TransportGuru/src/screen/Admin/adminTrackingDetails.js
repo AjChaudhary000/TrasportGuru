@@ -15,7 +15,7 @@ const wait = (timeout) => {
 const AdminTrackingDetails = (props) => {
     // console.log(props.route.params.id)
     const [refreshing, setRefreshing] = React.useState(false);
-    const [amount, setAmount] = React.useState(0)
+
     const onRefresh = React.useCallback(() => {
         props.transportListById({ token: props.token, id: props.route.params.id });
         setRefreshing(true);
@@ -26,17 +26,6 @@ const AdminTrackingDetails = (props) => {
 
         props.transportListById({ token: props.token, id: props.route.params.id });
     }, [])
-
-    const paymentHendle = (item) => {
-
-        let paymentStatus = "";
-        const payment = item.totalPayment - item.paymentHistory[0].payment
-        console.log(payment)
-        setAmount(payment)
-        let paymentHistory = [...item.paymentHistory, { payment }]
-        paymentStatus = "Completing"
-        props.updatePayment({ data: { paymentHistory, paymentStatus }, id: item._id, token: props.token })
-    }
     return (
         <View style={styles.container(props)}>
             <AnimatedLoader
@@ -141,7 +130,7 @@ const AdminTrackingDetails = (props) => {
                                         <View style={{ margin: 5, flexDirection: 'row' }}>
 
                                             <View style={{ width: '5%', justifyContent: 'center' }}>
-                                                <Image source={icons.forword} style={{ width: 20, height: 20, tintColor: "green" }} />
+                                                <Image source={icons.forword} style={{ width: 20, height: 20, tintColor: (new Date(item.item.Truckdate) <= new Date()) ? "green" : color.adminprimaryColors }} />
                                             </View>
                                             <View style={{ width: '95%' }}>
                                                 <Text style={{ marginHorizontal: 10, fontWeight: 'bold', color: 'gray', fontSize: 16 }}>
@@ -170,7 +159,11 @@ const AdminTrackingDetails = (props) => {
                                             <View style={{ margin: 5, flexDirection: 'row' }}>
 
                                                 <View style={{ width: '5%', justifyContent: 'center' }}>
-                                                    <Image source={icons.forword} style={{ width: 20, height: 20, tintColor: "green" }} />
+                                                    <Image source={icons.forword} style={{
+                                                        width: 20, height: 20, tintColor: ((new Date(new Date(item.item.Truckdate)
+                                                            .setHours(new Date(item.item.Truckdate)
+                                                                .getHours() + data.item.avgTime))) <= new Date()) ? "green" : color.adminprimaryColors
+                                                    }} />
                                                 </View>
                                                 <View style={{ width: '95%' }}>
                                                     <Text style={{ marginHorizontal: 10, fontWeight: 'bold', color: 'gray', fontSize: 16 }}>{data.item.stops}</Text>
@@ -202,7 +195,11 @@ const AdminTrackingDetails = (props) => {
                                         <View style={{ margin: 5, flexDirection: 'row' }}>
 
                                             <View style={{ width: '5%', justifyContent: 'center' }}>
-                                                <Image source={icons.forword} style={{ width: 20, height: 20, tintColor: props.theme ? color.drakPrimaryColors : color.primaryColors }} />
+                                                <Image source={icons.forword} style={{
+                                                    width: 20, height: 20, tintColor: ((new Date(new Date(item.item.Truckdate)
+                                                        .setHours(new Date(item.item.Truckdate)
+                                                            .getHours() + item.item.routeId.destination.avgTime))) <= new Date()) ? "green" : color.adminprimaryColors
+                                                }} />
                                             </View>
                                             <View style={{ width: '95%' }}>
                                                 <Text style={{ marginHorizontal: 10, fontWeight: 'bold', color: 'gray', fontSize: 16 }}>
@@ -243,7 +240,9 @@ const AdminTrackingDetails = (props) => {
                                                     item.item.routeId.destination.lng)) / 45))).toLocaleDateString("en-US", { weekday: 'short', month: 'long', day: 'numeric', hour: 'numeric', minute: 'numeric', hour12: false })}
                                     </Text>
                                 </View>
-
+                                <TouchableOpacity onPress={() => props.navigation.navigate("BookingHistory", { id: props.route.params.id })}>
+                                    <Text style={{ fontWeight: 'bold', color: color.adminprimaryColors }}>Booking History</Text>
+                                </TouchableOpacity>
                             </View>
                         </View>
 

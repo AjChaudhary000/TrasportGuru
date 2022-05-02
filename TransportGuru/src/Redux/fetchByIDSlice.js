@@ -32,12 +32,29 @@ export const trackingDetailsById = createAsyncThunk('fetchByID/trackingDetailsBy
             console.log()
         }
     });
+    export const trackingDetailsByTransportId = createAsyncThunk('fetchByID/trackingDetailsByTransportId',
+    async (obj, getState) => {
+        try {
+
+            console.log(obj)
+            const response = await TrasportApi.get(`/trackingByTransport/${obj.id}`, {
+                headers: {
+                    Authorization: `Bearer ${obj.token}`,
+                }
+            });
+           
+            return response.data.data
+        } catch (e) {
+            console.log()
+        }
+    });
 const fetchByIDSlice = createSlice({
     name: 'fetchByID',
     initialState: {
         loading: false,
         transportList: [],
         trackingDetails: [],
+        bookingHistory:[],
         error: ''
     },
     reducers: {
@@ -64,6 +81,18 @@ const fetchByIDSlice = createSlice({
             state.loading = true
         },
         [trackingDetailsById.rejected]: (state, action) => {
+            state.error = action.payload,
+                state.loading = true
+        },
+        [trackingDetailsByTransportId.fulfilled]: (state, action) => {
+
+            state.bookingHistory = action.payload,
+                state.loading = false
+        },
+        [trackingDetailsByTransportId.pending]: (state, action) => {
+            state.loading = true
+        },
+        [trackingDetailsByTransportId.rejected]: (state, action) => {
             state.error = action.payload,
                 state.loading = true
         }

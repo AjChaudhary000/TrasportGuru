@@ -4,7 +4,7 @@ import {
     TouchableOpacity,
     KeyboardAvoidingView,
     TouchableWithoutFeedback,
-    Keyboard, Platform, Modal, Dimensions, ScrollView, LogBox, PermissionsAndroid, Alert
+    Keyboard, Platform, Modal, Dimensions, ScrollView, LogBox, PermissionsAndroid, Alert, SafeAreaView
 } from 'react-native'
 import Toast from 'react-native-simple-toast';
 import React from 'react'
@@ -14,6 +14,7 @@ import { connect } from 'react-redux';
 import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
 import MapView, { PROVIDER_GOOGLE } from "react-native-maps"
 import config from '../../config/config';
+import ModelBox from '../../components/modelBox';
 const HomeScreen = (props) => {
     const [modalVisible, setModalVisible] = React.useState(false);
     const [placetype, setPlaceType] = React.useState()
@@ -449,90 +450,73 @@ const HomeScreen = (props) => {
             style={styles.container(props)}
         >
             <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-
-
                 <View style={{ flex: 1 }}>
-                    <Modal
-                        animationType="slide"
-                        transparent={true}
-                        visible={modalVisible}
-                        onRequestClose={() => {
-                            Alert.alert("Modal has been closed.");
-                            setModalVisible(!modalVisible);
-                        }}
-                    >
-                        <View style={{ flex: 1, justifyContent: 'center' }}>
-
-                            <View style={styles.modelBox(props)}>
-
-                                <ScrollView keyboardShouldPersistTaps="handled" >
-                                    <TouchableOpacity onPress={() => { setModalVisible(false) }} style={{ alignItems: 'center', left: Dimensions.get('screen').width / 2 - 40 }}>
-                                        <Image source={icons.close} style={{ width: 35, height: 35, tintColor: props.theme ? color.drakPrimaryColors : color.primaryColors, }} />
-                                    </TouchableOpacity>
-                                    <View style={{ marginHorizontal: 30, marginVertical: 20 }}>
-                                        <Text style={{ color: 'gray', fontSize: 20, fontWeight: 'bold' }}>Search Source / Destination City</Text>
-                                    </View>
-                                    <GooglePlacesAutocomplete
-                                        placeholder={placetype === "from" ? "eg. From" : "eg. destination"}
-                                        placeholderTextColor={'gray'}
-                                        minLength={2} // minimum length of text to search
-                                        fetchDetails={true}
-                                        autoFocus={true}
-                                        renderDescription={row => row.description} // custom description render
-                                        onPress={(dt, details = null) => {
-                                            //   console.log(dt)
-                                            placetype === "from" && setData({ ...data, from: { name: dt.description, lat: details.geometry.location.lat, lng: details.geometry.location.lng } });
-                                            if (placetype === "destination") {
-
-                                                setData({ ...data, destination: { name: dt.description, lat: details.geometry.location.lat, lng: details.geometry.location.lng } });
-                                            }
-                                            setModalVisible(false)
-                                            // console.log(details);
-                                        }}
-                                        getDefaultValue={() => {
-                                            return ''; // text input default value
-                                        }}
-                                        query={{
-                                            // available options: https://developers.google.com/places/web-service/autocomplete
-                                            key: config.GooglePlaceAPI,
-                                            language: 'en', // language of the results
-                                            types: '(cities)',
-                                            // default: 'geocode'
-                                        }}
-                                        styles={{
-
-                                            textInput: {
-                                                borderWidth: 2,
-                                                borderColor: props.theme ? color.drakPrimaryColors : color.primaryColors,
-                                                padding: 10,
-                                                fontSize: 18,
-                                                borderRadius: 10,
-                                                marginHorizontal: 30
-                                            },
-                                            description: {
-                                                color: props.theme ? color.drakPrimaryColors : color.primaryColors,
-                                                fontSize: 18,
-
-                                            }, listView: {
-                                                borderWidth: 2,
-                                                borderColor: props.theme ? color.drakPrimaryColors : color.primaryColors,
-                                                padding: 10,
-                                                fontSize: 18,
-                                                borderRadius: 10,
-                                            }
-                                        }}
-
-                                        debounce={200}
-                                    />
-
-                                </ScrollView>
+                    {modalVisible && <ModelBox
+                        modalVisibleData={modalVisible}
+                        theme={props.theme}>
+                        <ScrollView keyboardShouldPersistTaps="handled" >
+                            <TouchableOpacity onPress={() => { setModalVisible(false) }} style={{ alignItems: 'center', left: Dimensions.get('screen').width / 2 - 40 }}>
+                                <Image source={icons.close} style={{ width: 35, height: 35, tintColor: props.theme ? color.drakPrimaryColors : color.primaryColors, }} />
+                            </TouchableOpacity>
+                            <View style={{ marginHorizontal: 30, marginVertical: 20 }}>
+                                <Text style={{ color: 'gray', fontSize: 20, fontWeight: 'bold' }}>Search Source / Destination City</Text>
                             </View>
+                            <GooglePlacesAutocomplete
+                                placeholder={placetype === "from" ? "eg. From" : "eg. destination"}
+                                placeholderTextColor={'gray'}
+                                minLength={2} // minimum length of text to search
+                                fetchDetails={true}
+                                autoFocus={true}
+                                renderDescription={row => row.description} // custom description render
+                                onPress={(dt, details = null) => {
+                                    //   console.log(dt)
+                                    placetype === "from" && setData({ ...data, from: { name: dt.description, lat: details.geometry.location.lat, lng: details.geometry.location.lng } });
+                                    if (placetype === "destination") {
 
+                                        setData({ ...data, destination: { name: dt.description, lat: details.geometry.location.lat, lng: details.geometry.location.lng } });
+                                    }
+                                    setModalVisible(false)
+                                    // console.log(details);
+                                }}
+                                getDefaultValue={() => {
+                                    return ''; // text input default value
+                                }}
+                                query={{
+                                    // available options: https://developers.google.com/places/web-service/autocomplete
+                                    key: config.GooglePlaceAPI,
+                                    language: 'en', // language of the results
+                                    types: '(cities)',
+                                    // default: 'geocode'
+                                }}
+                                styles={{
 
-                        </View>
-                    </Modal>
+                                    textInput: {
+                                        borderWidth: 2,
+                                        borderColor: props.theme ? color.drakPrimaryColors : color.primaryColors,
+                                        padding: 10,
+                                        fontSize: 18,
+                                        borderRadius: 10,
+                                        marginHorizontal: 30
+                                    },
+                                    description: {
+                                        color: props.theme ? color.drakPrimaryColors : color.primaryColors,
+                                        fontSize: 18,
+
+                                    }, listView: {
+                                        borderWidth: 2,
+                                        borderColor: props.theme ? color.drakPrimaryColors : color.primaryColors,
+                                        padding: 10,
+                                        fontSize: 18,
+                                        borderRadius: 10,
+                                    }
+                                }}
+
+                                debounce={200}
+                            />
+
+                        </ScrollView>
+                    </ModelBox>}
                     <View style={styles.mapBox}>
-
                         <MapView
 
                             showsUserLocation={true}
@@ -614,7 +598,7 @@ const HomeScreen = (props) => {
 
             </TouchableWithoutFeedback>
 
-        </KeyboardAvoidingView>
+        </KeyboardAvoidingView >
     )
 }
 
@@ -666,7 +650,7 @@ const styles = StyleSheet.create({
         padding: 10,
         fontSize: 18,
         borderRadius: 10,
-        marginHorizontal: 10, color: props.theme? "gray" : "#111"
+        marginHorizontal: 10, color: props.theme ? "gray" : "#111"
 
     }], reverseBtn: (props) => [{
         width: 50,
@@ -696,23 +680,5 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         marginVertical: 10,
         marginHorizontal: 20
-    }, modelBox: (props) => [{
-        width: Dimensions.get('screen').width - 20,
-        minHeight: 200,
-
-        backgroundColor: props.theme ? color.drakBackgroundColor : color.backgroundColor,
-        alignSelf: 'center',
-        borderRadius: 15,
-        flexDirection: 'row',
-        alignItems: 'center',
-        shadowColor: props.theme ? color.drakFontcolor : color.fontcolor,
-        shadowOffset: {
-            width: 0,
-            height: 4
-        },
-        shadowOpacity: 0.25,
-        shadowRadius: 4,
-        elevation: 5
-    }],
-
+    }
 })

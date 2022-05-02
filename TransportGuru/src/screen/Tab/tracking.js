@@ -105,7 +105,7 @@ const Tracking = (props) => {
 
                     :
                     <FlatList data={props.trackingList} renderItem={(item) => (
-                        <TouchableOpacity style={styles.listBox(props)} onPress={() => props.navigation.navigate("TrackingDetails", { id: item.item._id })} >
+                        <TouchableOpacity style={styles.listBox(props, item)} onPress={() => props.navigation.navigate("TrackingDetails", { id: item.item._id })} >
                             <View style={{ marginHorizontal: 10, marginVertical: 5, flexDirection: "row", justifyContent: 'space-between' }}>
                                 <View >
 
@@ -197,9 +197,15 @@ const styles = StyleSheet.create({
         backgroundColor: props.theme ? color.drakBackgroundColor : color.backgroundColor,
 
     }],
-    listBox: (props) => [{
+    listBox: (props, item) => [{
         minHeight: 150,
-        backgroundColor: props.theme ? color.drakBackgroundColor : color.backgroundColor,
+        backgroundColor: (new Date(new Date(item.item.tarsportId.Truckdate)
+            .setHours(new Date(item.item.tarsportId.Truckdate)
+                .getHours() + Math.round((calcKmFind(item.item.paymentid.from.lat,
+                    item.item.paymentid.from.lng,
+                    item.item.paymentid.destination.lat,
+                    item.item.paymentid.destination.lng)) / 45))) <= new Date(new Date(item.item.createdAt)))
+            ? props.theme ? 'rgba(0, 0, 0, 0.30)' : 'rgba(255, 255, 255, 0.30)' : props.theme ? color.drakBackgroundColor : color.backgroundColor,
         marginHorizontal: 20,
         borderRadius: 20,
 

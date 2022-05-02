@@ -68,7 +68,7 @@ const TransportListDetails = (props) => {
     }
     return (
         <View style={styles.container(props)}>
-          
+
             <AdminHeaderWithBackButton name={"Transport List"} navigation={props.navigation} />
             {data.length === 0 ?
 
@@ -90,9 +90,9 @@ const TransportListDetails = (props) => {
                                 {item.item.routeId.from.name}
                             </Text>
                         </View>
-                        <View style={{ alignItems: "center", paddingVertical: 20 }}>
+                        <TouchableOpacity style={{ alignItems: "center", paddingVertical: 20 }} onPress={() => { props.navigation.navigate("BookingHistory", { id: item.item._id }) }}>
                             <Image source={icons.upToDown} style={{ width: 30, height: 30, tintColor: props.theme ? color.drakAdminprimaryColors : color.adminprimaryColors }} />
-                        </View>
+                        </TouchableOpacity>
                         <View style={{ alignItems: "center" }}>
                             <Text style={{ fontWeight: 'bold', color: props.theme ? color.drakFontcolor : color.fontcolor }}>
                                 {item.item.routeId.destination.name}
@@ -136,12 +136,14 @@ const TransportListDetails = (props) => {
                                     Truck
                                 </Text>
                             </TouchableOpacity>
+
                             <TouchableOpacity onPress={() => { setRoute({ type: !route.type, id: item.item._id }) }}>
                                 <Text style={{ color: props.theme ? color.drakAdminprimaryColors : color.adminprimaryColors, fontWeight: 'bold' }}>
                                     Route
                                 </Text>
                             </TouchableOpacity>
                         </View>
+
                         {/* driver data */}
                         {driver.type && driver.id === item.item._id &&
                             <View style={styles.drivelist} >
@@ -208,6 +210,7 @@ const TransportListDetails = (props) => {
 
 
                         </View>
+
                     </View>
                 )
                 }
@@ -249,10 +252,10 @@ const useSelector = (state) => (
 )
 export default connect(useSelector, useDispatch)(TransportListDetails);
 const styles = StyleSheet.create({
-    container: (props)=>[{
+    container: (props) => [{
         flex: 1,
         backgroundColor: props.theme ? color.drakBackgroundColor : color.backgroundColor
-    }], listBox:(props)=>[ {
+    }], listBox: (props) => [{
         minHeight: 150,
         backgroundColor: props.theme ? color.drakBackgroundColor : color.backgroundColor,
         marginHorizontal: 20,
@@ -289,7 +292,7 @@ const styles = StyleSheet.create({
         fontSize: 16,
         fontWeight: 'bold',
         color: 'red'
-    }, image: (props)=>[{
+    }, image: (props) => [{
         width: '28%',
         borderWidth: 3,
         borderColor: props.theme ? color.drakAdminprimaryColors : color.adminprimaryColors,
@@ -302,11 +305,11 @@ const styles = StyleSheet.create({
     listData: {
         width: '72%',
         padding: 20
-    }, driverName: (props)=>[{
+    }, driverName: (props) => [{
         fontSize: 20,
         fontWeight: 'bold',
         color: props.theme ? color.drakFontcolor : color.fontcolor
-    }], driverMobileNo: (props)=>[{
+    }], driverMobileNo: (props) => [{
         fontSize: 16,
         fontWeight: 'bold',
         color: props.theme ? color.drakAdminprimaryColors : color.adminprimaryColors,
@@ -317,11 +320,11 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         color: 'gray'
     },
-    truckname: (props)=>[{
+    truckname: (props) => [{
         fontSize: 25,
         fontWeight: 'bold',
         color: props.theme ? color.drakFontcolor : color.fontcolor
-    }], truckmodelname: (props)=>[{
+    }], truckmodelname: (props) => [{
         fontSize: 16,
         fontWeight: 'bold',
         color: props.theme ? color.drakAdminprimaryColors : color.adminprimaryColors,
@@ -332,7 +335,7 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         color: 'gray'
     },
-    truckcapicity: (props)=>[{
+    truckcapicity: (props) => [{
         fontSize: 14,
         fontWeight: 'bold',
         color: props.theme ? color.drakFontcolor : color.fontcolor
