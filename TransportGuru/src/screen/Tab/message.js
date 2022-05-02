@@ -6,6 +6,8 @@ import { connect } from 'react-redux'
 import LottieView from 'lottie-react-native';
 import color from '../../contents/color';
 import AnimatedLoader from "react-native-animated-loader";
+import { getBadgeMessage } from '../../Redux/badgeSlice';
+
 const wait = (timeout) => {
   return new Promise(resolve => setTimeout(resolve, timeout));
 }
@@ -20,7 +22,11 @@ const Message = (props) => {
   React.useEffect(() => {
     props.getMessageList({ token: props.token })
   }, [])
+  const Badge = (id) => {
+    props.getBadgeMessage({ convessationId: id, token: props.token })
+    return props.messageBadge;
 
+  }
   return (
     <View style={styles.container(props)}>
       <AnimatedLoader
@@ -42,39 +48,41 @@ const Message = (props) => {
           onRefresh={onRefresh}
         />
       }>
-        {props.messageList?.length === 0 ?
-
-
-
+        {props.messageList.length === 0 ?
           <View style={{ flex: 1 }}>
-
             <View style={{ height: 500, width: 200, alignSelf: 'center' }}>
               <LottieView source={require('../../assets/json/notfound.json')} autoPlay loop />
             </View>
-
           </View>
-
           :
           <FlatList data={props.messageList} renderItem={(item) => (
-
-            <TouchableOpacity style={{ flexDirection: 'row', marginVertical: 10, marginHorizontal: 20 }}
+            <TouchableOpacity style={{ flexDirection: 'row', marginVertical: 10, marginHorizontal: 20, }}
               onPress={() => { props.navigation.navigate('ChatDetails', { item: item.item.senderId }) }}>
               <View style={styles.image(props)}>
                 <Image source={{ uri: item.item.senderId?.trasportAccount[0]?.trasportImage }}
                   style={{
                     width: 60, height: 60, alignSelf: "center"
-
                   }} />
               </View>
               <View style={{
                 justifyContent: 'center', borderBottomWidth: 2,
                 borderBottomColor: color.primaryColors, width: '80%', justifyContent: 'center'
               }}>
-
                 <Text style={styles.text}>
                   {item.item.senderId?.trasportAccount[0]?.trasportName}</Text>
               </View>
-
+              <View style={{
+                width: 25,
+                height: 25,
+                borderRadius: 13,
+                backgroundColor: color.primaryColors,
+                justifyContent: 'center',
+                alignItems: "center",
+                marginTop: 20,
+              }} >
+                <Text style={{ color: props.theme ? color.drakFontcolor : color.fontcolor }}>
+                  {"2"}</Text>
+              </View>
             </TouchableOpacity>
           )}
           />}
@@ -85,11 +93,13 @@ const Message = (props) => {
 const useDispatch = (dispatch) => {
   return {
     getMessageList: (data) => dispatch(getMessageList(data)),
+    getBadgeMessage: (data) => dispatch(getBadgeMessage(data))
   };
 }
 const useSelector = (state) => (
 
   {
+    messageBadge: state.badge.messageBadge,
     loading: state.message.loading,
     messageList: state.message.messageList,
     theme: state.token.theme,

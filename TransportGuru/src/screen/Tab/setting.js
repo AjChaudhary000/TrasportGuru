@@ -1,4 +1,4 @@
-import { View, StyleSheet, Image, ScrollView, TouchableOpacity, Switch } from 'react-native'
+import { View, StyleSheet, Image, ScrollView, TouchableOpacity ,Switch} from 'react-native'
 import { Caption, Text, Title } from 'react-native-paper'
 import React from 'react'
 import color from '../../contents/color';
@@ -98,6 +98,7 @@ const Setting = (props) => {
                 <Text style={styles.menuText(props)}>Drak Mode</Text>
               </View>
               <View style={styles.menuclick}>
+               
                 <Switch
                   trackColor={{ false: "#767577", true: `${color.primaryColors}11` }}
                   thumbColor={isEnabled ? color.primaryColors : color.primaryColors}

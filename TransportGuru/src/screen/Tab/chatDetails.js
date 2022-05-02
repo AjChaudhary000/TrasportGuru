@@ -7,10 +7,11 @@ import color from '../../contents/color'
 import icons from '../../contents/icons';
 import AnimatedLoader from "react-native-animated-loader";
 import { getmessage, sendMessage, CreateRoom, getRoom, setChatList, setRoomData } from '../../Redux/chatSlice'
-import { getMessageList } from '../../Redux/messageListSlice'
+import { getMessageList, sortMessageList, getUserMessageList } from '../../Redux/messageListSlice'
 import config from '../../config/config'
+import { ClearBadgeMessage } from '../../Redux/badgeSlice'
 const ChatDetails = (props) => {
-  console.log("props", props)
+
   const socket = io(config.BaseUrl);
   const [message, setMessage] = React.useState('');
   const [convessationId, setConvessationId] = React.useState('')
@@ -39,14 +40,18 @@ const ChatDetails = (props) => {
     if (props.roomdata?.data.length !== 0) {
       setConvessationId(props.roomdata?.data[0]?._id)
       props.getMessageList({ token: props.token })
+      props.getUserMessageList({ token: props.token })
       props.setRoomData({ data: [] })
     }
     if (props.chatList?.status) {
       setUserChatList([...userChatList, ...props.chatList.data]);
       props.setChatList({})
     }
+   
   }, [props])
-
+  React.useEffect(() => {
+    props.ClearBadgeMessage({ convessationId, token: props.token })
+  }, [convessationId])
   React.useEffect(() => {
     try {
 
@@ -65,7 +70,8 @@ const ChatDetails = (props) => {
   const sendMessage = () => {
     try {
       props.sendMessage({ data: { senderId: id, convessationId: convessationId, message: message }, token: props.token })
-
+      props.sortMessageList({ id: convessationId, token: props.token })
+    
       setMessage('')
     } catch (e) {
       console.log(e)
@@ -79,7 +85,7 @@ const ChatDetails = (props) => {
     >
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         <View style={{ flex: 1 }}>
-          <AnimatedLoader
+          {/* <AnimatedLoader
             visible={props.loading}
             overlayColor="rgba(255,255,255,0.75)"
             source={require("../../assets/json/loder.json")}
@@ -90,7 +96,7 @@ const ChatDetails = (props) => {
             speed={1}
           >
             <Text>Loading ...</Text>
-          </AnimatedLoader>
+          </AnimatedLoader> */}
 
           <HeaderWithBackButton name={name} navigation={props.navigation} />
           <View style={{ flex: 1 }}>
@@ -146,6 +152,9 @@ const useDispatch = (dispatch) => {
     setChatList: (data) => dispatch(setChatList(data)),
     setRoomData: (data) => dispatch(setRoomData(data)),
     getMessageList: (data) => dispatch(getMessageList(data)),
+    ClearBadgeMessage: (data) => dispatch(ClearBadgeMessage(data)),
+    sortMessageList: (data) => dispatch(sortMessageList(data)),
+    getUserMessageList: (data) => dispatch(getUserMessageList(data))
   };
 }
 const useSelector = (state) => (
@@ -158,6 +167,7 @@ const useSelector = (state) => (
     userData: state.user.userData,
     chat: state.chat.chat,
     token: state.token.token,
+    sortData: state.message.sortData,
   }
 )
 export default connect(useSelector, useDispatch)(ChatDetails);
