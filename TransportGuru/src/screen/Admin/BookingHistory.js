@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, RefreshControl, ScrollView, FlatList, Image, TouchableOpacity } from 'react-native'
+import { View, Text, StyleSheet, RefreshControl, ScrollView, FlatList, Image, TouchableOpacity ,Linking} from 'react-native'
 import React from 'react'
 import color from '../../contents/color';
 import { connect } from 'react-redux';
@@ -22,7 +22,25 @@ const BookingHistory = (props) => {
     React.useEffect(() => {
         props.trackingDetailsByTransportId({ token: props.token, id: props.route.params.id })
     }, [])
-    console.log(props.BookingHistoryData)
+    const CallBtn = (MobileNo) => {
+        console.log('callNumber ----> ', MobileNo);
+        let phoneNumber = MobileNo;
+        if (Platform.OS !== 'android') {
+            phoneNumber = `telprompt:${MobileNo}`;
+        }
+        else {
+            phoneNumber = `tel:${MobileNo}`;
+        }
+        Linking.canOpenURL(phoneNumber)
+            .then(supported => {
+                if (!supported) {
+                    console.log(supported)
+                } else {
+                    return Linking.openURL(phoneNumber);
+                }
+            })
+            .catch(err => console.log(err));
+    }
     return (
         <View style={styles.container(props)}>
             <AnimatedLoader
@@ -100,7 +118,7 @@ const BookingHistory = (props) => {
                                     <View style={{ width: "90%" }}>
                                         <Text style={{ fontWeight: 'bold', color: 'gray' }}>{item.item?.userId?.mobileno || "+91"}</Text>
                                     </View>
-                                    <TouchableOpacity style={{ width: "10%" }}>
+                                    <TouchableOpacity style={{ width: "10%" }} onPress={()=>CallBtn(item.item?.userId?.mobileno)}>
                                         <Image source={icons.call} style={{
                                             width: 20,
                                             height: 20,

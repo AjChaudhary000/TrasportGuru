@@ -162,7 +162,7 @@ const AddDriver = (props) => {
                                     <TextInput style={styles.input(props)}
                                         placeholder={"eg. Driver mobile No"}
                                         placeholderTextColor={'gray'}
-                                        maxLength={10}
+                                        maxLength={13}
                                         onChangeText={(val) => setData({ ...data, driverMobileNo: val })}
                                         autoCapitalize={'none'}
                                         keyboardType={'number-pad'} />
@@ -239,6 +239,7 @@ const AddDriver = (props) => {
                                     <TextInput style={styles.input(props)}
                                         placeholder={"eg. Driver mobile No"}
                                         placeholderTextColor={'gray'}
+                                        maxLength={13}
                                         defaultValue={props.route.params?.item?.driverMobileNo}
                                         onChangeText={(val) => setData({ ...data, driverMobileNo: val })}
                                         autoCapitalize={'none'}

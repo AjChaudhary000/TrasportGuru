@@ -196,7 +196,7 @@ const AdminEditAccount = (props) => {
                             defaultValue={data.trasportmobile}
                             onChangeText={(val) => setData({ ...data, trasportmobile: val })}
                             autoCapitalize={'none'}
-                            maxLength={10}
+                            maxLength={13}
                             keyboardType={'number-pad'} />
 
                     </View>

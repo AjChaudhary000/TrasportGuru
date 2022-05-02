@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, RefreshControl, ScrollView, FlatList, Image, TouchableOpacity } from 'react-native'
+import { View, Text, StyleSheet, RefreshControl, ScrollView, FlatList, Image, TouchableOpacity, Linking, Alert } from 'react-native'
 import React from 'react'
 import { connect } from 'react-redux';
 
@@ -70,6 +70,25 @@ const TrackingDetails = (props) => {
         });
 
     }
+    const CallBtn = (MobileNo) => {
+        console.log('callNumber ----> ', MobileNo);
+        let phoneNumber = MobileNo;
+        if (Platform.OS !== 'android') {
+            phoneNumber = `telprompt:${MobileNo}`;
+        }
+        else {
+            phoneNumber = `tel:${MobileNo}`;
+        }
+        Linking.canOpenURL(phoneNumber)
+            .then(supported => {
+                if (!supported) {
+                    console.log(supported)
+                } else {
+                    return Linking.openURL(phoneNumber);
+                }
+            })
+            .catch(err => console.log(err));
+    }
     return (
         <View style={styles.container(props)}>
             <AnimatedLoader
@@ -115,7 +134,7 @@ const TrackingDetails = (props) => {
                                     </Text>
                                 </View>
                                 <View style={{ width: "30%", flexDirection: "row", justifyContent: 'space-between', paddingVertical: 10 }}>
-                                    <TouchableOpacity style={{ width: "50%" }} onPress={() => console.log("heloo")}>
+                                    <TouchableOpacity style={{ width: "50%" }} onPress={() => CallBtn(item.item?.tarsportId?.tarsportUserId.mobileno)}>
                                         <Image source={icons.call} style={styles.icon(props)} />
                                     </TouchableOpacity>
                                     <TouchableOpacity style={{ width: "50%" }} onPress={() => {
@@ -139,7 +158,7 @@ const TrackingDetails = (props) => {
                                     <View style={{ width: "90%" }}>
                                         <Text style={{ fontWeight: 'bold', color: 'gray' }}>Driver Mobile no : {item.item?.tarsportId.driverId.driverMobileNo}</Text>
                                     </View>
-                                    <TouchableOpacity style={{ width: "10%" }}>
+                                    <TouchableOpacity style={{ width: "10%" }} onPress={() => CallBtn(item.item?.tarsportId.driverId.driverMobileNo)}>
                                         <Image source={icons.call} style={{
                                             width: 20,
                                             height: 20,

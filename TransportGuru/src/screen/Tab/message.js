@@ -42,7 +42,7 @@ const Message = (props) => {
           onRefresh={onRefresh}
         />
       }>
-        {props.messageList.length === 0 ?
+        {props.messageList?.length === 0 ?
 
 
 

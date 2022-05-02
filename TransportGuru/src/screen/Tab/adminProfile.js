@@ -1,4 +1,4 @@
-import { View, StyleSheet, Image, ScrollView, TouchableOpacity } from 'react-native'
+import { View, StyleSheet, Image, ScrollView, TouchableOpacity, Linking } from 'react-native'
 import React from 'react'
 import { connect } from 'react-redux'
 import color from '../../contents/color'
@@ -12,6 +12,25 @@ const AdminProfile = (props) => {
     React.useEffect(() => {
         props.getUserDetails(props.token);
     }, [])
+    const CallBtn = (MobileNo) => {
+        console.log('callNumber ----> ', MobileNo);
+        let phoneNumber = MobileNo;
+        if (Platform.OS !== 'android') {
+            phoneNumber = `telprompt:${MobileNo}`;
+        }
+        else {
+            phoneNumber = `tel:${MobileNo}`;
+        }
+        Linking.canOpenURL(phoneNumber)
+            .then(supported => {
+                if (!supported) {
+                    console.log(supported)
+                } else {
+                    return Linking.openURL(phoneNumber);
+                }
+            })
+            .catch(err => console.log(err));
+    }
     return (
         <View style={styles.container(props)}>
             <HeaderWithBackButton name={"Admin Profile"} navigation={props.navigation} />
@@ -29,7 +48,7 @@ const AdminProfile = (props) => {
                 </View>
 
                 <View style={{ width: "99%", flexDirection: "row", justifyContent: 'space-between', paddingVertical: 10, marginHorizontal: 50 }}>
-                    <TouchableOpacity style={{ width: "33%" }}>
+                    <TouchableOpacity style={{ width: "33%" }} onPress={() => CallBtn(props.route.params.item.trasportAccount[0].trasportmobile)}>
                         <Image source={icons.call} style={styles.icon(props)} />
                     </TouchableOpacity>
                     <TouchableOpacity style={{ width: "33%" }}

@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, FlatList, Image, TouchableOpacity, RefreshControl, ScrollView } from 'react-native'
+import { View, Text, StyleSheet, FlatList, Image, TouchableOpacity, RefreshControl, ScrollView, Linking } from 'react-native'
 import React from 'react'
 import { connect } from 'react-redux';
 import color from '../../contents/color';
@@ -25,6 +25,25 @@ const TrasportList = (props) => {
     React.useEffect(() => {
         props.getTransportCompanyList(props.token)
     }, [])
+    const CallBtn = (MobileNo) => {
+        console.log('callNumber ----> ', MobileNo);
+        let phoneNumber = MobileNo;
+        if (Platform.OS !== 'android') {
+            phoneNumber = `telprompt:${MobileNo}`;
+        }
+        else {
+            phoneNumber = `tel:${MobileNo}`;
+        }
+        Linking.canOpenURL(phoneNumber)
+            .then(supported => {
+                if (!supported) {
+                    console.log(supported)
+                } else {
+                    return Linking.openURL(phoneNumber);
+                }
+            })
+            .catch(err => console.log(err));
+    }
     return (
         <View style={styles.container(props)}>
             <AnimatedLoader
@@ -89,7 +108,7 @@ const TrasportList = (props) => {
                             </View>
                             <View style={{ flexDirection: "row", justifyContent: 'space-between', padding: 5 }}>
                                 <View style={{ width: "50%", flexDirection: "row", justifyContent: 'space-between', paddingVertical: 10 }}>
-                                    <TouchableOpacity style={{ width: "30%" }}>
+                                    <TouchableOpacity style={{ width: "30%" }} onPress={() => CallBtn(item.item?.trasportAccount[0].trasportmobile)}>
                                         <Image source={icons.call} style={styles.icon(props)} />
                                     </TouchableOpacity>
                                     <TouchableOpacity style={{ width: "30%" }} onPress={() => {
