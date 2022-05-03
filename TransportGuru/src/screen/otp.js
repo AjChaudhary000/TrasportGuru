@@ -1,7 +1,7 @@
 
 import {
     View, Text, Image, StyleSheet, TextInput,
-    TouchableOpacity, StatusBar, Animated, TouchableWithoutFeedback, Keyboard, KeyboardAvoidingView
+    TouchableOpacity, StatusBar, Animated
 } from 'react-native'
 import React from 'react'
 import { CountdownCircleTimer } from 'react-native-countdown-circle-timer'
@@ -13,6 +13,7 @@ import color from '../contents/color';
 import image from '../contents/image';
 import Toast from 'react-native-simple-toast';
 import AnimatedLoader from "react-native-animated-loader";
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 const Otp = (props) => {
     const [isTimerView, setIsTmerView] = React.useState(true);
     const [otp, setOtp] = React.useState()
@@ -46,12 +47,8 @@ const Otp = (props) => {
     }
 
     return (
-        <KeyboardAvoidingView
-            behavior={Platform.OS === "ios" ? "padding" : "height"}
-            style={styles.contentor(props)}
-        >
-            <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-                <View style={{ flex: 1 }}>
+        
+                <KeyboardAwareScrollView style={styles.contentor(props)}>
                     <AnimatedLoader
                         visible={props.loading}
                         overlayColor="rgba(255,255,255,0.75)"
@@ -148,9 +145,8 @@ const Otp = (props) => {
                         </TouchableOpacity>
                     </View>
 
-                </View>
-            </TouchableWithoutFeedback>
-        </KeyboardAvoidingView>
+                </KeyboardAwareScrollView>
+            
     )
 }
 const useDispatch = (dispatch) => {

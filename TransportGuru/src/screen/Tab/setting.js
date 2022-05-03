@@ -1,4 +1,4 @@
-import { View, StyleSheet, Image, ScrollView, TouchableOpacity ,Switch} from 'react-native'
+import { View, StyleSheet, Image, ScrollView, TouchableOpacity, Switch } from 'react-native'
 import { Caption, Text, Title } from 'react-native-paper'
 import React from 'react'
 import color from '../../contents/color';
@@ -11,7 +11,7 @@ import Header from '../../components/header';
 import { getThemeMode, logoutToken } from '../../Redux/tokenSlice';
 import AnimatedLoader from "react-native-animated-loader";
 import { setotpData } from '../../Redux/verifyOtpSlice';
-import ModelBox from '../../components/modelBox';
+import ActionDialogBox from '../../components/ActionDialogBox';
 
 const Setting = (props) => {
   const [isEnabled, setIsEnabled] = React.useState(props.theme);
@@ -46,23 +46,14 @@ const Setting = (props) => {
   return (
 
     <View style={styles.container(props)}>
-      {modalVisible && <ModelBox
+      <ActionDialogBox
         modalVisibleData={modalVisible}
-        theme={props.theme}>
-        <Text style={styles.text}> Are you sure you want to logout ? </Text>
-        <View style={{ flexDirection: 'row', justifyContent: "space-between", margin: 30 }}>
-          <TouchableOpacity style={styles.btn1} onPress={() => { logout(), setModalVisible(false) }}>
-            <Text style={styles.btntext}>
-              Yes
-            </Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.btn} onPress={() => setModalVisible(false)}>
-            <Text style={styles.btntext}>
-              No
-            </Text>
-          </TouchableOpacity>
-        </View>
-      </ModelBox>}
+        theme={props.theme}
+        title={"Logout"}
+        text={"Are you sure you want to logout ?"}
+        onOkPress={(val) => val && logout()}
+        onGet={(val) => setModalVisible(val)}
+      />
       <AnimatedLoader
         visible={props.loading}
         overlayColor="rgba(255,255,255,0.75)"
@@ -98,7 +89,7 @@ const Setting = (props) => {
                 <Text style={styles.menuText(props)}>Drak Mode</Text>
               </View>
               <View style={styles.menuclick}>
-               
+
                 <Switch
                   trackColor={{ false: "#767577", true: `${color.primaryColors}11` }}
                   thumbColor={isEnabled ? color.primaryColors : color.primaryColors}
@@ -180,27 +171,5 @@ const styles = StyleSheet.create({
     height: 25,
     tintColor: props.theme ? color.drakPrimaryColors : color.primaryColors
   }],
-  text: {
-    fontSize: 20,
-    color: 'gray',
-    textAlign: 'center'
-  }, btn1: {
-    width: 100,
-    height: 45,
-    borderRadius: 10,
-    backgroundColor: color.primaryColors,
-    justifyContent: 'center',
-    alignItems: "center"
-  },
-  btn: {
-    width: 100,
-    height: 45,
-    borderRadius: 10,
-    backgroundColor: 'red',
-    justifyContent: 'center',
-    alignItems: "center"
-  }, btntext: {
-    fontSize: 18,
-    color: 'white'
-  }
+
 })

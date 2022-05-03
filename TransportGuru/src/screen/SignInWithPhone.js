@@ -1,6 +1,5 @@
 import {
-    View, Text, Image, StyleSheet, KeyboardAvoidingView, TextInput, TouchableOpacity, StatusBar,
-    TouchableWithoutFeedback, Keyboard, Platform
+    View, Text, Image, StyleSheet, TextInput, TouchableOpacity, StatusBar,
 } from 'react-native'
 import React from 'react'
 import icons from '../contents/icons';
@@ -13,10 +12,10 @@ import AnimatedLoader from "react-native-animated-loader";
 import { GoogleSignin, statusCodes } from '@react-native-google-signin/google-signin';
 import { CountryCode } from '../contents/CountryCode'
 import { Dropdown } from 'react-native-element-dropdown';
-import { ScrollView } from 'react-native-gesture-handler';
 import { verifyGoogle } from '../Redux/verifyOtpSlice';
 import { getOnBording } from '../Redux/helper';
 import { getOnBordingData } from '../Redux/tokenSlice';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 const SignInWithPhone = (props) => {
     const Google = async () => {
         const onbording = await getOnBording();
@@ -94,125 +93,118 @@ const SignInWithPhone = (props) => {
     };
 
     return (
-        <KeyboardAvoidingView
-            behavior={Platform.OS === "ios" ? "padding" : "height"}
-            style={styles.contentor(props)}
-        >
-            <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-                <ScrollView showsVerticalScrollIndicator={false}>
-                    <View style={{ flex: 1 }}>
-                        <StatusBar hidden />
-                        <AnimatedLoader
-                            visible={props.loading}
-                            overlayColor="rgba(255,255,255,0.75)"
-                            source={require("../assets/json/loder.json")}
-                            animationStyle={{
-                                width: 100,
-                                height: 100
-                            }}
-                            speed={1}
-                        >
-                            <Text>Loading...</Text>
-                        </AnimatedLoader>
 
-                        <View style={styles.truckLogo}>
-                            <Image source={image.Tg} style={{ width: 200, height: 100, tintColor: props.theme ? color.drakPrimaryColors : color.primaryColors, }} />
-                            {/* <LottieView source={require('../assets/json/loading.json')} autoPlay loop /> */}
-                        </View>
-                        <View style={styles.titleComponets}>
-                            <Text style={styles.title(props)}> Welcome To Transport Guru</Text>
-                            <View>
-                                <Text style={styles.text}>
-                                    Provide your phone no,so we can be able  to send your confirmation code.
-                                </Text>
-                            </View>
-                        </View>
-                        <View style={styles.inputBox}>
-                            <View style={{ width: "100%" }}>
-                                <Dropdown
-                                    style={styles.dropdown(props)}
-                                    placeholderStyle={styles.placeholderStyle(props)}
-                                    selectedTextStyle={styles.selectedTextStyle(props)}
-                                    inputSearchStyle={styles.inputSearchStyle}
-                                    iconStyle={styles.iconStyle}
-                                    data={CountryCode}
-                                    search
-                                    maxHeight={300}
-                                    labelField="name.en"
-                                    valueField="dial_code"
-                                    placeholder="Select Code"
-                                    searchPlaceholder="Search..."
+        <KeyboardAwareScrollView style={styles.contentor(props)}>
+            <StatusBar hidden />
+            <AnimatedLoader
+                visible={props.loading}
+                overlayColor="rgba(255,255,255,0.75)"
+                source={require("../assets/json/loder.json")}
+                animationStyle={{
+                    width: 100,
+                    height: 100
+                }}
+                speed={1}
+            >
+                <Text>Loading...</Text>
+            </AnimatedLoader>
 
-                                    value={value}
-                                    onChange={item => {
-                                        setValue(item.dial_code);
-                                    }}
-                                    renderItem={renderItem}
-                                />
-                            </View>
-                        </View>
-                        <View style={styles.inputBox}>
-                            <View style={{
-                                width: "20%", justifyContent: 'center', alignItems: 'center', borderBottomWidth: 2
-                                , borderBottomColor: color.primaryColors,
-                                borderRadius: 5
-                            }}>
-                                <Text style={{ color: 'gray', fontSize: 20 }}>{value}</Text>
-                            </View>
-                            <View style={{ width: "75%" }}>
+            <View style={styles.truckLogo}>
+                <Image source={image.Tg} style={{ width: 200, height: 100, tintColor: props.theme ? color.drakPrimaryColors : color.primaryColors, }} />
+                {/* <LottieView source={require('../assets/json/loading.json')} autoPlay loop /> */}
+            </View>
+            <View style={styles.titleComponets}>
+                <Text style={styles.title(props)}> Welcome To Transport Guru</Text>
+                <View>
+                    <Text style={styles.text}>
+                        Provide your phone no,so we can be able  to send your confirmation code.
+                    </Text>
+                </View>
+            </View>
+            <View style={styles.inputBox}>
+                <View style={{ width: "100%" }}>
+                    <Dropdown
+                        style={styles.dropdown(props)}
+                        placeholderStyle={styles.placeholderStyle(props)}
+                        selectedTextStyle={styles.selectedTextStyle(props)}
+                        inputSearchStyle={styles.inputSearchStyle}
+                        iconStyle={styles.iconStyle}
+                        data={CountryCode}
+                        search
+                        maxHeight={300}
+                        labelField="name.en"
+                        valueField="dial_code"
+                        placeholder="Select Code"
+                        searchPlaceholder="Search..."
 
-                                <TextInput style={styles.input(props)}
-                                    placeholder={"eg. Phone No "}
-                                    placeholderTextColor={'gray'}
-                                    onChangeText={(val) => setPhone(val)}
-                                    keyboardType={'number-pad'}
-                                    maxLength={10}
-                                    autoCapitalize={'none'} />
-                            </View>
-                        </View>
+                        value={value}
+                        onChange={item => {
+                            setValue(item.dial_code);
+                        }}
+                        renderItem={renderItem}
+                    />
+                </View>
+            </View>
+            <View style={styles.inputBox}>
+                <View style={{
+                    width: "20%", justifyContent: 'center', alignItems: 'center', borderBottomWidth: 2
+                    , borderBottomColor: color.primaryColors,
+                    borderRadius: 5
+                }}>
+                    <Text style={{ color: 'gray', fontSize: 20 }}>{value}</Text>
+                </View>
+                <View style={{ width: "75%" }}>
 
-                        <View>
-                            <TouchableOpacity style={styles.btn(props)} onPress={() => sendEmail()}>
-                                <Text style={styles.btnText}>
-                                    Continue
-                                </Text>
-                            </TouchableOpacity>
-                        </View>
-                        <View style={styles.google}>
+                    <TextInput style={styles.input(props)}
+                        placeholder={"eg. Phone No "}
+                        placeholderTextColor={'gray'}
+                        onChangeText={(val) => setPhone(val)}
+                        keyboardType={'number-pad'}
+                        maxLength={10}
+                        autoCapitalize={'none'} />
+                </View>
+            </View>
 
-                            <Text style={styles.googleText(props)}>
-                                Or
-                            </Text>
+            <View>
+                <TouchableOpacity style={styles.btn(props)} onPress={() => sendEmail()}>
+                    <Text style={styles.btnText}>
+                        Continue
+                    </Text>
+                </TouchableOpacity>
+            </View>
+            <View style={styles.google}>
+
+                <Text style={styles.googleText(props)}>
+                    Or
+                </Text>
 
 
-                            <TouchableOpacity onPress={() => onGoogleButtonPress()} style={styles.googleBox}>
-                                <View style={{ width: '20%', alignItems: 'center', justifyContent: 'center' }}>
-                                    <Image source={icons.google} style={{ width: 35, height: 35 }} />
-                                </View>
-                                <View style={{ width: '80%', alignItems: 'center', justifyContent: 'center', backgroundColor: '#4185F4' }}>
-                                    <Text style={{ color: color.drakFontcolor, fontWeight: "bold" }}>
-                                        Sign In with Google
-                                    </Text>
-                                </View>
-                            </TouchableOpacity>
-                            <TouchableOpacity onPress={() => props.navigation.replace("SignIn")} style={styles.googleBox}>
-                                <View style={{ width: '20%', alignItems: 'center', justifyContent: 'center' }}>
-                                    <Image source={icons.gmail} style={{
-                                        width: 35, height: 35
-                                    }} />
-                                </View>
-                                <View style={{ width: '80%', alignItems: 'center', justifyContent: 'center', backgroundColor: color.primaryColors }}>
-                                    <Text style={{ color: color.drakFontcolor, fontWeight: "bold" }}>
-                                        Sign In with Email
-                                    </Text>
-                                </View>
-                            </TouchableOpacity>
-                        </View>
-
+                <TouchableOpacity onPress={() => onGoogleButtonPress()} style={styles.googleBox}>
+                    <View style={{ width: '20%', alignItems: 'center', justifyContent: 'center' }}>
+                        <Image source={icons.google} style={{ width: 35, height: 35 }} />
                     </View>
-                </ScrollView>
-            </TouchableWithoutFeedback>
-        </KeyboardAvoidingView >
+                    <View style={{ width: '80%', alignItems: 'center', justifyContent: 'center', backgroundColor: '#4185F4' }}>
+                        <Text style={{ color: color.drakFontcolor, fontWeight: "bold" }}>
+                            Sign In with Google
+                        </Text>
+                    </View>
+                </TouchableOpacity>
+                <TouchableOpacity onPress={() => props.navigation.replace("SignIn")} style={styles.googleBox}>
+                    <View style={{ width: '20%', alignItems: 'center', justifyContent: 'center' }}>
+                        <Image source={icons.gmail} style={{
+                            width: 35, height: 35
+                        }} />
+                    </View>
+                    <View style={{ width: '80%', alignItems: 'center', justifyContent: 'center', backgroundColor: color.primaryColors }}>
+                        <Text style={{ color: color.drakFontcolor, fontWeight: "bold" }}>
+                            Sign In with Email
+                        </Text>
+                    </View>
+                </TouchableOpacity>
+            </View>
+
+        </KeyboardAwareScrollView>
+        
     )
 }
 const useDispatch = (dispatch) => {
@@ -250,7 +242,7 @@ const styles = StyleSheet.create({
     },
     titleComponets: {
         marginHorizontal: 5,
-        height: 150
+        height: 130
     },
     title: (props) => [{
         fontSize: 25,

@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, TextInput, TouchableOpacity, Image, FlatList, StatusBar, Modal, ScrollView, Dimensions } from 'react-native'
+import { View, Text, StyleSheet, TextInput, TouchableOpacity, Image, StatusBar } from 'react-native'
 import React from 'react'
 import color from '../../../contents/color'
 import icons from '../../../contents/icons'
@@ -8,12 +8,10 @@ import { getUserDetails } from '../../../Redux/UserDetails'
 import image from '../../../contents/image'
 import LottieView from 'lottie-react-native';
 import Toast from 'react-native-simple-toast';
-import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
 import ImageModel from '../../../components/imageModel'
 import { AdminHeaderWithBackButton } from '../../../components/adminHeader'
-import config from '../../../config/config'
-import ModelBox from '../../../components/modelBox'
-ModelBox
+import GoogleDialogBox from '../../../components/GoogleDialogBox'
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 const TrasportGuruAccount = (props) => {
     const [firebaseImage, setfirebaseImage] = React.useState('');
     const [imageLoading, setImageLoading] = React.useState(false)
@@ -39,8 +37,6 @@ const TrasportGuruAccount = (props) => {
             props.getUserDetails(props.token)
         }, 2000)
     }, [props])
-
-
     const TrasportAccount = () => {
         if (data.trasportName === "") {
             Toast.show("Enter The Trasport Name")
@@ -75,68 +71,18 @@ const TrasportGuruAccount = (props) => {
                 onGetImage={(val) => setfirebaseImage(val)}
                 onGetLoding={(val) => setImageLoading(val)}
                 onGetModalVisible={(val) => setModalVisible1(val)} />}
-            {modalVisible && <ModelBox
+            <GoogleDialogBox
                 modalVisibleData={modalVisible}
-                theme={props.theme}>
-                <ScrollView keyboardShouldPersistTaps="handled" >
-                    <TouchableOpacity onPress={() => { setModalVisible(false) }} style={{ alignItems: 'center', left: Dimensions.get('screen').width / 2 - 40 }}>
-                        <Image source={icons.close} style={{ width: 35, height: 35, tintColor: props.theme ? color.drakPrimaryColors : color.primaryColors, }} />
-                    </TouchableOpacity>
-                    <View style={{ marginHorizontal: 30, marginVertical: 20 }}>
-                        <Text style={{ color: 'gray', fontSize: 20, fontWeight: 'bold' }}>Search Your Address</Text>
-                    </View>
-                    <GooglePlacesAutocomplete
-                        placeholder='Address'
-                        placeholderTextColor={'gray'}
-                        minLength={2} // minimum length of text to search
-                        fetchDetails={true}
-
-                        renderDescription={row => row.description} // custom description render
-                        onPress={(dt, details = null) => {
-                            console.log(dt)
-                            setData({ ...data, trasportAddress: dt.description });
-                            setModalVisible(false)
-                            // console.log(details);
-                        }}
-                        getDefaultValue={() => {
-                            return ''; // text input default value
-                        }}
-                        query={{
-                            // available options: https://developers.google.com/places/web-service/autocomplete
-                            key: config.GooglePlaceAPI,
-                            language: 'en', // language of the results
-                            types: '', // default: 'geocode'
-                        }}
-                        styles={{
-
-                            textInput: {
-                                borderWidth: 2,
-                                borderColor: props.theme ? color.drakAdminprimaryColors : color.adminprimaryColors,
-                                padding: 10,
-                                fontSize: 18,
-                                borderRadius: 10,
-                                marginHorizontal: 30
-                            },
-                            description: {
-                                color: props.theme ? color.drakAdminprimaryColors : color.adminprimaryColors,
-                                fontSize: 18,
-
-                            }, listView: {
-                                borderWidth: 2,
-                                borderColor: props.theme ? color.drakAdminprimaryColors : color.adminprimaryColors,
-                                padding: 10,
-                                fontSize: 18,
-                                borderRadius: 10,
-                            }
-                        }}
-
-                        debounce={200}
-                    />
-
-                </ScrollView>
-            </ModelBox>}
+                theme={props.theme}
+                title={"Search Your Address"}
+                setPlaceTypeData={"Address"}
+                onGet={(val) => setModalVisible(val)}
+                onGetData={(val) => {
+                    setData({ ...data, trasportAddress: val.name })
+                }}
+            />
             <AdminHeaderWithBackButton name={"Transport Account"} navigation={props.navigation} />
-            <View style={styles.inputBox}>
+            <KeyboardAwareScrollView style={styles.inputBox} showsVerticalScrollIndicator={false}>
                 <View style={{ marginHorizontal: 10 }}>
                     {!imageLoading ?
                         <View style={{ marginHorizontal: 10 }}>
@@ -178,14 +124,11 @@ const TrasportGuruAccount = (props) => {
                         placeholderTextColor={'gray'}
                         onChangeText={(val) => setData({ ...data, trasportName: val })}
                         autoCapitalize={'none'} />
-                    {/* <Text style={{ color: 'red', marginTop: 5 }}> * Enter value  </Text> */}
                 </View>
                 <View style={{ margin: 10 }}>
                     <TouchableOpacity style={{ width: '100%' }} activeOpacity={0.80} onPress={() => { setModalVisible(true) }}>
                         <Text style={styles.input(props)}>{data.trasportAddress}</Text>
                     </TouchableOpacity>
-
-                    {/* <Text style={{ color: 'red', marginTop: 5 }}> * Enter value  </Text> */}
                 </View>
                 <View style={{ marginHorizontal: 10, marginVertical: 20 }}>
                     <TouchableOpacity style={styles.btn(props)} onPress={() => { TrasportAccount() }}>
@@ -194,7 +137,7 @@ const TrasportGuruAccount = (props) => {
                         </Text>
                     </TouchableOpacity>
                 </View>
-            </View>
+            </KeyboardAwareScrollView>
         </View>
     )
 }

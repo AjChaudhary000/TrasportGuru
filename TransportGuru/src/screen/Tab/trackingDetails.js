@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, RefreshControl, ScrollView, FlatList, Image, TouchableOpacity, Linking, Alert } from 'react-native'
+import { View, Text, StyleSheet, RefreshControl, ScrollView, FlatList, Image, TouchableOpacity, Linking} from 'react-native'
 import React from 'react'
 import { connect } from 'react-redux';
 
@@ -15,7 +15,6 @@ const wait = (timeout) => {
     return new Promise(resolve => setTimeout(resolve, timeout));
 }
 const TrackingDetails = (props) => {
-    // console.log(props.route.params.id)
     const [refreshing, setRefreshing] = React.useState(false);
 
     const [amount, setAmount] = React.useState(0)
@@ -253,20 +252,20 @@ const TrackingDetails = (props) => {
 
                                         </View>
                                     </View>
-                                    <FlatList data={item.item.tarsportId.routeId.routeStop} renderItem={(data) => (
+                                    {(item.item.tarsportId?.routeId?.routeStop).map((data, index) => (
 
-                                        <View >
+                                        <View key={index}>
                                             <View style={{ margin: 5, flexDirection: 'row' }}>
 
                                                 <View style={{ width: '5%', justifyContent: 'center' }}>
                                                     <Image source={icons.forword} style={{
                                                         width: 20, height: 20, tintColor: ((new Date(new Date(item.item.tarsportId.Truckdate)
                                                             .setHours(new Date(item.item.tarsportId.Truckdate)
-                                                                .getHours() + data.item.avgTime))) <= new Date()) ? "green" : color.primaryColors
+                                                                .getHours() + data.avgTime))) <= new Date()) ? "green" : color.primaryColors
                                                     }} />
                                                 </View>
                                                 <View style={{ width: '95%' }}>
-                                                    <Text style={{ marginHorizontal: 10, fontWeight: 'bold', color: 'gray', fontSize: 16 }}>{data.item.stops}</Text>
+                                                    <Text style={{ marginHorizontal: 10, fontWeight: 'bold', color: 'gray', fontSize: 16 }}>{data.stops}</Text>
                                                 </View>
 
                                             </View>
@@ -275,7 +274,7 @@ const TrackingDetails = (props) => {
                                                     <Text style={{ color: props.theme ? color.drakFontcolor : color.fontcolor }}>
                                                         {new Date(new Date(item.item.tarsportId.Truckdate)
                                                             .setHours(new Date(item.item.tarsportId.Truckdate)
-                                                                .getHours() + data.item.avgTime)).toLocaleDateString("en-US", { weekday: 'short', month: 'long', day: 'numeric' })}
+                                                                .getHours() + data.avgTime)).toLocaleDateString("en-US", { weekday: 'short', month: 'long', day: 'numeric' })}
                                                     </Text>
                                                 </View>
 
@@ -283,14 +282,14 @@ const TrackingDetails = (props) => {
                                                     <Text style={{ color: props.theme ? color.drakFontcolor : color.fontcolor, }}>
                                                         {new Date(new Date(item.item.tarsportId.Truckdate)
                                                             .setHours(new Date(item.item.tarsportId.Truckdate)
-                                                                .getHours() + data.item.avgTime)).toLocaleDateString("en-US", { hour: 'numeric', minute: 'numeric', hour12: false }).toString().slice(-6)}
+                                                                .getHours() + data.avgTime)).toLocaleDateString("en-US", { hour: 'numeric', minute: 'numeric', hour12: false }).toString().slice(-6)}
                                                     </Text>
                                                 </View>
 
                                             </View>
                                         </View>
-                                    )}
-                                    />
+                                    ))}
+
                                     <View>
                                         <View style={{ margin: 5, flexDirection: 'row' }}>
 
@@ -363,15 +362,15 @@ const TrackingDetails = (props) => {
                                 Payment summary</Text>
                         </View>
                         <View style={{ marginHorizontal: 20 }} >
-                            <FlatList data={item.item?.paymentid?.paymentHistory} renderItem={(data) => (
-                                <View style={{ flexDirection: 'row', justifyContent: 'space-around' }}>
+                            {(item.item?.paymentid?.paymentHistory).map((data, index) => (
+                                <View style={{ flexDirection: 'row', justifyContent: 'space-around' }} key={index}>
 
                                     <View style={{ width: "5%" }}>
-                                        <Text style={{ color: 'gray', fontWeight: 'bold', fontSize: 14 }}>{data.index + 1})</Text>
+                                        <Text style={{ color: 'gray', fontWeight: 'bold', fontSize: 14 }}>{index + 1})</Text>
                                     </View>
                                     <View style={{ width: "55%" }}>
                                         <Text style={{ color: props.theme ? color.drakFontcolor : color.fontcolor, fontWeight: 'bold', fontSize: 20, justifyContent: "center" }}>
-                                            {(Number(data.item.payment)).toLocaleString('en-IN', {
+                                            {(Number(data.payment)).toLocaleString('en-IN', {
                                                 maximumFractionDigits: 2,
                                                 style: 'currency',
                                                 currency: 'INR'
@@ -382,11 +381,11 @@ const TrackingDetails = (props) => {
                                     <View style={{ width: "40%" }} >
 
                                         <Text style={{ color: 'gray', fontWeight: 'bold', fontSize: 14, paddingRight: 2, justifyContent: "center" }}>
-                                            {new Date(new Date(data.item.paymentDate)).toLocaleDateString("en-US", { weekday: 'short', month: 'long', day: 'numeric', hour: 'numeric', minute: 'numeric', hour12: false })}
+                                            {new Date(new Date(data.paymentDate)).toLocaleDateString("en-US", { weekday: 'short', month: 'long', day: 'numeric', hour: 'numeric', minute: 'numeric', hour12: false })}
                                         </Text>
                                     </View>
                                 </View>
-                            )} />
+                            ))}
                         </View>
                     </View>
                 )} />

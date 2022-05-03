@@ -94,23 +94,13 @@ const SearchTransportList = (props) => {
                                     <View >
 
                                         <Text style={{ color: 'gray', fontWeight: 'bold', fontSize: 14, paddingRight: 2 }}>
-                                            {new Date(new Date(item.item.Truckdate)
-                                                .setHours(new Date(item.item.Truckdate)
-                                                    .getHours() + Math.round((calcKmFind(item.item.routeId.from.lat,
-                                                        item.item.routeId.from.lng,
-                                                        props?.route.params.from.lat,
-                                                        props?.route.params.from.lng)) / 45))).toLocaleDateString("en-US", { weekday: 'short', month: 'long', day: 'numeric' })}
+                                            {new Date(new Date(item.item.Truckdate)).toLocaleDateString("en-US", { weekday: 'short', month: 'long', day: 'numeric' })}
 
                                         </Text>
                                     </View>
                                     <View >
                                         <Text style={{ color: color.primaryColors, fontWeight: 'bold', fontSize: 14 }}>
-                                            {new Date(new Date(item.item.Truckdate)
-                                                .setHours(new Date(item.item.Truckdate)
-                                                    .getHours() + Math.round((calcKmFind(item.item.routeId.from.lat,
-                                                        item.item.routeId.from.lng,
-                                                        props?.route.params.from.lat,
-                                                        props?.route.params.from.lng)) / 45))).toLocaleDateString("en-US", { hour: 'numeric', minute: 'numeric', hour12: false }).toString().slice(-5)}
+                                            {new Date(new Date(item.item.Truckdate)).toLocaleDateString("en-US", { hour: 'numeric', minute: 'numeric', hour12: false }).toString().slice(-5)}
                                         </Text>
 
                                     </View>

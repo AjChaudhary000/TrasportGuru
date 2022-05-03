@@ -15,6 +15,7 @@ import { getRouteList } from '../../Redux/Admin/routeSlice';
 import { addTransport, setTransportData, updateTransport } from '../../Redux/Admin/transportSlice';
 import { getCountTransport } from '../../Redux/Admin/countAddSlice';
 import Toast from 'react-native-simple-toast';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 const AddTrasportDetails = (props) => {
     const [modalVisible, setModalVisible] = React.useState(false);
     const [placetype, setPlaceType] = React.useState()
@@ -140,9 +141,9 @@ const AddTrasportDetails = (props) => {
                     </View>
                 </Modal>
                 {!props.route.params?.item?._id ?
-                    <ScrollView showsVerticalScrollIndicator={false}>
+                    <View>
                         <AdminHeaderWithBackButton name={"Add Transport Details"} navigation={props.navigation} />
-                        <View style={styles.inputBox}>
+                        <KeyboardAwareScrollView style={styles.inputBox}>
                             <View style={{ margin: 10 }}>
                                 <Dropdown
                                     style={styles.dropdown(props)}
@@ -255,11 +256,11 @@ const AddTrasportDetails = (props) => {
                                     </Text>
                                 </TouchableOpacity>
                             </View>
-                        </View>
-                    </ScrollView> :
-                    <ScrollView showsVerticalScrollIndicator={false}>
+                        </KeyboardAwareScrollView>
+                    </View> :
+                    <View >
                         <AdminHeaderWithBackButton name={"Update Transport Details"} navigation={props.navigation} />
-                        <View style={styles.inputBox}>
+                        <KeyboardAwareScrollView style={styles.inputBox}>
                             <View style={{ margin: 10 }}>
                                 <Dropdown
                                     style={styles.dropdown(props)}
@@ -372,8 +373,8 @@ const AddTrasportDetails = (props) => {
                                     </Text>
                                 </TouchableOpacity>
                             </View>
-                        </View>
-                    </ScrollView>
+                        </KeyboardAwareScrollView>
+                    </View>
                 }
             </View>
         </TouchableWithoutFeedback>

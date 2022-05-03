@@ -1,20 +1,19 @@
 import {
-    View, Text, StyleSheet, TextInput, TouchableOpacity, Image, TouchableWithoutFeedback,
-    Keyboard, Dimensions, Modal, ScrollView, LogBox
+    View, Text, StyleSheet, TouchableOpacity, Image, Dimensions, LogBox
 } from 'react-native'
 import React from 'react'
 import { AdminHeaderWithBackButton } from '../../components/adminHeader';
 import color from '../../contents/color'
 import icons from '../../contents/icons';
 import { connect } from 'react-redux'
-import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
 import { addRoute, setRouteData, updateRoute } from '../../Redux/Admin/routeSlice';
 import { getCountRoute } from '../../Redux/Admin/countAddSlice';
 import DraggableFlatList from 'react-native-draggable-flatlist';
 import Toast from 'react-native-simple-toast';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
-import config from '../../config/config';
-import ModelBox from '../../components/modelBox'
+import calcKmFind from '../../components/kmFind';
+import GoogleDialogBox from '../../components/GoogleDialogBox';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 const AddRoute = (props) => {
     const [modalVisible, setModalVisible] = React.useState(false);
     const [placetype, setPlaceType] = React.useState()
@@ -68,233 +67,163 @@ const AddRoute = (props) => {
             props.updateRoute({ ...data, id: props.route.params?.item?._id, routeStop: stopList, token: props.token })
         }
     }
-
-
-    function calcCrow(lat1, lon1, lat2, lon2) {
-        console.log(lat1, lon1, lat2, lon2)
-        var R = 6371; // km
-        var dLat = toRad(lat2 - lat1);
-        var dLon = toRad(lon2 - lon1);
-        var lat1 = toRad(lat1);
-        var lat2 = toRad(lat2);
-
-        var a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-            Math.sin(dLon / 2) * Math.sin(dLon / 2) * Math.cos(lat1) * Math.cos(lat2);
-        var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-        var d = R * c;
-
-        return Math.round(d / 45);
-    }
-
-    // Converts numeric degrees to radians
-    function toRad(Value) {
-        return Value * Math.PI / 180;
-    }
-
-
     return (
-        <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-            <View style={styles.container(props)}>
 
-
-                {modalVisible && <ModelBox
-                    modalVisibleData={modalVisible}
-                    theme={props.theme}>
-                    <ScrollView keyboardShouldPersistTaps="handled" >
-                        <TouchableOpacity onPress={() => { setModalVisible(false) }} style={{ alignItems: 'center', left: Dimensions.get('screen').width / 2 - 40 }}>
-                            <Image source={icons.close} style={{ width: 35, height: 35, tintColor: props.theme ? color.drakPrimaryColors : color.primaryColors, }} />
+        <View style={styles.container(props)}>
+            <GoogleDialogBox
+                modalVisibleData={modalVisible}
+                theme={props.theme}
+                title={"Search Stops"}
+                setPlaceTypeData={placetype}
+                onGet={(val) => setModalVisible(val)}
+                onGetData={(val) => {
+                    if (placetype === "from") {
+                        const { name, lat, lng } = val
+                        setData({ ...data, from: { name, lat, lng, avgTime: 0 } })
+                    }
+                    if (placetype === "destination") {
+                        const { name, lat, lng } = val
+                        const d = calcKmFind(data.from.lat, data.from.lng, lat, lng)
+                        setData({ ...data, destination: { name, lat, lng, avgTime: Math.round(d / 45) } })
+                    }
+                    if (placetype === "addStop") {
+                        const { name, lat, lng } = val
+                        const d = calcKmFind(data.from.lat, data.from.lng, lat, lng)
+                        setStopList([...stopList, { stops: name, lat, lng, avgTime: Math.round(d / 45) }])
+                    }
+                }}
+            />
+            {!props.route.params?.item?._id ?
+                <View >
+                    <AdminHeaderWithBackButton name={"Add Route"} navigation={props.navigation} />
+                    <KeyboardAwareScrollView style={styles.inputBox}>
+                        <TouchableOpacity style={{ margin: 10 }} activeOpacity={0.80} onPress={() => { setPlaceType("from"); setModalVisible(true) }}>
+                            <Text style={styles.input(props)}>{data.from.name}</Text>
                         </TouchableOpacity>
-                        <View style={{ marginHorizontal: 30, marginVertical: 20 }}>
-                            <Text style={{ color: 'gray', fontSize: 20, fontWeight: 'bold' }}>Search Stops</Text>
+                        <TouchableOpacity style={{ margin: 10 }} activeOpacity={0.80} onPress={() => { setPlaceType("destination"); setModalVisible(true) }}>
+                            <Text style={styles.input(props)}>{data.destination.name}</Text>
+                        </TouchableOpacity>
+
+                        <View style={{ marginHorizontal: 10, marginVertical: 20, flexDirection: "row", justifyContent: 'space-between' }}>
+                            <TouchableOpacity onPress={() => { setInputBox(true) }}>
+                                <Text style={{ color: props.theme ? color.drakAdminprimaryColors : color.adminprimaryColors, fontWeight: 'bold' }}>
+                                    Add Stop
+                                </Text>
+                            </TouchableOpacity>
+                            <TouchableOpacity onPress={() => { setMoveBox(!moveBox) }}>
+                                <Text style={{ color: props.theme ? color.drakAdminprimaryColors : color.adminprimaryColors, fontWeight: 'bold' }}>
+                                    Move Stop
+                                </Text>
+                            </TouchableOpacity>
                         </View>
-                        <GooglePlacesAutocomplete
-                            placeholder={placetype === "from" ? "eg. From" : "eg. destination"}
-                            placeholderTextColor={'gray'}
-                            minLength={2} // minimum length of text to search
-                            fetchDetails={true}
-                            renderDescription={row => row.description} // custom description render
-                            onPress={(dt, details = null) => {
-
-                                placetype === "from" && setData({ ...data, from: { name: dt.description, lat: details.geometry.location.lat, lng: details.geometry.location.lng, avgTime: 0 } });
-                                if (placetype === "destination") {
-                                    const d = calcCrow(data.from.lat, data.from.lng, details.geometry.location.lat, details.geometry.location.lng)
-                                    console.log("time", d);
-                                    setData({ ...data, destination: { name: dt.description, lat: details.geometry.location.lat, lng: details.geometry.location.lng, avgTime: d } });
-                                }
-                                if (placetype === "addStop") {
-                                    const d = calcCrow(data.from.lat, data.from.lng, details.geometry.location.lat, details.geometry.location.lng)
-                                    setStopList([...stopList, { stops: dt.description, lat: details.geometry.location.lat, lng: details.geometry.location.lng, avgTime: d }]);
-                                } setModalVisible(false)
-                                setInputBox(false)
-                                //console.log(details.geometry.location);
-                            }}
-                            getDefaultValue={() => {
-                                return ''; // text input default value
-                            }}
-                            query={{
-                                // available options: https://developers.google.com/places/web-service/autocomplete
-                                key: config.GooglePlaceAPI,
-                                language: 'en', // language of the results
-                                types: '(cities)', // default: 'geocode'
-                            }}
-                            styles={{
-
-                                textInput: {
-                                    borderWidth: 2,
-                                    borderColor: color.adminprimaryColors,
-                                    padding: 10,
-                                    fontSize: 18,
-                                    borderRadius: 10,
-                                    marginHorizontal: 30
-                                },
-                                description: {
-                                    color: color.adminprimaryColors,
-                                    fontSize: 18,
-
-                                }, listView: {
-                                    borderWidth: 2,
-                                    borderColor: color.adminprimaryColors,
-                                    padding: 10,
-                                    fontSize: 18,
-                                    borderRadius: 10,
-                                }
-                            }}
-
-                            debounce={200}
-                        />
-                    </ScrollView>
-                </ModelBox>}
-                {!props.route.params?.item?._id ?
-                    <View showsVerticalScrollIndicator={false}>
-                        <AdminHeaderWithBackButton name={"Add Route"} navigation={props.navigation} />
-                        <View style={styles.inputBox}>
-                            <TouchableOpacity style={{ margin: 10 }} activeOpacity={0.80} onPress={() => { setPlaceType("from"); setModalVisible(true) }}>
-                                <Text style={styles.input(props)}>{data.from.name}</Text>
-                            </TouchableOpacity>
-                            <TouchableOpacity style={{ margin: 10 }} activeOpacity={0.80} onPress={() => { setPlaceType("destination"); setModalVisible(true) }}>
-                                <Text style={styles.input(props)}>{data.destination.name}</Text>
+                        {inputBox && <View style={{ margin: 10 }}>
+                            <TouchableOpacity style={{ margin: 10 }} activeOpacity={0.80} onPress={() => { setPlaceType("addStop"); setModalVisible(true) }}>
+                                <Text style={styles.input(props)}>Stops</Text>
                             </TouchableOpacity>
 
-                            <View style={{ marginHorizontal: 10, marginVertical: 20, flexDirection: "row", justifyContent: 'space-between' }}>
-                                <TouchableOpacity onPress={() => { setInputBox(true) }}>
-                                    <Text style={{ color: props.theme ? color.drakAdminprimaryColors : color.adminprimaryColors, fontWeight: 'bold' }}>
-                                        Add Stop
-                                    </Text>
-                                </TouchableOpacity>
-                                <TouchableOpacity onPress={() => { setMoveBox(!moveBox) }}>
-                                    <Text style={{ color: props.theme ? color.drakAdminprimaryColors : color.adminprimaryColors, fontWeight: 'bold' }}>
-                                        Move Stop
-                                    </Text>
-                                </TouchableOpacity>
-                            </View>
-                            {inputBox && <View style={{ margin: 10 }}>
-                                <TouchableOpacity style={{ margin: 10 }} activeOpacity={0.80} onPress={() => { setPlaceType("addStop"); setModalVisible(true) }}>
-                                    <Text style={styles.input(props)}>Stops</Text>
-                                </TouchableOpacity>
-
-                            </View>}
-                            <View>
-                                <GestureHandlerRootView style={{ width: '100%', height: '60%' }}>
-                                    <DraggableFlatList
-                                        data={stopList}
-                                        onDragEnd={({ data }) => setData(data)}
-                                        keyExtractor={(item) => item.key}
-                                        renderItem={({ item, index, drag }) => (
-                                            <View style={styles.stopbox(props)}>
-                                                {moveBox &&
-                                                    <TouchableOpacity style={{ alignItems: 'center' }} style={{ flexDirection: 'column' }}
-                                                        onLongPress={drag}>
-                                                        <Image source={icons.move} style={{ width: 30, height: 30, tintColor: props.theme ? color.drakAdminprimaryColors : color.adminprimaryColors, }} />
-                                                    </TouchableOpacity>}
-                                                <View style={{ alignItems: 'center' }}>
-                                                    <Text style={{ color: props.theme ? color.drakFontcolor : color.fontcolor, fontWeight: 'bold', fontSize: 18, paddingHorizontal: 5 }}>{item.stops}</Text>
-                                                </View>
-                                                <TouchableOpacity style={{ alignItems: 'center' }} onPress={() => { setStopList(stopList.filter((_, ind) => ind !== index)) }}>
-                                                    <Image source={icons.close} style={{ width: 35, height: 35, tintColor: props.theme ? color.drakAdminprimaryColors : color.adminprimaryColors, }} />
-                                                </TouchableOpacity>
+                        </View>}
+                        <View>
+                            <GestureHandlerRootView style={{ width: '100%', height: '60%' }}>
+                                <DraggableFlatList
+                                    data={stopList}
+                                    onDragEnd={({ data }) => setData(data)}
+                                    keyExtractor={(item) => item.key}
+                                    renderItem={({ item, index, drag }) => (
+                                        <View style={styles.stopbox(props)}>
+                                            {moveBox &&
+                                                <TouchableOpacity style={{ alignItems: 'center' }} style={{ flexDirection: 'column' }}
+                                                    onLongPress={drag}>
+                                                    <Image source={icons.move} style={{ width: 30, height: 30, tintColor: props.theme ? color.drakAdminprimaryColors : color.adminprimaryColors, }} />
+                                                </TouchableOpacity>}
+                                            <View style={{ alignItems: 'center' }}>
+                                                <Text style={{ color: props.theme ? color.drakFontcolor : color.fontcolor, fontWeight: 'bold', fontSize: 18, paddingHorizontal: 5 }}>{item.stops}</Text>
                                             </View>
-                                        )}
-                                        onDragEnd={({ data }) => setStopList(data)}
-                                        keyExtractor={(item, index) => `AJ${index + 1}`}
-                                    />
+                                            <TouchableOpacity style={{ alignItems: 'center' }} onPress={() => { setStopList(stopList.filter((_, ind) => ind !== index)) }}>
+                                                <Image source={icons.close} style={{ width: 35, height: 35, tintColor: props.theme ? color.drakAdminprimaryColors : color.adminprimaryColors, }} />
+                                            </TouchableOpacity>
+                                        </View>
+                                    )}
+                                    onDragEnd={({ data }) => setStopList(data)}
+                                    keyExtractor={(item, index) => `AJ${index + 1}`}
+                                />
 
-                                    <View style={{ marginHorizontal: 10, marginVertical: 20 }}>
-                                        <TouchableOpacity style={styles.btn(props)} onPress={() => { AddRoute() }}>
-                                            <Text style={styles.btnText}>
-                                                Add Route
-                                            </Text>
-                                        </TouchableOpacity>
-                                    </View>
-                                </GestureHandlerRootView>
-                            </View>
+                                <View style={{ marginHorizontal: 10, marginVertical: 20 }}>
+                                    <TouchableOpacity style={styles.btn(props)} onPress={() => { AddRoute() }}>
+                                        <Text style={styles.btnText}>
+                                            Add Route
+                                        </Text>
+                                    </TouchableOpacity>
+                                </View>
+                            </GestureHandlerRootView>
                         </View>
-                    </View> :
-                    <View >
-                        <AdminHeaderWithBackButton name={"Update Route"} navigation={props.navigation} />
-                        <View style={styles.inputBox}>
-                            <TouchableOpacity style={{ margin: 10 }} activeOpacity={0.80} onPress={() => { setPlaceType("from"); setModalVisible(true) }}>
-                                <Text style={styles.input(props)}>{data.from.name}</Text>
+                    </KeyboardAwareScrollView>
+                </View> :
+                <View >
+                    <AdminHeaderWithBackButton name={"Update Route"} navigation={props.navigation} />
+                    <KeyboardAwareScrollView style={styles.inputBox}>
+                        <TouchableOpacity style={{ margin: 10 }} activeOpacity={0.80} onPress={() => { setPlaceType("from"); setModalVisible(true) }}>
+                            <Text style={styles.input(props)}>{data.from.name}</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity style={{ margin: 10 }} activeOpacity={0.80} onPress={() => { setPlaceType("destination"); setModalVisible(true) }}>
+                            <Text style={styles.input(props)}>{data.destination.name}</Text>
+                        </TouchableOpacity>
+
+                        <View style={{ marginHorizontal: 10, marginVertical: 20, flexDirection: "row", justifyContent: 'space-between' }}>
+                            <TouchableOpacity onPress={() => { setInputBox(true) }}>
+                                <Text style={{ color: props.theme ? color.drakAdminprimaryColors : color.adminprimaryColors, fontWeight: 'bold' }}>
+                                    Add Stop
+                                </Text>
                             </TouchableOpacity>
-                            <TouchableOpacity style={{ margin: 10 }} activeOpacity={0.80} onPress={() => { setPlaceType("destination"); setModalVisible(true) }}>
-                                <Text style={styles.input(props)}>{data.destination.name}</Text>
+                            <TouchableOpacity onPress={() => { setMoveBox(!moveBox) }}>
+                                <Text style={{ color: props.theme ? color.drakAdminprimaryColors : color.adminprimaryColors, fontWeight: 'bold' }}>
+                                    Move Stop
+                                </Text>
+                            </TouchableOpacity>
+                        </View>
+                        {inputBox && <View style={{ margin: 10 }}>
+                            <TouchableOpacity style={{ margin: 10 }} activeOpacity={0.80} onPress={() => { setPlaceType("addStop"); setModalVisible(true) }}>
+                                <Text style={styles.input(props)}>Stops</Text>
                             </TouchableOpacity>
 
-                            <View style={{ marginHorizontal: 10, marginVertical: 20, flexDirection: "row", justifyContent: 'space-between' }}>
-                                <TouchableOpacity onPress={() => { setInputBox(true) }}>
-                                    <Text style={{ color: props.theme ? color.drakAdminprimaryColors : color.adminprimaryColors, fontWeight: 'bold' }}>
-                                        Add Stop
-                                    </Text>
-                                </TouchableOpacity>
-                                <TouchableOpacity onPress={() => { setMoveBox(!moveBox) }}>
-                                    <Text style={{ color: props.theme ? color.drakAdminprimaryColors : color.adminprimaryColors, fontWeight: 'bold' }}>
-                                        Move Stop
-                                    </Text>
-                                </TouchableOpacity>
-                            </View>
-                            {inputBox && <View style={{ margin: 10 }}>
-                                <TouchableOpacity style={{ margin: 10 }} activeOpacity={0.80} onPress={() => { setPlaceType("addStop"); setModalVisible(true) }}>
-                                    <Text style={styles.input(props)}>Stops</Text>
-                                </TouchableOpacity>
-
-                            </View>}
-                            <View>
-                                <GestureHandlerRootView style={{ width: '100%', height: "60%" }}>
-                                    <DraggableFlatList
-                                        data={stopList}
-                                        onDragEnd={({ data }) => setData(data)}
-                                        keyExtractor={(item) => item.key}
-                                        renderItem={({ item, index, drag }) => (
-                                            <View style={styles.stopbox(props)}>
-                                                {moveBox &&
-                                                    <TouchableOpacity style={{ alignItems: 'center' }} style={{ flexDirection: 'column' }}
-                                                        onLongPress={drag}>
-                                                        <Image source={icons.move} style={{ width: 30, height: 30, tintColor: props.theme ? color.drakAdminprimaryColors : color.adminprimaryColors, }} />
-                                                    </TouchableOpacity>}
-                                                <View style={{ alignItems: 'center', width: '80%' }}>
-                                                    <Text style={{ color: props.theme ? color.drakFontcolor : color.fontcolor, fontWeight: 'bold', fontSize: 18, paddingHorizontal: 5 }}>{item.stops}</Text>
-                                                </View>
-                                                <TouchableOpacity style={{ alignItems: 'center', width: '10%' }} onPress={() => { setStopList(stopList.filter((_, ind) => ind !== index)) }}>
-                                                    <Image source={icons.close} style={{ width: 35, height: 35, tintColor: props.theme ? color.drakAdminprimaryColors : color.adminprimaryColors, }} />
-                                                </TouchableOpacity>
+                        </View>}
+                        <View>
+                            <GestureHandlerRootView style={{ width: '100%', height: "60%" }}>
+                                <DraggableFlatList
+                                    data={stopList}
+                                    onDragEnd={({ data }) => setData(data)}
+                                    keyExtractor={(item) => item.key}
+                                    renderItem={({ item, index, drag }) => (
+                                        <View style={styles.stopbox(props)}>
+                                            {moveBox &&
+                                                <TouchableOpacity style={{ alignItems: 'center' }} style={{ flexDirection: 'column' }}
+                                                    onLongPress={drag}>
+                                                    <Image source={icons.move} style={{ width: 30, height: 30, tintColor: props.theme ? color.drakAdminprimaryColors : color.adminprimaryColors, }} />
+                                                </TouchableOpacity>}
+                                            <View style={{ alignItems: 'center', width: '80%' }}>
+                                                <Text style={{ color: props.theme ? color.drakFontcolor : color.fontcolor, fontWeight: 'bold', fontSize: 18, paddingHorizontal: 5 }}>{item.stops}</Text>
                                             </View>
-                                        )}
-                                        onDragEnd={({ data }) => setStopList(data)}
-                                        keyExtractor={(item, index) => `AJ${index + 1}`}
-                                    />
+                                            <TouchableOpacity style={{ alignItems: 'center', width: '10%' }} onPress={() => { setStopList(stopList.filter((_, ind) => ind !== index)) }}>
+                                                <Image source={icons.close} style={{ width: 35, height: 35, tintColor: props.theme ? color.drakAdminprimaryColors : color.adminprimaryColors, }} />
+                                            </TouchableOpacity>
+                                        </View>
+                                    )}
+                                    onDragEnd={({ data }) => setStopList(data)}
+                                    keyExtractor={(item, index) => `AJ${index + 1}`}
+                                />
 
-                                    <View style={{ marginHorizontal: 10, marginVertical: 20 }}>
-                                        <TouchableOpacity style={styles.btn(props)} onPress={() => { UpdateRoute() }}>
-                                            <Text style={styles.btnText}>
-                                                Update Route
-                                            </Text>
-                                        </TouchableOpacity>
-                                    </View>
-                                </GestureHandlerRootView>
-                            </View>
+                                <View style={{ marginHorizontal: 10, marginVertical: 20 }}>
+                                    <TouchableOpacity style={styles.btn(props)} onPress={() => { UpdateRoute() }}>
+                                        <Text style={styles.btnText}>
+                                            Update Route
+                                        </Text>
+                                    </TouchableOpacity>
+                                </View>
+                            </GestureHandlerRootView>
                         </View>
-                    </View>}
-            </View >
-        </TouchableWithoutFeedback>
+                    </KeyboardAwareScrollView>
+                </View>}
+        </View >
+
     )
 }
 const useDispatch = (dispatch) => {

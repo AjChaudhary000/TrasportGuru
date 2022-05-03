@@ -1,4 +1,4 @@
-import { View, Text, Image, StyleSheet, KeyboardAvoidingView, TextInput, Dimensions, TouchableOpacity, StatusBar, TouchableWithoutFeedback, Keyboard, Platform } from 'react-native'
+import { View, Text, Image, StyleSheet, TextInput, Dimensions, TouchableOpacity, StatusBar } from 'react-native'
 import LottieView from 'lottie-react-native';
 import React from 'react'
 import icons from '../contents/icons';
@@ -13,6 +13,7 @@ import { GoogleSignin } from '@react-native-google-signin/google-signin';
 import { verifyGoogle } from '../Redux/verifyOtpSlice';
 import { getOnBording } from '../Redux/helper';
 import { getOnBordingData } from '../Redux/tokenSlice';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 const SignIn = (props) => {
     const Google = async () => {
         const onbording = await getOnBording();
@@ -72,96 +73,90 @@ const SignIn = (props) => {
         setEmail(val);
     }
     return (
-        <KeyboardAvoidingView
-            behavior={Platform.OS === "ios" ? "padding" : "height"}
-            style={styles.contentor(props)}
-        >
-            <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-                <View style={{ flex: 1 }}>
-                    <StatusBar hidden />
-                    <AnimatedLoader
-                        visible={props.loading || props.loading1}
-                        overlayColor="rgba(255,255,255,0.75)"
-                        source={require("../assets/json/loder.json")}
-                        animationStyle={{
-                            width: 100,
-                            height: 100
-                        }}
-                        speed={1}
-                    >
-                        <Text>Loading...</Text>
-                    </AnimatedLoader>
-                    <View style={styles.truckLogo}>
-                        <Image source={image.Tg} style={{ width: 200, height: 100, tintColor: props.theme ? color.drakPrimaryColors : color.primaryColors, }} />
-                        {/* <LottieView source={require('../assets/json/loading.json')} autoPlay loop /> */}
-                    </View>
 
-                    <View style={styles.titleComponets}>
-                        <Text style={styles.title(props)}> Welcome To Transport Guru</Text>
-                        <View>
-                            <Text style={styles.text}>
-                                Provide your email id,so we can be able  to send your confirmation code.
-                            </Text>
-                        </View>
-                    </View>
+        <KeyboardAwareScrollView style={styles.contentor(props)}>
+            <StatusBar hidden />
+            <AnimatedLoader
+                visible={props.loading || props.loading1}
+                overlayColor="rgba(255,255,255,0.75)"
+                source={require("../assets/json/loder.json")}
+                animationStyle={{
+                    width: 100,
+                    height: 100
+                }}
+                speed={1}
+            >
+                <Text>Loading...</Text>
+            </AnimatedLoader>
+            <View style={styles.truckLogo}>
+                <Image source={image.Tg} style={{ width: 200, height: 100, tintColor: props.theme ? color.drakPrimaryColors : color.primaryColors, }} />
+                {/* <LottieView source={require('../assets/json/loading.json')} autoPlay loop /> */}
+            </View>
 
-                    <View style={styles.inputBox}>
-                        <View style={{ width: "10%", paddingTop: 12 }}>
-                            <Image source={icons.email} style={{ width: 35, height: 35, tintColor: props.theme ? color.drakPrimaryColors : color.primaryColors, }} />
-                        </View>
-                        <View style={{ width: "85%" }}>
+            <View style={styles.titleComponets}>
+                <Text style={styles.title(props)}> Welcome To Transport Guru</Text>
+                <View>
+                    <Text style={styles.text}>
+                        Provide your email id,so we can be able  to send your confirmation code.
+                    </Text>
+                </View>
+            </View>
 
-                            <TextInput style={styles.input(props)}
-                                placeholder={"eg. transportguru@gmail.com"}
-                                placeholderTextColor={'gray'}
-                                onChangeText={(val) => emailHandle(val)}
-                                keyboardType={'email-address'}
-                                autoCapitalize={'none'} />
-                            {!isEmailValid && <Text style={{ color: 'red', marginTop: 5 }}> * Enter valid Email  </Text>}
+            <View style={styles.inputBox}>
+                <View style={{ width: "10%", paddingTop: 12 }}>
+                    <Image source={icons.email} style={{ width: 35, height: 35, tintColor: props.theme ? color.drakPrimaryColors : color.primaryColors, }} />
+                </View>
+                <View style={{ width: "85%" }}>
 
-                        </View>
-                    </View>
-                    <TouchableOpacity style={styles.btn(props)} onPress={() => sendEmail()}>
-                        <Text style={styles.btnText}>
-                            Continue
-                        </Text>
-                    </TouchableOpacity>
-
-                    <View style={styles.google}>
-
-                        <Text style={styles.googleText(props)}>
-                            Or
-                        </Text>
-
-
-                        <TouchableOpacity onPress={() => onGoogleButtonPress()} style={styles.googleBox}>
-                            <View style={{ width: '20%', alignItems: 'center', justifyContent: 'center' }}>
-                                <Image source={icons.google} style={{ width: 35, height: 35 }} />
-                            </View>
-                            <View style={{ width: '80%', alignItems: 'center', justifyContent: 'center', backgroundColor: '#4185F4' }}>
-                                <Text style={{ color: color.drakFontcolor, fontWeight: "bold" }}>
-                                    SignIn with Google
-                                </Text>
-                            </View>
-                        </TouchableOpacity>
-                        <TouchableOpacity onPress={() => props.navigation.replace("SignInWithPhone")} style={styles.googleBox}>
-                            <View style={{ width: '20%', alignItems: 'center', justifyContent: 'center' }}>
-                                <Image source={icons.phone} style={{
-                                    width: 35, height: 35,
-                                    tintColor: props.theme ? color.drakPrimaryColors : color.primaryColors
-                                }} />
-                            </View>
-                            <View style={{ width: '80%', alignItems: 'center', justifyContent: 'center', backgroundColor: color.primaryColors }}>
-                                <Text style={{ color: color.drakFontcolor, fontWeight: "bold" }}>
-                                    Sign In with Mobile No
-                                </Text>
-                            </View>
-                        </TouchableOpacity>
-                    </View>
+                    <TextInput style={styles.input(props)}
+                        placeholder={"eg. transportguru@gmail.com"}
+                        placeholderTextColor={'gray'}
+                        onChangeText={(val) => emailHandle(val)}
+                        keyboardType={'email-address'}
+                        autoCapitalize={'none'} />
+                    {!isEmailValid && <Text style={{ color: 'red', marginTop: 5 }}> * Enter valid Email  </Text>}
 
                 </View>
-            </TouchableWithoutFeedback>
-        </KeyboardAvoidingView>
+            </View>
+            <TouchableOpacity style={styles.btn(props)} onPress={() => sendEmail()}>
+                <Text style={styles.btnText}>
+                    Continue
+                </Text>
+            </TouchableOpacity>
+
+            <View style={styles.google}>
+
+                <Text style={styles.googleText(props)}>
+                    Or
+                </Text>
+
+
+                <TouchableOpacity onPress={() => onGoogleButtonPress()} style={styles.googleBox}>
+                    <View style={{ width: '20%', alignItems: 'center', justifyContent: 'center' }}>
+                        <Image source={icons.google} style={{ width: 35, height: 35 }} />
+                    </View>
+                    <View style={{ width: '80%', alignItems: 'center', justifyContent: 'center', backgroundColor: '#4185F4' }}>
+                        <Text style={{ color: color.drakFontcolor, fontWeight: "bold" }}>
+                            SignIn with Google
+                        </Text>
+                    </View>
+                </TouchableOpacity>
+                <TouchableOpacity onPress={() => props.navigation.replace("SignInWithPhone")} style={styles.googleBox}>
+                    <View style={{ width: '20%', alignItems: 'center', justifyContent: 'center' }}>
+                        <Image source={icons.phone} style={{
+                            width: 35, height: 35,
+                            tintColor: props.theme ? color.drakPrimaryColors : color.primaryColors
+                        }} />
+                    </View>
+                    <View style={{ width: '80%', alignItems: 'center', justifyContent: 'center', backgroundColor: color.primaryColors }}>
+                        <Text style={{ color: color.drakFontcolor, fontWeight: "bold" }}>
+                            Sign In with Mobile No
+                        </Text>
+                    </View>
+                </TouchableOpacity>
+            </View>
+
+        </KeyboardAwareScrollView>
     )
 
 }
@@ -200,7 +195,7 @@ const styles = StyleSheet.create({
     },
     titleComponets: {
         marginHorizontal: 5,
-        height: 100
+        height: 130
     },
     title: (props) => [{
         fontSize: 25,

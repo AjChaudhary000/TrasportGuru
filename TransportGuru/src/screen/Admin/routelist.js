@@ -9,20 +9,21 @@ import { getCountRoute } from '../../Redux/Admin/countAddSlice'
 import icons from '../../contents/icons'
 import Toast from 'react-native-simple-toast';
 import AnimatedLoader from "react-native-animated-loader";
+import ActionDialogBox from '../../components/ActionDialogBox'
 const Routelist = (props) => {
+    const [modalVisible, setModalVisible] = React.useState(false);
+    const [Routeid, setRouteId] = React.useState('')
     React.useEffect(() => {
-
         props.getRouteList(props.token)
     }, [])
     React.useEffect(() => {
-
         if (props.deletedata.status) {
             props.getRouteList(props.token)
             props.getCountRoute(props.token)
             props.setRouteData(props.token)
         }
     }, [props])
-    const DeleteDriver = (id) => {
+    const DeleteRoute = (id) => {
         Toast.show(" Route remove successful")
         props.deleteRoute({ id: id, token: props.token })
     }
@@ -30,7 +31,6 @@ const Routelist = (props) => {
         console.log(item)
         props.navigation.navigate("AddRoute", { item: item })
     }
-
     return (
         <View style={styles.container(props)}>
             <AnimatedLoader
@@ -45,6 +45,14 @@ const Routelist = (props) => {
             >
                 <Text>Loading...</Text>
             </AnimatedLoader>
+            <ActionDialogBox
+                modalVisibleData={modalVisible}
+                theme={props.theme}
+                title={"Route Remove"}
+                text={"Are you sure you want to remove route ?"}
+                onOkPress={(val) => val && DeleteRoute(Routeid)}
+                onGet={(val) => setModalVisible(val)}
+            />
             <AdminHeaderWithBackButton name={"Route List"} navigation={props.navigation} />
             {props.routelist.length === 0 ?
                 <View style={{ flex: 1 }}>
@@ -52,9 +60,7 @@ const Routelist = (props) => {
                     <View style={{ height: 500, width: 200, alignSelf: 'center' }}>
                         <LottieView source={require('../../assets/json/notfound.json')} autoPlay loop />
                     </View>
-
                 </View>
-
                 :
                 <FlatList data={props.routelist} renderItem={(item) => (
                     <View style={styles.listBox(props)}>
@@ -76,11 +82,8 @@ const Routelist = (props) => {
                                 <Image source={icons.journey} style={{ width: 10, height: 40 * item.item.routeStop.length, tintColor: props.theme ? color.drakAdminprimaryColors : color.adminprimaryColors }} />
                             </View>
                             <View style={{ width: "95%", justifyContent: 'center' }}>
-
-
                                 <FlatList data={item.item.routeStop} renderItem={(item) => (
                                     <View style={{ margin: 10, flexDirection: 'row' }}>
-
                                         <View style={{ width: '5%', justifyContent: 'center' }}>
                                             <Image source={icons.forword} style={{ width: 20, height: 20, tintColor: props.theme ? color.drakAdminprimaryColors : color.adminprimaryColors }} />
                                         </View>
@@ -97,17 +100,13 @@ const Routelist = (props) => {
                             <TouchableOpacity onPress={() => { EditDriver(item.item) }}>
                                 <Text style={styles.edit}>Edit</Text>
                             </TouchableOpacity>
-                            <TouchableOpacity onPress={() => { DeleteDriver(item.item._id) }}>
+                            <TouchableOpacity onPress={() => { setModalVisible(true); setRouteId(item.item._id) }}>
                                 <Text style={styles.delete} >Delete</Text>
                             </TouchableOpacity>
-
-
-
                         </View>
                     </View>
                 )
                 } />}
-
         </View >
     )
 }

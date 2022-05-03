@@ -1,20 +1,16 @@
 import {
     View, Text, Image,
     StyleSheet, TextInput,
-    TouchableOpacity,
-    KeyboardAvoidingView,
-    TouchableWithoutFeedback,
-    Keyboard, Platform, Modal, Dimensions, ScrollView, LogBox, PermissionsAndroid, Alert, SafeAreaView
+    TouchableOpacity, Platform, LogBox, PermissionsAndroid
 } from 'react-native'
 import Toast from 'react-native-simple-toast';
 import React from 'react'
 import color from '../../contents/color'
 import icons from '../../contents/icons'
 import { connect } from 'react-redux';
-import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
 import MapView, { PROVIDER_GOOGLE } from "react-native-maps"
-import config from '../../config/config';
-import ModelBox from '../../components/modelBox';
+import GoogleDialogBox from '../../components/GoogleDialogBox';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 const HomeScreen = (props) => {
     const [modalVisible, setModalVisible] = React.useState(false);
     const [placetype, setPlaceType] = React.useState()
@@ -64,10 +60,8 @@ const HomeScreen = (props) => {
             Toast.show("Enter capicity")
         } else {
             props.navigation.navigate("SearchTransportList", data)
-
         }
     }
-
     const drakmap = [
         {
             "elementType": "geometry",
@@ -445,160 +439,113 @@ const HomeScreen = (props) => {
         }
     ]
     return (
-        <KeyboardAvoidingView
-            behavior={Platform.OS === "ios" ? "padding" : "height"}
-            style={styles.container(props)}
-        >
-            <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-                <View style={{ flex: 1 }}>
-                    {modalVisible && <ModelBox
-                        modalVisibleData={modalVisible}
-                        theme={props.theme}>
-                        <ScrollView keyboardShouldPersistTaps="handled" >
-                            <TouchableOpacity onPress={() => { setModalVisible(false) }} style={{ alignItems: 'center', left: Dimensions.get('screen').width / 2 - 40 }}>
-                                <Image source={icons.close} style={{ width: 35, height: 35, tintColor: props.theme ? color.drakPrimaryColors : color.primaryColors, }} />
+        <View style={styles.container(props)}>
+            <GoogleDialogBox
+                modalVisibleData={modalVisible}
+                theme={props.theme}
+                title={"Search Source / Destination City"}
+                setPlaceTypeData={placetype}
+                onGet={(val) => setModalVisible(val)}
+                onGetData={(val) => {
+                    placetype === "from" ?
+                        setData({ ...data, from: val }) :
+                        setData({ ...data, destination: val })
+                }}
+            />
+            <View style={styles.mapBox}>
+                <MapView
+
+                    showsUserLocation={true}
+                    style={{ height: "100%" }}
+                    zoomEnabled={true}
+                    scrollEnabled={true}
+                    showsBuildings={true}
+                    customMapStyle={props.theme ? drakmap : lightmap}
+                    showsMyLocationButton={true}
+                    provider={"google"}
+                    region={{
+                        latitude: 37.78825,
+                        longitude: -122.4324,
+                        latitudeDelta: 0.015,
+                        longitudeDelta: 0.0121,
+                    }}
+                >
+
+                </MapView>
+
+            </View>
+            <KeyboardAwareScrollView style={styles.searchBox(props)} >
+
+                <View style={styles.fromToDesc(props)}>
+                    <View style={{ width: "10%", justifyContent: 'center' }}>
+                        <Image source={icons.journey} style={{ width: 50, height: 115, tintColor: props.theme ? color.drakPrimaryColors : color.primaryColors, }} />
+                    </View>
+                    <View style={{ width: "90%", justifyContent: 'center' }}>
+                        <View style={{ margin: 10, flexDirection: 'row' }}>
+                            <View style={{ width: '5%', justifyContent: 'center' }}>
+                                <Image source={icons.forword} style={{
+                                    width: 20,
+                                    height: 20,
+                                    tintColor: props.theme ? color.drakPrimaryColors : color.primaryColors,
+                                }} />
+                            </View>
+                            <TouchableOpacity style={{ width: '95%' }} activeOpacity={0.80}
+                                onPress={() => {
+                                    setModalVisible(true);
+                                    setPlaceType("from")
+                                }}>
+                                <Text style={styles.inputBox(props)}>{data.from.name}</Text>
                             </TouchableOpacity>
-                            <View style={{ marginHorizontal: 30, marginVertical: 20 }}>
-                                <Text style={{ color: 'gray', fontSize: 20, fontWeight: 'bold' }}>Search Source / Destination City</Text>
+                        </View>
+                        <View style={{ margin: 10, flexDirection: 'row' }}>
+                            <View style={{ width: '5%', justifyContent: 'center' }}>
+                                <Image source={icons.forword} style={{
+                                    width: 20,
+                                    height: 20,
+                                    tintColor: props.theme ? color.drakPrimaryColors : color.primaryColors,
+                                }} />
                             </View>
-                            <GooglePlacesAutocomplete
-                                placeholder={placetype === "from" ? "eg. From" : "eg. destination"}
-                                placeholderTextColor={'gray'}
-                                minLength={2} // minimum length of text to search
-                                fetchDetails={true}
-                                autoFocus={true}
-                                renderDescription={row => row.description} // custom description render
-                                onPress={(dt, details = null) => {
-                                    //   console.log(dt)
-                                    placetype === "from" && setData({ ...data, from: { name: dt.description, lat: details.geometry.location.lat, lng: details.geometry.location.lng } });
-                                    if (placetype === "destination") {
-
-                                        setData({ ...data, destination: { name: dt.description, lat: details.geometry.location.lat, lng: details.geometry.location.lng } });
-                                    }
-                                    setModalVisible(false)
-                                    // console.log(details);
-                                }}
-                                getDefaultValue={() => {
-                                    return ''; // text input default value
-                                }}
-                                query={{
-                                    // available options: https://developers.google.com/places/web-service/autocomplete
-                                    key: config.GooglePlaceAPI,
-                                    language: 'en', // language of the results
-                                    types: '(cities)',
-                                    // default: 'geocode'
-                                }}
-                                styles={{
-
-                                    textInput: {
-                                        borderWidth: 2,
-                                        borderColor: props.theme ? color.drakPrimaryColors : color.primaryColors,
-                                        padding: 10,
-                                        fontSize: 18,
-                                        borderRadius: 10,
-                                        marginHorizontal: 30
-                                    },
-                                    description: {
-                                        color: props.theme ? color.drakPrimaryColors : color.primaryColors,
-                                        fontSize: 18,
-
-                                    }, listView: {
-                                        borderWidth: 2,
-                                        borderColor: props.theme ? color.drakPrimaryColors : color.primaryColors,
-                                        padding: 10,
-                                        fontSize: 18,
-                                        borderRadius: 10,
-                                    }
-                                }}
-
-                                debounce={200}
-                            />
-
-                        </ScrollView>
-                    </ModelBox>}
-                    <View style={styles.mapBox}>
-                        <MapView
-
-                            showsUserLocation={true}
-                            style={{ height: "100%" }}
-                            zoomEnabled={true}
-                            scrollEnabled={true}
-                            showsBuildings={true}
-                            customMapStyle={props.theme ? drakmap : lightmap}
-                            showsMyLocationButton={true}
-                            provider={"google"}
-                            region={{
-                                latitude: 37.78825,
-                                longitude: -122.4324,
-                                latitudeDelta: 0.015,
-                                longitudeDelta: 0.0121,
-                            }}
-                        >
-
-                        </MapView>
-
+                            <TouchableOpacity style={{ width: '95%' }} activeOpacity={0.80}
+                                onPress={() => {
+                                    setPlaceType("destination");
+                                    setModalVisible(true)
+                                }}>
+                                <Text style={styles.inputBox(props)}>{data.destination.name}</Text>
+                            </TouchableOpacity>
+                        </View>
                     </View>
-                    <View style={styles.searchBox(props)} >
-
-                        <View style={styles.fromToDesc(props)}>
-                            <View style={{ width: "10%", justifyContent: 'center' }}>
-                                <Image source={icons.journey} style={{ width: 50, height: 115, tintColor: props.theme ? color.drakPrimaryColors : color.primaryColors, }} />
-                            </View>
-                            <View style={{ width: "90%", justifyContent: 'center' }}>
-                                <View style={{ margin: 10, flexDirection: 'row' }}>
-                                    <View style={{ width: '5%', justifyContent: 'center' }}>
-                                        <Image source={icons.forword} style={{ width: 20, height: 20, tintColor: props.theme ? color.drakPrimaryColors : color.primaryColors, }} />
-                                    </View>
-                                    <TouchableOpacity style={{ width: '95%' }} activeOpacity={0.80} onPress={() => { setPlaceType("from"); setModalVisible(true) }}>
-                                        <Text style={styles.inputBox(props)}>{data.from.name}</Text>
-                                    </TouchableOpacity>
-                                </View>
-                                <View style={{ margin: 10, flexDirection: 'row' }}>
-                                    <View style={{ width: '5%', justifyContent: 'center' }}>
-                                        <Image source={icons.forword} style={{ width: 20, height: 20, tintColor: props.theme ? color.drakPrimaryColors : color.primaryColors, }} />
-                                    </View>
-                                    <TouchableOpacity style={{ width: '95%' }} activeOpacity={0.80} onPress={() => { setPlaceType("destination"); setModalVisible(true) }}>
-                                        <Text style={styles.inputBox(props)}>{data.destination.name}</Text>
-                                    </TouchableOpacity>
-                                </View>
-                            </View>
-                        </View>
-                        <View style={styles.reverseBtn(props)}>
-                            <Image source={icons.upToDown} style={{ width: 30, height: 30, tintColor: 'white' }} />
-                        </View>
-                        <View style={styles.dateOrCapicity}>
-                            <View style={{ width: '30%', justifyContent: 'center' }}>
-                                <Text style={{ fontWeight: "bold", fontSize: 18, color: props.theme ? color.drakFontcolor : color.fontcolor, }}>Goods Weight</Text>
-                            </View>
-                            <View style={{ width: '30%', justifyContent: 'center' }}>
-                                <TextInput style={{
-                                    borderBottomColor: color.primaryColors,
-                                    width: '70%',
-                                    borderBottomWidth: 2, paddingHorizontal: 20
-                                    , height: 40, fontSize: 18, color: props.theme ? color.drakFontcolor : color.fontcolor
-                                }}
-                                    onChangeText={(val) => setData({ ...data, capicity: val })}
-                                    placeholder={"00"}
-                                    placeholderTextColor="gray"
-                                    keyboardType='number-pad' />
-
-                            </View>
-                            <View style={{ width: '30%', justifyContent: 'center' }}>
-                                <Text style={{ fontWeight: "bold", fontSize: 18, color: props.theme ? color.drakPrimaryColors : color.primaryColors, }}>/ Tonnes</Text>
-                            </View>
-                        </View>
-                        <TouchableOpacity style={styles.btn(props)} onPress={() => { SearchRoute() }}>
-                            <Text style={styles.btnText}>
-                                Search
-                            </Text>
-                        </TouchableOpacity>
-                    </View>
-
                 </View>
+                <View style={styles.reverseBtn(props)}>
+                    <Image source={icons.upToDown} style={{ width: 30, height: 30, tintColor: 'white' }} />
+                </View>
+                <View style={styles.dateOrCapicity}>
+                    <View style={{ width: '30%', justifyContent: 'center' }}>
+                        <Text style={{ fontWeight: "bold", fontSize: 18, color: props.theme ? color.drakFontcolor : color.fontcolor, }}>Goods Weight</Text>
+                    </View>
+                    <View style={{ width: '30%', justifyContent: 'center' }}>
+                        <TextInput style={{
+                            borderBottomColor: color.primaryColors,
+                            width: '70%',
+                            borderBottomWidth: 2, paddingHorizontal: 20
+                            , height: 40, fontSize: 18, color: props.theme ? color.drakFontcolor : color.fontcolor
+                        }}
+                            onChangeText={(val) => setData({ ...data, capicity: val })}
+                            placeholder={"00"}
+                            placeholderTextColor="gray"
+                            keyboardType='number-pad' />
 
-            </TouchableWithoutFeedback>
-
-        </KeyboardAvoidingView >
+                    </View>
+                    <View style={{ width: '30%', justifyContent: 'center' }}>
+                        <Text style={{ fontWeight: "bold", fontSize: 18, color: props.theme ? color.drakPrimaryColors : color.primaryColors, }}>/ Tonnes</Text>
+                    </View>
+                </View>
+                <TouchableOpacity style={styles.btn(props)} onPress={() => { SearchRoute() }}>
+                    <Text style={styles.btnText}>
+                        Search
+                    </Text>
+                </TouchableOpacity>
+            </KeyboardAwareScrollView>
+        </View>
     )
 }
 
@@ -611,7 +558,7 @@ export default connect(useSelector)(HomeScreen);
 const styles = StyleSheet.create({
     container: (props) => [{
         flex: 1,
-        paddingBottom: 40,
+       
         backgroundColor: props.theme ? color.drakBackgroundColor : color.backgroundColor,
     }],
     mapBox: {
@@ -625,7 +572,7 @@ const styles = StyleSheet.create({
         bottom: 0,
         borderTopLeftRadius: 40,
         borderTopRightRadius: 40,
-        justifyContent: 'center',
+        paddingTop: 50
 
     }],
     fromToDesc: (props) => [{
@@ -657,7 +604,7 @@ const styles = StyleSheet.create({
         height: 50,
         borderRadius: 25,
         backgroundColor: props.theme ? color.drakPrimaryColors : color.primaryColors,
-        bottom: Platform.OS === 'android' ? '59%' : "57%", left: '70%',
+        bottom: Platform.OS === 'android' ? '60%' : "60%", left: '70%',
         justifyContent: 'center',
         alignItems: 'center', position: "absolute"
     }],

@@ -172,7 +172,7 @@ const AdminTrackingDetails = (props) => {
 
                                         </View>
                                     </View>
-                                    <FlatList data={item.item.routeId.routeStop} renderItem={(data) => (
+                                    {(item.item.routeId.routeStop).map((data) => (
 
                                         <View >
                                             <View style={{ margin: 5, flexDirection: 'row' }}>
@@ -181,11 +181,11 @@ const AdminTrackingDetails = (props) => {
                                                     <Image source={icons.forword} style={{
                                                         width: 20, height: 20, tintColor: ((new Date(new Date(item.item.Truckdate)
                                                             .setHours(new Date(item.item.Truckdate)
-                                                                .getHours() + data.item.avgTime))) <= new Date()) ? "green" : color.adminprimaryColors
+                                                                .getHours() + data.avgTime))) <= new Date()) ? "green" : color.adminprimaryColors
                                                     }} />
                                                 </View>
                                                 <View style={{ width: '95%' }}>
-                                                    <Text style={{ marginHorizontal: 10, fontWeight: 'bold', color: 'gray', fontSize: 16 }}>{data.item.stops}</Text>
+                                                    <Text style={{ marginHorizontal: 10, fontWeight: 'bold', color: 'gray', fontSize: 16 }}>{data.stops}</Text>
                                                 </View>
 
                                             </View>
@@ -194,7 +194,7 @@ const AdminTrackingDetails = (props) => {
                                                     <Text style={{ color: props.theme ? color.drakFontcolor : color.fontcolor }}>
                                                         {new Date(new Date(item.item.Truckdate)
                                                             .setHours(new Date(item.item.Truckdate)
-                                                                .getHours() + data.item.avgTime)).toLocaleDateString("en-US", { weekday: 'short', month: 'long', day: 'numeric' })}
+                                                                .getHours() + data.avgTime)).toLocaleDateString("en-US", { weekday: 'short', month: 'long', day: 'numeric' })}
                                                     </Text>
                                                 </View>
 
@@ -202,14 +202,14 @@ const AdminTrackingDetails = (props) => {
                                                     <Text style={{ color: props.theme ? color.drakFontcolor : color.fontcolor, }}>
                                                         {new Date(new Date(item.item.Truckdate)
                                                             .setHours(new Date(item.item.Truckdate)
-                                                                .getHours() + data.item.avgTime)).toLocaleDateString("en-US", { hour: 'numeric', minute: 'numeric', hour12: false }).toString().slice(-6)}
+                                                                .getHours() + data.avgTime)).toLocaleDateString("en-US", { hour: 'numeric', minute: 'numeric', hour12: false }).toString().slice(-6)}
                                                     </Text>
                                                 </View>
 
                                             </View>
                                         </View>
-                                    )}
-                                    />
+                                    ))}
+
                                     <View>
                                         <View style={{ margin: 5, flexDirection: 'row' }}>
 

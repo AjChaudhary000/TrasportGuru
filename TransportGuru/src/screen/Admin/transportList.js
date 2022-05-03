@@ -9,9 +9,8 @@ import { getCountTransport } from '../../Redux/Admin/countAddSlice'
 import icons from '../../contents/icons'
 import { deleteTransport, getTransportList, setTransportData, setTransportList } from '../../Redux/Admin/transportSlice'
 import Toast from 'react-native-simple-toast';
-
 import AnimatedLoader from "react-native-animated-loader";
-import { getUserDetails } from '../../Redux/UserDetails'
+import ActionDialogBox from '../../components/ActionDialogBox'
 const TransportListDetails = (props) => {
     const [driver, setDriver] = React.useState({ type: false, id: '' });
     const [truck, setTruck] = React.useState({ type: false, id: '' });
@@ -19,6 +18,8 @@ const TransportListDetails = (props) => {
     const [data, setData] = React.useState([])
     const limitValue = 3
     const [isSkip, setIsSkip] = React.useState(0);
+    const [modalVisible, setModalVisible] = React.useState(false);
+    const [Tid, setTId] = React.useState('')
     React.useEffect(() => {
 
         props.getTransportList({ token: props.token, skip: isSkip, limit: limitValue })
@@ -38,8 +39,7 @@ const TransportListDetails = (props) => {
         }
     }, [props])
 
-    const DeleteDriver = (id) => {
-
+    const TrasportDelete = (id) => {
         Toast.show(" Transport remove successful")
         props.deleteTransport({ id: id, token: props.token })
     }
@@ -68,7 +68,14 @@ const TransportListDetails = (props) => {
     }
     return (
         <View style={styles.container(props)}>
-
+            <ActionDialogBox
+                modalVisibleData={modalVisible}
+                theme={props.theme}
+                title={"Transport Details Remove"}
+                text={"Are you sure you want to remove Transport Details ?"}
+                onOkPress={(val) => val && TrasportDelete(Tid)}
+                onGet={(val) => setModalVisible(val)}
+            />
             <AdminHeaderWithBackButton name={"Transport List"} navigation={props.navigation} />
             {data.length === 0 ?
 
@@ -203,7 +210,7 @@ const TransportListDetails = (props) => {
                             <TouchableOpacity onPress={() => { EditDriver(item.item) }}>
                                 <Text style={styles.edit}>Edit</Text>
                             </TouchableOpacity>
-                            <TouchableOpacity onPress={() => { DeleteDriver(item.item._id) }}>
+                            <TouchableOpacity onPress={() => { setModalVisible(true); setTId(item.item._id) }}>
                                 <Text style={styles.delete} >Delete</Text>
                             </TouchableOpacity>
 

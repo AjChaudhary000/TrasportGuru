@@ -1,6 +1,5 @@
 import {
-    View, Text, StyleSheet, TextInput, TouchableOpacity, TouchableWithoutFeedback,
-    Keyboard, Image, KeyboardAvoidingView, Platform, ScrollView
+    View, Text, StyleSheet, TextInput, TouchableOpacity,  Image, 
 } from 'react-native'
 import React from 'react'
 import { AdminHeaderWithBackButton } from '../../components/adminHeader';
@@ -15,6 +14,7 @@ import { getDriverList } from '../../Redux/Admin/driverListSlice';
 import AnimatedLoader from "react-native-animated-loader";
 import Toast from 'react-native-simple-toast';
 import ImageModel from '../../components/imageModel';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 const AddDriver = (props) => {
 
     const [firebaseImage, setfirebaseImage] = React.useState(props.route.params?.item?.driverImage || '');
@@ -84,191 +84,185 @@ const AddDriver = (props) => {
         }
     }
     return (
-        <KeyboardAvoidingView
-            behavior={Platform.OS === "ios" ? "padding" : "height"}
-            style={styles.container(props)}
-        >
-            <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
 
-                <View style={{ flex: 1 }}>
-                    <AnimatedLoader
-                        visible={props.loading}
-                        overlayColor="rgba(255,255,255,0.75)"
-                        source={require("../../assets/json/loder.json")}
-                        animationStyle={{
-                            width: 100,
-                            height: 100
-                        }}
-                        speed={1}
-                    >
-                        <Text>Loading...</Text>
-                    </AnimatedLoader>
-                    {modalVisible1 && <ImageModel
-                        filename={"Driver"}
-                        theme={props.theme}
-                        modalVisibleData={modalVisible1}
-                        onGetImage={(val) => setfirebaseImage(val)}
-                        onGetLoding={(val) => setImageLoading(val)}
-                        onGetModalVisible={(val) => setModalVisible1(val)} />}
-                    {!props.route.params?.item?._id ?
-                        // add driver
-                        <ScrollView showsVerticalScrollIndicator={false}>
-                            <AdminHeaderWithBackButton name={"Add Driver"} navigation={props.navigation} />
+        <View style={styles.container(props)}>
+            <AnimatedLoader
+                visible={props.loading}
+                overlayColor="rgba(255,255,255,0.75)"
+                source={require("../../assets/json/loder.json")}
+                animationStyle={{
+                    width: 100,
+                    height: 100
+                }}
+                speed={1}
+            >
+                <Text>Loading...</Text>
+            </AnimatedLoader>
+            {modalVisible1 && <ImageModel
+                filename={"Driver"}
+                theme={props.theme}
+                modalVisibleData={modalVisible1}
+                onGetImage={(val) => setfirebaseImage(val)}
+                onGetLoding={(val) => setImageLoading(val)}
+                onGetModalVisible={(val) => setModalVisible1(val)} />}
+            {!props.route.params?.item?._id ?
+                // add driver
+                <View>
+                    <AdminHeaderWithBackButton name={"Add Driver"} navigation={props.navigation} />
 
 
-                            <View style={styles.inputBox}>
-                                {!imageLoading ?
-                                    <View style={{ marginHorizontal: 10 }}>
-                                        {!firebaseImage ?
-                                            <TouchableOpacity onPress={() => { setModalVisible1(true) }}>
-                                                <Image
-                                                    style={{
-                                                        alignSelf: 'center',
-                                                        width: 100,
-                                                        height: 100,
-                                                        borderRadius: 10,
-                                                        resizeMode: 'contain',
-                                                        marginVertical: 30,
-                                                        tintColor: props.theme ? color.drakAdminprimaryColors : color.adminprimaryColors,
-                                                    }}
-                                                    source={icons.add_photo}
-                                                />
-                                            </TouchableOpacity> :
-                                            <TouchableOpacity style={styles.image(props)} onPress={() => { setModalVisible1(true) }}>
-                                                <Image
-                                                    style={{
-                                                        width: 110, height: 110, alignSelf: "center"
+                    <KeyboardAwareScrollView style={styles.inputBox}>
+                        {!imageLoading ?
+                            <View style={{ marginHorizontal: 10 }}>
+                                {!firebaseImage ?
+                                    <TouchableOpacity onPress={() => { setModalVisible1(true) }}>
+                                        <Image
+                                            style={{
+                                                alignSelf: 'center',
+                                                width: 100,
+                                                height: 100,
+                                                borderRadius: 10,
+                                                resizeMode: 'contain',
+                                                marginVertical: 30,
+                                                tintColor: props.theme ? color.drakAdminprimaryColors : color.adminprimaryColors,
+                                            }}
+                                            source={icons.add_photo}
+                                        />
+                                    </TouchableOpacity> :
+                                    <TouchableOpacity style={styles.image(props)} onPress={() => { setModalVisible1(true) }}>
+                                        <Image
+                                            style={{
+                                                width: 110, height: 110, alignSelf: "center"
 
-                                                    }}
-                                                    source={{ uri: firebaseImage }}
-                                                /></TouchableOpacity>}
+                                            }}
+                                            source={{ uri: firebaseImage }}
+                                        /></TouchableOpacity>}
 
 
-                                    </View>
-                                    :
-                                    <View style={{ height: 100, alignContent: 'center', marginHorizontal: 10 }}>
-                                        <LottieView source={require('../../assets/json/uploading1.json')} autoPlay loop />
-                                    </View>}
-                                <View style={{ margin: 10 }}>
-                                    <TextInput style={styles.input(props)}
-
-                                        placeholder={"eg. Driver name"}
-                                        placeholderTextColor={'gray'}
-                                        onChangeText={(val) => setData({ ...data, driverName: val })}
-                                        autoCapitalize={'none'} />
-
-                                </View>
-                                <View style={{ margin: 10 }}>
-                                    <TextInput style={styles.input(props)}
-                                        placeholder={"eg. Driver mobile No"}
-                                        placeholderTextColor={'gray'}
-                                        maxLength={13}
-                                        onChangeText={(val) => setData({ ...data, driverMobileNo: val })}
-                                        autoCapitalize={'none'}
-                                        keyboardType={'number-pad'} />
-
-                                </View>
-                                <View style={{ margin: 10 }}>
-                                    <TextInput style={styles.input(props)}
-                                        placeholder={"eg. Driver email"}
-                                        placeholderTextColor={'gray'}
-                                        keyboardType={'email-address'}
-                                        onChangeText={(val) => setData({ ...data, driverEmail: val })}
-                                        autoCapitalize={'none'} />
-
-                                </View>
-
-                                <View style={{ marginHorizontal: 10, marginVertical: 10 }}>
-                                    <TouchableOpacity style={styles.btn(props)} onPress={() => { VerifyDriver() }}>
-                                        <Text style={styles.btnText}>
-                                            Verify Driver
-                                        </Text>
-                                    </TouchableOpacity>
-                                </View>
                             </View>
-                        </ScrollView> :
-                        <ScrollView showsVerticalScrollIndicator={false}>
-                            <AdminHeaderWithBackButton name={"Update Driver"} navigation={props.navigation} />
-                            <View style={styles.inputBox}>
+                            :
+                            <View style={{ height: 100, alignContent: 'center', marginHorizontal: 10 }}>
+                                <LottieView source={require('../../assets/json/uploading1.json')} autoPlay loop />
+                            </View>}
+                        <View style={{ margin: 10 }}>
+                            <TextInput style={styles.input(props)}
+
+                                placeholder={"eg. Driver name"}
+                                placeholderTextColor={'gray'}
+                                onChangeText={(val) => setData({ ...data, driverName: val })}
+                                autoCapitalize={'none'} />
+
+                        </View>
+                        <View style={{ margin: 10 }}>
+                            <TextInput style={styles.input(props)}
+                                placeholder={"eg. Driver mobile No"}
+                                placeholderTextColor={'gray'}
+                                maxLength={13}
+                                onChangeText={(val) => setData({ ...data, driverMobileNo: val })}
+                                autoCapitalize={'none'}
+                                keyboardType={'number-pad'} />
+
+                        </View>
+                        <View style={{ margin: 10 }}>
+                            <TextInput style={styles.input(props)}
+                                placeholder={"eg. Driver email"}
+                                placeholderTextColor={'gray'}
+                                keyboardType={'email-address'}
+                                onChangeText={(val) => setData({ ...data, driverEmail: val })}
+                                autoCapitalize={'none'} />
+
+                        </View>
+
+                        <View style={{ marginHorizontal: 10, marginVertical: 10 }}>
+                            <TouchableOpacity style={styles.btn(props)} onPress={() => { VerifyDriver() }}>
+                                <Text style={styles.btnText}>
+                                    Verify Driver
+                                </Text>
+                            </TouchableOpacity>
+                        </View>
+                    </KeyboardAwareScrollView>
+                </View> :
+                <View>
+                    <AdminHeaderWithBackButton name={"Update Driver"} navigation={props.navigation} />
+                    <KeyboardAwareScrollView style={styles.inputBox}>
+                        <View style={{ marginHorizontal: 10 }}>
+                            {!imageLoading ?
                                 <View style={{ marginHorizontal: 10 }}>
-                                    {!imageLoading ?
-                                        <View style={{ marginHorizontal: 10 }}>
-                                            {!firebaseImage ?
-                                                <TouchableOpacity onPress={() => { setModalVisible1(true) }}>
-                                                    <Image
-                                                        style={{
-                                                            alignSelf: 'center',
-                                                            width: 100,
-                                                            height: 100,
-                                                            borderRadius: 10,
-                                                            resizeMode: 'contain',
-                                                            marginVertical: 30,
-                                                            tintColor: props.theme ? color.drakAdminprimaryColors : color.adminprimaryColors,
-                                                        }}
-                                                        source={icons.add_photo}
-                                                    />
-                                                </TouchableOpacity> :
-                                                <TouchableOpacity style={styles.image(props)} onPress={() => { setModalVisible1(true) }}>
-                                                    <Image
-                                                        style={{
-                                                            width: 110, height: 110, alignSelf: "center"
+                                    {!firebaseImage ?
+                                        <TouchableOpacity onPress={() => { setModalVisible1(true) }}>
+                                            <Image
+                                                style={{
+                                                    alignSelf: 'center',
+                                                    width: 100,
+                                                    height: 100,
+                                                    borderRadius: 10,
+                                                    resizeMode: 'contain',
+                                                    marginVertical: 30,
+                                                    tintColor: props.theme ? color.drakAdminprimaryColors : color.adminprimaryColors,
+                                                }}
+                                                source={icons.add_photo}
+                                            />
+                                        </TouchableOpacity> :
+                                        <TouchableOpacity style={styles.image(props)} onPress={() => { setModalVisible1(true) }}>
+                                            <Image
+                                                style={{
+                                                    width: 110, height: 110, alignSelf: "center"
 
-                                                        }}
-                                                        source={{ uri: firebaseImage }}
-                                                    /></TouchableOpacity>}
+                                                }}
+                                                source={{ uri: firebaseImage }}
+                                            /></TouchableOpacity>}
 
-
-                                        </View>
-                                        :
-                                        <View style={{ height: 100, alignContent: 'center', marginHorizontal: 10 }}>
-                                            <LottieView source={require('../../assets/json/uploading1.json')} autoPlay loop />
-                                        </View>}
-                                </View>
-
-                                <View style={{ margin: 10 }}>
-                                    <TextInput style={styles.input(props)}
-
-                                        placeholder={"eg. Driver name"}
-                                        placeholderTextColor={'gray'}
-                                        defaultValue={props.route.params?.item?.driverName}
-                                        onChangeText={(val) => setData({ ...data, driverName: val })}
-                                        autoCapitalize={'none'} />
 
                                 </View>
-                                <View style={{ margin: 10 }}>
-                                    <TextInput style={styles.input(props)}
-                                        placeholder={"eg. Driver mobile No"}
-                                        placeholderTextColor={'gray'}
-                                        maxLength={13}
-                                        defaultValue={props.route.params?.item?.driverMobileNo}
-                                        onChangeText={(val) => setData({ ...data, driverMobileNo: val })}
-                                        autoCapitalize={'none'}
-                                        keyboardType={'number-pad'} />
+                                :
+                                <View style={{ height: 100, alignContent: 'center', marginHorizontal: 10 }}>
+                                    <LottieView source={require('../../assets/json/uploading1.json')} autoPlay loop />
+                                </View>}
+                        </View>
 
-                                </View>
-                                <View style={{ margin: 10 }}>
-                                    <TextInput style={styles.input(props)}
-                                        placeholder={"eg. Driver email"}
-                                        defaultValue={props.route.params?.item?.driverEmail}
-                                        placeholderTextColor={'gray'}
-                                        onChangeText={(val) => setData({ ...data, driverEmail: val })}
-                                        autoCapitalize={'none'} />
+                        <View style={{ margin: 10 }}>
+                            <TextInput style={styles.input(props)}
 
-                                </View>
+                                placeholder={"eg. Driver name"}
+                                placeholderTextColor={'gray'}
+                                defaultValue={props.route.params?.item?.driverName}
+                                onChangeText={(val) => setData({ ...data, driverName: val })}
+                                autoCapitalize={'none'} />
 
-                                <View style={{ marginHorizontal: 10, marginVertical: 10 }}>
-                                    <TouchableOpacity style={styles.btn(props)} onPress={() => { UpdateFinish() }}>
-                                        <Text style={styles.btnText}>
-                                            Verify Driver
-                                        </Text>
-                                    </TouchableOpacity>
-                                </View>
-                            </View>
-                        </ScrollView>
-                    }
+                        </View>
+                        <View style={{ margin: 10 }}>
+                            <TextInput style={styles.input(props)}
+                                placeholder={"eg. Driver mobile No"}
+                                placeholderTextColor={'gray'}
+                                maxLength={13}
+                                defaultValue={props.route.params?.item?.driverMobileNo}
+                                onChangeText={(val) => setData({ ...data, driverMobileNo: val })}
+                                autoCapitalize={'none'}
+                                keyboardType={'number-pad'} />
+
+                        </View>
+                        <View style={{ margin: 10 }}>
+                            <TextInput style={styles.input(props)}
+                                placeholder={"eg. Driver email"}
+                                defaultValue={props.route.params?.item?.driverEmail}
+                                placeholderTextColor={'gray'}
+                                onChangeText={(val) => setData({ ...data, driverEmail: val })}
+                                autoCapitalize={'none'} />
+
+                        </View>
+
+                        <View style={{ marginHorizontal: 10, marginVertical: 10 }}>
+                            <TouchableOpacity style={styles.btn(props)} onPress={() => { UpdateFinish() }}>
+                                <Text style={styles.btnText}>
+                                    Verify Driver
+                                </Text>
+                            </TouchableOpacity>
+                        </View>
+                    </KeyboardAwareScrollView>
                 </View>
-            </TouchableWithoutFeedback>
-        </KeyboardAvoidingView>
+            }
+        </View>
+
     )
 }
 const useDispatch = (dispatch) => {

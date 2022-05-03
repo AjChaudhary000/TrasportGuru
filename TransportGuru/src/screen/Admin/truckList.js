@@ -9,13 +9,14 @@ import { getCountTruck } from '../../Redux/Admin/countAddSlice'
 import AnimatedLoader from "react-native-animated-loader";
 import LottieView from 'lottie-react-native';
 import Toast from 'react-native-simple-toast';
+import ActionDialogBox from '../../components/ActionDialogBox'
 const TruckList = (props) => {
+    const [modalVisible, setModalVisible] = React.useState(false);
+    const [Truckid, setTruckId] = React.useState('')
     React.useEffect(() => {
-
         props.getTruckList(props.token)
     }, [])
     React.useEffect(() => {
-
         if (props.deletedata.status) {
             props.getCountTruck(props.token)
             props.setTruckData({})
@@ -27,15 +28,13 @@ const TruckList = (props) => {
         props.deleteTruck({ id: id, token: props.token })
     }
     const EditTruck = (item) => {
-
         props.navigation.navigate("AddTruck", { item: item })
     }
-
     return (
         <View style={styles.container(props)}>
             <AnimatedLoader
                 visible={props.loading}
-                // overlayColor="rgba(255,255,255,0.75)"
+                overlayColor="rgba(255,255,255,0.75)"
                 source={require("../../assets/json/loder.json")}
                 animationStyle={{
                     width: 100,
@@ -45,11 +44,16 @@ const TruckList = (props) => {
             >
                 <Text>Loading...</Text>
             </AnimatedLoader>
+            <ActionDialogBox
+                modalVisibleData={modalVisible}
+                theme={props.theme}
+                title={"Truck Remove"}
+                text={"Are you sure you want to remove truck ?"}
+                onOkPress={(val) => val && DeleteTruck(Truckid)}
+                onGet={(val) => setModalVisible(val)}
+            />
             <AdminHeaderWithBackButton name={"Truck List"} navigation={props.navigation} />
             {props.truckList.length === 0 ?
-
-
-
                 <View style={{ flex: 1 }}>
 
                     <View style={{ height: 500, width: 200, alignSelf: 'center' }}>
@@ -75,7 +79,7 @@ const TruckList = (props) => {
                                 <TouchableOpacity onPress={() => { EditTruck(item.item) }}>
                                     <Text style={styles.edit}>Edit</Text>
                                 </TouchableOpacity>
-                                <TouchableOpacity onPress={() => { DeleteTruck(item.item._id) }}>
+                                <TouchableOpacity onPress={() => { setModalVisible(true); setTruckId(item.item._id) }}>
                                     <Text style={styles.delete}>Delete</Text>
                                 </TouchableOpacity>
 
@@ -108,10 +112,10 @@ const useSelector = (state) => (
 )
 export default connect(useSelector, useDispatch)(TruckList);
 const styles = StyleSheet.create({
-    container: (props)=>[{
+    container: (props) => [{
         flex: 1,
         backgroundColor: props.theme ? color.drakBackgroundColor : color.backgroundColor
-    }], listBox: (props)=>[{
+    }], listBox: (props) => [{
 
         height: 150,
         backgroundColor: props.theme ? color.drakBackgroundColor : color.backgroundColor,
@@ -129,7 +133,7 @@ const styles = StyleSheet.create({
         elevation: 5,
         marginVertical: 10,
     }],
-    image: (props)=>[{
+    image: (props) => [{
         width: '30%',
         borderWidth: 3,
         borderColor: props.theme ? color.drakAdminprimaryColors : color.adminprimaryColors,
@@ -142,11 +146,11 @@ const styles = StyleSheet.create({
     listData: {
         width: '70%',
         padding: 20
-    }, truckname: (props)=>[{
+    }, truckname: (props) => [{
         fontSize: 25,
         fontWeight: 'bold',
         color: props.theme ? color.drakFontcolor : color.fontcolor
-    }], truckmodelname: (props)=>[{
+    }], truckmodelname: (props) => [{
         fontSize: 16,
         fontWeight: 'bold',
         color: props.theme ? color.drakAdminprimaryColors : color.adminprimaryColors,
@@ -157,7 +161,7 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         color: 'gray'
     },
-    truckcapicity:(props)=>[ {
+    truckcapicity: (props) => [{
         fontSize: 14,
         fontWeight: 'bold',
         color: props.theme ? color.drakFontcolor : color.fontcolor

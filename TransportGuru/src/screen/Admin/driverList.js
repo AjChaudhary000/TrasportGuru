@@ -9,8 +9,10 @@ import { deleteDriver } from '../../Redux/Admin/addDriverSlice'
 import { getCountDriver } from '../../Redux/Admin/countAddSlice'
 import Toast from 'react-native-simple-toast';
 import AnimatedLoader from "react-native-animated-loader";
+import ActionDialogBox from '../../components/ActionDialogBox'
 const DriverList = (props) => {
-
+    const [modalVisible, setModalVisible] = React.useState(false);
+    const [Driverid, setDriverid] = React.useState('')
     React.useEffect(() => {
 
         props.getDriverList(props.token)
@@ -42,6 +44,14 @@ const DriverList = (props) => {
             >
                 <Text>Loading...</Text>
             </AnimatedLoader>
+            <ActionDialogBox
+                modalVisibleData={modalVisible}
+                theme={props.theme}
+                title={"Driver Remove"}
+                text={"Are you sure you want to remove driver ?"}
+                onOkPress={(val) => val && DeleteDriver(Driverid)}
+                onGet={(val) => setModalVisible(val)}
+            />
             <AdminHeaderWithBackButton name={"Driver List"} navigation={props.navigation} />
             {props.driverList.length === 0 ?
                 <View style={{ flex: 1 }}>
@@ -68,7 +78,7 @@ const DriverList = (props) => {
                                 <TouchableOpacity onPress={() => { EditDriver(item.item) }}>
                                     <Text style={styles.edit}>Edit</Text>
                                 </TouchableOpacity>
-                                <TouchableOpacity onPress={() => { DeleteDriver(item.item._id) }}>
+                                <TouchableOpacity onPress={() => { setModalVisible(true); setDriverid(item.item._id) }}>
                                     <Text style={styles.delete} >Delete</Text>
                                 </TouchableOpacity>
 
@@ -102,10 +112,10 @@ const useSelector = (state) => (
 )
 export default connect(useSelector, useDispatch)(DriverList);
 const styles = StyleSheet.create({
-    container: (props)=>[{
+    container: (props) => [{
         flex: 1,
         backgroundColor: props.theme ? color.drakBackgroundColor : color.backgroundColor
-    }], listBox: (props)=>[{
+    }], listBox: (props) => [{
 
         height: 150,
         backgroundColor: props.theme ? color.drakBackgroundColor : color.backgroundColor,
@@ -123,7 +133,7 @@ const styles = StyleSheet.create({
         elevation: 5,
         marginVertical: 10,
     }],
-    image:(props)=>[ {
+    image: (props) => [{
         width: '30%',
         borderWidth: 3,
         borderColor: props.theme ? color.drakAdminprimaryColors : color.adminprimaryColors,
@@ -136,11 +146,11 @@ const styles = StyleSheet.create({
     listData: {
         width: '70%',
         padding: 20
-    }, driverName: (props)=>[{
+    }, driverName: (props) => [{
         fontSize: 20,
         fontWeight: 'bold',
         color: props.theme ? color.drakFontcolor : color.fontcolor
-    }], driverMobileNo: (props)=>[{
+    }], driverMobileNo: (props) => [{
         fontSize: 16,
         fontWeight: 'bold',
         color: props.theme ? color.drakAdminprimaryColors : color.adminprimaryColors,
