@@ -51,6 +51,12 @@ const HomeScreen = (props) => {
             AndroidPerMissionGranted();
         }
     }, [])
+    const reverseBtn = () => {
+        const tempFrom = data.from;
+        const tempDestination = data.destination;
+        setData({ ...data, from: tempDestination, destination: tempFrom })
+
+    }
     const SearchRoute = () => {
         if (data.from.name === "From") {
             Toast.show("Select loading loaction")
@@ -515,9 +521,9 @@ const HomeScreen = (props) => {
                         </View>
                     </View>
                 </View>
-                <View style={styles.reverseBtn(props)}>
+                <TouchableOpacity style={styles.reverseBtn(props)} onPress={() => reverseBtn()}>
                     <Image source={icons.upToDown} style={{ width: 30, height: 30, tintColor: 'white' }} />
-                </View>
+                </TouchableOpacity>
                 <View style={styles.dateOrCapicity}>
                     <View style={{ width: '30%', justifyContent: 'center' }}>
                         <Text style={{ fontWeight: "bold", fontSize: 18, color: props.theme ? color.drakFontcolor : color.fontcolor, }}>Goods Weight</Text>
@@ -558,7 +564,7 @@ export default connect(useSelector)(HomeScreen);
 const styles = StyleSheet.create({
     container: (props) => [{
         flex: 1,
-       
+
         backgroundColor: props.theme ? color.drakBackgroundColor : color.backgroundColor,
     }],
     mapBox: {
