@@ -8,7 +8,8 @@ export const transportAccount = createAsyncThunk(
             const data = {
                 trasportName: obj.trasportName,
                 trasportAddress: obj.trasportAddress,
-                trasportImage: obj.trasportImage
+                trasportImage: obj.trasportImage,
+                trasportmobile: obj.trasportmobile
             }
             const response = await TrasportApi.post('/user/trasportaccount', data, {
                 headers: {

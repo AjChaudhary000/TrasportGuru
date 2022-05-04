@@ -6,7 +6,17 @@ const userSchema = mongodb.Schema({
     },
     email: {
         type: String,
-        unique: true
+
+    },
+    emailVerify: {
+        type: Boolean,
+        default: false
+
+    },
+    mobileNoVerify: {
+        type: Boolean,
+        default: false
+
     },
     image: {
         type: String
@@ -15,8 +25,8 @@ const userSchema = mongodb.Schema({
         type: String
     },
     mobileno: {
-        type: String,     
-        unique: true
+        type: String,
+
     },
     accountType: {
         type: String,

@@ -33,7 +33,7 @@ router.post('/truck/create', auth, async (req, res) => {
 router.get('/truck', auth, async (req, res) => {
     try {
 
-        const data = await TruckDetails.find({ tarsportUserId: req.user._id }).populate("tarsportUserId").populate("truckTypeId");
+        const data = await TruckDetails.find({ tarsportUserId: req.user._id, deleteData: false }).populate("tarsportUserId").populate("truckTypeId");
         res.status(201).send({ data })
     } catch (e) {
         res.status(400).send({ "error": e.toString() })
@@ -41,7 +41,7 @@ router.get('/truck', auth, async (req, res) => {
 })
 router.delete('/truck/delete/:_id', auth, async (req, res) => {
     try {
-        const truck = await TruckDetails.findByIdAndDelete(req.params._id)
+        const truck = await TruckDetails.findByIdAndUpdate({ _id: req.params._id }, { deleteData: true },{ new: true})
         res.status(200).send({ data: truck, status: true })
     } catch (e) {
         res.status(400).send({ data: e.toString, status: false })
@@ -49,7 +49,7 @@ router.delete('/truck/delete/:_id', auth, async (req, res) => {
 })
 router.patch('/updatetruck/:_id', auth, async (req, res) => {
     try {
-        const data = await TruckDetails.findByIdAndUpdate({ _id: req.params._id }, req.body, { new: true, })
+        const data = await TruckDetails.findByIdAndUpdate({ _id: req.params._id }, req.body, { new: true})
         res.status(201).send({ data, status: true })
     } catch (e) {
         res.status(400).send({ data: e.toString(), status: false })

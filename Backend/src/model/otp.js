@@ -6,7 +6,7 @@ const otpSchema = mongodb.Schema({
     },
     mobileno: {
         type: String,
-
+       
     },
     otp: {
         type: String

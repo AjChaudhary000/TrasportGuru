@@ -35,7 +35,7 @@ const UserProfile = (props) => {
     }
     return (
 
-        <KeyboardAwareScrollView style={styles.contentor(props)}>
+        <KeyboardAwareScrollView style={styles.contentor(props)} showsVerticalScrollIndicator={false}>
             <AnimatedLoader
                 visible={props.loading}
                 overlayColor="rgba(255,255,255,0.75)"

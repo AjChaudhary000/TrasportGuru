@@ -16,10 +16,32 @@ router.post('/chat', auth, async (req, res) => {
 })
 router.post('/chatroom', auth, async (req, res) => {
     try {
-        
-       
+
+
         const data = await ChatRoom.find({ convessationId: req.body.convessationId });
-      
+
+        res.send({ data, status: true })
+    } catch (e) {
+        res.send(e.toString())
+    }
+})
+router.post('/messageBadge', auth, async (req, res) => {
+    try {
+
+
+        const data = await ChatRoom.find({ convessationId: req.body.convessationId, status: false, senderId: req.user._id });
+        console.log(data)
+        res.send({ data, status: true })
+    } catch (e) {
+        res.send(e.toString())
+    }
+})
+router.post('/clearMessageBadge', auth, async (req, res) => {
+    try {
+
+
+        await ChatRoom.updateMany({ convessationId: req.body.convessationId, status: false, senderId: req.user._id }, { status: true });
+        const data = await ChatRoom.find({ convessationId: req.body.convessationId, status: false, senderId:req.user._id });
         res.send({ data, status: true })
     } catch (e) {
         res.send(e.toString())

@@ -17,6 +17,10 @@ const chatRoomSchema = mongoose.Schema({
     message: {
         type: String,
         required: true
+    },
+    status: {
+        type: Boolean,
+        default: false
     }
 }, { timestamps: true });
 const ChatRoom = mongoose.model('ChatRoom', chatRoomSchema);

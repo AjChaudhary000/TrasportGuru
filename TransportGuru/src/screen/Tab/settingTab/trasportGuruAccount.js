@@ -19,7 +19,8 @@ const TrasportGuruAccount = (props) => {
     const [modalVisible1, setModalVisible1] = React.useState(false);
     const [data, setData] = React.useState({
         trasportName: '',
-        trasportAddress: 'Address'
+        trasportAddress: 'Address',
+        trasportmobile: '',
     });
     const [isloading, setloadingData] = React.useState(true)
     React.useEffect(() => {
@@ -45,12 +46,10 @@ const TrasportGuruAccount = (props) => {
         } else if (firebaseImage === "") {
             Toast.show("Select Transport Image")
         } else {
-
-            props.transportAccount({ ...data, trasportImage: firebaseImage, token: props.token })
+            const { trasportAddress, trasportName, trasportmobile } = data
+            props.transportAccount({ trasportAddress, trasportName, trasportmobile: `+91${trasportmobile}`, trasportImage: firebaseImage, token: props.token })
         }
     };
-
-    console.log("loading ", props.loading)
     if (isloading || props.loading) {
         return (
             <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: color.adminprimaryColors }}>
@@ -123,6 +122,15 @@ const TrasportGuruAccount = (props) => {
                         placeholder={"eg. Trasnport name"}
                         placeholderTextColor={'gray'}
                         onChangeText={(val) => setData({ ...data, trasportName: val })}
+                        autoCapitalize={'none'} />
+                </View>
+                <View style={{ margin: 10 }}>
+                    <TextInput style={styles.input(props)}
+                        placeholder={"eg.+91 "}
+                        placeholderTextColor={'gray'}
+                        onChangeText={(val) => setData({ ...data, trasportmobile: val })}
+                        keyboardType={'phone-pad'}
+                        maxLength={10}
                         autoCapitalize={'none'} />
                 </View>
                 <View style={{ margin: 10 }}>

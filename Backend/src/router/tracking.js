@@ -15,9 +15,25 @@ router.get('/tracking', auth, async (req, res) => {
     try {
 
         const data = await Tracking.find({ userId: req.user._id }).sort({ createdAt: -1 })
-            .populate("tarsportId")
+            .populate({
+                path: "tarsportId",
+                populate: {
+                    path: 'tarsportUserId'
+                }
+            })
             .populate("paymentid")
 
+        res.status(201).send({ data, status: true })
+    } catch (e) {
+        res.status(400).send({ "error": e.toString(), status: false })
+    }
+})
+router.get('/trackingByTransport/:id', auth, async (req, res) => {
+    try {
+
+        const data = await Tracking.find({ tarsportId: req.params.id })
+            .populate("paymentid")
+            .populate("userId").sort({ createdAt: -1 })
         res.status(201).send({ data, status: true })
     } catch (e) {
         res.status(400).send({ "error": e.toString(), status: false })
@@ -36,7 +52,7 @@ router.get('/tracking/:id', auth, async (req, res) => {
                     path: "truckId",
                 }, {
                     path: "driverId",
-                },{
+                }, {
                     path: "tarsportUserId",
                 }]
             })

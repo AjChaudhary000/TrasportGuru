@@ -38,6 +38,7 @@ const AddTrasportDetails = (props) => {
         if (props?.transportData.status) {
             props.getCountTransport(props.token)
             props.setTransportData({})
+            Toast.show("Transport Add successful")
             props.navigation.goBack();
         }
     }, [props])
@@ -143,7 +144,7 @@ const AddTrasportDetails = (props) => {
                 {!props.route.params?.item?._id ?
                     <View>
                         <AdminHeaderWithBackButton name={"Add Transport Details"} navigation={props.navigation} />
-                        <KeyboardAwareScrollView style={styles.inputBox}>
+                        <KeyboardAwareScrollView style={styles.inputBox} showsVerticalScrollIndicator={false}>
                             <View style={{ margin: 10 }}>
                                 <Dropdown
                                     style={styles.dropdown(props)}
@@ -260,7 +261,7 @@ const AddTrasportDetails = (props) => {
                     </View> :
                     <View >
                         <AdminHeaderWithBackButton name={"Update Transport Details"} navigation={props.navigation} />
-                        <KeyboardAwareScrollView style={styles.inputBox}>
+                        <KeyboardAwareScrollView style={styles.inputBox} showsVerticalScrollIndicator={false}>
                             <View style={{ margin: 10 }}>
                                 <Dropdown
                                     style={styles.dropdown(props)}

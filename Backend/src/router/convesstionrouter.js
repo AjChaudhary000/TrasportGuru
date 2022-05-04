@@ -14,7 +14,7 @@ router.post('/roomdata', auth, async (req, res) => {
         } else {
             const ConvessationRoom = new convessationRoom({ userId: req.user._id, ...req.body });
             const data1 = await ConvessationRoom.save();
-            
+
             res.send({ data: [data1], status: true })
         }
 
@@ -24,7 +24,7 @@ router.post('/roomdata', auth, async (req, res) => {
 })
 router.get('/adminMessageList', auth, async (req, res) => {
     try {
-        const data = await convessationRoom.find({ $or: [{ userId: req.user._id }] }).populate("senderId");
+        const data = await convessationRoom.find({ $or: [{ userId: req.user._id }] }).populate("senderId").sort({ "updatedAt": -1 });
         // console.log("data", data)
         res.send({ data, status: true })
     } catch (e) {
@@ -33,11 +33,19 @@ router.get('/adminMessageList', auth, async (req, res) => {
 })
 router.get('/userMessageList', auth, async (req, res) => {
     try {
-        const data = await convessationRoom.find({ $or: [{ senderId: req.user._id }] }).populate("userId");
+        const data = await convessationRoom.find({ $or: [{ senderId: req.user._id }] }).populate("userId").sort({ "updatedAt": -1 });
         // console.log("data", data)
         res.send({ data, status: true })
     } catch (e) {
         res.send(e.toString())
     }
-})
+}),
+    router.post('/sortMessageList', auth, async (req, res) => {
+        try {
+            const data = await convessationRoom.findByIdAndUpdate({ _id: req.body.id }, { updatedAt: new Date() });
+            res.send({ status: true })
+        } catch (e) {
+            res.send(e.toString())
+        }
+    })
 module.exports = router;

@@ -1,5 +1,5 @@
 import {
-    View, Text, StyleSheet, TextInput, TouchableOpacity,  Image, 
+    View, Text, StyleSheet, TextInput, TouchableOpacity, Image, ScrollView
 } from 'react-native'
 import React from 'react'
 import { AdminHeaderWithBackButton } from '../../components/adminHeader';
@@ -58,7 +58,8 @@ const AddDriver = (props) => {
             if (!regex.test(data.driverEmail)) {
                 Toast.show("Enter valid email ")
             } else {
-                props.addDriver({ ...data, driverImage: firebaseImage, token: props.token })
+                const {driverEmail,driverMobileNo,driverName } = data
+                props.addDriver({driverEmail,driverName,driverMobileNo:`+91${driverMobileNo}`, driverImage: firebaseImage, token: props.token })
                 console.log("output", data)
             }
         }
@@ -79,7 +80,8 @@ const AddDriver = (props) => {
             if (!regex.test(data.driverEmail)) {
                 Toast.show("Enter valid email ")
             } else {
-                props.updateDriver({ ...data, driverImage: firebaseImage, id: props.route.params?.item?._id, token: props.token })
+                const {driverEmail,driverMobileNo,driverName } = data
+                props.updateDriver({ driverEmail,driverName,driverMobileNo:`+91${driverMobileNo}`, driverImage: firebaseImage, id: props.route.params?.item?._id, token: props.token })
             }
         }
     }
@@ -107,11 +109,11 @@ const AddDriver = (props) => {
                 onGetModalVisible={(val) => setModalVisible1(val)} />}
             {!props.route.params?.item?._id ?
                 // add driver
-                <View>
+                <ScrollView>
                     <AdminHeaderWithBackButton name={"Add Driver"} navigation={props.navigation} />
 
 
-                    <KeyboardAwareScrollView style={styles.inputBox}>
+                    <KeyboardAwareScrollView style={styles.inputBox} showsVerticalScrollIndicator={false}>
                         {!imageLoading ?
                             <View style={{ marginHorizontal: 10 }}>
                                 {!firebaseImage ?
@@ -157,7 +159,7 @@ const AddDriver = (props) => {
                             <TextInput style={styles.input(props)}
                                 placeholder={"eg. Driver mobile No"}
                                 placeholderTextColor={'gray'}
-                                maxLength={13}
+                                maxLength={10}
                                 onChangeText={(val) => setData({ ...data, driverMobileNo: val })}
                                 autoCapitalize={'none'}
                                 keyboardType={'number-pad'} />
@@ -181,10 +183,10 @@ const AddDriver = (props) => {
                             </TouchableOpacity>
                         </View>
                     </KeyboardAwareScrollView>
-                </View> :
-                <View>
+                </ScrollView> :
+                <ScrollView>
                     <AdminHeaderWithBackButton name={"Update Driver"} navigation={props.navigation} />
-                    <KeyboardAwareScrollView style={styles.inputBox}>
+                    <KeyboardAwareScrollView style={styles.inputBox} showsVerticalScrollIndicator={false}>
                         <View style={{ marginHorizontal: 10 }}>
                             {!imageLoading ?
                                 <View style={{ marginHorizontal: 10 }}>
@@ -234,7 +236,7 @@ const AddDriver = (props) => {
                             <TextInput style={styles.input(props)}
                                 placeholder={"eg. Driver mobile No"}
                                 placeholderTextColor={'gray'}
-                                maxLength={13}
+                                maxLength={10}
                                 defaultValue={props.route.params?.item?.driverMobileNo}
                                 onChangeText={(val) => setData({ ...data, driverMobileNo: val })}
                                 autoCapitalize={'none'}
@@ -259,7 +261,7 @@ const AddDriver = (props) => {
                             </TouchableOpacity>
                         </View>
                     </KeyboardAwareScrollView>
-                </View>
+                </ScrollView>
             }
         </View>
 

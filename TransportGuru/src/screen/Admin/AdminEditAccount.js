@@ -87,7 +87,7 @@ const AdminEditAccount = (props) => {
             />
 
             <AdminHeaderWithBackButton name={"Edit Account"} navigation={props.navigation} />
-            <KeyboardAwareScrollView style={styles.inputBox} showsVerticalScrollIndicator={false}>
+            <KeyboardAwareScrollView style={styles.inputBox} showsVerticalScrollIndicator={false} >
                 <View style={{ marginHorizontal: 10 }}>
                     {!imageLoading ?
                         <View style={{ marginHorizontal: 10 }}>

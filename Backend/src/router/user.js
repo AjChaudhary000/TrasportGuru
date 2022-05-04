@@ -1,13 +1,10 @@
 const express = require('express');
-const multer = require('multer');
 const router = new express.Router();
-const path = require('path')
-const fs = require('fs');
 const User = require('../model/user');
 const nodemailer = require("nodemailer");
 const OTP = require('../model/otp');
 const auth = require('../middleware/auth');
-const Driver = require('../model/Driver');
+const Driver = require('../model/driver');
 const accountSid = "ACfeb6acb7c389dcfa42a021d7ac8236ea";
 const authToken = "2734bccec803bc8ad5c29486568a2de2";
 const client = require('twilio')(accountSid, authToken);
@@ -68,7 +65,7 @@ router.post('/verifyuser', async (req, res) => {
             const token = await UserList.genrateToken();
             return res.status(201).send({ data: UserList, token: token, account: '1', status: true })
         } else {
-            const user = new User({ email: req.body.email, accountType: "User" });
+            const user = new User({ email: req.body.email, accountType: "User", emailVerify: true });
             const data = await user.save()
             const token = await data.genrateToken();
             return res.status(201).send({ data: data, token: token, account: '0', status: true })
@@ -88,12 +85,28 @@ router.post('/verifySmsUser', async (req, res) => {
             console.log("my token", token)
             return res.status(201).send({ data: UserList, token: token, account: '1', status: true })
         } else {
-            const user = new User({ mobileno: req.body.mobileno, accountType: "User" });
+            const user = new User({ mobileno: req.body.mobileno, accountType: "User", mobileNoVerify: true });
             console.log("my user ", user)
             const data = await user.save()
             console.log("my user ", data)
             const token = await data.genrateToken();
             return res.status(201).send({ data: data, token: token, account: '0', status: true })
+        }
+    } catch (e) {
+        res.status(400).send(e.toString())
+    }
+})
+router.post('/googleSignIn', async (req, res) => {
+    try {
+        const UserList = await User.findOne({ email: req.body.email });
+        if (UserList) {
+            const token = await UserList.genrateToken();
+            return res.status(201).send({ data: UserList, token: token, status: true })
+        } else {
+            const user = new User({ ...req.body, accountType: "User", emailVerify: true });
+            const data = await user.save()
+            const token = await data.genrateToken();
+            return res.status(201).send({ data: data, token: token, status: true })
         }
     } catch (e) {
         res.status(400).send(e.toString())
@@ -150,9 +163,6 @@ router.delete('/user/trasportaccount', auth, async (req, res) => {
 })
 router.post('/verifyDriver', auth, async (req, res) => {
     try {
-        const DriverData = await OTP.findOne({ email: req.body.driverEmail, otp: req.body.driverOtp })
-
-        if (DriverData === null) return res.status(404).send({ data: 'otp invalid' })
         const DriverInfo = {
             driverName: req.body.driverName,
             driverEmail: req.body.driverEmail,
@@ -169,7 +179,7 @@ router.post('/verifyDriver', auth, async (req, res) => {
 router.get('/driver', auth, async (req, res) => {
     try {
 
-        const data = await Driver.find({ tarsportUserId: req.user._id }).populate("tarsportUserId")
+        const data = await Driver.find({ tarsportUserId: req.user._id, deleteData: false }).populate("tarsportUserId")
         res.status(201).send({ data })
     } catch (e) {
         res.status(400).send({ "error": e.toString() })
@@ -178,7 +188,7 @@ router.get('/driver', auth, async (req, res) => {
 router.delete('/driver/delete/:_id', auth, async (req, res) => {
     try {
 
-        const driver = await Driver.findByIdAndDelete(req.params._id)
+        const driver = await Driver.findByIdAndUpdate({ _id: req.params._id }, { deleteData: true }, { new: true })
         res.status(200).send({ data: driver, status: true })
     } catch (e) {
         res.status(400).send({ data: e.toString, status: false })
@@ -186,9 +196,7 @@ router.delete('/driver/delete/:_id', auth, async (req, res) => {
 })
 router.patch('/updateDriver/:_id', auth, async (req, res) => {
     try {
-        const DriverData = await OTP.findOne({ email: req.body.driverEmail, otp: req.body.driverOtp })
 
-        if (DriverData === null) return res.status(404).send({ data: 'otp invalid' })
         const DriverInfo = {
             driverName: req.body.driverName,
             driverEmail: req.body.driverEmail,
@@ -207,6 +215,40 @@ router.patch('/updateUser/:_id', auth, async (req, res) => {
         res.status(201).send({ data, status: true })
     } catch (e) {
         res.status(400).send({ data: e.toString(), status: false })
+    }
+})
+router.get('/userEmailCheck/:email', auth, async (req, res) => {
+    try {
+        const data = await User.find({ email: req.params.email })
+        res.status(201).send({ data, status: true })
+    } catch (e) {
+        res.status(400).send({ "error": e.toString() })
+    }
+})
+router.get('/userMobileNoCheck/:mobileno', auth, async (req, res) => {
+    try {
+        const data = await User.find({ mobileno: req.params.mobileno })
+        res.status(201).send({ data, status: true })
+    } catch (e) {
+        res.status(400).send({ "error": e.toString() })
+    }
+})
+router.post('/userEmailVerify', auth, async (req, res) => {
+    try {
+        const UserData = await OTP.findOne({ email: req.body.email, otp: req.body.otp })
+        if (UserData === null) return res.status(404).send({ data: 'otp invalid' })
+        res.status(201).send({ data:UserData, status: true })
+    } catch (e) {
+        res.status(400).send({ "error": e.toString() })
+    }
+})
+router.post('/userMobileNoVerify', auth, async (req, res) => {
+    try {
+        const UserData = await OTP.findOne({ mobileno: req.body.mobileno, otp: req.body.otp })
+        if (UserData === null) return res.status(404).send({ data: 'otp invalid' })
+        res.status(201).send({ data:UserData, status: true })
+    } catch (e) {
+        res.status(400).send({ "error": e.toString() })
     }
 })
 module.exports = router;

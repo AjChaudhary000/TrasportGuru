@@ -18,7 +18,7 @@ const truckDetailsSchema = mongodb.Schema({
     truckCapicity: {
         type: String
     },
-   
+
     truckTypeId: {
         type: mongodb.Schema.Types.ObjectId,
         ref: "truckType"
@@ -26,6 +26,10 @@ const truckDetailsSchema = mongodb.Schema({
     tarsportUserId: {
         type: mongodb.Schema.Types.ObjectId,
         ref: "user"
+    },
+    deleteData: {
+        type: Boolean,
+        default: false
     }
 }, { timestamps: true });
 const TruckDetails = mongodb.model('truckDetails', truckDetailsSchema);

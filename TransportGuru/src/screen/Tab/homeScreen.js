@@ -480,7 +480,7 @@ const HomeScreen = (props) => {
                 </MapView>
 
             </View>
-            <KeyboardAwareScrollView style={styles.searchBox(props)} >
+            <KeyboardAwareScrollView style={styles.searchBox(props)} showsVerticalScrollIndicator={false}>
 
                 <View style={styles.fromToDesc(props)}>
                     <View style={{ width: "10%", justifyContent: 'center' }}>
@@ -568,17 +568,17 @@ const styles = StyleSheet.create({
         backgroundColor: props.theme ? color.drakBackgroundColor : color.backgroundColor,
     }],
     mapBox: {
-        height: "40%"
+        height: "50%"
 
 
     },
     searchBox: (props) => [{
-        height: "60%",
+        height: "50%",
         backgroundColor: props.theme ? color.drakBackgroundColor : color.backgroundColor,
         bottom: 0,
         borderTopLeftRadius: 40,
         borderTopRightRadius: 40,
-        paddingTop: 50
+        paddingTop: 20
 
     }],
     fromToDesc: (props) => [{

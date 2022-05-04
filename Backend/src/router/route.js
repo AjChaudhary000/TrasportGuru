@@ -18,7 +18,7 @@ router.post('/route/create', auth, async (req, res) => {
 router.get('/route', auth, async (req, res) => {
     try {
 
-        const data = await Route.find({ tarsportUserId: req.user._id }).populate("tarsportUserId");
+        const data = await Route.find({ tarsportUserId: req.user._id, deleteData: false }).populate("tarsportUserId");
         res.status(201).send({ data, status: true })
     } catch (e) {
         res.status(400).send({ "error": e.toString(), status: false })
@@ -26,7 +26,7 @@ router.get('/route', auth, async (req, res) => {
 })
 router.delete('/route/delete/:_id', auth, async (req, res) => {
     try {
-        const route = await Route.findByIdAndDelete(req.params._id)
+        const route = await Route.findByIdAndUpdate({ _id: req.params._id }, { deleteData: true },{ new: true})
         res.status(200).send({ data: route, status: true })
     } catch (e) {
         res.status(400).send({ data: e.toString, status: false })
@@ -34,7 +34,7 @@ router.delete('/route/delete/:_id', auth, async (req, res) => {
 })
 router.patch('/route/update/:_id', auth, async (req, res) => {
     try {
-        const data = await Route.findByIdAndUpdate({ _id: req.params._id }, req.body, { new: true, })
+        const data = await Route.findByIdAndUpdate({ _id: req.params._id }, req.body, { new: true})
         res.status(201).send({ data, status: true })
     } catch (e) {
         res.status(400).send({ data: e.toString(), status: false })
@@ -43,19 +43,15 @@ router.patch('/route/update/:_id', auth, async (req, res) => {
 
 router.post('/searchRoute', auth, async (req, res) => {
     try {
-        const data = await Transport.find()
+        const data = await Transport.find({deleteData:false})
             .populate("routeId").populate("truckId").populate("tarsportUserId");
         const routeList = data.
             filter(item => ((item.truckId.truckCapicity - item.capicity) >= req.body.capicity)).
             map(item => {
-
-
-
                 if (item.routeId.from.name === req.body.from && item.routeId.destination.name === req.body.destination) {
                     if (item.Truckdate > new Date()) {
                         return item
                     }
-
                 } else {
                     if (item.routeId.from.name === req.body.from) {
                         const destination = item.routeId.routeStop.

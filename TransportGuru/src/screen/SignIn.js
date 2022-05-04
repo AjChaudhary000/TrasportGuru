@@ -74,7 +74,7 @@ const SignIn = (props) => {
     }
     return (
 
-        <KeyboardAwareScrollView style={styles.contentor(props)}>
+        <KeyboardAwareScrollView style={styles.contentor(props)} showsVerticalScrollIndicator={false}>
             <StatusBar hidden />
             <AnimatedLoader
                 visible={props.loading || props.loading1}

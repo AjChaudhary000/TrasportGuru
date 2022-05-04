@@ -1,5 +1,5 @@
 import {
-    View, Text, StyleSheet, TextInput, TouchableOpacity, Image, 
+    View, Text, StyleSheet, TextInput, TouchableOpacity, Image, ScrollView
 } from 'react-native'
 import React from 'react'
 import { AdminHeaderWithBackButton } from '../../components/adminHeader';
@@ -37,6 +37,7 @@ const AddTruck = (props) => {
         if (props?.truckData.status) {
             props.getCountTruck(props.token)
             props.setTruckData({})
+            Toast.show("Truck add successful")
             props.navigation.goBack();
         }
         ;
@@ -118,9 +119,9 @@ const AddTruck = (props) => {
                 onGetLoding={(val) => setImageLoading(val)}
                 onGetModalVisible={(val) => setModalVisible1(val)} />}
             {!props.route.params?.item?._id ?
-                <View >
+                <ScrollView >
                     <AdminHeaderWithBackButton name={"Add Truck"} navigation={props.navigation} />
-                    <KeyboardAwareScrollView style={styles.inputBox}>
+                    <KeyboardAwareScrollView style={styles.inputBox} showsVerticalScrollIndicator={false}>
                         <View style={{ marginHorizontal: 10 }}>
                             {!imageLoading ?
                                 <View style={{ marginHorizontal: 10 }}>
@@ -222,10 +223,10 @@ const AddTruck = (props) => {
                             </TouchableOpacity>
                         </View>
                     </KeyboardAwareScrollView>
-                </View> :
-                <View >
+                </ScrollView> :
+                <ScrollView >
                     <AdminHeaderWithBackButton name={"Update Truck"} navigation={props.navigation} />
-                    <KeyboardAwareScrollView style={styles.inputBox}>
+                    <KeyboardAwareScrollView style={styles.inputBox} showsVerticalScrollIndicator={false}>
                         <View style={{ marginHorizontal: 10 }}>
                             {!imageLoading ?
                                 <View style={{ marginHorizontal: 10 }}>
@@ -329,7 +330,7 @@ const AddTruck = (props) => {
                             </TouchableOpacity>
                         </View>
                     </KeyboardAwareScrollView>
-                </View>}
+                </ScrollView>}
 
         </View>
     )

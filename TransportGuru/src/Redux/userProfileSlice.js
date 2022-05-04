@@ -48,7 +48,7 @@ export const userProfileSlice = createSlice({
         data: {}
     },
     reducers: {
-        setUserData: (state, action) => {
+        setUserProfile: (state, action) => {
             state.data = action.payload
         }
     },
@@ -79,5 +79,5 @@ export const userProfileSlice = createSlice({
         },
     }
 })
-export const { setUserData } = userProfileSlice.actions
+export const { setUserProfile } = userProfileSlice.actions
 export default userProfileSlice.reducer

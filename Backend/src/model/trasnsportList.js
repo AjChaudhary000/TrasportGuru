@@ -27,6 +27,10 @@ const TransportSchema = mongodb.Schema({
     tarsportUserId: {
         type: mongodb.Schema.Types.ObjectId,
         ref: "user"
+    },
+    deleteData: {
+        type: Boolean,
+        default: false
     }
 }, { timestamps: true });
 const Transport = mongodb.model('transport', TransportSchema);

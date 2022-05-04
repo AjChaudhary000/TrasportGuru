@@ -17,6 +17,10 @@ const DriverSchema = mongodb.Schema({
     tarsportUserId: {
         type: mongodb.Schema.Types.ObjectId,
         ref: "user"
+    },
+    deleteData: {
+        type: Boolean,
+        default: false
     }
 }, { timestamps: true });
 const Driver = mongodb.model('driver', DriverSchema);

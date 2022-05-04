@@ -1,5 +1,5 @@
 import {
-    View, Text, StyleSheet, TouchableOpacity, Image, Dimensions, LogBox
+    View, Text, StyleSheet, TouchableOpacity, Image, Dimensions, LogBox, ScrollView
 } from 'react-native'
 import React from 'react'
 import { AdminHeaderWithBackButton } from '../../components/adminHeader';
@@ -32,7 +32,7 @@ const AddRoute = (props) => {
         },
     })
     const [stopList, setStopList] = React.useState(props.route.params?.item?.routeStop || []);
-    const [inputBox, setInputBox] = React.useState(false)
+   
     const [moveBox, setMoveBox] = React.useState(false)
     React.useEffect(() => {
         LogBox.ignoreLogs(["VirtualizedLists should never be nested"])
@@ -41,7 +41,9 @@ const AddRoute = (props) => {
         if (props?.routeData.status) {
             props.getCountRoute(props.token)
             props.setRouteData({})
+            Toast.show("Route add successful")
             props.navigation.goBack();
+
         }
         ;
     }, [props])
@@ -94,9 +96,9 @@ const AddRoute = (props) => {
                 }}
             />
             {!props.route.params?.item?._id ?
-                <View >
+                <ScrollView >
                     <AdminHeaderWithBackButton name={"Add Route"} navigation={props.navigation} />
-                    <KeyboardAwareScrollView style={styles.inputBox}>
+                    <KeyboardAwareScrollView style={styles.inputBox} showsVerticalScrollIndicator={false}>
                         <TouchableOpacity style={{ margin: 10 }} activeOpacity={0.80} onPress={() => { setPlaceType("from"); setModalVisible(true) }}>
                             <Text style={styles.input(props)}>{data.from.name}</Text>
                         </TouchableOpacity>
@@ -105,7 +107,7 @@ const AddRoute = (props) => {
                         </TouchableOpacity>
 
                         <View style={{ marginHorizontal: 10, marginVertical: 20, flexDirection: "row", justifyContent: 'space-between' }}>
-                            <TouchableOpacity onPress={() => { setInputBox(true) }}>
+                            <TouchableOpacity onPress={() => { setPlaceType("addStop"); setModalVisible(true) }}>
                                 <Text style={{ color: props.theme ? color.drakAdminprimaryColors : color.adminprimaryColors, fontWeight: 'bold' }}>
                                     Add Stop
                                 </Text>
@@ -116,14 +118,9 @@ const AddRoute = (props) => {
                                 </Text>
                             </TouchableOpacity>
                         </View>
-                        {inputBox && <View style={{ margin: 10 }}>
-                            <TouchableOpacity style={{ margin: 10 }} activeOpacity={0.80} onPress={() => { setPlaceType("addStop"); setModalVisible(true) }}>
-                                <Text style={styles.input(props)}>Stops</Text>
-                            </TouchableOpacity>
-
-                        </View>}
+                       
                         <View>
-                            <GestureHandlerRootView style={{ width: '100%', height: '60%' }}>
+                            <GestureHandlerRootView style={{ width: '100%', height: '100%' }}>
                                 <DraggableFlatList
                                     data={stopList}
                                     onDragEnd={({ data }) => setData(data)}
@@ -157,10 +154,10 @@ const AddRoute = (props) => {
                             </GestureHandlerRootView>
                         </View>
                     </KeyboardAwareScrollView>
-                </View> :
-                <View >
+                </ScrollView> :
+                <ScrollView >
                     <AdminHeaderWithBackButton name={"Update Route"} navigation={props.navigation} />
-                    <KeyboardAwareScrollView style={styles.inputBox}>
+                    <KeyboardAwareScrollView style={styles.inputBox} showsVerticalScrollIndicator={false}>
                         <TouchableOpacity style={{ margin: 10 }} activeOpacity={0.80} onPress={() => { setPlaceType("from"); setModalVisible(true) }}>
                             <Text style={styles.input(props)}>{data.from.name}</Text>
                         </TouchableOpacity>
@@ -169,7 +166,7 @@ const AddRoute = (props) => {
                         </TouchableOpacity>
 
                         <View style={{ marginHorizontal: 10, marginVertical: 20, flexDirection: "row", justifyContent: 'space-between' }}>
-                            <TouchableOpacity onPress={() => { setInputBox(true) }}>
+                            <TouchableOpacity onPress={() => { setPlaceType("addStop"); setModalVisible(true) }}>
                                 <Text style={{ color: props.theme ? color.drakAdminprimaryColors : color.adminprimaryColors, fontWeight: 'bold' }}>
                                     Add Stop
                                 </Text>
@@ -180,14 +177,9 @@ const AddRoute = (props) => {
                                 </Text>
                             </TouchableOpacity>
                         </View>
-                        {inputBox && <View style={{ margin: 10 }}>
-                            <TouchableOpacity style={{ margin: 10 }} activeOpacity={0.80} onPress={() => { setPlaceType("addStop"); setModalVisible(true) }}>
-                                <Text style={styles.input(props)}>Stops</Text>
-                            </TouchableOpacity>
-
-                        </View>}
+                        
                         <View>
-                            <GestureHandlerRootView style={{ width: '100%', height: "60%" }}>
+                            <GestureHandlerRootView style={{ width: '100%', height: "100%" }}>
                                 <DraggableFlatList
                                     data={stopList}
                                     onDragEnd={({ data }) => setData(data)}
@@ -221,7 +213,7 @@ const AddRoute = (props) => {
                             </GestureHandlerRootView>
                         </View>
                     </KeyboardAwareScrollView>
-                </View>}
+                </ScrollView>}
         </View >
 
     )

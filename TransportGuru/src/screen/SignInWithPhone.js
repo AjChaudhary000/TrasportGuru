@@ -94,7 +94,7 @@ const SignInWithPhone = (props) => {
 
     return (
 
-        <KeyboardAwareScrollView style={styles.contentor(props)}>
+        <KeyboardAwareScrollView style={styles.contentor(props)} showsVerticalScrollIndicator={false}>
             <StatusBar hidden />
             <AnimatedLoader
                 visible={props.loading}
