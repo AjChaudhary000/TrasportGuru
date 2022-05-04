@@ -4,7 +4,7 @@ import Dialog, { DialogContent, ScaleAnimation, DialogTitle } from 'react-native
 import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
 import color from '../contents/color';
 import config from '../config/config';
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
+
 const GoogleDialogBox = (props) => {
     return (
 

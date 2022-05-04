@@ -1,19 +1,26 @@
 import {
     View, Text, Image,
     StyleSheet, TextInput,
-    TouchableOpacity, Platform, LogBox, PermissionsAndroid
+    TouchableOpacity, Platform, LogBox, PermissionsAndroid, Alert
 } from 'react-native'
 import Toast from 'react-native-simple-toast';
 import React from 'react'
 import color from '../../contents/color'
 import icons from '../../contents/icons'
 import { connect } from 'react-redux';
-import MapView, { PROVIDER_GOOGLE } from "react-native-maps"
+import MapView, { PROVIDER_GOOGLE, Marker } from "react-native-maps"
 import GoogleDialogBox from '../../components/GoogleDialogBox';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
+import MapViewDirections from 'react-native-maps-directions';
+import Geolocation from '@react-native-community/geolocation';
+import config from '../../config/config';
 const HomeScreen = (props) => {
     const [modalVisible, setModalVisible] = React.useState(false);
     const [placetype, setPlaceType] = React.useState()
+    const [location, setlocation] = React.useState({
+        latitude: 0.0,
+        longitude: 0.0
+    });
     const [data, setData] = React.useState({
         from: {
             name: 'From',
@@ -27,6 +34,13 @@ const HomeScreen = (props) => {
         },
         capicity: '',
     })
+    const GeolocationFetch = async () => {
+        Geolocation.getCurrentPosition(
+            (position) => {
+
+                setlocation({ ...location, latitude: position.coords.latitude, longitude: position.coords.longitude })
+            }, (err) => console.log(err), { enableHighAccuracy: true, timeout: 20000, maximumAge: 4000 });
+    }
     const AndroidPerMissionGranted = async () => {
         try {
             const granted = await PermissionsAndroid.request(
@@ -37,9 +51,9 @@ const HomeScreen = (props) => {
                 },
             );
             if (granted === PermissionsAndroid.RESULTS.GRANTED) {
-
+                GeolocationFetch()
             } else {
-                Toast.show("Location Permission Not Granted");
+                GeolocationFetch()
             }
         } catch (err) {
             console.log(err)
@@ -49,7 +63,14 @@ const HomeScreen = (props) => {
         LogBox.ignoreLogs(["VirtualizedLists should never be nested"])
         if (Platform.OS == 'android') {
             AndroidPerMissionGranted();
+        } else {
+            if (Platform.OS === 'ios') {
+                Geolocation.requestAuthorization();
+                GeolocationFetch()
+            }
+
         }
+        GeolocationFetch()
     }, [])
     const reverseBtn = () => {
         const tempFrom = data.from;
@@ -460,23 +481,48 @@ const HomeScreen = (props) => {
             />
             <View style={styles.mapBox}>
                 <MapView
-
                     showsUserLocation={true}
-                    style={{ height: "100%" }}
-                    zoomEnabled={true}
+                    style={{ flex: 1 }}
+                    
                     scrollEnabled={true}
-                    showsBuildings={true}
+                   showsBuildings={true}
+                showsMyLocationButton={true}
                     customMapStyle={props.theme ? drakmap : lightmap}
-                    showsMyLocationButton={true}
-                    provider={"google"}
+                    // provider={"google"}
                     region={{
-                        latitude: 37.78825,
-                        longitude: -122.4324,
-                        latitudeDelta: 0.015,
-                        longitudeDelta: 0.0121,
+                        latitude: parseFloat(location.latitude),
+                        longitude: parseFloat(location.longitude),
+                        latitudeDelta: 0.4,
+                        longitudeDelta: 0.9,
                     }}
                 >
-
+                    <Marker
+                        coordinate={{
+                            latitude: parseFloat(data.from.lat),
+                            longitude: parseFloat(data.from.lng)
+                        }}
+                        title={data.from.name}
+                    />
+                    <Marker
+                        coordinate={{
+                            latitude: parseFloat(data.destination.lat),
+                            longitude: parseFloat(data.destination.lng)
+                        }}
+                        title={data.destination.name}
+                    />
+                    <MapViewDirections
+                        origin={{
+                            latitude: parseFloat(data.from.lat),
+                            longitude: parseFloat(data.from.lng)
+                        }}
+                        destination={{
+                            latitude: parseFloat(data.destination.lat),
+                            longitude: parseFloat(data.destination.lng)
+                        }}
+                        apikey={`${config.GooglePlaceAPI}`}
+                        strokeWidth={10}
+                        strokeColor={color.primaryColors}
+                    />
                 </MapView>
 
             </View>
