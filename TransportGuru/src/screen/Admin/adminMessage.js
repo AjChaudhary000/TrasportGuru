@@ -1,4 +1,4 @@
-import { View, Text, FlatList, Image, TouchableOpacity, StyleSheet} from 'react-native';
+import { View, Text, FlatList, Image, TouchableOpacity, StyleSheet } from 'react-native';
 import React from 'react';
 import AdminHeader from '../../components/adminHeader'
 import AnimatedLoader from "react-native-animated-loader";
@@ -34,7 +34,7 @@ const AdminMessage = (props) => {
                 <Text>Loading...</Text>
             </AnimatedLoader>
             <AdminHeader name={"Messages"} />
-            {props.messageList.length === 0 ?
+            {(props.messageList?.length === 0 && !props.loading) ?
                 <View style={{ flex: 1 }}>
                     <View style={{ height: 500, width: 200, alignSelf: 'center' }}>
                         <LottieView source={require('../../assets/json/notfound.json')} autoPlay loop />
@@ -53,10 +53,31 @@ const AdminMessage = (props) => {
                             </View>
                             <View style={{
                                 justifyContent: 'center', borderBottomWidth: 2,
-                                borderBottomColor: color.adminprimaryColors, width: '80%', justifyContent: 'center'
+                                borderBottomColor: color.adminprimaryColors, width: '75%', justifyContent: 'center'
                             }}>
                                 <Text style={styles.text}>
                                     {item.item.userId?.username}</Text>
+                            </View>
+                            <View style={{
+                                justifyContent: 'center', width: '8%', justifyContent: 'center',
+                                borderBottomWidth: 2,
+                                borderBottomColor: color.adminprimaryColors,
+                            }}>{item.item.messageCount !== 0 &&
+                                <View style={{
+                                    width: 25,
+                                    height: 25,
+                                    borderRadius: 13,
+
+                                    backgroundColor: color.adminprimaryColors,
+                                    justifyContent: 'center',
+                                    alignItems: "center",
+                                    marginTop: 20,
+
+                                }} >
+                                    <Text style={{ color: props.theme ? color.drakFontcolor : color.fontcolor }}>
+                                        {item.item.messageCount}</Text>
+                                </View>
+                                }
                             </View>
                         </TouchableOpacity>
                     )}

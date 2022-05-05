@@ -1,4 +1,4 @@
-import { View, Text, FlatList, Image, TouchableOpacity, StyleSheet} from 'react-native';
+import { View, Text, FlatList, Image, TouchableOpacity, StyleSheet } from 'react-native';
 import React from 'react';
 import Header from '../../components/header'
 import { getMessageList } from '../../Redux/messageListSlice';
@@ -27,6 +27,7 @@ const Message = (props) => {
     return props.messageBadge;
 
   }
+  console.log(props.messageList)
   return (
     <View style={styles.container(props)}>
       <AnimatedLoader
@@ -42,46 +43,60 @@ const Message = (props) => {
         <Text>Loading ...</Text>
       </AnimatedLoader>
       <Header name={"Messages"} />
-      
-        {(props.messageList.length === 0 && !props.loading) ?
-          <View style={{ flex: 1 }}>
-            <View style={{ height: 500, width: 200, alignSelf: 'center' }}>
-              <LottieView source={require('../../assets/json/notfound.json')} autoPlay loop />
-            </View>
+
+      {(props.messageList.length === 0 && !props.loading) ?
+        <View style={{ flex: 1 }}>
+          <View style={{ height: 500, width: 200, alignSelf: 'center' }}>
+            <LottieView source={require('../../assets/json/notfound.json')} autoPlay loop />
           </View>
-          :
-          <FlatList data={props.messageList} refreshing={refreshing}
-            onRefresh={onRefresh} renderItem={({ item }) => (
-              <TouchableOpacity style={{ flexDirection: 'row', marginVertical: 10, marginHorizontal: 20, }}
-                onPress={() => { props.navigation.navigate('ChatDetails', { item: item.senderId }) }}>
-                <View style={styles.image(props)}>
-                  <Image source={{ uri: item.senderId?.trasportAccount[0]?.trasportImage }}
-                    style={{
-                      width: 60, height: 60, alignSelf: "center"
-                    }} />
-                </View>
-                <View style={{
-                  justifyContent: 'center', borderBottomWidth: 2,
-                  borderBottomColor: color.primaryColors, width: '80%', justifyContent: 'center'
-                }}>
-                  <Text style={styles.text}>
-                    {item.senderId?.trasportAccount[0]?.trasportName}</Text>
-                </View>
+        </View>
+        :
+        <FlatList data={props.messageList} refreshing={refreshing}
+          onRefresh={onRefresh} renderItem={({ item }) => (
+            <TouchableOpacity activeOpacity={0.6} style={{
+              flexDirection: 'row',
+              marginVertical: 10, marginHorizontal: 15,
+            }}
+              onPress={() => { props.navigation.navigate('ChatDetails', { item: item.senderId }) }}>
+              <View style={styles.image(props)}>
+                <Image source={{ uri: item.senderId?.trasportAccount[0]?.trasportImage }}
+                  style={{
+                    width: 60, height: 60, alignSelf: "center"
+                  }} />
+              </View>
+              <View style={{
+                justifyContent: 'center', width: '75%', justifyContent: 'center', borderBottomWidth: 2,
+                borderBottomColor: color.primaryColors,
+              }}>
+                <Text style={styles.text}>
+                  {item.senderId?.trasportAccount[0]?.trasportName}</Text>
+              </View>
+
+              <View style={{
+                justifyContent: 'center', width: '8%', justifyContent: 'center',
+                borderBottomWidth: 2,
+                borderBottomColor: color.primaryColors,
+              }}>{item.messageCount !== 0 &&
                 <View style={{
                   width: 25,
                   height: 25,
                   borderRadius: 13,
+
                   backgroundColor: color.primaryColors,
                   justifyContent: 'center',
                   alignItems: "center",
-                  marginHorizontal: 20,
+                  marginTop: 20,
+
                 }} >
                   <Text style={{ color: props.theme ? color.drakFontcolor : color.fontcolor }}>
-                    {"2"}</Text>
+                    {item.messageCount}</Text>
                 </View>
-              </TouchableOpacity>
-            )} />}
-    
+                }
+              </View>
+
+            </TouchableOpacity>
+          )} />}
+
     </View>
   );
 };

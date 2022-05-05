@@ -35,7 +35,6 @@ const ChatDetails = (props) => {
       setChatList([])
     } catch (e) { console.log(e) }
   }, [])
-
   React.useEffect(() => {
     if (props.roomdata?.data.length !== 0) {
       setConvessationId(props.roomdata?.data[0]?._id)
@@ -44,10 +43,14 @@ const ChatDetails = (props) => {
       props.setRoomData({ data: [] })
     }
     if (props.chatList?.status) {
+      props.ClearBadgeMessage({ convessationId, token: props.token })
       setUserChatList([...userChatList, ...props.chatList.data]);
+
+      props.getMessageList({ token: props.token })
+      props.getUserMessageList({ token: props.token })
       props.setChatList({})
     }
-   
+
   }, [props])
   React.useEffect(() => {
     props.ClearBadgeMessage({ convessationId, token: props.token })
@@ -71,7 +74,7 @@ const ChatDetails = (props) => {
     try {
       props.sendMessage({ data: { senderId: id, convessationId: convessationId, message: message }, token: props.token })
       props.sortMessageList({ id: convessationId, token: props.token })
-    
+
       setMessage('')
     } catch (e) {
       console.log(e)
@@ -106,7 +109,7 @@ const ChatDetails = (props) => {
                   {(props.userData?._id !== item.item?.userId) ?
                     <View style={{ flexDirection: "row" }}>
                       <View style={styles.left(props)}>
-                        <Text style={styles.text}>{item.item.message}</Text>
+                        <Text style={styles.text(props)}>{item.item.message}</Text>
                       </View>
                       <View style={{ justifyContent: 'flex-end' }}>
                         <Text style={{ color: 'gray', fontWeight: 'bold', fontSize: 10, paddingHorizontal: 2 }}>{new Date(item.item.createdAt).toLocaleDateString("en-US", { hour: 'numeric', minute: 'numeric', hour12: false }).toString().slice(-5)}</Text>
@@ -162,7 +165,7 @@ const useSelector = (state) => (
   {
     theme: state.token.theme,
     chatList: state.chat.chatList,
-    loading: state.chat.loading,
+    //  loading: state.chat.loading,
     roomdata: state.chat.roomdata,
     userData: state.user.userData,
     chat: state.chat.chat,
