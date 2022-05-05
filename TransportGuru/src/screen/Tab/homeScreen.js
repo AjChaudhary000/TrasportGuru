@@ -614,12 +614,12 @@ const styles = StyleSheet.create({
         backgroundColor: props.theme ? color.drakBackgroundColor : color.backgroundColor,
     }],
     mapBox: {
-        height: "50%"
+        height: "40%"
 
 
     },
     searchBox: (props) => [{
-        height: "50%",
+        height: "60%",
         backgroundColor: props.theme ? color.drakBackgroundColor : color.backgroundColor,
         bottom: 0,
         borderTopLeftRadius: 40,

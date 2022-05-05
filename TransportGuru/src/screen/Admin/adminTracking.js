@@ -110,7 +110,7 @@ const AdminTracking = (props) => {
                                     </Text>
                                 </View>
                                 <View >
-                                    <Text style={{ color: color.primaryColors, fontWeight: 'bold', fontSize: 14 }}>
+                                    <Text style={{ color: color.adminprimaryColors, fontWeight: 'bold', fontSize: 14 }}>
                                         {new Date(new Date(item.item.Truckdate)).toLocaleDateString("en-US", { hour: 'numeric', minute: 'numeric', hour12: false }).toString().slice(-5)}
                                     </Text>
 
@@ -126,7 +126,7 @@ const AdminTracking = (props) => {
 
                                 </View>
                                 <View style={{ width: '20%', alignItems: "center" }}>
-                                    <Image source={icons.transfer} style={{ width: 30, height: 30, tintColor: props.theme ? color.drakPrimaryColors : color.primaryColors }} />
+                                    <Image source={icons.transfer} style={{ width: 30, height: 30, tintColor: props.theme ? color.drakAdminprimaryColors : color.adminprimaryColors }} />
                                 </View>
                                 <View style={{ width: '40%', alignItems: "center" }}>
                                     <Text style={{ fontWeight: 'bold', color: props.theme ? color.drakFontcolor : color.fontcolor }}>
@@ -145,7 +145,7 @@ const AdminTracking = (props) => {
                                             <Image source={icons.call} style={{
                                                 width: 20,
                                                 height: 20,
-                                                tintColor: props.theme ? color.drakPrimaryColors : color.primaryColors
+                                                tintColor: props.theme ? color.drakAdminprimaryColors : color.adminprimaryColors
                                             }} />
                                         </TouchableOpacity>
                                     </View>

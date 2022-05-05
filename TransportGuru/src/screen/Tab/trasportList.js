@@ -78,8 +78,8 @@ const TrasportList = (props) => {
                     </View>
 
                     :
-                    <FlatList data={props.data} renderItem={(item) => (
-                        <View style={styles.listBox(props)}>
+                    (props.data).map(item => (
+                        <View style={styles.listBox(props)} key={item._id}>
                             <View style={{
                                 marginHorizontal: 20, flexDirection: "row", justifyContent: 'space-between',
                                 paddingVertical: 2
@@ -90,32 +90,32 @@ const TrasportList = (props) => {
                                             style={{
                                                 width: 60, height: 60, alignSelf: "center"
                                             }}
-                                            source={{ uri: item.item.trasportAccount[0].trasportImage }}
+                                            source={{ uri: item.trasportAccount[0].trasportImage }}
                                         />
                                     </View>
                                 </View>
                                 <View style={{ justifyContent: 'center', width: '80%', paddingHorizontal: 10 }}>
                                     <Text style={{ fontSize: 20, fontWeight: 'bold', color: props.theme ? color.drakPrimaryColors : color.primaryColors }}>
-                                        {item.item.trasportAccount[0].trasportName}</Text>
+                                        {item.trasportAccount[0].trasportName}</Text>
                                     <Text style={{ fontSize: 12, fontWeight: 'bold', color: 'gray' }}>
 
-                                        {item.item.trasportAccount[0].trasportAddress.split(',').reverse()[2]},
-                                        {item.item.trasportAccount[0].trasportAddress.split(',').reverse()[1]},
-                                        {item.item.trasportAccount[0].trasportAddress.split(',').reverse()[0]}
+                                        {item.trasportAccount[0].trasportAddress.split(',').reverse()[2]},
+                                        {item.trasportAccount[0].trasportAddress.split(',').reverse()[1]},
+                                        {item.trasportAccount[0].trasportAddress.split(',').reverse()[0]}
                                     </Text>
                                 </View>
 
                             </View>
                             <View style={{ flexDirection: "row", justifyContent: 'space-between', padding: 5 }}>
                                 <View style={{ width: "50%", flexDirection: "row", justifyContent: 'space-between', paddingVertical: 10 }}>
-                                    <TouchableOpacity style={{ width: "30%" }} onPress={() => CallBtn(item.item?.trasportAccount[0].trasportmobile)}>
+                                    <TouchableOpacity style={{ width: "30%" }} onPress={() => CallBtn(item?.trasportAccount[0].trasportmobile)}>
                                         <Image source={icons.call} style={styles.icon(props)} />
                                     </TouchableOpacity>
                                     <TouchableOpacity style={{ width: "30%" }} onPress={() => {
-                                        if (item.item?._id === props?.userData?._id) {
+                                        if (item?._id === props?.userData?._id) {
                                             Toast.show("not found ...")
                                         } else {
-                                            props.navigation.navigate("ChatDetails", { item: item.item })
+                                            props.navigation.navigate("ChatDetails", { item: item })
                                         }
                                     }}>
                                         <Image source={icons.message} style={styles.icon(props)} />
@@ -124,14 +124,14 @@ const TrasportList = (props) => {
                                         <Image source={icons.share} style={styles.icon(props)} />
                                     </TouchableOpacity>
                                 </View>
-                                <TouchableOpacity style={styles.profile(props)} onLongPress={() => console.log("hello")} onPress={() => props.navigation.navigate("AdminProfile", { item: item.item })}>
+                                <TouchableOpacity style={styles.profile(props)} onLongPress={() => console.log("hello")} onPress={() => props.navigation.navigate("AdminProfile", { item: item })}>
                                     <Text style={{ color: 'white', fontWeight: "bold" }}> View Profile</Text>
                                 </TouchableOpacity>
                             </View>
 
                         </View>
-                    )
-                    } />}
+                    ))
+                }
             </ScrollView>
 
         </View >

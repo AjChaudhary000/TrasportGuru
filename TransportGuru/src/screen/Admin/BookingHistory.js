@@ -8,17 +8,13 @@ import AnimatedLoader from "react-native-animated-loader";
 import LottieView from 'lottie-react-native';
 import icons from '../../contents/icons';
 import calcKmFind from '../../components/kmFind';
-
-const wait = (timeout) => {
-    return new Promise(resolve => setTimeout(resolve, timeout));
-}
 const BookingHistory = (props) => {
-    const [refreshing, setRefreshing] = React.useState(false);
-    const onRefresh = React.useCallback(() => {
-        props.trackingDetailsByTransportId({ token: props.token, id: props.route.params.id })
-        setRefreshing(true);
-        wait(2000).then(() => setRefreshing(false));
-    }, []);
+    // const [refreshing, setRefreshing] = React.useState(false);
+    // const onRefresh = React.useCallback(() => {
+    //     props.trackingDetailsByTransportId({ token: props.token, id: props.route.params.id })
+    //     setRefreshing(true);
+    //     wait(2000).then(() => setRefreshing(false));
+    // }, []);
     React.useEffect(() => {
         props.trackingDetailsByTransportId({ token: props.token, id: props.route.params.id })
     }, [])
@@ -56,12 +52,12 @@ const BookingHistory = (props) => {
                 <Text>Loading...</Text>
             </AnimatedLoader>
             <AdminHeaderWithBackButton name={"Booking History"} navigation={props.navigation} />
-            <ScrollView style={{ marginBottom: 60 }} refreshControl={
+            {/* <ScrollView style={{ marginBottom: 60 }} refreshControl={
                 <RefreshControl
                     refreshing={refreshing}
                     onRefresh={onRefresh}
                 />
-            } showsVerticalScrollIndicator={false}>
+            } showsVerticalScrollIndicator={false}> */}
                 {props.BookingHistoryData.length === 0 ?
 
 
@@ -86,7 +82,7 @@ const BookingHistory = (props) => {
                                     </Text>
                                 </View>
                                 <View >
-                                    <Text style={{ color: color.primaryColors, fontWeight: 'bold', fontSize: 14 }}>
+                                    <Text style={{ color: color.adminprimaryColors, fontWeight: 'bold', fontSize: 14 }}>
                                         {new Date(new Date(item.item.createdAt)).toLocaleDateString("en-US", { hour: 'numeric', minute: 'numeric', hour12: false }).toString().slice(-5)}
                                     </Text>
 
@@ -102,7 +98,7 @@ const BookingHistory = (props) => {
 
                                 </View>
                                 <View style={{ width: '20%', alignItems: "center" }}>
-                                    <Image source={icons.transfer} style={{ width: 30, height: 30, tintColor: props.theme ? color.drakPrimaryColors : color.primaryColors }} />
+                                    <Image source={icons.transfer} style={{ width: 30, height: 30, tintColor: props.theme ? color.drakAdminprimaryColors : color.adminprimaryColors }} />
                                 </View>
                                 <View style={{ width: '40%', alignItems: "center" }}>
                                     <Text style={{ fontWeight: 'bold', color: props.theme ? color.drakFontcolor : color.fontcolor }}>
@@ -113,7 +109,7 @@ const BookingHistory = (props) => {
 
                             <View style={{ alignItems: "flex-start", paddingVertical: 4, marginHorizontal: 20, }}>
 
-                                <Text style={{ fontWeight: 'bold', color: 'gray' }}>{item.item?.userId.username}</Text>
+                                <Text style={{ fontWeight: 'bold', color: 'gray' }}>{item.item?.userId?.username}</Text>
                                 <View style={{ flexDirection: "row", justifyContent: 'space-between' }}>
                                     <View style={{ width: "90%" }}>
                                         <Text style={{ fontWeight: 'bold', color: 'gray' }}>{item.item?.userId?.mobileno || "+91"}</Text>
@@ -122,7 +118,7 @@ const BookingHistory = (props) => {
                                         <Image source={icons.call} style={{
                                             width: 20,
                                             height: 20,
-                                            tintColor: props.theme ? color.drakPrimaryColors : color.primaryColors
+                                            tintColor: props.theme ? color.drakAdminprimaryColors : color.adminprimaryColors
                                         }} />
                                     </TouchableOpacity>
                                 </View>
@@ -151,7 +147,7 @@ const BookingHistory = (props) => {
 
 
                     />}
-            </ScrollView>
+            {/* </ScrollView> */}
         </View>
     )
 }

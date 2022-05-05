@@ -1,34 +1,18 @@
 const express = require('express');
 const router = new express.Router();
 const User = require('../model/user');
-const nodemailer = require("nodemailer");
+
 const OTP = require('../model/otp');
 const auth = require('../middleware/auth');
 const Driver = require('../model/driver');
+const sendEmailBox = require('./sendEmailBox');
 const accountSid = "ACfeb6acb7c389dcfa42a021d7ac8236ea";
 const authToken = "2734bccec803bc8ad5c29486568a2de2";
 const client = require('twilio')(accountSid, authToken);
 router.post('/sendemail', async (req, res) => {
-
     try {
         const otpvalue = Math.round(Math.random() * 100000).toString().slice(0, 4);
-        // let testAccount = await nodemailer.createTestAccount();
-        // let transporter = nodemailer.createTransport({
-        //     host: "smtp.gmail.com",
-        //     port: 465,
-        //     secure: true,
-        //     auth: {
-        //         user: "transportguru8@gmail.com",
-        //         pass: "chaudhary.dcs22",
-        //     },
-        // });
-        // let info = await transporter.sendMail({
-        //     from: "transportguru8@gmail.com",
-        //     to: req.body.email,
-        //     subject: "Trasport guru send otp ... ✔",
-        //     text: `hii ${req.body.email} OTP ${otpvalue}`,
-        //     //  html: "<b>Hello world?</b>",
-        // })
+        await sendEmailBox(req.body.email, otpvalue)
         const otp = new OTP({ email: req.body.email, otp: otpvalue });
         await otp.save()
         res.status(201).send({ email: req.body.email, status: true })
@@ -42,7 +26,7 @@ router.post('/sendsms', async (req, res) => {
         const otpvalue = Math.round(Math.random() * 100000).toString().slice(0, 4);
         // client.messages
         //     .create({
-        //         body: `Trasnport Guru Verify Otp :- ${otpvalue}`,
+        //         body: `Hi, Enter this verification code in field ${otpvalue} Verification code is valid only for 60 second`,
         //         from: '+19378263797',
         //         to: req.body.mobileno
         //     })
@@ -237,7 +221,7 @@ router.post('/userEmailVerify', auth, async (req, res) => {
     try {
         const UserData = await OTP.findOne({ email: req.body.email, otp: req.body.otp })
         if (UserData === null) return res.status(404).send({ data: 'otp invalid' })
-        res.status(201).send({ data:UserData, status: true })
+        res.status(201).send({ data: UserData, status: true })
     } catch (e) {
         res.status(400).send({ "error": e.toString() })
     }
@@ -246,7 +230,7 @@ router.post('/userMobileNoVerify', auth, async (req, res) => {
     try {
         const UserData = await OTP.findOne({ mobileno: req.body.mobileno, otp: req.body.otp })
         if (UserData === null) return res.status(404).send({ data: 'otp invalid' })
-        res.status(201).send({ data:UserData, status: true })
+        res.status(201).send({ data: UserData, status: true })
     } catch (e) {
         res.status(400).send({ "error": e.toString() })
     }

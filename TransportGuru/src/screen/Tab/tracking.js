@@ -104,19 +104,19 @@ const Tracking = (props) => {
                     </View>
 
                     :
-                    <FlatList data={props.trackingList} renderItem={(item) => (
-                        <TouchableOpacity style={styles.listBox(props, item)} onPress={() => props.navigation.navigate("TrackingDetails", { id: item.item._id })} >
+                    (props.trackingList).map(item => (
+                        <TouchableOpacity style={styles.listBox(props, item)} onPress={() => props.navigation.navigate("TrackingDetails", { id: item._id })} key={item._id}>
                             <View style={{ marginHorizontal: 10, marginVertical: 5, flexDirection: "row", justifyContent: 'space-between' }}>
                                 <View >
 
                                     <Text style={{ color: 'gray', fontWeight: 'bold', fontSize: 14, paddingRight: 2 }}>
-                                        {new Date(new Date(item.item.createdAt)).toLocaleDateString("en-US", { weekday: 'short', month: 'long', day: 'numeric' })}
+                                        {new Date(new Date(item.createdAt)).toLocaleDateString("en-US", { weekday: 'short', month: 'long', day: 'numeric' })}
 
                                     </Text>
                                 </View>
                                 <View >
                                     <Text style={{ color: color.primaryColors, fontWeight: 'bold', fontSize: 14 }}>
-                                        {new Date(new Date(item.item.createdAt)).toLocaleDateString("en-US", { hour: 'numeric', minute: 'numeric', hour12: false }).toString().slice(-5)}
+                                        {new Date(new Date(item.createdAt)).toLocaleDateString("en-US", { hour: 'numeric', minute: 'numeric', hour12: false }).toString().slice(-5)}
                                     </Text>
 
                                 </View>
@@ -126,7 +126,7 @@ const Tracking = (props) => {
                                 <View style={{ width: '40%', alignItems: "center" }}>
                                     <Text style={{ fontWeight: 'bold', color: props.theme ? color.drakFontcolor : color.fontcolor }}>
 
-                                        {(item.item.paymentid.from.name.split(',').reverse()[2])}
+                                        {(item.paymentid.from.name.split(',').reverse()[2])}
                                     </Text>
 
                                 </View>
@@ -135,7 +135,7 @@ const Tracking = (props) => {
                                 </View>
                                 <View style={{ width: '40%', alignItems: "center" }}>
                                     <Text style={{ fontWeight: 'bold', color: props.theme ? color.drakFontcolor : color.fontcolor }}>
-                                        {(item.item.paymentid.destination.name.split(',').reverse()[2])}</Text>
+                                        {(item.paymentid.destination.name.split(',').reverse()[2])}</Text>
 
                                 </View>
                             </View>
@@ -143,23 +143,23 @@ const Tracking = (props) => {
                                 <View>
                                     <Text style={{ fontWeight: 'bold', color: 'gray' }}>Delivery Date</Text>
                                     <Text style={{ color: props.theme ? color.drakFontcolor : color.fontcolor, fontWeight: 'bold', fontSize: 14, paddingRight: 2 }}>
-                                        {new Date(new Date(item.item.tarsportId.Truckdate)
-                                            .setHours(new Date(item.item.tarsportId.Truckdate)
-                                                .getHours() + Math.round((calcKmFind(item.item.paymentid.from.lat,
-                                                    item.item.paymentid.from.lng,
-                                                    item.item.paymentid.destination.lat,
-                                                    item.item.paymentid.destination.lng)) / 45))).toLocaleDateString("en-US", { weekday: 'short', month: 'long', day: 'numeric', hour: 'numeric', minute: 'numeric', hour12: false })}
+                                        {new Date(new Date(item.tarsportId.Truckdate)
+                                            .setHours(new Date(item.tarsportId.Truckdate)
+                                                .getHours() + Math.round((calcKmFind(item.paymentid.from.lat,
+                                                    item.paymentid.from.lng,
+                                                    item.paymentid.destination.lat,
+                                                    item.paymentid.destination.lng)) / 45))).toLocaleDateString("en-US", { weekday: 'short', month: 'long', day: 'numeric', hour: 'numeric', minute: 'numeric', hour12: false })}
                                     </Text>
                                 </View>
                                 <View>
-                                    {item.item.paymentid.paymentStatus === "Completing" ?
+                                    {item.paymentid.paymentStatus === "Completing" ?
                                         <TouchableOpacity style={styles.paid}
                                         >
                                             <Text style={{ color: 'white', fontWeight: "bold", fontSize: 18 }}>Paid</Text>
                                         </TouchableOpacity> :
                                         <TouchableOpacity style={styles.pay(props)}
                                             onPress={() => {
-                                                paymentHendle(item.item.paymentid, item.item.tarsportId.tarsportUserId)
+                                                paymentHendle(item.paymentid, item.tarsportId.tarsportUserId)
                                             }}>
                                             <Text style={{ color: 'white', fontWeight: "bold", fontSize: 18 }}>Pay</Text>
                                         </TouchableOpacity>}
@@ -167,7 +167,7 @@ const Tracking = (props) => {
                             </View>
                         </TouchableOpacity>
 
-                    )} />}
+                    ))}
             </ScrollView>
         </View>
     )
@@ -199,12 +199,12 @@ const styles = StyleSheet.create({
     }],
     listBox: (props, item) => [{
         minHeight: 150,
-        backgroundColor: (new Date(new Date(item.item.tarsportId.Truckdate)
-            .setHours(new Date(item.item.tarsportId.Truckdate)
-                .getHours() + Math.round((calcKmFind(item.item.paymentid.from.lat,
-                    item.item.paymentid.from.lng,
-                    item.item.paymentid.destination.lat,
-                    item.item.paymentid.destination.lng)) / 45))) <= new Date(new Date(item.item.createdAt)))
+        backgroundColor: (new Date(new Date(item.tarsportId.Truckdate)
+            .setHours(new Date(item.tarsportId.Truckdate)
+                .getHours() + Math.round((calcKmFind(item.paymentid.from.lat,
+                    item.paymentid.from.lng,
+                    item.paymentid.destination.lat,
+                    item.paymentid.destination.lng)) / 45))) <= new Date(new Date(item.createdAt)))
             ? props.theme ? 'rgba(0, 0, 0, 0.30)' : 'rgba(255, 255, 255, 0.30)' : props.theme ? color.drakBackgroundColor : color.backgroundColor,
         marginHorizontal: 20,
         borderRadius: 20,

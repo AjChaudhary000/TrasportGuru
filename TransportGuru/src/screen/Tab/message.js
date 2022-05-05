@@ -55,11 +55,11 @@ const Message = (props) => {
             </View>
           </View>
           :
-          <FlatList data={props.messageList} renderItem={(item) => (
+          (props.messageList).map(item => (
             <TouchableOpacity style={{ flexDirection: 'row', marginVertical: 10, marginHorizontal: 20, }}
-              onPress={() => { props.navigation.navigate('ChatDetails', { item: item.item.senderId }) }}>
+              onPress={() => { props.navigation.navigate('ChatDetails', { item: item.senderId }) }}>
               <View style={styles.image(props)}>
-                <Image source={{ uri: item.item.senderId?.trasportAccount[0]?.trasportImage }}
+                <Image source={{ uri: item.senderId?.trasportAccount[0]?.trasportImage }}
                   style={{
                     width: 60, height: 60, alignSelf: "center"
                   }} />
@@ -69,7 +69,7 @@ const Message = (props) => {
                 borderBottomColor: color.primaryColors, width: '80%', justifyContent: 'center'
               }}>
                 <Text style={styles.text}>
-                  {item.item.senderId?.trasportAccount[0]?.trasportName}</Text>
+                  {item.senderId?.trasportAccount[0]?.trasportName}</Text>
               </View>
               <View style={{
                 width: 25,
@@ -78,14 +78,13 @@ const Message = (props) => {
                 backgroundColor: color.primaryColors,
                 justifyContent: 'center',
                 alignItems: "center",
-                marginTop: 20,
+                marginHorizontal: 20,
               }} >
                 <Text style={{ color: props.theme ? color.drakFontcolor : color.fontcolor }}>
                   {"2"}</Text>
               </View>
             </TouchableOpacity>
-          )}
-          />}
+          ))}
       </ScrollView>
     </View>
   );

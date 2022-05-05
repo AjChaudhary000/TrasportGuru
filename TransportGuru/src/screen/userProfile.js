@@ -1,8 +1,8 @@
-import { View, Text, Image, StyleSheet, TextInput, TouchableOpacity, StatusBar } from 'react-native'
+import { View, Text, Image, StyleSheet, TextInput, TouchableOpacity, StatusBar, ScrollView, TouchableWithoutFeedback, Keyboard } from 'react-native'
 import React from 'react'
 import icons from '../contents/icons';
 import { connect } from 'react-redux'
-import { setUserData, userProfile } from '../Redux/userProfileSlice';
+import { setUserProfile, userProfile } from '../Redux/userProfileSlice';
 import color from '../contents/color';
 import LottieView from 'lottie-react-native';
 import AnimatedLoader from "react-native-animated-loader";
@@ -17,7 +17,7 @@ const UserProfile = (props) => {
     })
     React.useEffect(() => {
         if (props?.userdata.status) {
-            props.setUserData({})
+            props.setUserProfile({})
             props.navigation.replace('Tab')
         }
 
@@ -35,89 +35,90 @@ const UserProfile = (props) => {
     }
     return (
 
-        <KeyboardAwareScrollView style={styles.contentor(props)} showsVerticalScrollIndicator={false}>
-            <AnimatedLoader
-                visible={props.loading}
-                overlayColor="rgba(255,255,255,0.75)"
-                source={require("../assets/json/loder.json")}
-                animationStyle={{
-                    width: 100,
-                    height: 100
-                }}
-                speed={1}
-            >
-                <Text>Loading...</Text>
-            </AnimatedLoader>
-            {modalVisible1 && <ImageModel
-                filename={"user"}
-                theme={props.theme}
-                modalVisibleData={modalVisible1}
-                onGetImage={(val) => setfirebaseImage(val)}
-                onGetLoding={(val) => setImageLoading(val)}
-                onGetModalVisible={(val) => setModalVisible1(val)} />}
-            <StatusBar hidden />
+        <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+            <ScrollView style={styles.contentor(props)} showsVerticalScrollIndicator={false}>
+                <AnimatedLoader
+                    visible={props.loading}
+                    overlayColor="rgba(255,255,255,0.75)"
+                    source={require("../assets/json/loder.json")}
+                    animationStyle={{
+                        width: 100,
+                        height: 100
+                    }}
+                    speed={1}
+                >
+                    <Text>Loading...</Text>
+                </AnimatedLoader>
+                {modalVisible1 && <ImageModel
+                    filename={"user"}
+                    theme={props.theme}
+                    modalVisibleData={modalVisible1}
+                    onGetImage={(val) => setfirebaseImage(val)}
+                    onGetLoding={(val) => setImageLoading(val)}
+                    onGetModalVisible={(val) => setModalVisible1(val)} />}
+                <StatusBar hidden />
 
-            <View style={{ paddingTop: 12, height: '30%', justifyContent: 'center' }}>
-                {!imageLoading ?
-                    <View style={{ marginHorizontal: 10 }}>
-                        {!firebaseImage ?
-                            <TouchableOpacity onPress={() => { setModalVisible1(true) }}>
-                                <Image
-                                    style={{
-                                        alignSelf: 'center',
-                                        width: 100,
-                                        height: 100,
-                                        borderRadius: 10,
-                                        resizeMode: 'contain',
-                                        marginVertical: 30,
-                                        tintColor: props.theme ? color.drakPrimaryColors : color.primaryColors,
-                                    }}
-                                    source={icons.add_photo}
-                                />
-                            </TouchableOpacity> :
-                            <TouchableOpacity style={styles.image(props)} onPress={() => { setModalVisible1(true) }}>
-                                <Image
-                                    style={{
-                                        width: 110, height: 110, alignSelf: "center"
+                <View style={{ paddingTop: 12, height: '30%', justifyContent: 'center' }}>
+                    {!imageLoading ?
+                        <View style={{ marginHorizontal: 10 }}>
+                            {!firebaseImage ?
+                                <TouchableOpacity onPress={() => { setModalVisible1(true) }}>
+                                    <Image
+                                        style={{
+                                            alignSelf: 'center',
+                                            width: 100,
+                                            height: 100,
+                                            borderRadius: 10,
+                                            resizeMode: 'contain',
+                                            marginVertical: 30,
+                                            tintColor: props.theme ? color.drakPrimaryColors : color.primaryColors,
+                                        }}
+                                        source={icons.add_photo}
+                                    />
+                                </TouchableOpacity> :
+                                <TouchableOpacity style={styles.image(props)} onPress={() => { setModalVisible1(true) }}>
+                                    <Image
+                                        style={{
+                                            width: 110, height: 110, alignSelf: "center"
 
-                                    }}
-                                    source={{ uri: firebaseImage }}
-                                /></TouchableOpacity>}
+                                        }}
+                                        source={{ uri: firebaseImage }}
+                                    /></TouchableOpacity>}
 
 
+                        </View>
+                        :
+                        <View style={{ height: 100, alignContent: 'center', marginHorizontal: 10 }}>
+                            <LottieView source={require('../assets/json/uploading1.json')} autoPlay loop />
+                        </View>}
+                </View>
+                <View style={styles.titleComponets}>
+                    <Text style={styles.title(props)}> Here we go !</Text>
+                    <View>
+                        <Text style={styles.text}> Please provide your name and  profile photo.</Text>
                     </View>
-                    :
-                    <View style={{ height: 100, alignContent: 'center', marginHorizontal: 10 }}>
-                        <LottieView source={require('../assets/json/uploading1.json')} autoPlay loop />
-                    </View>}
-            </View>
-            <View style={styles.titleComponets}>
-                <Text style={styles.title(props)}> Here we go !</Text>
-                <View>
-                    <Text style={styles.text}> Please provide your name and  profile photo.</Text>
                 </View>
-            </View>
-            <View style={styles.inputBox}>
-                <View style={{ width: "10%", paddingTop: 12 }}>
-                    <Image source={icons.user} style={{ width: 35, height: 35, tintColor: color.primaryColors }} />
+                <View style={styles.inputBox}>
+                    <View style={{ width: "10%", paddingTop: 12 }}>
+                        <Image source={icons.user} style={{ width: 35, height: 35, tintColor: color.primaryColors }} />
+                    </View>
+                    <View style={{ width: "85%", marginHorizontal: 10 }}>
+
+                        <TextInput style={styles.input(props)} placeholder={"eg: Arjun Chaudhary "}
+                            onChangeText={(val) => setdata({ ...data, username: val })}
+                            placeholderTextColor={'gray'} />
+                    </View>
                 </View>
-                <View style={{ width: "85%", marginHorizontal: 10 }}>
 
-                    <TextInput style={styles.input(props)} placeholder={"eg: Arjun Chaudhary "}
-                        onChangeText={(val) => setdata({ ...data, username: val })}
-                        placeholderTextColor={'gray'} />
+                <View style={{ marginTop: 20, height: '10%' }}>
+                    <TouchableOpacity style={styles.btn(props)} onPress={() => uploadData()}>
+                        <Text style={styles.btnText}>
+                            Finish
+                        </Text>
+                    </TouchableOpacity>
                 </View>
-            </View>
-
-            <View style={{ marginTop: 20, height: '10%' }}>
-                <TouchableOpacity style={styles.btn(props)} onPress={() => uploadData()}>
-                    <Text style={styles.btnText}>
-                        Finish
-                    </Text>
-                </TouchableOpacity>
-            </View>
-        </KeyboardAwareScrollView >
-
+            </ScrollView >
+        </TouchableWithoutFeedback>
     )
 }
 const useSelector = (state) => {
@@ -132,7 +133,7 @@ const useSelector = (state) => {
 const useDispatch = (dispatch) => {
     return {
         userProfile: (data) => dispatch(userProfile(data)),
-        setUserData: (data) => dispatch(setUserData(data)),
+        setUserProfile: (data) => dispatch(setUserProfile(data)),
     }
 }
 

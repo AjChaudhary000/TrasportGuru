@@ -117,10 +117,14 @@ const EditAccount = (props) => {
         }
     }
     const Finish = () => {
-        if (!props.route.params.item.emailVerify) {
-            props.userEmailVerify({ data: { email: data.email, otp: otp }, token: props.token })
-        } if (!props.route.params.item.mobileNoVerify) {
-            props.userMobileNoVerify({ data: { mobileno: `${value}${data.mobileno}`, otp: otp }, token: props.token })
+        if (otp.length === 4) {
+            if (!props.route.params.item.emailVerify) {
+                props.userEmailVerify({ data: { email: data.email, otp: otp }, token: props.token })
+            } if (!props.route.params.item.mobileNoVerify) {
+                props.userMobileNoVerify({ data: { mobileno: `${value}${data.mobileno}`, otp: otp }, token: props.token })
+            }
+        } else {
+            Toast.show("Enter otp")
         }
     }
     const renderItem = (item) => {
