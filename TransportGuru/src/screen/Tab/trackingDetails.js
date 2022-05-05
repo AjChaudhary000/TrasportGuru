@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, RefreshControl, ScrollView, FlatList, Image, TouchableOpacity, Linking} from 'react-native'
+import { View, Text, StyleSheet,  FlatList, Image, TouchableOpacity, Linking} from 'react-native'
 import React from 'react'
 import { connect } from 'react-redux';
 
@@ -103,13 +103,9 @@ const TrackingDetails = (props) => {
                 <Text>Loading ...</Text>
             </AnimatedLoader>
             <HeaderWithBackButton name={"Tracking Details"} navigation={props.navigation} />
-            <ScrollView style={{ paddingBottom: 100 }} refreshControl={
-                <RefreshControl
-                    refreshing={refreshing}
-                    onRefresh={onRefresh}
-                />
-            } showsVerticalScrollIndicator={false}>
-                <FlatList data={props.trackingDetails} renderItem={(item) => (
+            
+                <FlatList data={props.trackingDetails} refreshing={refreshing}
+                    onRefresh={onRefresh} renderItem={(item) => (
                     <View style={{ marginBottom: 100 }}>
                         <View style={styles.listBox(props)} >
                             <View style={{
@@ -389,7 +385,7 @@ const TrackingDetails = (props) => {
                         </View>
                     </View>
                 )} />
-            </ScrollView>
+            
         </View>
     )
 }

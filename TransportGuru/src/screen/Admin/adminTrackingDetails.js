@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, RefreshControl, ScrollView, FlatList, Image, TouchableOpacity, Linking } from 'react-native'
+import { View, Text, StyleSheet, FlatList, Image, TouchableOpacity, Linking } from 'react-native'
 import React from 'react'
 import { connect } from 'react-redux';
 import color from '../../contents/color';
@@ -60,13 +60,9 @@ const AdminTrackingDetails = (props) => {
                 <Text>Loading ...</Text>
             </AnimatedLoader>
             <AdminHeaderWithBackButton name={"Tracking Details"} navigation={props.navigation} />
-            <ScrollView style={{ paddingBottom: 100 }} refreshControl={
-                <RefreshControl
-                    refreshing={refreshing}
-                    onRefresh={onRefresh}
-                />
-            } showsVerticalScrollIndicator={false}>
-                <FlatList data={props.transportList} renderItem={(item) => (
+
+            <FlatList data={props.transportList} refreshing={refreshing}
+                onRefresh={onRefresh} renderItem={(item) => (
                     <View>
                         <View style={styles.listBox(props)} >
 
@@ -174,7 +170,7 @@ const AdminTrackingDetails = (props) => {
                                     </View>
                                     {(item.item.routeId.routeStop).map((data) => (
 
-                                        <View >
+                                        <View key={item._id}>
                                             <View style={{ margin: 5, flexDirection: 'row' }}>
 
                                                 <View style={{ width: '5%', justifyContent: 'center' }}>
@@ -267,7 +263,7 @@ const AdminTrackingDetails = (props) => {
 
                     </View>
                 )} />
-            </ScrollView>
+
         </View>
     )
 }

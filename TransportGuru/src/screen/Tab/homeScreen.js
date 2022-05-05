@@ -1,7 +1,7 @@
 import {
     View, Text, Image,
     StyleSheet, TextInput,
-    TouchableOpacity, Platform, LogBox, PermissionsAndroid, Alert
+    TouchableOpacity, Platform, LogBox, PermissionsAndroid, Dimensions,
 } from 'react-native'
 import Toast from 'react-native-simple-toast';
 import React from 'react'
@@ -18,9 +18,9 @@ const HomeScreen = (props) => {
     const [modalVisible, setModalVisible] = React.useState(false);
     const [placetype, setPlaceType] = React.useState()
     const [location, setlocation] = React.useState({
-        latitude: 0.0,
-        longitude: 0.0
-    });
+        latitude: 21.0435,
+        longitude: -122.0353454
+    }); 
     const [data, setData] = React.useState({
         from: {
             name: 'From',
@@ -37,7 +37,6 @@ const HomeScreen = (props) => {
     const GeolocationFetch = async () => {
         Geolocation.getCurrentPosition(
             (position) => {
-
                 setlocation({ ...location, latitude: position.coords.latitude, longitude: position.coords.longitude })
             }, (err) => console.log(err), { enableHighAccuracy: true, timeout: 20000, maximumAge: 4000 });
     }
@@ -66,9 +65,8 @@ const HomeScreen = (props) => {
         } else {
             if (Platform.OS === 'ios') {
                 Geolocation.requestAuthorization();
-                GeolocationFetch()
+                
             }
-
         }
         GeolocationFetch()
     }, [])
@@ -76,7 +74,6 @@ const HomeScreen = (props) => {
         const tempFrom = data.from;
         const tempDestination = data.destination;
         setData({ ...data, from: tempDestination, destination: tempFrom })
-
     }
     const SearchRoute = () => {
         if (data.from.name === "From") {
@@ -478,17 +475,16 @@ const HomeScreen = (props) => {
                         setData({ ...data, from: val }) :
                         setData({ ...data, destination: val })
                 }}
-            />
+            /> 
             <View style={styles.mapBox}>
                 <MapView
                     showsUserLocation={true}
                     style={{ flex: 1 }}
-                    
                     scrollEnabled={true}
-                   showsBuildings={true}
-                showsMyLocationButton={true}
+                    showsBuildings={true}
+                    showsMyLocationButton={true}
                     customMapStyle={props.theme ? drakmap : lightmap}
-                    // provider={"google"}
+                    provider={"google"}
                     region={{
                         latitude: parseFloat(location.latitude),
                         longitude: parseFloat(location.longitude),
@@ -524,10 +520,8 @@ const HomeScreen = (props) => {
                         strokeColor={color.primaryColors}
                     />
                 </MapView>
-
             </View>
             <KeyboardAwareScrollView style={styles.searchBox(props)} showsVerticalScrollIndicator={false}>
-
                 <View style={styles.fromToDesc(props)}>
                     <View style={{ width: "10%", justifyContent: 'center' }}>
                         <Image source={icons.journey} style={{ width: 50, height: 115, tintColor: props.theme ? color.drakPrimaryColors : color.primaryColors, }} />
@@ -585,7 +579,6 @@ const HomeScreen = (props) => {
                             placeholder={"00"}
                             placeholderTextColor="gray"
                             keyboardType='number-pad' />
-
                     </View>
                     <View style={{ width: '30%', justifyContent: 'center' }}>
                         <Text style={{ fontWeight: "bold", fontSize: 18, color: props.theme ? color.drakPrimaryColors : color.primaryColors, }}>/ Tonnes</Text>
@@ -600,7 +593,6 @@ const HomeScreen = (props) => {
         </View>
     )
 }
-
 const useSelector = (state) => (
     {
         theme: state.token.theme
@@ -615,8 +607,6 @@ const styles = StyleSheet.create({
     }],
     mapBox: {
         height: "40%"
-
-
     },
     searchBox: (props) => [{
         height: "60%",
@@ -624,8 +614,7 @@ const styles = StyleSheet.create({
         bottom: 0,
         borderTopLeftRadius: 40,
         borderTopRightRadius: 40,
-        paddingTop: 20
-
+        paddingVertical: (Dimensions.get('window').height - 330) / 6
     }],
     fromToDesc: (props) => [{
         height: 180,

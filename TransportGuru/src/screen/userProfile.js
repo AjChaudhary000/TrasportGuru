@@ -1,4 +1,8 @@
-import { View, Text, Image, StyleSheet, TextInput, TouchableOpacity, StatusBar, ScrollView, TouchableWithoutFeedback, Keyboard } from 'react-native'
+import {
+    View, Text, Image, StyleSheet, TextInput, TouchableOpacity, StatusBar, ScrollView,
+
+    TouchableWithoutFeedback, Keyboard
+} from 'react-native'
 import React from 'react'
 import icons from '../contents/icons';
 import { connect } from 'react-redux'

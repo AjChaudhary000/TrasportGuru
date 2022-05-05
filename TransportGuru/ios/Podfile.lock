@@ -153,7 +153,7 @@ PODS:
   - GTMAppAuth (1.2.3):
     - AppAuth/Core (~> 1.4)
     - GTMSessionFetcher/Core (~> 1.5)
-  - GTMSessionFetcher/Core (1.7.1)
+  - GTMSessionFetcher/Core (1.7.2)
   - libevent (2.1.12)
   - lottie-ios (3.2.3)
   - lottie-react-native (5.0.1):
@@ -373,7 +373,7 @@ PODS:
     - Google-Maps-iOS-Utils (= 3.10.3)
     - GoogleMaps (= 5.1.0)
     - React-Core
-  - react-native-image-picker (4.8.0):
+  - react-native-image-picker (4.8.2):
     - React-Core
   - react-native-maps (0.30.1):
     - React-Core
@@ -462,14 +462,14 @@ PODS:
     - React-perflogger (= 0.67.4)
   - RNCAsyncStorage (1.17.3):
     - React-Core
-  - RNFBApp (14.9.0):
+  - RNFBApp (14.9.1):
     - Firebase/CoreOnly (= 8.15.0)
     - React-Core
-  - RNFBAuth (14.9.0):
+  - RNFBAuth (14.9.1):
     - Firebase/Auth (= 8.15.0)
     - React-Core
     - RNFBApp
-  - RNFBStorage (14.9.0):
+  - RNFBStorage (14.9.1):
     - Firebase/Storage (= 8.15.0)
     - React-Core
     - RNFBApp
@@ -760,7 +760,7 @@ SPEC CHECKSUMS:
   GoogleSignIn: c90b5bec45e780f54c6a8e1e3c182a86e3dda69d
   GoogleUtilities: e0913149f6b0625b553d70dae12b49fc62914fd1
   GTMAppAuth: 987526d41b07efb1bedda5e936fe0cb718a03113
-  GTMSessionFetcher: 4577a4cc914a5a07c40a8a0ad0acc22080418c2d
+  GTMSessionFetcher: 5595ec75acf5be50814f81e9189490412bad82ba
   libevent: 4049cae6c81cdb3654a443be001fb9bdceff7913
   lottie-ios: c058aeafa76daa4cf64d773554bccc8385d0150e
   lottie-react-native: a029a86e1689c86a07169c520ae770e84348cd20
@@ -783,7 +783,7 @@ SPEC CHECKSUMS:
   react-native-date-picker: 211dead8aeaecab3904a07b967f580e6ea3dee88
   react-native-geolocation: c956aeb136625c23e0dce0467664af2c437888c9
   react-native-google-maps: 17432eb7412df3c65d7c7c52ede085d0f5624f77
-  react-native-image-picker: 941240a0c7de399bdef2401aefb30dc76b1547e7
+  react-native-image-picker: 1ccfc97709f680a7167ccb758c32466b466c96e2
   react-native-maps: d752b0dd0e1951d815b1336332835aab6b4a836f
   react-native-netinfo: 3671b091c4843fda5e153612866ef4024b8f5d62
   react-native-razorpay: 6d613f3464a509e3a4bb5b9ca43b70013b3d96d4
@@ -804,9 +804,9 @@ SPEC CHECKSUMS:
   React-runtimeexecutor: a9d3c82ddf7ffdad9fbe6a81c6d6f8c06385464d
   ReactCommon: 07d0c460b9ba9af3eaf1b8f5abe7daaad28c9c4e
   RNCAsyncStorage: 005c0e2f09575360f142d0d1f1f15e4ec575b1af
-  RNFBApp: d3a0f69a3cc67c609f962acf67f483a841ffc49f
-  RNFBAuth: 647e3bac0592ad7f2adc2e5ba9764e918400566a
-  RNFBStorage: cec868c244c3adfe6c8730420587ed539b3e46ab
+  RNFBApp: fd23737680ed2bdde41ca27d8bfb171b6d668c6b
+  RNFBAuth: 4cfeb48367f81b135aced4bb9800df5488bc9660
+  RNFBStorage: 6073d7684eba9d2ec155436c067021b3eafe04e4
   RNGestureHandler: a479ebd5ed4221a810967000735517df0d2db211
   RNGoogleSignin: d7f8368b82d94f1dec964785d496387ca7f19092
   RNReanimated: 46cdb89ca59ab7181334f4ed05a70e82ddb36751

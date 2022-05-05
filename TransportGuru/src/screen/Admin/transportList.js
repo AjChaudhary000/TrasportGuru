@@ -21,13 +21,10 @@ const TransportListDetails = (props) => {
     const [modalVisible, setModalVisible] = React.useState(false);
     const [Tid, setTId] = React.useState('')
     React.useEffect(() => {
-
         props.getTransportList({ token: props.token, skip: isSkip, limit: limitValue })
     }, [])
     React.useEffect(() => {
-
         if (props.deletedata?.status) {
-
             props.getCountTransport(props.token)
             props.setTransportData({})
         }
@@ -35,7 +32,6 @@ const TransportListDetails = (props) => {
             setData([...data, ...props.transportList.data]);
             props.setTransportList({})
             props.transportList = {}
-
         }
     }, [props])
 
@@ -44,11 +40,8 @@ const TransportListDetails = (props) => {
         props.deleteTransport({ id: id, token: props.token })
     }
     const EditDriver = (item) => {
-
         props.navigation.navigate("AddTrasportDetails", { item: item })
     }
-
-
     const handleListFooterComponent = () => {
         return (
             (props.loading) ? (
@@ -77,20 +70,14 @@ const TransportListDetails = (props) => {
                 onGet={(val) => setModalVisible(val)}
             />
             <AdminHeaderWithBackButton name={"Transport List"} navigation={props.navigation} />
-            {data.length === 0 ?
-
-
-
+            {(data.length === 0 && !props.loading) ?
                 <View style={{ flex: 1 }}>
-
                     <View style={{ height: 500, width: 200, alignSelf: 'center' }}>
                         <LottieView source={require('../../assets/json/notfound.json')} autoPlay loop />
                     </View>
-
                 </View>
-
                 :
-                <FlatList data={data} renderItem={(item) => (
+                <FlatList data={data}  renderItem={(item) => (
                     <View style={styles.listBox(props)} key={"A" + item.index}>
                         <View style={{ alignItems: "center" }}>
                             <Text style={{ fontWeight: 'bold', color: props.theme ? color.drakFontcolor : color.fontcolor }}>
@@ -116,22 +103,16 @@ const TransportListDetails = (props) => {
                                     {new Date(item.item.Truckdate).toLocaleDateString("en-US", { hour: 'numeric', minute: 'numeric' }).toString().slice(-8)}
                                 </Text>
                             </View>
-
                         </View>
                         <View style={{ marginHorizontal: 20, marginVertical: 5, flexDirection: "row", justifyContent: 'space-between' }}>
                             <View >
-
                                 <Text style={{ color: props.theme ? color.drakAdminprimaryColors : color.adminprimaryColors, fontWeight: 'bold' }}>{item.item.capicity}/{item.item.truckId.truckCapicity}</Text>
-
                             </View>
                             <View >
                                 <Text style={{ color: 'gray', fontWeight: 'bold' }}>
                                     {(item.item.truckId.truckCapicity) - (item.item.capicity)} Available</Text>
-
                             </View>
-
                         </View>
-
                         <View style={{ marginHorizontal: 20, marginVertical: 10, flexDirection: "row", justifyContent: 'space-between' }}>
                             <TouchableOpacity onPress={() => { setDriver({ type: !driver.type, id: item.item._id }) }}>
                                 <Text style={{ color: props.theme ? color.drakAdminprimaryColors : color.adminprimaryColors, fontWeight: 'bold' }}>
@@ -143,14 +124,12 @@ const TransportListDetails = (props) => {
                                     Truck
                                 </Text>
                             </TouchableOpacity>
-
                             <TouchableOpacity onPress={() => { setRoute({ type: !route.type, id: item.item._id }) }}>
                                 <Text style={{ color: props.theme ? color.drakAdminprimaryColors : color.adminprimaryColors, fontWeight: 'bold' }}>
                                     Route
                                 </Text>
                             </TouchableOpacity>
                         </View>
-
                         {/* driver data */}
                         {driver.type && driver.id === item.item._id &&
                             <View style={styles.drivelist} >

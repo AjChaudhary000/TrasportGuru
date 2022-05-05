@@ -1,5 +1,8 @@
-import { View, Text } from 'react-native'
+import { View, Text ,LogBox} from 'react-native'
 import React from 'react'
+LogBox.ignoreLogs(['Require cycles']); // Ignore log notification by message
+LogBox.ignoreAllLogs();
+
 import Dialog, { DialogContent, ScaleAnimation, DialogTitle, DialogFooter, DialogButton, } from 'react-native-popup-dialog';
 import color from '../contents/color';
 const ActionDialogBox = (props) => {

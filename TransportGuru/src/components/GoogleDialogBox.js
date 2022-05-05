@@ -1,10 +1,11 @@
-import { View, ScrollView } from 'react-native'
+import { ScrollView, LogBox } from 'react-native'
 import React from 'react'
 import Dialog, { DialogContent, ScaleAnimation, DialogTitle } from 'react-native-popup-dialog';
 import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
 import color from '../contents/color';
 import config from '../config/config';
-
+LogBox.ignoreLogs(['Require cycles']); // Ignore log notification by message
+LogBox.ignoreAllLogs();
 const GoogleDialogBox = (props) => {
     return (
 

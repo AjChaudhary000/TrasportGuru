@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, FlatList, Image, TouchableOpacity, ScrollView, Modal, Dimensions, Linking } from 'react-native'
+import { View, Text, StyleSheet, FlatList, Image, TouchableOpacity, Modal, Dimensions, Linking } from 'react-native'
 import React from 'react'
 import { connect } from 'react-redux';
 import { HeaderWithBackButton } from '../../components/header'
@@ -36,7 +36,7 @@ const SearchTransportList = (props) => {
                 <Text>Loading ...</Text>
             </AnimatedLoader>
             <HeaderWithBackButton name={"Searching"} navigation={props.navigation} />
-            <ScrollView style={{ marginBottom: 0 }} showsVerticalScrollIndicator={false}>
+         
                 {props.searchList.length === 0 ?
 
 
@@ -329,7 +329,7 @@ const SearchTransportList = (props) => {
                         </View>
                     )
                     } />}
-            </ScrollView >
+       
         </View >
     )
 }

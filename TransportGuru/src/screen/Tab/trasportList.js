@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, FlatList, Image, TouchableOpacity, RefreshControl, ScrollView, Linking } from 'react-native'
+import { View, Text, StyleSheet, FlatList, Image, TouchableOpacity, Linking } from 'react-native'
 import React from 'react'
 import { connect } from 'react-redux';
 import color from '../../contents/color';
@@ -59,26 +59,17 @@ const TrasportList = (props) => {
                 <Text>Loading ...</Text>
             </AnimatedLoader>
             <Header name={"Transport List"} />
-            <ScrollView style={{ marginBottom: 60 }} refreshControl={
-                <RefreshControl
-                    refreshing={refreshing}
-                    onRefresh={onRefresh}
-                />
-            } showsVerticalScrollIndicator={false}>
-                {props.data.length === 0 ?
+            {(props.data.length === 0 && !props.loading) ?
+                <View style={{ flex: 1 }}>
 
-
-
-                    <View style={{ flex: 1 }}>
-
-                        <View style={{ height: 500, width: 200, alignSelf: 'center' }}>
-                            <LottieView source={require('../../assets/json/notfound.json')} autoPlay loop />
-                        </View>
-
+                    <View style={{ height: 500, width: 200, alignSelf: 'center' }}>
+                        <LottieView source={require('../../assets/json/notfound.json')} autoPlay loop />
                     </View>
 
-                    :
-                    (props.data).map(item => (
+                </View>
+                :
+                <FlatList data={props.data} refreshing={refreshing}
+                    onRefresh={onRefresh} renderItem={({ item }) => (
                         <View style={styles.listBox(props)} key={item._id}>
                             <View style={{
                                 marginHorizontal: 20, flexDirection: "row", justifyContent: 'space-between',
@@ -130,10 +121,8 @@ const TrasportList = (props) => {
                             </View>
 
                         </View>
-                    ))
-                }
-            </ScrollView>
-
+                    )
+                    } />}
         </View >
     )
 }

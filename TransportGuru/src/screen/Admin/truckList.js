@@ -53,7 +53,7 @@ const TruckList = (props) => {
                 onGet={(val) => setModalVisible(val)}
             />
             <AdminHeaderWithBackButton name={"Truck List"} navigation={props.navigation} />
-            {props.truckList.length === 0 ?
+            {(props.truckList.length === 0 && !props.loading) ?
                 <View style={{ flex: 1 }}>
 
                     <View style={{ height: 500, width: 200, alignSelf: 'center' }}>
@@ -63,7 +63,7 @@ const TruckList = (props) => {
                 </View>
 
                 :
-                <FlatList data={props.truckList} renderItem={(item) => (
+                <FlatList data={props.truckList}  renderItem={(item) => (
                     <View style={styles.listBox(props)}>
                         <View style={styles.image(props)}>
                             <Image source={{ uri: item.item.truckImage }} style={{ width: '100%', height: '100%', overflow: "hidden" }} />

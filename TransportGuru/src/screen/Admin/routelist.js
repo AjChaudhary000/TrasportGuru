@@ -54,7 +54,7 @@ const Routelist = (props) => {
                 onGet={(val) => setModalVisible(val)}
             />
             <AdminHeaderWithBackButton name={"Route List"} navigation={props.navigation} />
-            {props.routelist.length === 0 ?
+            {(props.routelist.length === 0  && !props.loading) ?
                 <View style={{ flex: 1 }}>
 
                     <View style={{ height: 500, width: 200, alignSelf: 'center' }}>

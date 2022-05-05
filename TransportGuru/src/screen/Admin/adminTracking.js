@@ -79,26 +79,22 @@ const AdminTracking = (props) => {
         <View style={styles.container(props)}>
 
             <AdminHeader name={"Tracking"} />
-            <ScrollView style={{ marginBottom: 60 }} refreshControl={
-                <RefreshControl
-                    refreshing={refreshing}
-                    onRefresh={onRefresh}
-                />
-            } showsVerticalScrollIndicator={false}>
-                {data.length === 0 ?
+
+            {data.length === 0 ?
 
 
 
-                    <View style={{ flex: 1 }}>
+                <View style={{ flex: 1 }}>
 
-                        <View style={{ height: 500, width: 200, alignSelf: 'center' }}>
-                            <LottieView source={require('../../assets/json/notfound.json')} autoPlay loop />
-                        </View>
-
+                    <View style={{ height: 500, width: 200, alignSelf: 'center' }}>
+                        <LottieView source={require('../../assets/json/notfound.json')} autoPlay loop />
                     </View>
 
-                    :
-                    <FlatList data={data} renderItem={(item) => (
+                </View>
+
+                :
+                <FlatList data={data} refreshing={refreshing}
+                    onRefresh={onRefresh} renderItem={(item) => (
                         <TouchableOpacity style={styles.listBox(props, item)}
                             onPress={() => props.navigation.navigate("AdminTrackingDetails", { id: item.item._id })} >
                             <View style={{ marginHorizontal: 10, marginVertical: 5, flexDirection: "row", justifyContent: 'space-between' }}>
@@ -141,7 +137,7 @@ const AdminTracking = (props) => {
                                         <TouchableOpacity style={{ width: "90%" }}>
                                             <Text style={{ fontWeight: 'bold', color: 'gray' }}>Driver Mobile no : {item.item?.driverId.driverMobileNo}</Text>
                                         </TouchableOpacity>
-                                        <TouchableOpacity style={{ width: "10%" }}  onPress={() => CallBtn(item.item?.driverId.driverMobileNo)}>
+                                        <TouchableOpacity style={{ width: "10%" }} onPress={() => CallBtn(item.item?.driverId.driverMobileNo)}>
                                             <Image source={icons.call} style={{
                                                 width: 20,
                                                 height: 20,
@@ -165,18 +161,18 @@ const AdminTracking = (props) => {
                         </TouchableOpacity>
 
                     )}
-                        onEndReached={() => {
-                            let count = isSkip + limitValue
-                            console.log("isSkip", count)
-                            setIsSkip(count);
+                    onEndReached={() => {
+                        let count = isSkip + limitValue
+                        console.log("isSkip", count)
+                        setIsSkip(count);
 
-                            props.getTransportList({ token: props.token, skip: count, limit: limitValue })
-                        }}
-                        onEndReachedThreshold={0.5}
-                        ListFooterComponent={handleListFooterComponent}
+                        props.getTransportList({ token: props.token, skip: count, limit: limitValue })
+                    }}
+                    onEndReachedThreshold={0.5}
+                    ListFooterComponent={handleListFooterComponent}
 
-                    />}
-            </ScrollView>
+                />}
+
         </View>
     )
 }

@@ -53,7 +53,7 @@ const DriverList = (props) => {
                 onGet={(val) => setModalVisible(val)}
             />
             <AdminHeaderWithBackButton name={"Driver List"} navigation={props.navigation} />
-            {props.driverList.length === 0 ?
+            {(props.driverList.length === 0 && !props.loading) ?
                 <View style={{ flex: 1 }}>
 
                     <View style={{ height: 500, width: 200, alignSelf: 'center' }}>

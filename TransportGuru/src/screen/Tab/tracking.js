@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, RefreshControl, ScrollView, FlatList, Image, TouchableOpacity } from 'react-native'
+import { View, Text, StyleSheet, FlatList, Image, TouchableOpacity } from 'react-native'
 import React from 'react'
 import { connect } from 'react-redux';
 import Header from '../../components/header'
@@ -85,13 +85,8 @@ const Tracking = (props) => {
                 <Text>Loading ...</Text>
             </AnimatedLoader>
             <Header name={"Tracking"} />
-            <ScrollView style={{ marginBottom: 60 }} refreshControl={
-                <RefreshControl
-                    refreshing={refreshing}
-                    onRefresh={onRefresh}
-                />
-            } showsVerticalScrollIndicator={false}>
-                {props.trackingList.length === 0 ?
+           
+                {(props.trackingList.length === 0 && !props.loading) ?
 
 
 
@@ -104,7 +99,8 @@ const Tracking = (props) => {
                     </View>
 
                     :
-                    (props.trackingList).map(item => (
+                    <FlatList data={props.trackingList}  refreshing={refreshing}
+                    onRefresh={onRefresh} renderItem={({ item }) => (
                         <TouchableOpacity style={styles.listBox(props, item)} onPress={() => props.navigation.navigate("TrackingDetails", { id: item._id })} key={item._id}>
                             <View style={{ marginHorizontal: 10, marginVertical: 5, flexDirection: "row", justifyContent: 'space-between' }}>
                                 <View >
@@ -166,9 +162,8 @@ const Tracking = (props) => {
                                 </View>
                             </View>
                         </TouchableOpacity>
-
-                    ))}
-            </ScrollView>
+                    )} />}
+          
         </View>
     )
 }

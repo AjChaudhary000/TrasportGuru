@@ -1,4 +1,4 @@
-import { View, Text, FlatList, Image, TouchableOpacity, StyleSheet, RefreshControl, ScrollView } from 'react-native';
+import { View, Text, FlatList, Image, TouchableOpacity, StyleSheet} from 'react-native';
 import React from 'react';
 import AdminHeader from '../../components/adminHeader'
 import AnimatedLoader from "react-native-animated-loader";
@@ -19,7 +19,6 @@ const AdminMessage = (props) => {
     React.useEffect(() => {
         props.getUserMessageList({ token: props.token })
     }, [])
-
     return (
         <View style={styles.container(props)}>
             <AnimatedLoader
@@ -35,46 +34,33 @@ const AdminMessage = (props) => {
                 <Text>Loading...</Text>
             </AnimatedLoader>
             <AdminHeader name={"Messages"} />
-            <ScrollView refreshControl={
-                <RefreshControl
-                    refreshing={refreshing}
-                    onRefresh={onRefresh}
-                />
-            }>
-                {props.messageList.length === 0 ?
-                    <View style={{ flex: 1 }}>
-
-                        <View style={{ height: 500, width: 200, alignSelf: 'center' }}>
-                            <LottieView source={require('../../assets/json/notfound.json')} autoPlay loop />
-                        </View>
-
+            {props.messageList.length === 0 ?
+                <View style={{ flex: 1 }}>
+                    <View style={{ height: 500, width: 200, alignSelf: 'center' }}>
+                        <LottieView source={require('../../assets/json/notfound.json')} autoPlay loop />
                     </View>
-
-                    :
-                    <FlatList data={props.messageList} renderItem={(item) => (
-
+                </View>
+                :
+                <FlatList data={props.messageList} refreshing={refreshing}
+                    onRefresh={onRefresh} renderItem={(item) => (
                         <TouchableOpacity style={{ flexDirection: 'row', marginVertical: 10, marginHorizontal: 20 }}
                             onPress={() => { props.navigation.navigate('ChatDetails', { item: item.item.userId }) }}>
                             <View style={styles.image(props)}>
                                 <Image source={{ uri: item.item.userId?.image }}
                                     style={{
                                         width: 60, height: 60, alignSelf: "center"
-
                                     }} />
                             </View>
                             <View style={{
                                 justifyContent: 'center', borderBottomWidth: 2,
                                 borderBottomColor: color.adminprimaryColors, width: '80%', justifyContent: 'center'
                             }}>
-
                                 <Text style={styles.text}>
                                     {item.item.userId?.username}</Text>
                             </View>
-
                         </TouchableOpacity>
                     )}
-                    />}
-            </ScrollView>
+                />}
         </View>
     );
 };
@@ -84,7 +70,6 @@ const useDispatch = (dispatch) => {
     };
 }
 const useSelector = (state) => (
-
     {
         loading: state.message.loading,
         messageList: state.message.usermessageList,
