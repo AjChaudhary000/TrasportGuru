@@ -11,6 +11,8 @@ import { deleteTransport, getTransportList, setTransportData, setTransportList }
 import Toast from 'react-native-simple-toast';
 import AnimatedLoader from "react-native-animated-loader";
 import ActionDialogBox from '../../components/ActionDialogBox'
+import DialogBox from '../../components/DialogBox';
+
 const TransportListDetails = (props) => {
     const [driver, setDriver] = React.useState({ type: false, id: '' });
     const [truck, setTruck] = React.useState({ type: false, id: '' });
@@ -77,7 +79,7 @@ const TransportListDetails = (props) => {
                     </View>
                 </View>
                 :
-                <FlatList data={data}  renderItem={(item) => (
+                <FlatList data={data} renderItem={(item) => (
                     <View style={styles.listBox(props)} key={"A" + item.index}>
                         <View style={{ alignItems: "center" }}>
                             <Text style={{ fontWeight: 'bold', color: props.theme ? color.drakFontcolor : color.fontcolor }}>
@@ -114,76 +116,92 @@ const TransportListDetails = (props) => {
                             </View>
                         </View>
                         <View style={{ marginHorizontal: 20, marginVertical: 10, flexDirection: "row", justifyContent: 'space-between' }}>
-                            <TouchableOpacity onPress={() => { setDriver({ type: !driver.type, id: item.item._id }) }}>
+                            <TouchableOpacity onPress={() => { setDriver({ type: true, id: item.item._id }) }}>
                                 <Text style={{ color: props.theme ? color.drakAdminprimaryColors : color.adminprimaryColors, fontWeight: 'bold' }}>
                                     Driver
                                 </Text>
                             </TouchableOpacity>
-                            <TouchableOpacity onPress={() => { setTruck({ type: !truck.type, id: item.item._id }) }}>
+                            <TouchableOpacity onPress={() => { setTruck({ type: true, id: item.item._id }) }}>
                                 <Text style={{ color: props.theme ? color.drakAdminprimaryColors : color.adminprimaryColors, fontWeight: 'bold' }}>
                                     Truck
                                 </Text>
                             </TouchableOpacity>
-                            <TouchableOpacity onPress={() => { setRoute({ type: !route.type, id: item.item._id }) }}>
+                            <TouchableOpacity onPress={() => { setRoute({ type: true, id: item.item._id }) }}>
                                 <Text style={{ color: props.theme ? color.drakAdminprimaryColors : color.adminprimaryColors, fontWeight: 'bold' }}>
                                     Route
                                 </Text>
                             </TouchableOpacity>
                         </View>
                         {/* driver data */}
-                        {driver.type && driver.id === item.item._id &&
-                            <View style={styles.drivelist} >
-                                <View style={styles.image(props)}>
-                                    <Image source={{ uri: item.item.driverId.driverImage }} style={{ width: '100%', height: '100%', overflow: "hidden" }} />
-                                </View>
+                        {driver.id === item.item._id &&
+                            <DialogBox
+                                modalVisibleData={driver.type}
+                                theme={props.theme}
+                                title={"Driver Details"}
+                                onGet={(val) => setDriver({ ...driver, type: val })}>
+                                <View style={styles.drivelist} >
+                                    <View style={styles.image(props)}>
+                                        <Image source={{ uri: item.item.driverId.driverImage }} style={{ width: '100%', height: '100%', overflow: "hidden" }} />
+                                    </View>
 
-                                <View style={styles.listData}>
-                                    <Text style={styles.driverName(props)}>{item.item.driverId.driverName}</Text>
-                                    <Text style={styles.driverEmail}>{item.item.driverId.driverEmail}</Text>
-                                    <Text style={styles.driverMobileNo(props)}>{item.item.driverId.driverMobileNo}</Text>
-                                </View>
-                            </View>
-                        }
-                        {/* driver data */}
-                        {truck.type && truck.id === item.item._id &&
-                            <View style={styles.drivelist}>
-                                <View style={styles.image(props)}>
-                                    <Image source={{ uri: item.item.truckId.truckImage }} style={{ width: '100%', height: '100%', overflow: "hidden" }} />
-                                </View>
-                                <View style={styles.listData}>
-                                    <Text style={styles.truckname(props)}>{item.item.truckId.truckName}</Text>
-                                    <Text style={styles.truckmodelname(props)}>{item.item.truckId.truckModelName}</Text>
-                                    <View style={{ flexDirection: 'row', justifyContent: 'space-between', paddingVertical: 5 }}>
-                                        <Text style={styles.truckreg}>{item.item.truckId.truckRegistartionNo}</Text>
-                                        <Text style={styles.truckcapicity(props)}>{item.item.truckId.truckCapicity} /-Tonnes</Text>
+                                    <View style={styles.listData}>
+                                        <Text style={styles.driverName(props)}>{item.item.driverId.driverName}</Text>
+                                        <Text style={styles.driverEmail}>{item.item.driverId.driverEmail}</Text>
+                                        <Text style={styles.driverMobileNo(props)}>{item.item.driverId.driverMobileNo}</Text>
                                     </View>
                                 </View>
-                            </View>}
+                            </DialogBox>
+                        }
+                        {/* driver data */}
+                        { truck.id === item.item._id &&
+                            <DialogBox
+                                modalVisibleData={truck.type}
+                                theme={props.theme}
+                                title={"Truck Details"}
+                                onGet={(val) => setTruck({ ...truck, type: val })}>
+                                <View style={styles.drivelist}>
+                                    <View style={styles.image(props)}>
+                                        <Image source={{ uri: item.item.truckId.truckImage }} style={{ width: '100%', height: '100%', overflow: "hidden" }} />
+                                    </View>
+                                    <View style={styles.listData}>
+                                        <Text style={styles.truckname(props)}>{item.item.truckId.truckName}</Text>
+                                        <Text style={styles.truckmodelname(props)}>{item.item.truckId.truckModelName}</Text>
+                                        <View style={{ flexDirection: 'row', justifyContent: 'space-between', paddingVertical: 5 }}>
+                                            <Text style={styles.truckreg}>{item.item.truckId.truckRegistartionNo}</Text>
+                                            <Text style={styles.truckcapicity(props)}>{item.item.truckId.truckCapicity} /-Tonnes</Text>
+                                        </View>
+                                    </View>
+                                </View></DialogBox>}
                         {/* route data */}
-                        {route.type && route.id === item.item._id &&
-                            <View style={{ flexDirection: 'row' }}>
-                                <View style={{ width: "5%", justifyContent: 'center' }}>
-                                    <Image source={icons.journey} style={{ width: 10, height: 40 * item.item.routeId.routeStop.length, tintColor: props.theme ? color.drakAdminprimaryColors : color.adminprimaryColors }} />
-                                </View>
+                        {route.id === item.item._id &&
+                            <DialogBox
+                                modalVisibleData={route.type}
+                                theme={props.theme}
+                                title={"Routes Details"}
+                                onGet={(val) => setRoute({ ...route, type: val })}>
+                                <View style={{ flexDirection: 'row' }}>
+                                    <View style={{ width: "5%", justifyContent: 'center' }}>
+                                        <Image source={icons.journey} style={{ width: 10, height: 40 * item.item.routeId.routeStop.length, tintColor: props.theme ? color.drakAdminprimaryColors : color.adminprimaryColors }} />
+                                    </View>
 
-                                <View style={{ width: "95%", justifyContent: 'center' }}>
-
-
-                                    <FlatList data={item.item.routeId.routeStop} renderItem={(item) => (
-                                        <View style={{ margin: 10, flexDirection: 'row' }}>
-
-                                            <View style={{ width: '5%', justifyContent: 'center' }}>
-                                                <Image source={icons.forword} style={{ width: 20, height: 20, tintColor: props.theme ? color.drakAdminprimaryColors : color.adminprimaryColors }} />
-                                            </View>
-                                            <View style={{ width: '95%' }}>
-                                                <Text style={{ marginHorizontal: 10, fontWeight: 'bold', color: 'gray' }}>{item.item.stops}</Text>
-                                            </View>
-                                        </View>)}
-                                    />
+                                    <View style={{ width: "95%", justifyContent: 'center' }}>
 
 
-                                </View>
-                            </View>}
+                                        <FlatList data={item.item.routeId.routeStop} renderItem={(item) => (
+                                            <View style={{ margin: 10, flexDirection: 'row' }}>
+
+                                                <View style={{ width: '5%', justifyContent: 'center' }}>
+                                                    <Image source={icons.forword} style={{ width: 20, height: 20, tintColor: props.theme ? color.drakAdminprimaryColors : color.adminprimaryColors }} />
+                                                </View>
+                                                <View style={{ width: '95%' }}>
+                                                    <Text style={{ marginHorizontal: 10, fontWeight: 'bold', color: 'gray' }}>{item.item.stops}</Text>
+                                                </View>
+                                            </View>)}
+                                        />
+
+
+                                    </View>
+                                </View></DialogBox>}
                         {/* route data */}
                         <View style={{ flexDirection: 'row', justifyContent: 'space-between', paddingVertical: 20, paddingHorizontal: 30 }}>
                             <TouchableOpacity onPress={() => { EditDriver(item.item) }}>
@@ -279,7 +297,7 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         color: 'red'
     }, image: (props) => [{
-        width: '28%',
+        width: '30%',
         borderWidth: 3,
         borderColor: props.theme ? color.drakAdminprimaryColors : color.adminprimaryColors,
         borderRadius: 15,

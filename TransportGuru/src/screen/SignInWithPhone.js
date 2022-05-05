@@ -16,6 +16,7 @@ import { verifyGoogle } from '../Redux/verifyOtpSlice';
 import { getOnBording } from '../Redux/helper';
 import { getOnBordingData } from '../Redux/tokenSlice';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
+import auth from '@react-native-firebase/auth';
 const SignInWithPhone = (props) => {
     const Google = async () => {
         const onbording = await getOnBording();
@@ -27,22 +28,23 @@ const SignInWithPhone = (props) => {
     React.useEffect(() => {
         Google()
     }, [])
-    const [value, setValue] = React.useState("+91");
-    const [phone, setPhone] = React.useState('');
-
     React.useEffect(() => {
-
         try {
             if (props.userdata?.status) {
                 props.navigation.replace('Otp', { mobileno: props.userdata.mobileno })
                 props.setUserData({})
             }
+            if (props.otpdata?.status) {
+                props.navigation.replace('Tab')
+            }
         } catch (e) {
             console.log(e)
         }
     }, [props])
-
+    const [value, setValue] = React.useState("+91");
+    const [phone, setPhone] = React.useState('');
     const onGoogleButtonPress = async () => {
+
         try {
 
             const { idToken } = await GoogleSignin.signIn();
@@ -59,6 +61,7 @@ const SignInWithPhone = (props) => {
             }).catch((e) => { console.log(e) })
             await GoogleSignin.signOut();
         } catch (error) {
+
             console.log("my error", error)
         }
     }
@@ -185,7 +188,7 @@ const SignInWithPhone = (props) => {
                     </View>
                     <View style={{ width: '80%', alignItems: 'center', justifyContent: 'center', backgroundColor: '#4185F4' }}>
                         <Text style={{ color: color.drakFontcolor, fontWeight: "bold" }}>
-                            Sign In with Google
+                            SignIn with Google
                         </Text>
                     </View>
                 </TouchableOpacity>
@@ -204,7 +207,7 @@ const SignInWithPhone = (props) => {
             </View>
 
         </KeyboardAwareScrollView>
-        
+
     )
 }
 const useDispatch = (dispatch) => {
