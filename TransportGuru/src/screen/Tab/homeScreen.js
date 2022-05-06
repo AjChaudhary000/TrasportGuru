@@ -499,8 +499,8 @@ const HomeScreen = props => {
                     customMapStyle={props.theme ? drakmap : lightmap}
                     provider={'google'}
                     region={{
-                        latitude: parseFloat(location.latitude),
-                        longitude: parseFloat(location.longitude),
+                        latitude: parseFloat(data.from.lat ) || parseFloat(location.latitude),
+                        longitude: parseFloat(data.from.lng ) || parseFloat(location.longitude),
                         latitudeDelta: 0.4,
                         longitudeDelta: 0.9,
                     }}>

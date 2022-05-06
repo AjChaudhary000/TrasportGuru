@@ -1,20 +1,17 @@
 const express = require("express");
 const router = new express.Router();
 const User = require("../model/user");
-
 const OTP = require("../model/otp");
 const auth = require("../middleware/auth");
 const Driver = require("../model/driver");
 const sendEmailBox = require("./sendEmailBox");
-const accountSid = "ACfeb6acb7c389dcfa42a021d7ac8236ea";
-const authToken = "2734bccec803bc8ad5c29486568a2de2";
-const client = require("twilio")(accountSid, authToken);
+const client = require("twilio")(process.env.AccountSid, process.env.AuthToken);
 router.post("/sendemail", async (req, res) => {
     try {
         const otpvalue = Math.round(Math.random() * 100000)
             .toString()
             .slice(0, 4);
-        await sendEmailBox(req.body.email, otpvalue);
+      //  await sendEmailBox(req.body.email, otpvalue);
         const otp = new OTP({ email: req.body.email, otp: otpvalue });
         await otp.save();
         res.status(201).send({ email: req.body.email, status: true });
