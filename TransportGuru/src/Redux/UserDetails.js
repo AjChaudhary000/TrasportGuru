@@ -59,7 +59,7 @@ export const userEmailVerify = createAsyncThunk('user/userEmailVerify',
 export const userMobileNoVerify = createAsyncThunk('user/userMobileNoVerify',
     async (obj, getState) => {
         try {
-           
+
             const response = await TrasportApi.post(`/userMobileNoVerify`, obj.data, {
                 headers: {
                     Authorization: `Bearer ${obj.token}`,
@@ -81,6 +81,9 @@ const UserDetails = createSlice({
         error: ''
     },
     reducers: {
+        setUserData: (state, action) => {
+            state.userData = action.payload
+        },
         setEmailCheck: (state, action) => {
             state.emailCheck = action.payload
         },
@@ -138,7 +141,7 @@ const UserDetails = createSlice({
             state.loading = true
         },
         [userMobileNoVerify.fulfilled]: (state, action) => {
-           
+
             state.otpdata = action.payload,
                 state.loading = false
         },
@@ -153,5 +156,5 @@ const UserDetails = createSlice({
 
     }
 });
-export const { setEmailCheck, setMobileNoCheck, setOtpData } = UserDetails.actions
+export const { setEmailCheck, setMobileNoCheck, setOtpData, setUserData } = UserDetails.actions
 export default UserDetails.reducer;

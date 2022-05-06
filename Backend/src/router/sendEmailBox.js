@@ -1,22 +1,22 @@
 const nodemailer = require("nodemailer");
 const sendEmailBox = async (email, otpdata) => {
-    try {
-        let testAccount = await nodemailer.createTestAccount();
-        let transporter = nodemailer.createTransport({
-            host: "smtp.gmail.com",
-            port: 465,
-            secure: true,
-            auth: {
-                user: "transportguru8@gmail.com",
-                pass: "chaudhary.dcs22",
-            },
-        });
-        let info = await transporter.sendMail({
-            from: "transportguru8@gmail.com",
-            to: email,
-            subject: "Trasport guru send otp ... ✔",
-            //text: `hii ${req.body.email} OTP ${otpvalue}`,
-            html: `<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional //EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+  try {
+    let testAccount = await nodemailer.createTestAccount();
+    let transporter = nodemailer.createTransport({
+      host: "smtp.gmail.com",
+      port: 465,
+      secure: true,
+      auth: {
+        user: "transportguru8@gmail.com",
+        pass: "chaudhary.dcs22",
+      },
+    });
+    let info = await transporter.sendMail({
+      from: "transportguru8@gmail.com",
+      to: email,
+      subject: "Trasport guru send otp ... ✔",
+      //text: `hii ${req.body.email} OTP ${otpvalue}`,
+      html: `<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional //EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
             <html
               xmlns="http://www.w3.org/1999/xhtml"
               xmlns:v="urn:schemas-microsoft-com:vml"
@@ -1326,9 +1326,9 @@ const sendEmailBox = async (email, otpdata) => {
               </body>
             </html>
             `,
-        })
-    } catch (e) {
-        console.log(e)
-    }
-}
-module.exports = sendEmailBox
+    });
+  } catch (e) {
+    console.log(e);
+  }
+};
+module.exports = sendEmailBox;

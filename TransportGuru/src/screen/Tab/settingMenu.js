@@ -1,10 +1,13 @@
-import { View, Text, StyleSheet, TouchableOpacity, Image } from 'react-native'
-import React from 'react'
-import color from '../../contents/color'
-import icons from '../../contents/icons'
-const SettingMenu = (props) => {
+import { View, Text, StyleSheet, TouchableOpacity, Image } from 'react-native';
+import React from 'react';
+import color from '../../contents/color';
+import icons from '../../contents/icons';
+const SettingMenu = props => {
     return (
-        <TouchableOpacity style={styles.option} onPress={props.onPress} activeOpacity={0.60}>
+        <TouchableOpacity
+            style={styles.option}
+            onPress={props.onPress}
+            activeOpacity={0.6}>
             <View style={styles.menuIcon}>
                 <Image source={props.icon} style={styles.menuiconStyle} />
             </View>
@@ -15,8 +18,8 @@ const SettingMenu = (props) => {
                 <Image source={icons.next} style={styles.menuiconStyle} />
             </View>
         </TouchableOpacity>
-    )
-}
+    );
+};
 export default SettingMenu;
 const styles = StyleSheet.create({
     option: {
@@ -26,30 +29,30 @@ const styles = StyleSheet.create({
         borderRadius: 10,
         flexDirection: 'row',
         justifyContent: 'center',
-        marginVertical: 2
+        marginVertical: 2,
     },
     menuIcon: {
         width: '15%',
         justifyContent: 'center',
-        alignItems: "center"
+        alignItems: 'center',
     },
     menuname: {
         width: '70%',
-        justifyContent: 'center'
+        justifyContent: 'center',
     },
     menuclick: {
         width: '15%',
         justifyContent: 'center',
-        alignItems: "center"
+        alignItems: 'center',
     },
     menuText: {
         color: color.primaryColors,
         fontWeight: 'bold',
-        fontSize: 18
+        fontSize: 18,
     },
     menuiconStyle: {
         width: 25,
         height: 25,
-        tintColor: color.primaryColors
-    }
-})
+        tintColor: color.primaryColors,
+    },
+});

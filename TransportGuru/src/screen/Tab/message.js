@@ -1,144 +1,209 @@
-import { View, Text, FlatList, Image, TouchableOpacity, StyleSheet } from 'react-native';
+import {
+  View,
+  Text,
+  FlatList,
+  Image,
+  TouchableOpacity,
+  StyleSheet,
+} from 'react-native';
 import React from 'react';
-import Header from '../../components/header'
+import Header from '../../components/header';
 import { getMessageList } from '../../Redux/messageListSlice';
-import { connect } from 'react-redux'
+import { connect } from 'react-redux';
 import LottieView from 'lottie-react-native';
 import color from '../../contents/color';
-import AnimatedLoader from "react-native-animated-loader";
+import AnimatedLoader from 'react-native-animated-loader';
 import { getBadgeMessage } from '../../Redux/badgeSlice';
 
-const wait = (timeout) => {
+const wait = timeout => {
   return new Promise(resolve => setTimeout(resolve, timeout));
-}
+};
 
-const Message = (props) => {
+const Message = props => {
   const [refreshing, setRefreshing] = React.useState(false);
   const onRefresh = React.useCallback(() => {
     setRefreshing(true);
-    props.getMessageList({ token: props.token })
+    props.getMessageList({ token: props.token });
     wait(2000).then(() => setRefreshing(false));
   }, []);
   React.useEffect(() => {
-    props.getMessageList({ token: props.token })
-  }, [])
-  const Badge = (id) => {
-    props.getBadgeMessage({ convessationId: id, token: props.token })
+    props.getMessageList({ token: props.token });
+  }, []);
+  const Badge = id => {
+    props.getBadgeMessage({ convessationId: id, token: props.token });
     return props.messageBadge;
-
-  }
-  console.log(props.messageList)
+  };
+  console.log(props.messageList);
   return (
     <View style={styles.container(props)}>
       <AnimatedLoader
         visible={props.loading}
         overlayColor="rgba(255,255,255,0.75)"
-        source={require("../../assets/json/loder.json")}
+        source={require('../../assets/json/loder.json')}
         animationStyle={{
           width: 100,
-          height: 100
+          height: 100,
         }}
-        speed={1}
-      >
+        speed={1}>
         <Text>Loading ...</Text>
       </AnimatedLoader>
-      <Header name={"Messages"} />
+      <Header name={'Messages'} />
 
-      {(props.messageList.length === 0 && !props.loading) ?
+      {props.messageList?.length === 0 && !props.loading ? (
         <View style={{ flex: 1 }}>
           <View style={{ height: 500, width: 200, alignSelf: 'center' }}>
-            <LottieView source={require('../../assets/json/notfound.json')} autoPlay loop />
+            <LottieView
+              source={require('../../assets/json/notfound.json')}
+              autoPlay
+              loop
+            />
           </View>
         </View>
-        :
-        <FlatList data={props.messageList} refreshing={refreshing}
-          onRefresh={onRefresh} renderItem={({ item }) => (
-            <TouchableOpacity activeOpacity={0.6} style={{
-              flexDirection: 'row',
-              marginVertical: 10, marginHorizontal: 15,
-            }}
-              onPress={() => { props.navigation.navigate('ChatDetails', { item: item.senderId }) }}>
-              <View style={styles.image(props)}>
-                <Image source={{ uri: item.senderId?.trasportAccount[0]?.trasportImage }}
-                  style={{
-                    width: 60, height: 60, alignSelf: "center"
-                  }} />
-              </View>
-              <View style={{
-                justifyContent: 'center', width: '75%', justifyContent: 'center', borderBottomWidth: 2,
-                borderBottomColor: color.primaryColors,
+      ) : (
+        <FlatList
+          data={props.messageList}
+          refreshing={refreshing}
+          onRefresh={onRefresh}
+          renderItem={({ item }) => (
+            <TouchableOpacity
+              activeOpacity={0.6}
+              style={{
+                flexDirection: 'row',
+                marginVertical: 10,
+                marginHorizontal: 15,
+              }}
+              onPress={() => {
+                props.navigation.navigate('ChatDetails', { item: item.senderId });
               }}>
-                <Text style={styles.text}>
-                  {item.senderId?.trasportAccount[0]?.trasportName}</Text>
+              <View style={styles.image(props)}>
+                <Image
+                  source={{
+                    uri: item.senderId?.trasportAccount[0]?.trasportImage,
+                  }}
+                  style={{
+                    width: 60,
+                    height: 60,
+                    alignSelf: 'center',
+                  }}
+                />
               </View>
-
-              <View style={{
-                justifyContent: 'center', width: '8%', justifyContent: 'center',
-                borderBottomWidth: 2,
-                borderBottomColor: color.primaryColors,
-              }}>{item.messageCount !== 0 &&
-                <View style={{
-                  width: 25,
-                  height: 25,
-                  borderRadius: 13,
-
-                  backgroundColor: color.primaryColors,
+              <View
+                style={{
                   justifyContent: 'center',
-                  alignItems: "center",
-                  marginTop: 20,
+                  width: '65%',
+                  justifyContent: 'center',
 
-                }} >
-                  <Text style={{ color: props.theme ? color.drakFontcolor : color.fontcolor }}>
-                    {item.messageCount}</Text>
-                </View>
-                }
+                }}>
+                <Text style={styles.text}>
+                  {item.senderId?.trasportAccount[0]?.trasportName}
+                </Text>
+                <Text style={styles.textmessage(props)} numberOfLines={1}>
+                  {item.lastMessage?.message}
+                </Text>
               </View>
 
-            </TouchableOpacity>
-          )} />}
+              <View
+                style={{
+                  justifyContent: 'center',
+                  width: '15%',
+                  justifyContent: 'center',
 
+                }}>
+                <Text style={styles.textdate(item.messageCount)}>
+                  {new Date(item.lastMessage?.createdAt)
+                    .toLocaleDateString('en-US', {
+                      hour: 'numeric',
+                      minute: 'numeric',
+                      hour12: false,
+                    })
+                    .toString()
+                    .slice(-5)}
+                </Text>
+                {item.messageCount !== 0 && (
+                  <View
+                    style={{
+                      width: 20,
+                      height: 20,
+                      borderRadius: 10,
+                      backgroundColor: color.primaryColors,
+                      justifyContent: 'center',
+                      alignItems: 'center',
+                      alignSelf: 'flex-end',
+                      marginTop: 5
+                    }}>
+                    <Text
+                      style={{
+                        color: props.theme
+                          ? color.drakFontcolor
+                          : color.fontcolor,
+                      }}>
+                      {item.messageCount}
+                    </Text>
+                  </View>
+                )}
+              </View>
+            </TouchableOpacity>
+          )}
+        />
+      )}
     </View>
   );
 };
-const useDispatch = (dispatch) => {
+const useDispatch = dispatch => {
   return {
-    getMessageList: (data) => dispatch(getMessageList(data)),
-    getBadgeMessage: (data) => dispatch(getBadgeMessage(data))
+    getMessageList: data => dispatch(getMessageList(data)),
+    getBadgeMessage: data => dispatch(getBadgeMessage(data)),
   };
-}
-const useSelector = (state) => (
-
-  {
-    messageBadge: state.badge.messageBadge,
-    loading: state.message.loading,
-    messageList: state.message.messageList,
-    theme: state.token.theme,
-    token: state.token.token,
-    internet: state.token.internet,
-  }
-)
+};
+const useSelector = state => ({
+  messageBadge: state.badge.messageBadge,
+  loading: state.message.loading,
+  messageList: state.message.messageList,
+  theme: state.token.theme,
+  token: state.token.token,
+  internet: state.token.internet,
+});
 export default connect(useSelector, useDispatch)(Message);
 const styles = StyleSheet.create({
-  container: (props) => [{
-    flex: 1,
-    backgroundColor: props.theme ? color.drakBackgroundColor : color.backgroundColor,
-  }],
-  image: (props) => [{
-    width: '20%',
-    overflow: 'hidden',
-    alignSelf: 'center',
-    width: 60,
-    height: 60,
-    borderRadius: 30,
-    borderWidth: 2,
-    borderColor: props.theme ? color.drakPrimaryColors : color.primaryColors,
-  }],
+  container: props => [
+    {
+      flex: 1,
+      backgroundColor: props.theme
+        ? color.drakBackgroundColor
+        : color.backgroundColor,
+    },
+  ],
+  image: props => [
+    {
+      width: '20%',
+      overflow: 'hidden',
+      alignSelf: 'center',
+      width: 50,
+      height: 50,
+      borderRadius: 25,
+    },
+  ],
   text: {
     fontSize: 16,
     fontWeight: 'bold',
     letterSpacing: 1,
     marginLeft: 10,
-    color: 'gray'
-  }
-})
-
+    color: 'gray',
+  },
+  textdate: (count) => [
+    {
+      fontSize: 12,
+      fontWeight: 'bold',
+      letterSpacing: 1,
+      alignSelf: 'flex-end',
+      color: count !== 0 ? color.primaryColors : 'gray',
+    },
+  ],
+  textmessage: props => [
+    {
+      fontSize: 14,
+      marginLeft: 10,
+      color: props.theme ? color.drakFontcolor : color.fontcolor,
+    },
+  ],
+});

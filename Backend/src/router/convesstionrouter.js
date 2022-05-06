@@ -30,62 +30,76 @@ router.post("/roomdata", auth, async (req, res) => {
     }
 });
 router.get("/adminMessageList", auth, (req, res) => {
-    const List = [];
+    let List = [];
     convessationRoom
         .find({ $or: [{ userId: req.user._id }] })
         .populate("senderId")
-        .sort({ updatedAt: 1 })
-        .then((data) => {
+        .sort({ updatedAt: -1 })
+        .then(async (data) => {
+            const listPromise = [];
             data.forEach((item) => {
-                ChatRoom.find({
-                    convessationId: item._id,
-                    status: false,
-                    senderId: req.user._id,
-                }).then((messageCount) => {
-                    List.push({ ...item._doc, messageCount: messageCount.length });
-                });
+                listPromise.push(
+                    ChatRoom.find({
+                        convessationId: item._id,
+                        status: false,
+                        senderId: req.user._id,
+                    }).then((item2) => {
+                        return ChatRoom.find({
+                            convessationId: item._id,
+
+                        }).then((item3) => {
+                            return { ...item._doc, messageCount: item2.length, lastMessage: item3[item3.length - 1] };
+                        })
+                    })
+                );
             });
-            setTimeout(() => {
-               
-                res.send({ data: List, status: true });
-            }, 1000)
+
+            await Promise.all(listPromise).then((data1) => {
+                res.send({ data: data1, status: true });
+            });
+
 
         });
-
 });
 router.get("/userMessageList", auth, (req, res) => {
     const List = [];
     convessationRoom
         .find({ $or: [{ senderId: req.user._id }] })
         .populate("userId")
-        .sort({ updatedAt: 1 }).then((data) => {
+        .sort({ updatedAt: -1 })
+        .then(async (data) => {
+            const listPromise = [];
             data.forEach((item) => {
-                ChatRoom.find({
-                    convessationId: item._id,
-                    status: false,
-                    senderId: req.user._id,
-                }).then((messageCount) => {
-                    List.push({ ...item._doc, messageCount: messageCount.length });
-                });
+                listPromise.push(
+                    ChatRoom.find({
+                        convessationId: item._id,
+                        status: false,
+                        senderId: req.user._id,
+                    }).then((item2) => {
+                        return ChatRoom.find({
+                            convessationId: item._id,
+                        }).then((item3) => {
+                            return { ...item._doc, messageCount: item2.length, lastMessage: item3[item3.length - 1] };
+                        })
+                    })
+                );
             });
-            setTimeout(() => {
-               
-            }, 1000)
+            await Promise.all(listPromise).then((data1) => {
+                res.send({ data: data1, status: true });
+            });
 
         });
-    // console.log("data", data)
+});
+router.post("/sortMessageList", auth, async (req, res) => {
+    try {
+        const data = await convessationRoom.findByIdAndUpdate(
+            { _id: req.body.id },
+            { updatedAt: new Date() }
+        );
 
-}),
-    router.post("/sortMessageList", auth, async (req, res) => {
-        try {
-            const data = await convessationRoom.findByIdAndUpdate(
-                { _id: req.body.id },
-                { updatedAt: new Date() }
-            );
-
-            res.send({ status: true });
-        } catch (e) {
-            res.send(e.toString());
-        }
-    });
+        res.send({ status: true });
+    } catch (e) {
+        res.send(e.toString());
+    }
+});
 module.exports = router;
