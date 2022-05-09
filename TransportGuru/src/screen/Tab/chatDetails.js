@@ -103,6 +103,9 @@ const ChatDetails = props => {
         data: { senderId: id, convessationId: convessationId, message: message },
         token: props.token,
       });
+      props.ClearBadgeMessage({ convessationId, token: props.token });
+      props.getMessageList({ token: props.token });
+      props.getUserMessageList({ token: props.token });
       props.sortMessageList({ id: convessationId, token: props.token });
 
       setMessage('');

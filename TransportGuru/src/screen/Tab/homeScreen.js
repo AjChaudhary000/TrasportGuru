@@ -21,6 +21,8 @@ import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view
 import MapViewDirections from 'react-native-maps-directions';
 import Geolocation from '@react-native-community/geolocation';
 import config from '../../config/config';
+import { getUserDetails } from '../../Redux/UserDetails';
+
 const HomeScreen = props => {
     const [modalVisible, setModalVisible] = React.useState(false);
     const [placetype, setPlaceType] = React.useState();
@@ -73,6 +75,7 @@ const HomeScreen = props => {
         }
     };
     React.useEffect(() => {
+        props.getUserDetails(props.token);
         LogBox.ignoreLogs(['VirtualizedLists should never be nested']);
         if (Platform.OS == 'android') {
             AndroidPerMissionGranted();
@@ -499,8 +502,8 @@ const HomeScreen = props => {
                     customMapStyle={props.theme ? drakmap : lightmap}
                     provider={'google'}
                     region={{
-                        latitude: parseFloat(data.from.lat ) || parseFloat(location.latitude),
-                        longitude: parseFloat(data.from.lng ) || parseFloat(location.longitude),
+                        latitude: parseFloat(data.from.lat) || parseFloat(location.latitude),
+                        longitude: parseFloat(data.from.lng) || parseFloat(location.longitude),
                         latitudeDelta: 0.4,
                         longitudeDelta: 0.9,
                     }}>
@@ -661,9 +664,15 @@ const HomeScreen = props => {
     );
 };
 const useSelector = state => ({
+    userData: state.user.userData,
+    token: state.token.token,
     theme: state.token.theme,
+
 });
-export default connect(useSelector)(HomeScreen);
+const useDispatch = dispatch => ({
+    getUserDetails: (data) => dispatch(getUserDetails(data))
+});
+export default connect(useSelector, useDispatch)(HomeScreen);
 const styles = StyleSheet.create({
     container: props => [
         {

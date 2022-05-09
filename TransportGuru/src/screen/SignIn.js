@@ -212,7 +212,7 @@ const SignIn = props => {
                             backgroundColor: color.primaryColors,
                         }}>
                         <Text style={{ color: color.drakFontcolor, fontWeight: 'bold' }}>
-                            Sign In with Mobile No
+                        Sign In with Mobile No
                         </Text>
                     </View>
                 </TouchableOpacity>
