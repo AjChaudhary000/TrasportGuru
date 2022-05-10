@@ -23,12 +23,15 @@ const StyledTextField = styled(TextField)({
 });
 
 const SignIn = (props) => {
-  const [email, setEmail] = React.useState()
+  const [email, setEmail] = React.useState('')
   const [isEmailValid, setIsEmailValid] = React.useState(true);
   const sendEmail = (event) => {
     event.preventDefault();
-    
-    props.onSendEmail(email)
+    if (email !== '') {
+      props.onSendEmail(email)
+    } else {
+      setIsEmailValid(false)
+    }
   }
   const emailHandle = (event) => {
     const regex = /[^\s@]+@[^\s@]+\.[^\s@]+/;

@@ -1,4 +1,4 @@
-import { createAsyncThunk, createSlice, isRejectedWithValue } from '@reduxjs/toolkit';
+import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import TrasportApi from '../api/TrasportApi';
 import { saveJWTToken } from './helper';
 import { getToken } from './tokenSlice';

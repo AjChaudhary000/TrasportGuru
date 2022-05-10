@@ -1,7 +1,6 @@
 import React from "react";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
-
 import Typography from "@mui/material/Typography";
 import Image from "../Contents/Images";
 import colors from "../Contents/colors";
@@ -62,7 +61,7 @@ function getStyles(name, code, theme) {
 const SignInWithPhone = (props) => {
   const theme = useTheme();
   const [code, setCode] = React.useState(["+91"]);
-  const [mobileno, setMobileNo] = React.useState()
+  const [mobileno, setMobileNo] = React.useState('')
   const [isMobileValid, setIsMobileValid] = React.useState(true);
   const handleChange = (event) => {
     const {
@@ -78,6 +77,8 @@ const SignInWithPhone = (props) => {
       if (event.currentTarget.value.length === 10) {
         setIsMobileValid(true)
         setMobileNo(event.currentTarget.value)
+      } else {
+        setIsMobileValid(false)
       }
     }
   }
@@ -112,6 +113,7 @@ const SignInWithPhone = (props) => {
       </Typography>
       <Grid
         container
+        item
         xs={12}
         sm={12}
         sx={{
@@ -120,6 +122,7 @@ const SignInWithPhone = (props) => {
         }}
       >
         <Grid
+          item
           xs={5}
           sm={4}
           sx={{
@@ -136,6 +139,9 @@ const SignInWithPhone = (props) => {
               onChange={handleChange}
               input={<OutlinedInput label="Name" />}
               MenuProps={MenuProps}
+              inputProps={{
+                maxLength: 10
+              }}
             >
               {CountryCode.map((item) => (
                 <MenuItem
@@ -150,6 +156,7 @@ const SignInWithPhone = (props) => {
           </StyledFormControl>
         </Grid>
         <Grid
+          item
           xs={7}
           sm={7}
           sx={{
@@ -163,8 +170,11 @@ const SignInWithPhone = (props) => {
             variant="outlined"
             sx={{ mt: 3, mb: 2 }}
             error={!isMobileValid}
-            helperText={!isMobileValid && "enter valid email"}
+            helperText={!isMobileValid && "enter valid mobileno"}
             onChange={mobileHandle}
+            inputProps={{
+              maxLength: 10
+            }}
           />
         </Grid>
       </Grid>

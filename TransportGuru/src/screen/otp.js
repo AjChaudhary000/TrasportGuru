@@ -21,6 +21,7 @@ import AnimatedLoader from 'react-native-animated-loader';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 const Otp = props => {
     const [isTimerView, setIsTmerView] = React.useState(true);
+    
     const [otp, setOtp] = React.useState();
     React.useEffect(() => {
         if (props?.otpdata.account === '0' && props?.otpdata.status) {

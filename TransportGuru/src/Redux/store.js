@@ -22,7 +22,7 @@ import paymentSlice from './paymentSlice';
 import trackingSlice from './trackingSlice';
 import chatSlice from './chatSlice';
 import badgeSlice from './badgeSlice';
-badgeSlice
+
 const store = configureStore({
     reducer: combineReducers({
         login: sendEmailSlice,
