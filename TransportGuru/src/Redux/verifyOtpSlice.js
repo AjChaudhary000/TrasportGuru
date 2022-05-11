@@ -33,12 +33,12 @@ export const verifySms = createAsyncThunk('otp/verifySms',
 );
 export const verifyGoogle = createAsyncThunk('otp/verifyGoogle',
     async (obj, getState) => {
-       
+
         try {
             const response = await TrasportApi.post('/googleSignIn', obj);
             await saveJWTToken(response.data.token);
             await getState.dispatch(getToken(response.data.token))
-           
+
             return response.data;
         } catch (e) {
             return getState.rejectWithValue(e.response.data);

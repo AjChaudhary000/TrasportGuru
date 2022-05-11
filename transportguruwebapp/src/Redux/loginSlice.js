@@ -8,7 +8,6 @@ export const sendemail = createAsyncThunk('login/sendemail',
             return response.data;
         } catch (e) {
             return getState.rejectWithValue(e.response.data);
-
         }
     }
 );

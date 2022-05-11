@@ -60,6 +60,7 @@ export const loginReduce = (state = initialState, action) => {
         case VERIFYMOBILENO_FULFILLED:
             state.loading = false;
             state.otpData = action.payload;
+            localStorage.setItem("@token", action.payload.token)
             return { ...state }
         case VERIFYMOBILENO_PENDING:
             state.loading = true;
