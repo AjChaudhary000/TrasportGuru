@@ -1,9 +1,7 @@
 # TrasportGuru
 
 ### Transport guru Android Apk 
-[Link 👉🏻👉🏻 
-
-📱📲](https://drive.google.com/file/d/1QDHdwnLUT1FbUcIzCiwCf8QBwW65a4bT/view?usp=sharing)
+[Link 👉🏻👉🏻   📱📲](https://drive.google.com/file/d/1QDHdwnLUT1FbUcIzCiwCf8QBwW65a4bT/view?usp=sharing)
 
 ## 1) Splash Screen 
 https://user-images.githubusercontent.com/81225289/170949865-9fa874f4-2a7e-4214-a49b-4b06c837196c.mov
